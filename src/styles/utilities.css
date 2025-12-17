@@ -1,0 +1,60 @@
+
+@tailwind utilities;
+
+/* Utility classes and animations */
+
+/* Responsive grid utilities */
+.responsive-grid {
+  @apply grid gap-4 sm:gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Container utilities */
+.container-mobile {
+  @apply px-2 sm:px-6 lg:px-8 mx-auto max-w-7xl;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Animation keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out forwards;
+}
+
+/* Viewport height fix utility */
+.vh-fix {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.min-vh-fix {
+  min-height: 100vh;
+  min-height: 100dvh;
+}

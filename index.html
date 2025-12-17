@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-content, minimal-ui" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="apple-mobile-web-app-title" content="Innisfree Management Portal" />
+    <!-- Enhanced iOS Safari browser UI hiding -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <!-- Force iOS Safari minimal UI -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <title>Innisfree Management Portal</title>
+    <meta name="description" content="Lovable Generated Project" />
+    <meta name="author" content="Lovable" />
+    <link rel="icon" href="/lovable-uploads/7c920697-b652-4bed-9838-632c94912af5.png" type="image/png" />
+
+    <meta property="og:title" content="Innisfree Management Portal" />
+    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/lovable-uploads/7c920697-b652-4bed-9838-632c94912af5.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="/lovable-uploads/7c920697-b652-4bed-9838-632c94912af5.png" />
+    
+    <style>
+      /* Enhanced iOS Safari browser UI hiding */
+      html, body {
+        height: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        touch-action: manipulation;
+      }
+      
+      /* iOS Safari specific styles for aggressive browser UI hiding */
+      @supports (-webkit-touch-callout: none) {
+        html {
+          height: 100dvh;
+          height: calc(var(--vh, 1vh) * 100);
+          -webkit-text-size-adjust: none;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+        
+        body {
+          height: 100dvh;
+          height: calc(var(--vh, 1vh) * 100);
+          -webkit-fill-available: 100vh;
+          position: relative;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          will-change: transform;
+        }
+      }
+
+      /* iPad and iPhone specific optimizations */
+      @media screen and (max-width: 1024px) {
+        html {
+          height: 100dvh;
+          width: 100vw;
+          overflow-x: hidden;
+          overscroll-behavior: none;
+          -webkit-text-size-adjust: none;
+          touch-action: manipulation;
+        }
+        
+        body {
+          height: 100dvh;
+          width: 100vw;
+          overflow-x: hidden;
+          -webkit-fill-available: 100vh;
+          overscroll-behavior: none;
+          position: relative;
+          min-height: 100dvh;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+
+/* Orders container styles */
+.orders-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.orders-scroll {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Enhanced scrolling for mobile devices */
+.mobile-scroll-container,
+.dashboard-scroll,
+.orders-scroll,
+.menu-scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+/* Smooth animations for order cards */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+/* Ensure proper scroll container height */
+.h-full {
+  height: 100% !important;
+}
+
+/* Fix for scroll containers on mobile */
+@media (max-width: 1024px) {
+  .mobile-scroll-container,
+  .dashboard-scroll,
+  .orders-scroll,
+  .menu-scroll-container {
+    height: 100%;
+    max-height: calc(100vh - var(--header-height, 64px));
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  }
+}

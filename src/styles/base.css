@@ -1,0 +1,250 @@
+@tailwind base;
+
+/* Base styles and CSS variables */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 213 91% 59%; /* Brand blue #4A90E2 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 15 85% 60%; /* Brand orange/coral #FF6B35 */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 213 91% 59%; /* Brand blue for focus rings */
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 213 91% 25%; /* Darker navy blue sidebar */
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 213 91% 25%;
+    --sidebar-accent: 213 91% 35%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 213 91% 20%;
+    --sidebar-ring: 15 85% 60%;
+
+    /* Beach resort themed colors */
+    --ocean-blue: 205 89% 45%; /* Deep ocean blue #1976D2 */
+    --ocean-blue-light: 205 89% 65%;
+    --ocean-blue-dark: 205 89% 25%;
+    --sunset-coral: 14 90% 63%; /* Coral sunset #FF5722 */
+    --sunset-coral-light: 14 90% 73%;
+    --sunset-coral-dark: 14 90% 53%;
+    --sand-beige: 45 44% 85%; /* Warm sand #E8D5B7 */
+    --sand-beige-light: 45 44% 90%;
+    --sand-beige-dark: 45 44% 75%;
+    --tropical-teal: 173 58% 39%; /* Tropical waters #2E8B57 */
+    --tropical-teal-light: 173 58% 55%;
+    --tropical-teal-dark: 173 58% 25%;
+    --palm-green: 142 76% 36%; /* Palm fronds #22C55E */
+    --palm-green-light: 142 76% 50%;
+    --palm-green-dark: 142 76% 25%;
+    
+    /* Brand specific colors - beach themed */
+    --brand-blue: 205 89% 45%; /* Ocean blue */
+    --brand-blue-light: 205 89% 65%;
+    --brand-blue-dark: 205 89% 25%;
+    --brand-orange: 14 90% 63%; /* Sunset coral */
+    --brand-orange-light: 14 90% 73%;
+    --brand-orange-dark: 14 90% 53%;
+
+    /* Mobile viewport variables */
+    --vh: 1vh;
+    --vw: 1vw;
+    --ios-vh: 100vh;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 213 91% 65%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 15 85% 65%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 213 91% 65%;
+    --sidebar-background: 213 91% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 15 85% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 15 85% 60%;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Enhanced touch action for better scrolling */
+    touch-action: manipulation;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    height: 100%;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    position: relative;
+    /* Enhanced touch action */
+    touch-action: manipulation;
+  }
+
+  #root {
+    height: 100%;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Enhanced scrolling containers with better momentum */
+  .scroll-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    overscroll-behavior: contain;
+    position: relative;
+    /* Enhanced momentum scrolling */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: scroll-position;
+    /* Better padding for complete scroll reach */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+    scroll-padding-bottom: 20px;
+  }
+
+  .scroll-container::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+
+  /* Mobile-first responsive typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+
+  h3 {
+    @apply text-base sm:text-lg md:text-xl;
+  }
+
+  p {
+    @apply leading-relaxed text-sm sm:text-base;
+  }
+
+  /* Enhanced touch-friendly interactive elements */
+  button, [role="button"] {
+    @apply min-h-[44px] min-w-[44px];
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  input, textarea, select {
+    @apply min-h-[44px];
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+  /* Enhanced scrollable area utilities */
+  .scrollable-y {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+  }
+
+  .scrollable-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+  }
+
+  /* iOS Safari specific enhancements */
+  @supports (-webkit-touch-callout: none) {
+    html {
+      height: -webkit-fill-available;
+      min-height: -webkit-fill-available;
+    }
+    
+    body {
+      height: -webkit-fill-available;
+      min-height: -webkit-fill-available;
+    }
+  }
+}

@@ -1,0 +1,555 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useResort } from '@/contexts/ResortContext';
+import { useStores } from '@/contexts/StoresContext';
+import { StoreAssignmentDialog } from './StoreAssignmentDialog';
+import { StoreLogo } from '@/components/stores/StoreLogo';
+
+export interface Resort {
+  id: string;
+  name: string;
+  location: string;
+  address: string;
+  phone?: string;
+  email?: string;
+  manager: string;
+  status: 'active' | 'inactive';
+  storeCount: number;
+  createdAt: string;
+  logo?: string; // Base64 encoded image or URL
+}
+
+export const ResortManagement = () => {
+  const { resorts, addResort, updateResort, deleteResort } = useResort();
+  const { getStoresByResort, addStore, updateStore, deleteStore } = useStores();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [editingResort, setEditingResort] = useState<Resort | null>(null);
+  const [isStoreDialogOpen, setIsStoreDialogOpen] = useState(false);
+  const [selectedResortId, setSelectedResortId] = useState<string>('');
+  const [editingStore, setEditingStore] = useState<any>(null);
+  const { toast } = useToast();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    location: '',
+    address: '',
+    phone: '',
+    email: '',
+    manager: '',
+    logo: ''
+  });
+
+  const [logoPreview, setLogoPreview] = useState<string>('');
+
+  const handleCreateResort = () => {
+    setEditingResort(null);
+    setFormData({
+      name: '',
+      location: '',
+      address: '',
+      phone: '',
+      email: '',
+      manager: '',
+      logo: ''
+    });
+    setLogoPreview('');
+    setIsCreateDialogOpen(true);
+  };
+
+  const handleEditResort = (resort: Resort) => {
+    setEditingResort(resort);
+    setFormData({
+      name: resort.name,
+      location: resort.location,
+      address: resort.address,
+      phone: resort.phone || '',
+      email: resort.email || '',
+      manager: resort.manager,
+      logo: resort.logo || ''
+    });
+    setLogoPreview(resort.logo || '');
+    setIsCreateDialogOpen(true);
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select an image smaller than 5MB.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select an image file.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        setFormData({ ...formData, logo: result });
+        setLogoPreview(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setFormData({ ...formData, logo: '' });
+    setLogoPreview('');
+  };
+
+  const handleSubmitResort = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingResort) {
+      // Update existing resort
+      const updatedResort = { ...editingResort, ...formData };
+      updateResort(updatedResort);
+      toast({
+        title: "Resort updated",
+        description: `${formData.name} has been successfully updated.`,
+      });
+    } else {
+      // Create new resort
+      const newResort: Resort = {
+        id: formData.name.toLowerCase().replace(/\s+/g, '-'),
+        ...formData,
+        status: 'active',
+        storeCount: 0,
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+      addResort(newResort);
+      toast({
+        title: "Resort created",
+        description: `${formData.name} has been successfully created.`,
+        className: "bg-green-50 border-green-200 text-green-800",
+      });
+    }
+    
+    setIsCreateDialogOpen(false);
+    setEditingResort(null);
+    setLogoPreview('');
+  };
+
+  const handleDeleteResort = (resortId: string, resortName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${resortName}"? This action cannot be undone.`)) {
+      deleteResort(resortId);
+      toast({
+        title: "Resort deleted",
+        description: "The resort has been successfully removed.",
+      });
+    }
+  };
+
+  const handleAddStore = (resortId: string) => {
+    setSelectedResortId(resortId);
+    setEditingStore(null);
+    setIsStoreDialogOpen(true);
+  };
+
+  const handleEditStore = (resortId: string, store: any) => {
+    setSelectedResortId(resortId);
+    setEditingStore(store);
+    setIsStoreDialogOpen(true);
+  };
+
+  const handleStoreDelete = (storeId: number, storeName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${storeName}"? This action cannot be undone.`)) {
+      deleteStore(storeId);
+      toast({
+        title: "Store Deleted",
+        description: `${storeName} has been successfully deleted.`,
+      });
+    }
+  };
+
+  const handleStoreSave = (store: any) => {
+    if (editingStore) {
+      updateStore(store);
+      toast({
+        title: "Store Updated",
+        description: `${store.name} has been successfully updated.`,
+      });
+    } else {
+      // Check if this is an existing store being reassigned
+      const existingStore = getStoresByResort('').find(s => s.id === store.id);
+      if (existingStore) {
+        updateStore(store);
+        toast({
+          title: "Store Assigned",
+          description: `${store.name} has been assigned to this resort.`,
+        });
+      } else {
+        addStore(store);
+        toast({
+          title: "Store Created",
+          description: `${store.name} has been successfully created.`,
+          className: "bg-green-50 border-green-200 text-green-800",
+        });
+      }
+    }
+    setIsStoreDialogOpen(false);
+  };
+
+  return (
+    <div className="space-y-4 sm:space-y-6">
+      <Card>
+        <CardHeader className="space-y-4 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="space-y-2">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <Building2 className="h-5 w-5" />
+                Resort Management
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Manage your resort properties and their associated stores
+              </p>
+            </div>
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={handleCreateResort} className="flex items-center gap-2 w-full sm:w-auto">
+                  <Plus className="h-4 w-4" />
+                  <span className="sm:inline">Add Resort</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[95vw] max-w-[500px] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+                <DialogHeader>
+                  <DialogTitle className="text-lg sm:text-xl">
+                    {editingResort ? 'Edit Resort' : 'Create New Resort'}
+                  </DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmitResort} className="space-y-4 sm:space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="logo" className="text-sm font-medium">Resort Logo</Label>
+                      <div className="mt-2">
+                        {logoPreview ? (
+                          <div className="relative inline-block">
+                            <img
+                              src={logoPreview}
+                              alt="Logo preview"
+                              className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-border"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                              onClick={handleRemoveLogo}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-dashed border-border rounded-lg flex items-center justify-center">
+                            <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="mt-2">
+                          <input
+                            type="file"
+                            id="logo"
+                            accept="image/*"
+                            onChange={handleLogoUpload}
+                            className="hidden"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => document.getElementById('logo')?.click()}
+                            className="text-xs"
+                          >
+                            {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Recommended: Square image, max 5MB
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="name">Resort Name</Label>
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="e.g. Hilton Miami Beach"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="location">Location</Label>
+                        <Input
+                          id="location"
+                          value={formData.location}
+                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          placeholder="e.g. Miami Beach, FL"
+                          required
+                        />
+                      </div>
+                    </div>
+                  
+                    <div>
+                      <Label htmlFor="address">Full Address</Label>
+                      <Input
+                        id="address"
+                        value={formData.address}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        placeholder="e.g. 1601 Collins Ave, Miami Beach, FL 33139"
+                        required
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="(305) 123-4567"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="info@resort.com"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="manager">Resort Manager</Label>
+                      <Input
+                        id="manager"
+                        value={formData.manager}
+                        onChange={(e) => setFormData({ ...formData, manager: e.target.value })}
+                        placeholder="Manager name"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setIsCreateDialogOpen(false)}
+                      className="order-2 sm:order-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" className="order-1 sm:order-2">
+                      {editingResort ? 'Update Resort' : 'Create Resort'}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </CardHeader>
+        <CardContent className="p-4 sm:p-6">
+          <div className="space-y-4 sm:space-y-6">
+            {resorts.map((resort) => {
+              const resortStores = getStoresByResort(resort.id);
+              
+              return (
+                <Card key={resort.id} className="border-l-4 border-l-primary">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <div className="flex-1 space-y-4">
+                          <div className="flex flex-col xs:flex-row xs:items-center gap-3">
+                            <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold overflow-hidden shadow-lg flex-shrink-0">
+                              {resort.logo ? (
+                                <img
+                                  src={resort.logo}
+                                  alt={`${resort.name} logo`}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+                                  {resort.name.charAt(0)}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-lg sm:text-xl text-foreground truncate">{resort.name}</h3>
+                              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <MapPin className="h-4 w-4 flex-shrink-0" />
+                                <span className="truncate">{resort.location}</span>
+                              </div>
+                            </div>
+                            <Badge variant={resort.status === 'active' ? 'default' : 'secondary'} className="flex-shrink-0">
+                              {resort.status}
+                            </Badge>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 gap-3 text-sm text-muted-foreground">
+                            <div className="space-y-2">
+                              <p className="flex items-start gap-2">
+                                <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                                <span className="break-words">{resort.address}</span>
+                              </p>
+                              {resort.phone && (
+                                <p className="flex items-center gap-2">
+                                  <Phone className="h-4 w-4 flex-shrink-0" />
+                                  <span>{resort.phone}</span>
+                                </p>
+                              )}
+                              {resort.email && (
+                                <p className="flex items-center gap-2">
+                                  <Mail className="h-4 w-4 flex-shrink-0" />
+                                  <span className="break-all">{resort.email}</span>
+                                </p>
+                              )}
+                              <p className="flex items-center gap-2">
+                                <User className="h-4 w-4 flex-shrink-0" />
+                                <span><strong>Manager:</strong> {resort.manager}</span>
+                              </p>
+                              <p className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4 flex-shrink-0" />
+                                <span><strong>Created:</strong> {resort.createdAt}</span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditResort(resort)}
+                            className="flex items-center gap-1 flex-1 sm:flex-none"
+                          >
+                            <Edit2 className="h-3 w-3" />
+                            <span>Edit</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteResort(resort.id, resort.name)}
+                            className="flex items-center gap-1 text-destructive hover:text-destructive-foreground hover:bg-destructive flex-1 sm:flex-none"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>Delete</span>
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Store Management Section */}
+                      <div className="mt-6 p-3 sm:p-4 bg-muted/50 rounded-lg space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <StoreIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                            <h4 className="font-medium text-foreground">Assigned Stores</h4>
+                            <Badge variant="secondary">{resortStores.length}</Badge>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleAddStore(resort.id)}
+                            className="flex items-center gap-1 w-full sm:w-auto"
+                          >
+                            <Plus className="h-4 w-4" />
+                            <span>Add Store</span>
+                          </Button>
+                        </div>
+
+                        {resortStores.length > 0 ? (
+                          <div className="space-y-3">
+                            {resortStores.map((store) => (
+                              <div key={store.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-background rounded-lg border">
+                                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                                  <StoreLogo 
+                                    logo={store.logo}
+                                    customLogo={store.customLogo}
+                                    bgColor={store.bgColor}
+                                    size="md"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <h5 className="font-medium text-foreground truncate">{store.name}</h5>
+                                    <p className="text-sm text-muted-foreground truncate">{store.address}</p>
+                                    {store.locationDescription && (
+                                      <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-2">{store.locationDescription}</p>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2 w-full sm:w-auto">
+                                  <Badge variant="outline" className="text-xs flex-shrink-0">
+                                    {store.activeOrders} orders
+                                  </Badge>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleEditStore(resort.id, store)}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleStoreDelete(store.id, store.name)}
+                                      className="h-8 w-8 p-0 text-destructive hover:text-destructive-foreground hover:bg-destructive"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-6 text-muted-foreground">
+                            <StoreIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground/40" />
+                            <p className="text-sm">No stores assigned to this resort yet.</p>
+                            <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Store" to get started.</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      <StoreAssignmentDialog
+        isOpen={isStoreDialogOpen}
+        onClose={() => setIsStoreDialogOpen(false)}
+        onSave={handleStoreSave}
+        resortId={selectedResortId}
+        store={editingStore}
+      />
+    </div>
+  );
+};
