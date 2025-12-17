@@ -52,12 +52,12 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
             </div>
           </div>
         ) : (
-          /* Expanded State - Lily Hall Logo + Arrow */
+          /* Expanded State - DAZE Logo + Arrow */
           <div className="flex items-center justify-between">
             <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
               <img 
                 src="/lovable-uploads/db847939-b95d-4615-ab8d-a03ec8f81e50.png" 
-                alt="Lily Hall Logo" 
+                alt="DAZE Logo" 
                 className="h-4 sm:h-5 md:h-6 w-auto object-contain"
               />
             </div>
