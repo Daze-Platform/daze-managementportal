@@ -34,105 +34,105 @@ const staticOrderData: OrderData = {
   progress: [
     {
       id: '6789988',
-      items: '3 items, $45.00',
+      items: '3 items, $78.00',
       type: 'Delivery',
       time: '1m ago',
-      deliverTime: 'Deliver today, at 11:50AM',
+      deliverTime: 'Deliver today, at 6:50PM',
       icon: '🚚',
       iconBg: 'bg-purple-500',
       customer: 'John Doe',
       estimatedTime: '15 min',
       priority: 'high',
       platformFee: '$2.50',
-      storeId: '12', // Database ID for Piazza
-      storeName: 'Piazza'
+      storeId: '1',
+      storeName: 'Brother Fox'
     },
     {
       id: '9210943',
-      items: '3 items, $45.00',
+      items: '4 items, $56.00',
       type: 'Pick Up',
       time: '1m ago',
-      deliverTime: 'Pickup today, at 11:50AM',
+      deliverTime: 'Pickup today, at 7:30PM',
       icon: '🏪',
       iconBg: 'bg-green-600',
       customer: 'Jane Smith',
       estimatedTime: '10 min',
       priority: 'normal',  
       platformFee: '$1.25',
-      storeId: '13', // Database ID for Red Fish Blue Fish
-      storeName: 'Red Fish Blue Fish'
+      storeId: '2',
+      storeName: 'Sister Hen'
     },
     {
       id: '3456789',
-      items: '2 items, $28.75',
-      type: 'Delivery',
+      items: '2 items, $18.50',
+      type: 'Pick Up',
       time: '5m ago',
-      deliverTime: 'Deliver today, at 12:00PM',
-      icon: '🚚',
-      iconBg: 'bg-purple-500',
+      deliverTime: 'Pickup today, at 8:30AM',
+      icon: '🏪',
+      iconBg: 'bg-green-600',
       customer: 'Emma Wilson',
-      estimatedTime: '20 min',
+      estimatedTime: '8 min',
       priority: 'normal',
       platformFee: '$1.75',
-      storeId: '8', // Database ID for Sal De Mar
-      storeName: 'Sal De Mar'
+      storeId: '3',
+      storeName: 'Cousin Wolf'
     }
   ],
   ready: [
     {
-      id: '6789988',
-      items: '3 items, $45.00',
+      id: '6789989',
+      items: '2 items, $64.00',
       type: 'Delivery',
       time: '1m ago',
-      deliverTime: 'Deliver today, at 11:50AM',
+      deliverTime: 'Deliver today, at 7:15PM',
       icon: '🚚',
       iconBg: 'bg-purple-500',
-      customer: 'John Doe',
+      customer: 'Marcus Chen',
       estimatedTime: '5 min',
       priority: 'urgent',
       platformFee: '$2.50',
-      storeId: '12', // Database ID for Piazza
-      storeName: 'Piazza',
+      storeId: '1',
+      storeName: 'Brother Fox',
       courier: 'Antonio T.'
     },
     {
-      id: '9210943',
-      items: '3 items, $45.00',
+      id: '9210944',
+      items: '5 items, $72.00',
       type: 'Pick Up',
       time: '1m ago',
-      deliverTime: 'Pickup today, at 11:50AM',
+      deliverTime: 'Pickup today, at 8:45PM',
       icon: '🏪',
       iconBg: 'bg-green-600',
-      customer: 'Jane Smith',
+      customer: 'Rachel Green',
       estimatedTime: 'Ready',
       priority: 'normal',
       platformFee: '$1.25',
-      storeId: '13', // Database ID for Red Fish Blue Fish
-      storeName: 'Red Fish Blue Fish'
+      storeId: '2',
+      storeName: 'Sister Hen'
     },
     {
       id: '4567890',
-      items: '1 item, $12.99',
+      items: '3 items, $24.50',
       type: 'Pick Up',
       time: '8m ago',
-      deliverTime: 'Pickup today, at 11:45AM',
+      deliverTime: 'Pickup today, at 9:00AM',
       icon: '🏪',
       iconBg: 'bg-green-600',
       customer: 'David Brown',
       estimatedTime: 'Ready',
       priority: 'normal',
       platformFee: '$0.75',
-      storeId: '8', // Database ID for Sal De Mar
-      storeName: 'Sal De Mar'
+      storeId: '3',
+      storeName: 'Cousin Wolf'
     }
   ],
   fulfillment: [
     {
       id: '8765432',
-      items: '2 items, $28.50',
+      items: '4 items, $92.00',
       type: 'Delivery',
       time: '15m ago',
-      deliverTime: 'Delivered today, at 11:30AM',
+      deliverTime: 'Delivered today, at 6:30PM',
       icon: '✅',
       iconBg: 'bg-green-500',
       status: 'Delivered',
@@ -140,16 +140,16 @@ const staticOrderData: OrderData = {
       estimatedTime: 'Completed',
       priority: 'normal',
       platformFee: '$1.75',
-      storeId: '12', // Database ID for Piazza
-      storeName: 'Piazza',
+      storeId: '1',
+      storeName: 'Brother Fox',
       courier: 'Maria S.'
     },
     {
       id: '5432109',
-      items: '4 items, $62.00',
+      items: '3 items, $48.00',
       type: 'Pick Up',
       time: '22m ago',
-      deliverTime: 'Picked up today, at 11:15AM',
+      deliverTime: 'Picked up today, at 9:15PM',
       icon: '✅',
       iconBg: 'bg-blue-500',
       status: 'Picked Up',
@@ -157,17 +157,17 @@ const staticOrderData: OrderData = {
       estimatedTime: 'Completed',
       priority: 'normal',
       platformFee: '$2.00',
-      storeId: '13', // Database ID for Red Fish Blue Fish
-      storeName: 'Red Fish Blue Fish'
+      storeId: '2',
+      storeName: 'Sister Hen'
     }
   ],
   fulfilled: [
     {
       id: '1111111',
-      items: '3 items, $42.75',
+      items: '5 items, $118.00',
       type: 'Delivery',
       time: '45m ago',
-      deliverTime: 'Delivered today, at 10:45AM',
+      deliverTime: 'Delivered today, at 5:45PM',
       icon: '✅',
       iconBg: 'bg-green-500',
       status: 'Delivered',
@@ -175,16 +175,16 @@ const staticOrderData: OrderData = {
       estimatedTime: 'Completed',
       priority: 'normal',
       platformFee: '$2.25',
-      storeId: '12', // Database ID for Piazza
-      storeName: 'Piazza',
+      storeId: '1',
+      storeName: 'Brother Fox',
       courier: 'Carlos R.'
     },
     {
       id: '2222222',
-      items: '2 items, $24.50',
+      items: '4 items, $52.00',
       type: 'Pick Up',
       time: '1h ago',
-      deliverTime: 'Picked up today, at 10:30AM',
+      deliverTime: 'Picked up today, at 10:30PM',
       icon: '✅',
       iconBg: 'bg-blue-500',
       status: 'Picked Up',
@@ -192,75 +192,74 @@ const staticOrderData: OrderData = {
       estimatedTime: 'Completed',
       priority: 'normal',
       platformFee: '$1.50',
-      storeId: '13', // Database ID for Red Fish Blue Fish
-      storeName: 'Red Fish Blue Fish'
+      storeId: '2',
+      storeName: 'Sister Hen'
     },
     {
       id: '3333333',
-      items: '5 items, $67.25',
-      type: 'Delivery',
+      items: '2 items, $19.50',
+      type: 'Pick Up',
       time: '1h 15m ago',
-      deliverTime: 'Delivered today, at 10:15AM',
+      deliverTime: 'Picked up today, at 10:15AM',
       icon: '✅',
-      iconBg: 'bg-green-500',
-      status: 'Delivered',
+      iconBg: 'bg-blue-500',
+      status: 'Picked Up',
       customer: 'Amanda Davis',
       estimatedTime: 'Completed',
-      priority: 'high',
-      platformFee: '$3.00',
-      storeId: '8', // Database ID for Sal De Mar
-      storeName: 'Sal De Mar',
-      courier: 'Diego M.'
+      priority: 'normal',
+      platformFee: '$1.00',
+      storeId: '3',
+      storeName: 'Cousin Wolf'
     }
   ],
   scheduled: [
     {
       id: '7777777',
-      items: '2 items, $35.00',
+      items: '3 items, $86.00',
       type: 'Delivery',
       time: '30m ago',
-      deliverTime: 'Scheduled for tomorrow, at 2:00PM',
+      deliverTime: 'Scheduled for tomorrow, at 7:00PM',
       icon: '📅',
       iconBg: 'bg-purple-600',
       customer: 'Rachel Green',
-      estimatedTime: 'Tomorrow 2:00PM',
+      estimatedTime: 'Tomorrow 7:00PM',
       priority: 'normal',
       platformFee: '$2.25',
-      storeId: '12', // Database ID for Piazza
-      storeName: 'Piazza',
-      scheduledFor: 'Tomorrow, 2:00PM'
+      storeId: '1',
+      storeName: 'Brother Fox',
+      scheduledFor: 'Tomorrow, 7:00PM'
     },
     {
       id: '8888888',
-      items: '4 items, $52.75',
+      items: '6 items, $84.00',
       type: 'Pick Up',
       time: '1h ago',
-      deliverTime: 'Scheduled for today, at 6:30PM',
+      deliverTime: 'Scheduled for today, at 9:30PM',
       icon: '📅',
       iconBg: 'bg-purple-600',
       customer: 'Kevin Martinez',
-      estimatedTime: 'Today 6:30PM',
+      estimatedTime: 'Today 9:30PM',
       priority: 'normal',
       platformFee: '$1.75',
-      storeId: '13', // Database ID for Red Fish Blue Fish
-      storeName: 'Red Fish Blue Fish',
-      scheduledFor: 'Today, 6:30PM'
+      storeId: '2',
+      storeName: 'Sister Hen',
+      scheduledFor: 'Today, 9:30PM'
     },
     {
       id: '9999999',
-      items: '3 items, $41.25',
-      type: 'Delivery',
+      items: '2 items, $22.00',
+      type: 'Pick Up',
       time: '2h ago',
-      deliverTime: 'Scheduled for Friday, at 7:00PM',
+      deliverTime: 'Scheduled for Saturday, at 9:00AM',
       icon: '📅',
       iconBg: 'bg-purple-600',
       customer: 'Lisa Thompson',
-      estimatedTime: 'Friday 7:00PM',
+      estimatedTime: 'Saturday 9:00AM',
       priority: 'high',
-      platformFee: '$2.50',
-      storeId: '8', // Database ID for Sal De Mar
-      storeName: 'Sal De Mar',
-      scheduledFor: 'Friday, 7:00PM'
+      platformFee: '$1.25',
+      storeId: '3',
+      storeName: 'Cousin Wolf',
+      scheduledFor: 'Saturday, 9:00AM'
     }
   ]
 };
@@ -284,153 +283,153 @@ const generateRandomOrderId = () => {
 
 // Orders to add with randomized IDs - Added more orders per store
 const initialNewOrders: Order[] = [
-  // Piazza orders
+  // Brother Fox orders (dinner restaurant)
   {
     id: generateRandomOrderId().toString(),
-    items: '2 items, $32.50',
+    items: '2 items, $68.00',
     type: 'Delivery',
     time: 'Just now',
-    deliverTime: 'Deliver today, at 12:15PM',
+    deliverTime: 'Deliver today, at 7:15PM',
     icon: '🚚',
     iconBg: 'bg-purple-500',
     customer: 'Alice Johnson',
     estimatedTime: '25 min',
     priority: 'normal',
     platformFee: '$2.00',
-    storeId: '12', // Database ID for Piazza
-    storeName: 'Piazza',
+    storeId: '1',
+    storeName: 'Brother Fox',
     isVisible: false
   },
   {
     id: generateRandomOrderId().toString(),
-    items: '3 items, $41.75',
+    items: '4 items, $124.00',
     type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Pickup today, at 12:30PM',
+    deliverTime: 'Pickup today, at 7:30PM',
     icon: '🏪',
     iconBg: 'bg-green-600',
     customer: 'David Wilson',
     estimatedTime: '12 min',
     priority: 'normal',
     platformFee: '$1.50',
-    storeId: '12', // Database ID for Piazza
-    storeName: 'Piazza',
+    storeId: '1',
+    storeName: 'Brother Fox',
     isVisible: false
   },
   {
     id: generateRandomOrderId().toString(),
-    items: '1 item, $15.25',
+    items: '3 items, $86.00',
     type: 'Delivery',
     time: 'Just now',
-    deliverTime: 'Deliver today, at 12:45PM',
+    deliverTime: 'Deliver today, at 7:45PM',
     icon: '🚚',
     iconBg: 'bg-purple-500',
     customer: 'Sarah Connor',
     estimatedTime: '20 min',
     priority: 'high',
     platformFee: '$1.25',
-    storeId: '12', // Database ID for Piazza
-    storeName: 'Piazza',
+    storeId: '1',
+    storeName: 'Brother Fox',
     isVisible: false
   },
   
-  // Red Fish Blue Fish orders
+  // Sister Hen orders (speakeasy bar)
   {
     id: generateRandomOrderId().toString(),
-    items: '1 item, $18.00',
+    items: '3 items, $42.00',
     type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Pickup today, at 12:20PM',
+    deliverTime: 'Pickup today, at 8:20PM',
     icon: '🏪',
     iconBg: 'bg-green-600',
     customer: 'Bob Smith',
     estimatedTime: '15 min',
     priority: 'normal',
     platformFee: '$1.00',
-    storeId: '13', // Database ID for Red Fish Blue Fish
-    storeName: 'Red Fish Blue Fish',
+    storeId: '2',
+    storeName: 'Sister Hen',
     isVisible: false
   },
   {
     id: generateRandomOrderId().toString(),
-    items: '2 items, $29.99',
-    type: 'Delivery',
+    items: '5 items, $68.00',
+    type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Deliver today, at 12:35PM',
-    icon: '🚚',
-    iconBg: 'bg-purple-500',
+    deliverTime: 'Pickup today, at 9:35PM',
+    icon: '🏪',
+    iconBg: 'bg-green-600',
     customer: 'Eva Martinez',
     estimatedTime: '22 min',
     priority: 'urgent',
     platformFee: '$1.90',
-    storeId: '13', // Database ID for Red Fish Blue Fish
-    storeName: 'Red Fish Blue Fish',
+    storeId: '2',
+    storeName: 'Sister Hen',
     isVisible: false
   },
   {
     id: generateRandomOrderId().toString(),
-    items: '4 items, $52.80',
+    items: '4 items, $56.00',
     type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Pickup today, at 12:40PM',
+    deliverTime: 'Pickup today, at 10:00PM',
     icon: '🏪',
     iconBg: 'bg-green-600',
     customer: 'Mike Johnson',
     estimatedTime: '18 min',
     priority: 'normal',
     platformFee: '$2.25',
-    storeId: '13', // Database ID for Red Fish Blue Fish
-    storeName: 'Red Fish Blue Fish',
+    storeId: '2',
+    storeName: 'Sister Hen',
     isVisible: false
   },
   
-  // Sal De Mar orders
+  // Cousin Wolf orders (breakfast food truck)
   {
     id: generateRandomOrderId().toString(),
-    items: '4 items, $58.25',
-    type: 'Delivery',
+    items: '2 items, $15.00',
+    type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Deliver today, at 12:25PM',
-    icon: '🚚',
-    iconBg: 'bg-purple-500',
+    deliverTime: 'Pickup today, at 8:25AM',
+    icon: '🏪',
+    iconBg: 'bg-green-600',
     customer: 'Carol Davis',
-    estimatedTime: '30 min',
-    priority: 'high',
-    platformFee: '$2.75',
-    storeId: '8', // Database ID for Sal De Mar
-    storeName: 'Sal De Mar',
+    estimatedTime: '8 min',
+    priority: 'normal',
+    platformFee: '$0.75',
+    storeId: '3',
+    storeName: 'Cousin Wolf',
     isVisible: false
   },
   {
     id: generateRandomOrderId().toString(),
-    items: '3 items, $45.50',
+    items: '3 items, $22.50',
     type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Pickup today, at 12:50PM',
+    deliverTime: 'Pickup today, at 9:50AM',
     icon: '🏪',
     iconBg: 'bg-green-600',
     customer: 'James Rodriguez',
-    estimatedTime: '16 min',
+    estimatedTime: '10 min',
     priority: 'normal',
-    platformFee: '$1.75',
-    storeId: '8', // Database ID for Sal De Mar
-    storeName: 'Sal De Mar',
+    platformFee: '$1.00',
+    storeId: '3',
+    storeName: 'Cousin Wolf',
     isVisible: false
   },
   {
     id: generateRandomOrderId().toString(),
-    items: '2 items, $34.75',
-    type: 'Delivery',
+    items: '4 items, $28.00',
+    type: 'Pick Up',
     time: 'Just now',
-    deliverTime: 'Deliver today, at 1:00PM',
-    icon: '🚚',
-    iconBg: 'bg-purple-500',
+    deliverTime: 'Pickup today, at 10:30AM',
+    icon: '🏪',
+    iconBg: 'bg-green-600',
     customer: 'Lisa Thompson',
-    estimatedTime: '28 min',
-    priority: 'urgent',
-    platformFee: '$2.10',
-    storeId: '8', // Database ID for Sal De Mar
-    storeName: 'Sal De Mar',
+    estimatedTime: '12 min',
+    priority: 'high',
+    platformFee: '$1.25',
+    storeId: '3',
+    storeName: 'Cousin Wolf',
     isVisible: false
   }
 ];
