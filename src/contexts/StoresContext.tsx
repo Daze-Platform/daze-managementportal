@@ -52,14 +52,63 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         console.log('Converted stores:', convertedStores);
         setStores(convertedStores);
       } else {
-        console.log('No stores found in database');
-        setStores([]);
+        console.log('No stores found in database, seeding with default stores...');
+        await seedDefaultStores();
       }
     } catch (error) {
       console.error('Error loading stores:', error);
       setStores([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const seedDefaultStores = async () => {
+    try {
+      console.log('Seeding default stores:', defaultStores);
+      for (const store of defaultStores) {
+        const { error } = await supabase
+          .from('stores')
+          .insert({
+            name: store.name,
+            address: store.address,
+            location_description: store.locationDescription,
+            logo: store.logo,
+            custom_logo: store.customLogo,
+            bg_color: store.bgColor,
+            active_orders: store.activeOrders,
+            hours: store.hours as any,
+            resort_id: store.resortId
+          });
+
+        if (error) {
+          console.error('Error seeding store:', store.name, error);
+        }
+      }
+      // Reload stores after seeding
+      const { data: newStoresData } = await supabase
+        .from('stores')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (newStoresData) {
+        const convertedStores: Store[] = newStoresData.map(store => ({
+          id: store.id,
+          name: store.name,
+          address: store.address,
+          locationDescription: store.location_description || '',
+          logo: store.logo || '🏪',
+          customLogo: store.custom_logo || '',
+          bgColor: store.bg_color || 'bg-blue-500',
+          activeOrders: store.active_orders || 0,
+          hours: (store.hours as any) || [],
+          resortId: store.resort_id || null
+        }));
+        setStores(convertedStores);
+        toast.success('Default stores loaded');
+      }
+    } catch (error) {
+      console.error('Error seeding default stores:', error);
     }
   };
 

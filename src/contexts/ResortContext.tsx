@@ -16,56 +16,17 @@ const ResortContext = createContext<ResortContextType | undefined>(undefined);
 
 const defaultResorts: Resort[] = [
   {
-    id: 'hilton-pensacola-beach',
-    name: 'Hilton Pensacola Beach',
-    location: 'Pensacola Beach, FL',
-    address: '12 Via De Luna Dr, Pensacola Beach, FL 32561',
-    phone: '(850) 916-2999',
-    email: 'info@hiltonpensacolabeach.com',
-    manager: 'Manuel Rodriguez',
+    id: 'lily-hall-pensacola',
+    name: 'Lily Hall Pensacola',
+    location: 'Old East Hill, Pensacola, FL',
+    address: '1105 E Cervantes St, Pensacola, FL 32501',
+    phone: '(850) 208-6913',
+    email: 'info@lilyhall.com',
+    manager: 'Kari Thomas',
     status: 'active',
     storeCount: 3,
     createdAt: '2024-01-15',
-    logo: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=400&fit=crop&crop=center'
-  },
-  {
-    id: 'hampton-inn-pensacola-beach',
-    name: 'Hampton Inn Pensacola Beach',
-    location: 'Pensacola Beach, FL',
-    address: '2 Via De Luna Dr, Pensacola Beach, FL 32561',
-    phone: '(850) 932-6800',
-    email: 'info@hamptonpensacolabeach.com',
-    manager: 'Sarah Johnson',
-    status: 'active',
-    storeCount: 2,
-    createdAt: '2024-02-10',
-    logo: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=400&fit=crop&crop=center'
-  },
-  {
-    id: 'holiday-inn-resort-pensacola-beach',
-    name: 'Holiday Inn Resort Pensacola Beach',
-    location: 'Pensacola Beach, FL',
-    address: '165 Fort Pickens Rd, Pensacola Beach, FL 32561',
-    phone: '(850) 932-5361',
-    email: 'info@holidayinnpensacolabeach.com',
-    manager: 'Jennifer Davis',
-    status: 'active',
-    storeCount: 2,
-    createdAt: '2024-01-20',
-    logo: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=400&fit=crop&crop=center'
-  },
-  {
-    id: 'fairfield-inn-pensacola-beach',
-    name: 'Fairfield Inn Pensacola Beach',
-    location: 'Pensacola Beach, FL',
-    address: '14 Via De Luna Dr, Pensacola Beach, FL 32561',
-    phone: '(850) 916-9755',
-    email: 'info@fairfieldpensacolabeach.com',
-    manager: 'David Wilson',
-    status: 'active',
-    storeCount: 1,
-    createdAt: '2024-02-05',
-    logo: 'https://images.unsplash.com/photo-1564013434775-f71db2d48aa0?w=400&h=400&fit=crop&crop=center'
+    logo: ''
   }
 ];
 
