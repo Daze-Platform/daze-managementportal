@@ -70,7 +70,7 @@ const resortStores: Record<string, Store[]> = {
       name: 'Cousin Wolf',
       address: '1105 E Cervantes St, Pensacola, FL 32501 (Courtyard)',
       locationDescription: 'Food truck serving breakfast and brunch favorites with Southern flair',
-      logo: '/lovable-uploads/4670af0c-ac52-4ff7-95cc-4b34973c1a4e.png',
+      logo: '/images/stores/cousin-wolf-logo.webp',
       bgColor: '#2D4A3E',
       activeOrders: 5,
       hours: cousinWolfHours,
