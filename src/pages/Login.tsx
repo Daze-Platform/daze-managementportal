@@ -62,7 +62,7 @@ const Login = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Mock successful login (you can customize these credentials)
-      if (email === 'admin@daze.com' && password === 'admin123') {
+      if (email === 'admin@lilyhall.com' && password === 'lilyhall123') {
         login(email);
         toast({
           variant: "success",
@@ -99,7 +99,7 @@ const Login = () => {
           <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center">
             <img 
               src="/lovable-uploads/0a4d33da-9760-4b33-86d2-db718dd0c98b.png" 
-              alt="Daze Logo" 
+              alt="Lily Hall Logo"
               className="h-full w-full object-contain"
             />
           </div>
@@ -156,8 +156,8 @@ const Login = () => {
 
           <div className="mt-6 text-center text-sm text-gray-600">
             <p className="mb-2">Demo credentials:</p>
-            <p>Email: admin@daze.com</p>
-            <p>Password: admin123</p>
+            <p>Email: admin@lilyhall.com</p>
+            <p>Password: lilyhall123</p>
             <p className="mt-3 text-xs text-gray-500">You'll stay logged in for 30 days</p>
           </div>
         </CardContent>

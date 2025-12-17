@@ -92,9 +92,9 @@ export const OrderDetails = ({ selectedOrder, activeTab, onOrderUpdate }: OrderD
 
   const selectedOrderDetails = {
     customer: {
-      name: 'Johny Godwin',
-      email: 'hanawharton@daze.com',
-      tel: '+1(555)6547890',
+      name: 'Sarah Mitchell',
+      email: 'sarah.mitchell@gmail.com',
+      tel: '+1(850)555-1234',
       paymentMethod: 'Credit Card',
       rating: 4.8,
       totalOrders: 23
