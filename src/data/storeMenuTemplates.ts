@@ -21,352 +21,374 @@ export interface StoreMenuTemplate {
   categories: MenuCategory[];
 }
 
-// Italian Restaurant Menu (for Piazza)
-const piazzaMenu: StoreMenuTemplate = {
+// Brother Fox - Wood-fired hearth restaurant
+const brotherFoxMenu: StoreMenuTemplate = {
   storeId: '1',
-  storeName: 'Piazza',
-  menuName: 'Authentic Italian Cuisine',
-  description: 'Traditional Italian dishes made with imported ingredients and family recipes passed down through generations.',
+  storeName: 'Brother Fox',
+  menuName: 'Wood-Fired American Cuisine',
+  description: 'Contemporary shared plates and seafood from our wood-fired hearth.',
   categories: [
     {
-      id: 'antipasti',
-      name: 'Antipasti',
+      id: 'snacks',
+      name: 'Snacks & Small Plates',
       items: [
         {
-          id: 'bruschetta',
-          name: 'Bruschetta Classica',
-          description: 'Toasted Tuscan bread with fresh tomatoes, basil, garlic, and extra virgin olive oil',
-          price: 12.99,
-          modifierGroups: ['italian-sides']
+          id: 'pan-con-tomate',
+          name: 'Pan Con Tomate',
+          description: 'Grilled bread with fresh tomato, olive oil, and sea salt',
+          price: 8.00,
+          modifierGroups: []
         },
         {
-          id: 'antipasto-platter',
-          name: 'Antipasto della Casa',
-          description: 'Selection of Italian cured meats, aged cheeses, olives, and roasted vegetables',
-          price: 18.99,
-          modifierGroups: ['pizza-sizes', 'italian-cheeses']
+          id: 'shishito-peppers',
+          name: 'Shishito Peppers',
+          description: 'Blistered peppers with sea salt and citrus aioli',
+          price: 13.00,
+          modifierGroups: ['spice-levels']
         },
         {
-          id: 'carpaccio',
-          name: 'Carpaccio di Manzo',
-          description: 'Thinly sliced raw beef with arugula, capers, and lemon-parmesan dressing',
-          price: 16.99,
+          id: 'charbroiled-oysters',
+          name: 'Charbroiled Oysters',
+          description: 'Half dozen Gulf oysters with herb butter and parmesan',
+          price: 18.00,
+          modifierGroups: []
+        },
+        {
+          id: 'snapper-ceviche',
+          name: 'Snapper Ceviche',
+          description: 'Fresh Gulf snapper with citrus, jalapeño, and tortilla chips',
+          price: 16.00,
+          modifierGroups: ['spice-levels']
+        },
+        {
+          id: 'drunken-goat-cheese',
+          name: 'Drunken Goat Cheese',
+          description: 'Wine-soaked goat cheese with honey, marcona almonds, and crostini',
+          price: 14.00,
           modifierGroups: []
         }
       ]
     },
     {
-      id: 'pasta',
-      name: 'Pasta Fresca',
+      id: 'charcuterie',
+      name: 'Charcuterie & Boards',
       items: [
         {
-          id: 'carbonara',
-          name: 'Spaghetti alla Carbonara',
-          description: 'House-made spaghetti with pancetta, egg yolk, pecorino romano, and black pepper',
-          price: 19.99,
-          modifierGroups: ['pasta-types', 'italian-cheeses', 'italian-proteins']
-        },
-        {
-          id: 'bolognese',
-          name: 'Tagliatelle Bolognese',
-          description: 'Fresh ribbon pasta with traditional meat sauce simmered for 4 hours',
-          price: 22.99,
-          modifierGroups: ['pasta-types', 'italian-cheeses']
-        },
-        {
-          id: 'pesto',
-          name: 'Linguine al Pesto',
-          description: 'Fresh linguine with basil pesto, pine nuts, and parmigiano-reggiano',
-          price: 18.99,
-          modifierGroups: ['pasta-types', 'italian-cheeses']
-        },
-        {
-          id: 'seafood-pasta',
-          name: 'Spaghetti alle Vongole',
-          description: 'Spaghetti with fresh clams, white wine, garlic, and parsley',
-          price: 26.99,
-          modifierGroups: ['pasta-types', 'italian-sides']
-        }
-      ]
-    },
-    {
-      id: 'pizza',
-      name: 'Pizza Napoletana',
-      items: [
-        {
-          id: 'margherita',
-          name: 'Pizza Margherita',
-          description: 'San Marzano tomatoes, buffalo mozzarella, fresh basil, and extra virgin olive oil',
-          price: 18.99,
-          modifierGroups: ['pizza-sizes', 'italian-cheeses', 'italian-sides']
-        },
-        {
-          id: 'quattro-stagioni',
-          name: 'Pizza Quattro Stagioni',
-          description: 'Artichokes, mushrooms, prosciutto, and olives representing the four seasons',
-          price: 24.99,
-          modifierGroups: ['pizza-sizes', 'italian-cheeses']
-        },
-        {
-          id: 'diavola',
-          name: 'Pizza Diavola',
-          description: 'Spicy salami, mozzarella, tomato sauce, and hot peppers',
-          price: 21.99,
-          modifierGroups: ['pizza-sizes', 'spice-levels']
-        }
-      ]
-    },
-    {
-      id: 'secondi',
-      name: 'Secondi Piatti',
-      items: [
-        {
-          id: 'osso-buco',
-          name: 'Osso Buco alla Milanese',
-          description: 'Braised veal shanks with saffron risotto and gremolata',
-          price: 34.99,
-          modifierGroups: ['italian-sides']
-        },
-        {
-          id: 'saltimbocca',
-          name: 'Saltimbocca alla Romana',
-          description: 'Veal medallions with prosciutto and sage in white wine sauce',
-          price: 28.99,
-          modifierGroups: ['italian-sides']
-        }
-      ]
-    },
-    {
-      id: 'dolci',
-      name: 'Dolci',
-      items: [
-        {
-          id: 'tiramisu',
-          name: 'Tiramisù della Casa',
-          description: 'Traditional mascarpone dessert with espresso-soaked ladyfingers and cocoa',
-          price: 9.99,
+          id: 'charcuterie-board',
+          name: 'Charcuterie Board',
+          description: 'Selection of cured meats, aged cheeses, pickled vegetables, and accompaniments',
+          price: 32.00,
           modifierGroups: []
         },
         {
-          id: 'panna-cotta',
-          name: 'Panna Cotta ai Frutti di Bosco',
-          description: 'Vanilla bean panna cotta with mixed berry compote',
-          price: 8.99,
+          id: 'smoked-mushroom-tartare',
+          name: 'Smoked Mushroom Tartare',
+          description: 'Hearth-smoked mushrooms with capers, shallots, and toast points',
+          price: 15.00,
           modifierGroups: []
         }
       ]
-    }
-  ]
-};
-
-// Seafood Restaurant Menu (for Sal de Mar)
-const salDeMarMenu: StoreMenuTemplate = {
-  storeId: '2',
-  storeName: 'Sal de Mar',
-  menuName: 'Fresh Coastal Seafood',
-  description: 'Ocean-to-table dining featuring the freshest catch and coastal-inspired dishes.',
-  categories: [
+    },
     {
-      id: 'raw-bar',
-      name: 'Raw Bar',
+      id: 'salads',
+      name: 'Salads',
       items: [
         {
-          id: 'oysters',
-          name: 'Fresh Oysters',
-          description: 'Daily selection of East and West Coast oysters served with mignonette',
-          price: 3.50,
-          modifierGroups: ['seafood-sauces']
+          id: 'elote-salad',
+          name: 'Elote Salad',
+          description: 'Grilled corn, cotija cheese, lime crema, and cilantro',
+          price: 12.00,
+          modifierGroups: []
         },
         {
-          id: 'shrimp-cocktail',
-          name: 'Jumbo Shrimp Cocktail',
-          description: 'Chilled jumbo shrimp with house-made cocktail sauce and lemon',
-          price: 16.99,
-          modifierGroups: ['italian-sides']
-        },
-        {
-          id: 'ceviche',
-          name: 'Citrus Ceviche',
-          description: 'Fresh fish cured in lime juice with red onion, cilantro, and jalapeño',
-          price: 14.99,
-          modifierGroups: ['spice-levels', 'seafood-sauces']
+          id: 'the-wedge',
+          name: 'The Wedge',
+          description: 'Iceberg lettuce, blue cheese crumbles, bacon, and cherry tomatoes',
+          price: 14.00,
+          modifierGroups: []
         }
       ]
     },
     {
-      id: 'soups-salads',
-      name: 'Soups & Salads',
+      id: 'wood-fired-mains',
+      name: 'Wood-Fired Mains',
       items: [
         {
-          id: 'clam-chowder',
-          name: 'New England Clam Chowder',
-          description: 'Creamy chowder with tender clams, potatoes, and smoky bacon',
-          price: 9.99,
-          modifierGroups: ['portion-sizes']
+          id: 'grilled-octopus',
+          name: 'Grilled Octopus',
+          description: 'Tender octopus with romesco sauce, fingerling potatoes, and charred lemon',
+          price: 26.00,
+          modifierGroups: []
         },
         {
-          id: 'seafood-salad',
-          name: 'Grilled Seafood Salad',
-          description: 'Mixed greens with grilled shrimp, scallops, and citrus vinaigrette',
-          price: 22.99,
-          modifierGroups: ['seafood-sauces', 'seafood-sides']
-        }
-      ]
-    },
-    {
-      id: 'mains',
-      name: 'Fresh Catch',
-      items: [
-        {
-          id: 'lobster',
-          name: 'Maine Lobster',
-          description: 'Whole steamed lobster with drawn butter and lemon',
-          price: 42.99,
-          modifierGroups: ['lobster-sizes', 'seafood-sauces', 'seafood-sides']
+          id: 'skirt-steak-asada',
+          name: 'Prime Skirt Steak Asada',
+          description: 'Wood-fired skirt steak with chimichurri and roasted vegetables',
+          price: 38.00,
+          modifierGroups: ['cooking-styles']
         },
         {
-          id: 'salmon',
-          name: 'Atlantic Salmon',
-          description: 'Grilled salmon with herb butter and seasonal vegetables',
-          price: 26.99,
-          modifierGroups: ['cooking-styles', 'seafood-sauces', 'seafood-sides']
-        },
-        {
-          id: 'sea-bass',
-          name: 'Chilean Sea Bass',
-          description: 'Pan-seared with miso glaze and jasmine rice',
-          price: 32.99,
-          modifierGroups: ['cooking-styles', 'seafood-sauces', 'seafood-sides']
-        },
-        {
-          id: 'fish-chips',
-          name: 'Fish & Chips',
-          description: 'Beer-battered cod with hand-cut fries and mushy peas',
-          price: 18.99,
-          modifierGroups: ['seafood-sauces', 'seafood-sides']
-        },
-        {
-          id: 'paella',
+          id: 'seafood-paella',
           name: 'Seafood Paella',
-          description: 'Traditional Spanish rice dish with mussels, clams, shrimp, and saffron',
-          price: 28.99,
-          modifierGroups: ['seafood-sides']
+          description: 'Saffron rice with mussels, clams, shrimp, and chorizo (serves 2)',
+          price: 56.00,
+          modifierGroups: []
+        },
+        {
+          id: 'wood-fired-pork-chop',
+          name: 'Wood-Fired Pork Chop',
+          description: 'Bone-in pork chop with apple mostarda and roasted root vegetables',
+          price: 34.00,
+          modifierGroups: ['cooking-styles']
+        },
+        {
+          id: 'whole-grilled-fish',
+          name: 'Whole Grilled Fish',
+          description: 'Daily catch, wood-fired with herbs, lemon, and olive oil',
+          price: 42.00,
+          modifierGroups: []
         }
       ]
     },
     {
       id: 'desserts',
-      name: 'Sweet Endings',
+      name: 'Desserts',
       items: [
         {
-          id: 'key-lime-pie',
-          name: 'Key Lime Pie',
-          description: 'Traditional Florida key lime pie with graham cracker crust',
-          price: 8.99,
-          modifierGroups: ['toppings']
+          id: 'mocha-torte',
+          name: 'Mocha Torte',
+          description: 'Rich chocolate and espresso torte with whipped cream',
+          price: 12.00,
+          modifierGroups: []
         },
         {
-          id: 'bread-pudding',
-          name: 'Rum Bread Pudding',
-          description: 'Warm bread pudding with rum sauce and vanilla ice cream',
-          price: 9.99,
-          modifierGroups: ['toppings']
+          id: 'churros',
+          name: 'Churros',
+          description: 'Warm churros with chocolate sauce and dulce de leche',
+          price: 10.00,
+          modifierGroups: []
         }
       ]
     }
   ]
 };
 
-// Fast Casual Menu (for Red Fish Blue Fish)
-const redFishBlueFishMenu: StoreMenuTemplate = {
-  storeId: '3',
-  storeName: 'Red Fish Blue Fish',
-  menuName: 'Fresh Fast Casual',
-  description: 'Quick and healthy options featuring fresh fish, bowls, and grab-and-go items.',
+// Sister Hen - Speakeasy bar
+const sisterHenMenu: StoreMenuTemplate = {
+  storeId: '2',
+  storeName: 'Sister Hen',
+  menuName: 'Craft Cocktails & Small Bites',
+  description: 'Prohibition-era inspired cocktails and elevated bar snacks.',
   categories: [
     {
-      id: 'bowls',
-      name: 'Signature Bowls',
+      id: 'signature-cocktails',
+      name: 'Signature Cocktails',
       items: [
         {
-          id: 'poke-bowl',
-          name: 'Ahi Tuna Poke Bowl',
-          description: 'Fresh ahi tuna over sushi rice with avocado, cucumber, and spicy mayo',
-          price: 16.99,
-          modifierGroups: ['bowl-bases', 'fresh-toppings', 'healthy-sauces', 'spice-levels']
+          id: 'sister-hen-old-fashioned',
+          name: 'Sister Hen Old Fashioned',
+          description: 'Bourbon, orange bitters, demerara, and smoked cherry',
+          price: 14.00,
+          modifierGroups: []
         },
         {
-          id: 'salmon-bowl',
-          name: 'Teriyaki Salmon Bowl',
-          description: 'Grilled salmon with teriyaki glaze, steamed rice, and Asian vegetables',
-          price: 15.99,
-          modifierGroups: ['bowl-bases', 'fresh-toppings', 'healthy-sauces']
+          id: 'lavender-bee',
+          name: 'The Lavender Bee',
+          description: 'Gin, lavender honey, lemon, and egg white',
+          price: 15.00,
+          modifierGroups: []
         },
         {
-          id: 'quinoa-bowl',
-          name: 'Mediterranean Quinoa Bowl',
-          description: 'Quinoa with grilled vegetables, feta cheese, and lemon-herb dressing',
-          price: 13.99,
-          modifierGroups: ['bowl-bases', 'fresh-toppings', 'healthy-sauces']
+          id: 'midnight-garden',
+          name: 'Midnight Garden',
+          description: 'Mezcal, cucumber, jalapeño, and elderflower',
+          price: 16.00,
+          modifierGroups: ['spice-levels']
+        },
+        {
+          id: 'paper-plane',
+          name: 'Paper Plane',
+          description: 'Bourbon, Aperol, Amaro Nonino, and fresh lemon',
+          price: 14.00,
+          modifierGroups: []
         }
       ]
     },
     {
-      id: 'tacos',
-      name: 'Fish Tacos',
+      id: 'classics',
+      name: 'Classic Cocktails',
       items: [
         {
-          id: 'fish-tacos',
-          name: 'Baja Fish Tacos',
-          description: 'Beer-battered fish with cabbage slaw and chipotle crema',
-          price: 12.99,
-          modifierGroups: ['spice-levels', 'healthy-sauces', 'fresh-toppings']
+          id: 'manhattan',
+          name: 'Manhattan',
+          description: 'Rye whiskey, sweet vermouth, and Angostura bitters',
+          price: 13.00,
+          modifierGroups: []
         },
         {
-          id: 'shrimp-tacos',
-          name: 'Grilled Shrimp Tacos',
-          description: 'Seasoned shrimp with pico de gallo and avocado',
-          price: 13.99,
-          modifierGroups: ['spice-levels', 'healthy-sauces', 'fresh-toppings']
+          id: 'martini',
+          name: 'Classic Martini',
+          description: 'Gin or vodka with dry vermouth and olive or twist',
+          price: 13.00,
+          modifierGroups: []
+        },
+        {
+          id: 'negroni',
+          name: 'Negroni',
+          description: 'Gin, Campari, and sweet vermouth',
+          price: 13.00,
+          modifierGroups: []
         }
       ]
     },
     {
-      id: 'sandwiches',
-      name: 'Sandwiches & Wraps',
+      id: 'bar-snacks',
+      name: 'Bar Snacks',
       items: [
         {
-          id: 'fish-sandwich',
-          name: 'Crispy Fish Sandwich',
-          description: 'Fried fish fillet with lettuce, tomato, and tartar sauce',
-          price: 11.99,
-          modifierGroups: ['healthy-sauces', 'fresh-toppings']
+          id: 'deviled-eggs',
+          name: 'Deviled Eggs',
+          description: 'Classic preparation with smoked paprika and chives',
+          price: 9.00,
+          modifierGroups: []
         },
         {
-          id: 'tuna-wrap',
-          name: 'Seared Tuna Wrap',
-          description: 'Seared tuna with mixed greens and wasabi mayo in a spinach tortilla',
-          price: 14.99,
-          modifierGroups: ['healthy-sauces', 'fresh-toppings']
+          id: 'spiced-nuts',
+          name: 'Spiced Nuts',
+          description: 'House-roasted mixed nuts with rosemary and sea salt',
+          price: 7.00,
+          modifierGroups: []
+        },
+        {
+          id: 'olives-pickles',
+          name: 'Olives & Pickles',
+          description: 'House-marinated olives and pickled vegetables',
+          price: 8.00,
+          modifierGroups: []
+        },
+        {
+          id: 'cheese-plate',
+          name: 'Cheese Plate',
+          description: 'Selection of artisan cheeses with honeycomb and crackers',
+          price: 18.00,
+          modifierGroups: []
+        }
+      ]
+    }
+  ]
+};
+
+// Cousin Wolf - Breakfast food truck
+const cousinWolfMenu: StoreMenuTemplate = {
+  storeId: '3',
+  storeName: 'Cousin Wolf',
+  menuName: 'Breakfast & Brunch',
+  description: 'Grab-and-go breakfast from our food truck, open mornings only.',
+  categories: [
+    {
+      id: 'breakfast-sandwiches',
+      name: 'Breakfast Sandwiches',
+      items: [
+        {
+          id: 'wolf-sandwich',
+          name: 'The Wolf',
+          description: 'Scrambled eggs, bacon, cheddar, and chipotle aioli on brioche',
+          price: 10.00,
+          modifierGroups: ['egg-styles']
+        },
+        {
+          id: 'veggie-wolf',
+          name: 'Veggie Wolf',
+          description: 'Scrambled eggs, avocado, tomato, and swiss on sourdough',
+          price: 9.00,
+          modifierGroups: ['egg-styles']
+        },
+        {
+          id: 'sausage-biscuit',
+          name: 'Sausage Biscuit',
+          description: 'House-made sausage patty with egg and cheese on buttermilk biscuit',
+          price: 8.00,
+          modifierGroups: ['egg-styles']
         }
       ]
     },
     {
-      id: 'sides',
-      name: 'Sides & Snacks',
+      id: 'breakfast-tacos',
+      name: 'Breakfast Tacos',
       items: [
         {
-          id: 'sweet-potato-fries',
-          name: 'Sweet Potato Fries',
-          description: 'Crispy sweet potato fries with sea salt',
-          price: 6.99,
-          modifierGroups: ['healthy-sauces']
+          id: 'chorizo-taco',
+          name: 'Chorizo & Egg Taco',
+          description: 'Scrambled eggs with chorizo, queso fresco, and salsa verde',
+          price: 5.00,
+          modifierGroups: ['spice-levels']
         },
         {
-          id: 'coleslaw',
-          name: 'Fresh Coleslaw',
-          description: 'Crisp cabbage and carrots with tangy dressing',
-          price: 4.99,
+          id: 'bacon-potato-taco',
+          name: 'Bacon & Potato Taco',
+          description: 'Crispy bacon, breakfast potatoes, egg, and cheddar',
+          price: 5.00,
+          modifierGroups: []
+        },
+        {
+          id: 'migas-taco',
+          name: 'Migas Taco',
+          description: 'Eggs scrambled with tortilla strips, peppers, and pico de gallo',
+          price: 5.00,
+          modifierGroups: ['spice-levels']
+        }
+      ]
+    },
+    {
+      id: 'sweet-treats',
+      name: 'Sweet Treats',
+      items: [
+        {
+          id: 'french-toast-sticks',
+          name: 'French Toast Sticks',
+          description: 'Cinnamon-dusted with maple syrup for dipping',
+          price: 7.00,
+          modifierGroups: []
+        },
+        {
+          id: 'banana-bread',
+          name: 'House Banana Bread',
+          description: 'Toasted slice with honey butter',
+          price: 4.00,
+          modifierGroups: []
+        },
+        {
+          id: 'muffin',
+          name: 'Daily Muffin',
+          description: 'Ask about today\'s flavor',
+          price: 3.50,
+          modifierGroups: []
+        }
+      ]
+    },
+    {
+      id: 'drinks',
+      name: 'Drinks',
+      items: [
+        {
+          id: 'drip-coffee',
+          name: 'Drip Coffee',
+          description: 'Locally roasted, served hot or iced',
+          price: 3.00,
+          modifierGroups: []
+        },
+        {
+          id: 'cold-brew',
+          name: 'Cold Brew',
+          description: '16-hour steeped cold brew coffee',
+          price: 4.50,
+          modifierGroups: []
+        },
+        {
+          id: 'fresh-oj',
+          name: 'Fresh Orange Juice',
+          description: 'Freshly squeezed Florida oranges',
+          price: 5.00,
           modifierGroups: []
         }
       ]
@@ -438,9 +460,9 @@ const defaultMenu: StoreMenuTemplate = {
 };
 
 export const storeMenuTemplates: Record<string, StoreMenuTemplate> = {
-  '1': piazzaMenu,
-  '2': salDeMarMenu,
-  '3': redFishBlueFishMenu,
+  '1': brotherFoxMenu,
+  '2': sisterHenMenu,
+  '3': cousinWolfMenu,
   default: defaultMenu
 };
 

@@ -83,10 +83,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const getDefaultProfile = (email: string): UserProfile => ({
-    firstName: 'Manuel',
-    lastName: 'Rodriguez',
+    firstName: 'Kari',
+    lastName: 'Thomas',
     email: email,
-    phone: '+1 850 555 0123',
+    phone: '+1 850 208 6913',
     timezone: 'America/Chicago',
     language: 'English',
     avatar: ''
