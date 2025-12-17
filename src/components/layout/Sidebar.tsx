@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNavigation } from './SidebarNavigation';
 
@@ -26,26 +26,50 @@ export const Sidebar = ({
 
   return (
     <>
-      {/* Mobile/Tablet Overlay - Covers entire screen on smaller devices */}
-      {isOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 animate-fade-in" 
-          onClick={onClose} 
-        />
-      )}
+      {/* Mobile/Tablet Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed inset-0 bg-foreground/30 backdrop-blur-sm z-40" 
+            onClick={onClose} 
+          />
+        )}
+      </AnimatePresence>
       
-      {/* Sidebar - Full viewport height on all devices */}
-      <div className={`
-        fixed lg:static top-0 left-0 z-50 lg:z-auto
-        text-white h-screen flex flex-col
-        transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-        border-r border-blue-800/30 shadow-xl lg:shadow-none
-        ${isCollapsed ? 'w-16' : 'w-64 sm:w-72 md:w-80 lg:w-64 xl:w-72'}
-        transform ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}
-      style={{ backgroundColor: '#021945' }}>
+      {/* Sidebar */}
+      <motion.div 
+        className={`
+          fixed lg:static top-0 left-0 z-50 lg:z-auto
+          text-sidebar-foreground h-screen flex flex-col
+          border-r border-sidebar-border/30 shadow-xl lg:shadow-none
+          ${isCollapsed ? 'w-16' : 'w-64 sm:w-72 md:w-80 lg:w-64 xl:w-72'}
+        `}
+        initial={false}
+        animate={{ 
+          x: isOpen ? 0 : '-100%',
+          width: isCollapsed ? 64 : undefined 
+        }}
+        transition={{ 
+          type: "spring", 
+          stiffness: 300, 
+          damping: 30,
+          x: { duration: 0.3 }
+        }}
+        style={{ backgroundColor: 'hsl(222, 47%, 11%)' }}
+      >
+        {/* Gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
         
-        <SidebarHeader isOpen={isOpen} isCollapsed={isCollapsed} onClose={onClose} onToggleCollapse={onToggleCollapse} />
+        <SidebarHeader 
+          isOpen={isOpen} 
+          isCollapsed={isCollapsed} 
+          onClose={onClose} 
+          onToggleCollapse={onToggleCollapse} 
+        />
 
         <SidebarNavigation
           expandedItems={expandedItems}
@@ -55,9 +79,9 @@ export const Sidebar = ({
           onToggleCollapse={onToggleCollapse}
         />
         
-        {/* Footer spacer to ensure content doesn't get cut off */}
-        <div className="flex-shrink-0 h-4 sm:h-6"></div>
-      </div>
+        {/* Footer spacer */}
+        <div className="flex-shrink-0 h-4 sm:h-6" />
+      </motion.div>
     </>
   );
 };

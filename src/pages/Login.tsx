@@ -1,14 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { FadeIn, ScaleIn } from '@/components/ui/animated-container';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,25 +17,28 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login, isAuthenticated, loading } = useAuth();
   const { toast } = useToast();
 
-  // Redirect if already authenticated - do this immediately without showing login form
   useEffect(() => {
     if (!loading && isAuthenticated) {
       navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, loading, navigate]);
 
-  // Don't render anything while checking auth status or if already authenticated
   if (loading || isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
+        </motion.div>
       </div>
     );
   }
@@ -44,7 +48,6 @@ const Login = () => {
     setError('');
     setIsLoading(true);
 
-    // Simple validation
     if (!email || !password) {
       setError('Please fill in all fields');
       setIsLoading(false);
@@ -56,12 +59,9 @@ const Login = () => {
       return;
     }
 
-    // Mock authentication - in a real app, this would call your auth service
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock successful login (you can customize these credentials)
       if (email === 'admin@lilyhall.com' && password === 'lilyhall123') {
         login(email);
         toast({
@@ -115,84 +115,188 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center">
-            <img 
-              src="/lovable-uploads/0a4d33da-9760-4b33-86d2-db718dd0c98b.png" 
-              alt="Lily Hall Logo"
-              className="h-full w-full object-contain"
-            />
-          </div>
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>
-            Sign in to access your management portal
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div 
+          className="absolute -top-1/2 -right-1/2 w-full h-full rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute -bottom-1/2 -left-1/2 w-full h-full rounded-full bg-gradient-to-tr from-accent/20 to-transparent blur-3xl"
+          animate={{ 
+            scale: [1, 1.15, 1],
+            rotate: [0, -5, 0],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      <FadeIn className="w-full max-w-md relative z-10">
+        <Card className="glass shadow-glass-lg border-border/50">
+          <CardHeader className="text-center pb-4">
+            <ScaleIn delay={0.1}>
+              <motion.div 
+                className="mx-auto mb-4 flex h-24 w-24 items-center justify-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <img 
+                  src="/lovable-uploads/0a4d33da-9760-4b33-86d2-db718dd0c98b.png" 
+                  alt="Lily Hall Logo"
+                  className="h-full w-full object-contain drop-shadow-md"
+                />
+              </motion.div>
+            </ScaleIn>
+            <CardTitle className="text-2xl font-bold text-foreground">Welcome Back</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              Sign in to access your management portal
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <motion.div 
+                className="space-y-2"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Label 
+                  htmlFor="email" 
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    focusedField === 'email' ? 'text-primary' : 'text-foreground'
+                  }`}
+                >
+                  Email
+                </Label>
                 <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField(null)}
+                  className="h-12 bg-background/50 border-input focus:border-primary focus:ring-primary/20 transition-all duration-200"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              </motion.div>
+              
+              <motion.div 
+                className="space-y-2"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Label 
+                  htmlFor="password"
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    focusedField === 'password' ? 'text-primary' : 'text-foreground'
+                  }`}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField(null)}
+                    className="h-12 pr-12 bg-background/50 border-input focus:border-primary focus:ring-primary/20 transition-all duration-200"
+                    required
+                  />
+                  <motion.button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-md transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </motion.button>
+                </div>
+              </motion.div>
 
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -10, height: 0 }}
+                >
+                  <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 text-base font-medium gradient-primary hover:opacity-90 transition-opacity shadow-md"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    'Sign In'
+                  )}
+                </Button>
+              </motion.div>
+            </form>
 
-          <div className="mt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full border-dashed border-2 hover:bg-primary/5"
-              onClick={handleDemoLogin}
-              disabled={isLoading}
+            <motion.div 
+              className="mt-5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
             >
-              Demo Login
-            </Button>
-          </div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-2 text-muted-foreground">Or</span>
+                </div>
+              </div>
+              
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full h-12 mt-5 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors"
+                onClick={handleDemoLogin}
+                disabled={isLoading}
+              >
+                Try Demo Login
+              </Button>
+            </motion.div>
 
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            You'll stay logged in for 30 days
-          </p>
-        </CardContent>
-      </Card>
+            <motion.p 
+              className="mt-5 text-center text-xs text-muted-foreground"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              You'll stay logged in for 30 days
+            </motion.p>
+          </CardContent>
+        </Card>
+      </FadeIn>
     </div>
   );
 };
