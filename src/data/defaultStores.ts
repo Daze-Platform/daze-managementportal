@@ -59,7 +59,7 @@ const resortStores: Record<string, Store[]> = {
       name: 'Sister Hen',
       address: '1105 E Cervantes St, Pensacola, FL 32501 (Basement)',
       locationDescription: 'Hidden speakeasy bar in the basement serving craft cocktails and small bites',
-      logo: '/lovable-uploads/39add00a-390f-428a-b66f-acfa4920adf5.png',
+      logo: '/images/stores/sister-hen-logo.jpg',
       bgColor: '#4A1A2C',
       activeOrders: 12,
       hours: sisterHenHours,
