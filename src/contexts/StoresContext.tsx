@@ -53,17 +53,23 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         setStores(convertedStores);
       } else {
         console.log('No stores found in database, seeding with default stores...');
-        await seedDefaultStores();
+        const seeded = await seedDefaultStores();
+        if (!seeded) {
+          // Fallback to in-memory defaults if seeding fails
+          console.log('Using in-memory default stores as fallback');
+          setStores(defaultStores);
+        }
       }
     } catch (error) {
       console.error('Error loading stores:', error);
-      setStores([]);
+      // Fallback to defaults on any error
+      setStores(defaultStores);
     } finally {
       setLoading(false);
     }
   };
 
-  const seedDefaultStores = async () => {
+  const seedDefaultStores = async (): Promise<boolean> => {
     try {
       console.log('Seeding default stores:', defaultStores);
       for (const store of defaultStores) {
@@ -83,6 +89,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
 
         if (error) {
           console.error('Error seeding store:', store.name, error);
+          return false;
         }
       }
       // Reload stores after seeding
@@ -91,7 +98,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         .select('*')
         .order('created_at', { ascending: true });
 
-      if (newStoresData) {
+      if (newStoresData && newStoresData.length > 0) {
         const convertedStores: Store[] = newStoresData.map(store => ({
           id: store.id,
           name: store.name,
@@ -106,9 +113,12 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         }));
         setStores(convertedStores);
         toast.success('Default stores loaded');
+        return true;
       }
+      return false;
     } catch (error) {
       console.error('Error seeding default stores:', error);
+      return false;
     }
   };
 
