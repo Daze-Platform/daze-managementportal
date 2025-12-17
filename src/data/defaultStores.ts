@@ -48,7 +48,7 @@ const resortStores: Record<string, Store[]> = {
       name: 'Brother Fox',
       address: '1105 E Cervantes St, Pensacola, FL 32501',
       locationDescription: 'Wood-fired hearth restaurant featuring shared plates, charbroiled oysters, and seasonal dishes',
-      logo: '/lovable-uploads/314bc76d-4c76-4519-b8cd-5e3c08d90fe6.png',
+      logo: '/images/stores/brother-fox-logo.jpg',
       bgColor: '#8B4513',
       activeOrders: 8,
       hours: brotherFoxHours,
