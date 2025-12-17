@@ -92,6 +92,28 @@ const Login = () => {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setEmail('admin@lilyhall.com');
+    setPassword('lilyhall123');
+    setError('');
+    setIsLoading(true);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      login('admin@lilyhall.com');
+      toast({
+        variant: "success",
+        title: "Demo Login",
+        description: "Welcome to the Lily Hall demo!"
+      });
+      navigate('/dashboard');
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <Card className="w-full max-w-md">
@@ -154,12 +176,21 @@ const Login = () => {
             </Button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            <p className="mb-2">Demo credentials:</p>
-            <p>Email: admin@lilyhall.com</p>
-            <p>Password: lilyhall123</p>
-            <p className="mt-3 text-xs text-gray-500">You'll stay logged in for 30 days</p>
+          <div className="mt-4">
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="w-full border-dashed border-2 hover:bg-primary/5"
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+            >
+              🎭 Try Demo Login
+            </Button>
           </div>
+
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            You'll stay logged in for 30 days
+          </p>
         </CardContent>
       </Card>
     </div>
