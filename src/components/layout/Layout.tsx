@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { PromotionCard } from './PromotionCard';
@@ -48,21 +48,12 @@ export const Layout = ({ children }: LayoutProps) => {
     };
   }, []);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const toggleSidebarCollapse = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
-
-  const closeSidebar = () => {
-    setSidebarOpen(false);
-  };
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const toggleSidebarCollapse = () => setSidebarCollapsed(!sidebarCollapsed);
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-gray-50">
-      {/* Sidebar - positioned to not interfere with header */}
+    <div className="flex h-screen w-full overflow-hidden bg-muted/30">
       <Sidebar 
         isOpen={sidebarOpen} 
         isCollapsed={sidebarCollapsed}
@@ -70,28 +61,40 @@ export const Layout = ({ children }: LayoutProps) => {
         onToggleCollapse={toggleSidebarCollapse}
       />
       
-      {/* Main content area - properly positioned to avoid overlap */}
       <div className="flex flex-col flex-1 min-w-0 h-full relative">
-        {/* Header with proper z-index and positioning */}
-        <div className={`flex-shrink-0 relative z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300 ${
-          isScrollingDown && isMobile ? 'transform -translate-y-full opacity-0' : 'transform translate-y-0 opacity-100'
-        }`}>
-          <Header 
-            onToggleSidebar={toggleSidebar} 
-            isHidden={false}
-          />
-        </div>
+        {/* Header with smooth hide on scroll */}
+        <motion.div 
+          className="flex-shrink-0 relative z-40 bg-card border-b border-border shadow-sm"
+          initial={false}
+          animate={{ 
+            y: isScrollingDown && isMobile ? -100 : 0,
+            opacity: isScrollingDown && isMobile ? 0 : 1
+          }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <Header onToggleSidebar={toggleSidebar} isHidden={false} />
+        </motion.div>
         
-        {/* Main content with proper spacing */}
+        {/* Main content with page transitions */}
         <main className="flex-1 overflow-hidden relative">
-          <div className="h-full overflow-y-auto bg-gray-50">
-            {children}
+          <div className="h-full overflow-y-auto scroll-container bg-muted/30">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="min-h-full"
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
         
-        {/* Static promotion card integrated into dashboard flow */}
         {isDashboard && (
-          <div className="flex-shrink-0 bg-gray-50 border-t border-gray-100">
+          <div className="flex-shrink-0 bg-muted/30 border-t border-border">
             <PromotionCard />
           </div>
         )}

@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ActiveOrdersHeader } from '@/components/orders/ActiveOrdersHeader';
 import { PauseOrdersModal } from '@/components/orders/PauseOrdersModal';
 import { StoreClosedState } from '@/components/orders/StoreClosedState';
@@ -42,7 +42,6 @@ export const ActiveOrders = () => {
     getOrderTypeCount
   } = useOrderManagement();
 
-  // Available stores
   const stores = [
     { id: 'all', name: 'All Stores' },
     { id: '12', name: 'Piazza' },
@@ -63,43 +62,31 @@ export const ActiveOrders = () => {
 
   const toggleStoreOrOrderStatus = () => {
     if (storeStatus === 'closed') {
-      // If store is closed, open it and activate orders
-      console.log('Opening store and activating orders');
       setStoreStatus('open');
       setOrderStatus('active');
     } else if (orderStatus === 'active') {
-      // If orders are active, show pause modal
       setShowPauseModal(true);
     } else {
-      // If orders are paused, resume them
-      console.log('Resuming orders for store:', selectedStore);
       setOrderStatus('active');
     }
   };
 
   const handleConfirmPause = () => {
-    console.log('Pausing orders for store:', selectedStore);
     setOrderStatus('paused');
     setShowPauseModal(false);
   };
 
   const handleOpenStore = () => {
-    console.log('Opening store and activating orders for:', selectedStore);
     setStoreStatus('open');
     setOrderStatus('active');
   };
   
-  // Function specifically for the Resume Taking Orders button in StoreClosedState
   const handleResumeOrders = () => {
-    console.log('Resume Taking Orders button clicked in ActiveOrders.tsx');
     setOrderStatus('active');
   };
 
-  // Handle store selection changes - simple filtering only
   const handleStoreChange = (storeId: string) => {
-    console.log('Store selection changed to:', storeId);
     setSelectedStore(storeId);
-    // Orders will be automatically filtered by the getFilteredOrders function
   };
 
   const selectedStoreName = stores.find(store => store.id === selectedStore)?.name || 'All Stores';
@@ -113,7 +100,6 @@ export const ActiveOrders = () => {
   };
 
   const handleViewOrderDetails = (orderId: string) => {
-    console.log('handleViewOrderDetails called for:', orderId);
     setViewingOrderDetails(orderId);
     if (isMobile) {
       setShowOrderDetails(true);
@@ -125,7 +111,7 @@ export const ActiveOrders = () => {
     setViewingOrderDetails(null);
   };
 
-  // Mobile view - show order details full screen
+  // Mobile order details view
   if ((showOrderDetails && selectedOrder && isMobile) || (viewingOrderDetails && isMobile)) {
     const orderIdToShow = viewingOrderDetails || selectedOrder;
     return (
@@ -138,21 +124,24 @@ export const ActiveOrders = () => {
     );
   }
 
-  // Determine if we should show the closed/paused state
-  // Only show if store is closed OR if orders are paused AND there are no filtered orders available
   const shouldShowClosedState = storeStatus === 'closed' || 
     (orderStatus === 'paused' && filteredOrders.length === 0);
 
   return (
-    <div className="min-h-screen w-full bg-black">
+    <div className="min-h-screen w-full bg-background">
       {/* Mobile Sidebar */}
       {isMobile && (
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       )}
 
       <div className="min-h-screen flex flex-col">
-        {/* Fixed Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 z-10">
+        {/* Header */}
+        <motion.div 
+          className="flex-shrink-0 bg-card border-b border-border z-10"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
           <ActiveOrdersHeader
             storeStatus={storeStatus}
             orderStatus={orderStatus}
@@ -164,12 +153,19 @@ export const ActiveOrders = () => {
             selectedDateRange={selectedDateRange}
             onDateRangeChange={setSelectedDateRange}
           />
-        </div>
+        </motion.div>
 
-        {/* Main Content Area */}
+        {/* Main Content */}
         <div className="flex-1">
-          {shouldShowClosedState ? (
-            <div className="min-h-screen">
+          <AnimatePresence mode="wait">
+            {shouldShowClosedState ? (
+              <motion.div
+                key="closed"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="min-h-screen"
+              >
                 <StoreClosedState 
                   storeName={selectedStoreName}
                   storeStatus={storeStatus}
@@ -177,36 +173,44 @@ export const ActiveOrders = () => {
                   onResumeOrders={handleResumeOrders}
                   onOpenStore={handleOpenStore}
                 />
-            </div>
-          ) : (
-            <OrdersListLayout
-              tabs={tabs}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              orderType={orderType}
-              onOrderTypeChange={setOrderType}
-              pickupCount={getOrderTypeCount('pickup')}
-              deliveryCount={getOrderTypeCount('delivery')}
-              totalCount={filteredOrders.length}
-              advancedFilters={advancedFilters}
-              onAdvancedFiltersChange={setAdvancedFilters}
-              filteredOrders={filteredOrders}
-              selectedOrder={selectedOrder}
-              onOrderSelect={handleMobileOrderSelect}
-              onOrderUpdate={handleOrderUpdate}
-              onViewDetails={handleViewOrderDetails}
-              viewingOrderDetails={viewingOrderDetails}
-              isMobile={isMobile}
-              isWaitingForOrders={isWaitingForOrders}
-              selectedStore={selectedStore}
-              orderStatus={orderStatus}
-              onResumeOrders={handleResumeOrders}
-            />
-          )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="orders"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <OrdersListLayout
+                  tabs={tabs}
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                  orderType={orderType}
+                  onOrderTypeChange={setOrderType}
+                  pickupCount={getOrderTypeCount('pickup')}
+                  deliveryCount={getOrderTypeCount('delivery')}
+                  totalCount={filteredOrders.length}
+                  advancedFilters={advancedFilters}
+                  onAdvancedFiltersChange={setAdvancedFilters}
+                  filteredOrders={filteredOrders}
+                  selectedOrder={selectedOrder}
+                  onOrderSelect={handleMobileOrderSelect}
+                  onOrderUpdate={handleOrderUpdate}
+                  onViewDetails={handleViewOrderDetails}
+                  viewingOrderDetails={viewingOrderDetails}
+                  isMobile={isMobile}
+                  isWaitingForOrders={isWaitingForOrders}
+                  selectedStore={selectedStore}
+                  orderStatus={orderStatus}
+                  onResumeOrders={handleResumeOrders}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Pause Orders Modal */}
+      {/* Pause Modal */}
       <PauseOrdersModal
         isOpen={showPauseModal}
         onClose={() => setShowPauseModal(false)}
