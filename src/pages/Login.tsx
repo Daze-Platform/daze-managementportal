@@ -184,7 +184,7 @@ const Login = () => {
               onClick={handleDemoLogin}
               disabled={isLoading}
             >
-              🎭 Try Demo Login
+              Demo Login
             </Button>
           </div>
 
