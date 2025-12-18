@@ -157,7 +157,7 @@ export default {
 					to: { height: '0' }
 				},
 				'fade-in': {
-					from: { opacity: '0', transform: 'translateY(8px)' },
+					from: { opacity: '0', transform: 'translateY(4px)' },
 					to: { opacity: '1', transform: 'translateY(0)' }
 				},
 				'fade-in-up': {
@@ -166,7 +166,7 @@ export default {
 				},
 				'fade-out': {
 					from: { opacity: '1', transform: 'translateY(0)' },
-					to: { opacity: '0', transform: 'translateY(8px)' }
+					to: { opacity: '0', transform: 'translateY(-4px)' }
 				},
 				'scale-in': {
 					from: { opacity: '0', transform: 'scale(0.95)' },
@@ -175,6 +175,14 @@ export default {
 				'scale-out': {
 					from: { opacity: '1', transform: 'scale(1)' },
 					to: { opacity: '0', transform: 'scale(0.95)' }
+				},
+				'zoom-in': {
+					from: { opacity: '0', transform: 'scale(0.9)' },
+					to: { opacity: '1', transform: 'scale(1)' }
+				},
+				'zoom-out': {
+					from: { opacity: '1', transform: 'scale(1)' },
+					to: { opacity: '0', transform: 'scale(0.9)' }
 				},
 				'slide-in-right': {
 					from: { transform: 'translateX(100%)' },
@@ -273,35 +281,37 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.4s ease-out',
-				'fade-in-up': 'fade-in-up 0.5s ease-out',
-				'fade-out': 'fade-out 0.3s ease-out',
-				'scale-in': 'scale-in 0.3s ease-out',
-				'scale-out': 'scale-out 0.2s ease-out',
-				'slide-in-right': 'slide-in-right 0.3s ease-out',
-				'slide-out-right': 'slide-out-right 0.3s ease-out',
-				'slide-in-left': 'slide-in-left 0.3s ease-out',
-				'slide-in-up': 'slide-in-up 0.4s ease-out',
-				'slide-in-down': 'slide-in-down 0.4s ease-out',
+				'fade-in': 'fade-in 0.2s ease-out',
+				'fade-in-up': 'fade-in-up 0.4s ease-out',
+				'fade-out': 'fade-out 0.15s ease-out',
+				'scale-in': 'scale-in 0.2s ease-out',
+				'scale-out': 'scale-out 0.15s ease-out',
+				'zoom-in': 'zoom-in 0.2s ease-out',
+				'zoom-out': 'zoom-out 0.15s ease-out',
+				'slide-in-right': 'slide-in-right 0.25s ease-out',
+				'slide-out-right': 'slide-out-right 0.25s ease-out',
+				'slide-in-left': 'slide-in-left 0.25s ease-out',
+				'slide-in-up': 'slide-in-up 0.3s ease-out',
+				'slide-in-down': 'slide-in-down 0.3s ease-out',
 				'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
 				'shimmer': 'shimmer 2s linear infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'gradient-shift': 'gradient-shift 8s ease infinite',
-				'enter': 'fade-in 0.3s ease-out, scale-in 0.2s ease-out',
-				'exit': 'fade-out 0.3s ease-out, scale-out 0.2s ease-out',
-				// New micro-interaction animations
-				'bounce-subtle': 'bounce-subtle 0.5s ease-in-out',
-				'wiggle': 'wiggle 0.3s ease-in-out',
-				'press': 'press 0.15s ease-in-out',
-				'pop': 'pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'enter': 'fade-in 0.2s ease-out, scale-in 0.2s ease-out',
+				'exit': 'fade-out 0.15s ease-out, scale-out 0.15s ease-out',
+				// HeroUI-inspired micro-interactions
+				'bounce-subtle': 'bounce-subtle 0.4s ease-in-out',
+				'wiggle': 'wiggle 0.25s ease-in-out',
+				'press': 'press 0.1s ease-in-out',
+				'pop': 'pop 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-				'slide-up-fade': 'slide-up-fade 0.4s ease-out',
-				'expand': 'expand 0.3s ease-out',
-				'ripple': 'ripple 0.6s ease-out',
-				'check-bounce': 'check-bounce 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-				'shake': 'shake 0.4s ease-in-out',
+				'slide-up-fade': 'slide-up-fade 0.3s ease-out',
+				'expand': 'expand 0.25s ease-out',
+				'ripple': 'ripple 0.5s ease-out',
+				'check-bounce': 'check-bounce 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'shake': 'shake 0.3s ease-in-out',
 				'spin-slow': 'spin-slow 3s linear infinite',
-				'count-up': 'count-up 0.5s ease-out forwards',
+				'count-up': 'count-up 0.4s ease-out forwards',
 			},
 			transitionTimingFunction: {
 				'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
