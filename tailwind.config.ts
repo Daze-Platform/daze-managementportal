@@ -192,6 +192,10 @@ export default {
 					from: { transform: 'translateY(100%)', opacity: '0' },
 					to: { transform: 'translateY(0)', opacity: '1' }
 				},
+				'slide-in-down': {
+					from: { transform: 'translateY(-100%)', opacity: '0' },
+					to: { transform: 'translateY(0)', opacity: '1' }
+				},
 				'pulse-soft': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
@@ -211,6 +215,59 @@ export default {
 				'counter': {
 					from: { '--num': '0' },
 					to: { '--num': 'var(--target)' }
+				},
+				// New micro-interaction animations
+				'bounce-subtle': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-4px)' }
+				},
+				'wiggle': {
+					'0%, 100%': { transform: 'rotate(0deg)' },
+					'25%': { transform: 'rotate(-2deg)' },
+					'75%': { transform: 'rotate(2deg)' }
+				},
+				'press': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(0.97)' }
+				},
+				'pop': {
+					'0%': { transform: 'scale(0.9)', opacity: '0' },
+					'50%': { transform: 'scale(1.02)' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'glow-pulse': {
+					'0%, 100%': { boxShadow: '0 0 0 0 hsl(var(--primary) / 0)' },
+					'50%': { boxShadow: '0 0 20px 4px hsl(var(--primary) / 0.3)' }
+				},
+				'slide-up-fade': {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'expand': {
+					'0%': { transform: 'scaleX(0)', opacity: '0' },
+					'100%': { transform: 'scaleX(1)', opacity: '1' }
+				},
+				'ripple': {
+					'0%': { transform: 'scale(0)', opacity: '0.5' },
+					'100%': { transform: 'scale(4)', opacity: '0' }
+				},
+				'check-bounce': {
+					'0%': { transform: 'scale(0)' },
+					'50%': { transform: 'scale(1.2)' },
+					'100%': { transform: 'scale(1)' }
+				},
+				'shake': {
+					'0%, 100%': { transform: 'translateX(0)' },
+					'20%, 60%': { transform: 'translateX(-4px)' },
+					'40%, 80%': { transform: 'translateX(4px)' }
+				},
+				'spin-slow': {
+					from: { transform: 'rotate(0deg)' },
+					to: { transform: 'rotate(360deg)' }
+				},
+				'count-up': {
+					from: { opacity: '0', transform: 'translateY(10px)' },
+					to: { opacity: '1', transform: 'translateY(0)' }
 				}
 			},
 			animation: {
@@ -225,16 +282,32 @@ export default {
 				'slide-out-right': 'slide-out-right 0.3s ease-out',
 				'slide-in-left': 'slide-in-left 0.3s ease-out',
 				'slide-in-up': 'slide-in-up 0.4s ease-out',
+				'slide-in-down': 'slide-in-down 0.4s ease-out',
 				'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
 				'shimmer': 'shimmer 2s linear infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'gradient-shift': 'gradient-shift 8s ease infinite',
 				'enter': 'fade-in 0.3s ease-out, scale-in 0.2s ease-out',
 				'exit': 'fade-out 0.3s ease-out, scale-out 0.2s ease-out',
+				// New micro-interaction animations
+				'bounce-subtle': 'bounce-subtle 0.5s ease-in-out',
+				'wiggle': 'wiggle 0.3s ease-in-out',
+				'press': 'press 0.15s ease-in-out',
+				'pop': 'pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+				'slide-up-fade': 'slide-up-fade 0.4s ease-out',
+				'expand': 'expand 0.3s ease-out',
+				'ripple': 'ripple 0.6s ease-out',
+				'check-bounce': 'check-bounce 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'shake': 'shake 0.4s ease-in-out',
+				'spin-slow': 'spin-slow 3s linear infinite',
+				'count-up': 'count-up 0.5s ease-out forwards',
 			},
 			transitionTimingFunction: {
 				'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
 				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+				'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+				'snap': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
 			}
 		}
 	},
