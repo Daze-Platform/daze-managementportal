@@ -43,7 +43,7 @@ const createInitialMenus = (): Menu[] => {
   const menus: Menu[] = [];
   
   // Brother Fox - Food Menu (Store ID: 1)
-  const brotherFoxTemplate = storeMenuTemplates['brother-fox'];
+  const brotherFoxTemplate = storeMenuTemplates['1'];
   if (brotherFoxTemplate) {
     const items: MenuItem[] = [];
     brotherFoxTemplate.categories.forEach(category => {
@@ -74,7 +74,7 @@ const createInitialMenus = (): Menu[] => {
   }
   
   // Sister Hen - Cocktails & Bar Snacks (Store ID: 2)
-  const sisterHenTemplate = storeMenuTemplates['sister-hen'];
+  const sisterHenTemplate = storeMenuTemplates['2'];
   if (sisterHenTemplate) {
     const items: MenuItem[] = [];
     sisterHenTemplate.categories.forEach(category => {
@@ -105,7 +105,7 @@ const createInitialMenus = (): Menu[] => {
   }
   
   // Cousin Wolf - Breakfast Menu (Store ID: 3)
-  const cousinWolfTemplate = storeMenuTemplates['cousin-wolf'];
+  const cousinWolfTemplate = storeMenuTemplates['3'];
   if (cousinWolfTemplate) {
     const items: MenuItem[] = [];
     cousinWolfTemplate.categories.forEach(category => {
