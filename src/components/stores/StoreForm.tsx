@@ -25,9 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Loader2 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface StoreHours {
   day: string;
@@ -73,6 +74,8 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
   const [customLogo, setCustomLogo] = useState<string>('');
   const [logoType, setLogoType] = useState<'emoji' | 'custom'>('emoji');
   const [resorts, setResorts] = useState<{id: string, name: string}[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
   
   const form = useForm<Store>({
     defaultValues: {
@@ -140,22 +143,114 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
     name: "hours",
   });
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setCustomLogo(result);
-        form.setValue('customLogo', result);
-        setLogoType('custom');
-      };
-      reader.readAsDataURL(file);
+  const ensureBucketExists = async () => {
+    try {
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const bucketExists = buckets?.some(b => b.name === 'store-logos');
+      
+      if (!bucketExists) {
+        await supabase.storage.createBucket('store-logos', {
+          public: true,
+          fileSizeLimit: 5242880 // 5MB
+        });
+      }
+    } catch (error) {
+      console.log('Bucket check/create skipped:', error);
     }
   };
 
-  const handleRemoveCustomLogo = () => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      await ensureBucketExists();
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `stores/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from('store-logos')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        console.error('Storage upload error:', error);
+        // Fallback to base64
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const result = e.target?.result as string;
+          setCustomLogo(result);
+          form.setValue('customLogo', result);
+          setLogoType('custom');
+        };
+        reader.readAsDataURL(file);
+        toast({
+          title: "Using local preview",
+          description: "Logo will be stored when you save.",
+        });
+      } else {
+        const { data: urlData } = supabase.storage
+          .from('store-logos')
+          .getPublicUrl(filePath);
+
+        const logoUrl = urlData.publicUrl;
+        setCustomLogo(logoUrl);
+        form.setValue('customLogo', logoUrl);
+        setLogoType('custom');
+        toast({
+          title: "Logo uploaded",
+          description: "Your logo has been uploaded successfully.",
+        });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: "Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveCustomLogo = async () => {
+    // If it's a storage URL, try to delete from storage
+    if (customLogo && customLogo.includes('store-logos')) {
+      try {
+        const urlParts = customLogo.split('/store-logos/');
+        if (urlParts.length > 1) {
+          const filePath = urlParts[1];
+          await supabase.storage.from('store-logos').remove([filePath]);
+        }
+      } catch (error) {
+        console.error('Error deleting logo from storage:', error);
+      }
+    }
     setCustomLogo('');
     form.setValue('customLogo', '');
     setLogoType('emoji');
@@ -418,7 +513,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                       <div className="space-y-4">
                         {customLogo ? (
                           <div className="relative w-24 h-24 mx-auto">
-                            <div className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-white overflow-hidden">
+                            <div className="w-full h-full border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-background overflow-hidden">
                               <img 
                                 src={customLogo} 
                                 alt="Custom logo preview" 
@@ -431,23 +526,34 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                               size="sm"
                               onClick={handleRemoveCustomLogo}
                               className="absolute -top-2 -right-2 h-8 w-8 rounded-full p-0"
+                              disabled={isUploading}
                             >
                               <X className="h-4 w-4" />
                             </Button>
                           </div>
                         ) : (
                           <div className="w-full">
-                            <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 active:bg-gray-200 transition-colors">
+                            <label className={`flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/50 hover:bg-muted active:bg-muted/80 transition-colors ${isUploading ? 'pointer-events-none opacity-60' : ''}`}>
                               <div className="flex flex-col items-center justify-center">
-                                <Upload className="w-8 h-8 mb-2 text-gray-500" />
-                                <p className="text-sm text-gray-500">Upload image</p>
-                                <p className="text-xs text-gray-400">Any ratio supported</p>
+                                {isUploading ? (
+                                  <>
+                                    <Loader2 className="w-8 h-8 mb-2 text-muted-foreground animate-spin" />
+                                    <p className="text-sm text-muted-foreground">Uploading...</p>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
+                                    <p className="text-sm text-muted-foreground">Upload image</p>
+                                    <p className="text-xs text-muted-foreground/70">Max 5MB</p>
+                                  </>
+                                )}
                               </div>
                               <input
                                 type="file"
                                 className="hidden"
                                 accept="image/*"
                                 onChange={handleImageUpload}
+                                disabled={isUploading}
                               />
                             </label>
                           </div>
