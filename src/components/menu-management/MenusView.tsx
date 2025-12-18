@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { MenuList } from './MenuList';
-import { PDFMenuUpload } from './PDFMenuUpload';
+import { MenuImport } from './MenuImport';
 import { Menu } from '@/pages/MenuManagement';
 import { useIsMobile, useIsTablet } from '@/hooks/use-mobile';
 
@@ -52,7 +52,7 @@ export const MenusView: React.FC<MenusViewProps> = ({
               <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               Create New Menu
             </Button>
-            <PDFMenuUpload />
+            <MenuImport />
           </div>
         </div>
       </div>
