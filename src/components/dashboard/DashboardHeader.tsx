@@ -19,7 +19,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
 import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 
 interface DashboardStore {
   id: string;

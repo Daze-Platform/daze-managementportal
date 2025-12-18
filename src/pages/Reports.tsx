@@ -13,7 +13,7 @@ import { TeamSection } from '@/components/reports/TeamSection';
 import { CustomerAnalyticsSection } from '@/components/reports/CustomerAnalyticsSection';
 import { ProductMixSection } from '@/components/reports/ProductMixSection';
 import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 import { useFilters } from '@/contexts/FilterContext';
 import { Calendar } from '@/components/ui/calendar';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';

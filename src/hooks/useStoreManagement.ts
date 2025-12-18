@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useStores } from '@/contexts/StoresContext';
 import { Store, StoreHours } from '@/types/store';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 
 // Remove duplicate interface - using Store from StoresContext
 

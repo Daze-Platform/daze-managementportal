@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 
 interface StoresContextType {
   stores: Store[];
+  getStoresByDestination: (destinationId: string) => Store[];
+  // Legacy alias
   getStoresByResort: (resortId: string) => Store[];
   addStore: (store: Store) => void;
   updateStore: (store: Store) => void;
@@ -46,7 +48,8 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           bgColor: store.bg_color || 'bg-blue-500',
           activeOrders: store.active_orders || 0,
           hours: (store.hours as any) || [],
-          resortId: store.resort_id || null
+          destinationId: store.resort_id || '',
+          resortId: store.resort_id || ''
         }));
 
         console.log('Converted stores:', convertedStores);
@@ -84,7 +87,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
             bg_color: store.bgColor,
             active_orders: store.activeOrders,
             hours: store.hours as any,
-            resort_id: store.resortId
+            resort_id: store.destinationId || store.resortId
           });
 
         if (error) {
@@ -109,7 +112,8 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           bgColor: store.bg_color || 'bg-blue-500',
           activeOrders: store.active_orders || 0,
           hours: (store.hours as any) || [],
-          resortId: store.resort_id || null
+          destinationId: store.resort_id || '',
+          resortId: store.resort_id || ''
         }));
         setStores(convertedStores);
         toast.success('Default stores loaded');
@@ -130,9 +134,12 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
     loadStores();
   };
 
-  const getStoresByResort = (resortId: string): Store[] => {
-    return stores.filter(store => store.resortId === resortId);
+  const getStoresByDestination = (destinationId: string): Store[] => {
+    return stores.filter(store => store.destinationId === destinationId || store.resortId === destinationId);
   };
+
+  // Legacy alias
+  const getStoresByResort = getStoresByDestination;
 
   const addStore = async (store: Store) => {
     // If store has an ID, check if it already exists and update instead
@@ -154,7 +161,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           bg_color: store.bgColor,
           active_orders: store.activeOrders,
           hours: store.hours as any,
-          resort_id: store.resortId
+          resort_id: store.destinationId || store.resortId
         })
         .select()
         .single();
@@ -191,7 +198,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           bg_color: updatedStore.bgColor,
           active_orders: updatedStore.activeOrders,
           hours: updatedStore.hours as any,
-          resort_id: updatedStore.resortId
+          resort_id: updatedStore.destinationId || updatedStore.resortId
         })
         .eq('id', updatedStore.id);
 
@@ -228,6 +235,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
   return (
     <StoresContext.Provider value={{ 
       stores, 
+      getStoresByDestination,
       getStoresByResort, 
       addStore, 
       updateStore, 

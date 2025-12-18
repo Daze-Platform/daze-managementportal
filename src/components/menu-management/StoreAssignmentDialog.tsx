@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Store, Building2, MapPin } from 'lucide-react';
 import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 import { Menu } from '@/pages/MenuManagement';
 
 interface StoreAssignmentDialogProps {

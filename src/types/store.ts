@@ -15,5 +15,7 @@ export interface Store {
   bgColor: string;
   activeOrders: number;
   hours: StoreHours[];
-  resortId: string; // Associate store with resort
+  destinationId: string; // Associate store with destination
+  // Legacy alias for backwards compatibility
+  resortId?: string;
 }

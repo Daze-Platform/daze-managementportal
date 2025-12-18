@@ -7,12 +7,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Badge } from '@/components/ui/badge';
 import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useResort } from '@/contexts/ResortContext';
+import { useDestination } from '@/contexts/DestinationContext';
 import { useStores } from '@/contexts/StoresContext';
 import { StoreAssignmentDialog } from './StoreAssignmentDialog';
 import { StoreLogo } from '@/components/stores/StoreLogo';
 
-export interface Resort {
+export interface Destination {
   id: string;
   name: string;
   location: string;
@@ -23,16 +23,19 @@ export interface Resort {
   status: 'active' | 'inactive';
   storeCount: number;
   createdAt: string;
-  logo?: string; // Base64 encoded image or URL
+  logo?: string;
 }
 
-export const ResortManagement = () => {
-  const { resorts, addResort, updateResort, deleteResort } = useResort();
-  const { getStoresByResort, addStore, updateStore, deleteStore } = useStores();
+// Legacy alias for backwards compatibility
+export type Resort = Destination;
+
+export const DestinationManagement = () => {
+  const { destinations, addDestination, updateDestination, deleteDestination } = useDestination();
+  const { getStoresByDestination, addStore, updateStore, deleteStore } = useStores();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [editingResort, setEditingResort] = useState<Resort | null>(null);
+  const [editingDestination, setEditingDestination] = useState<Destination | null>(null);
   const [isStoreDialogOpen, setIsStoreDialogOpen] = useState(false);
-  const [selectedResortId, setSelectedResortId] = useState<string>('');
+  const [selectedDestinationId, setSelectedDestinationId] = useState<string>('');
   const [editingStore, setEditingStore] = useState<any>(null);
   const { toast } = useToast();
 
@@ -48,8 +51,8 @@ export const ResortManagement = () => {
 
   const [logoPreview, setLogoPreview] = useState<string>('');
 
-  const handleCreateResort = () => {
-    setEditingResort(null);
+  const handleCreateDestination = () => {
+    setEditingDestination(null);
     setFormData({
       name: '',
       location: '',
@@ -63,25 +66,24 @@ export const ResortManagement = () => {
     setIsCreateDialogOpen(true);
   };
 
-  const handleEditResort = (resort: Resort) => {
-    setEditingResort(resort);
+  const handleEditDestination = (destination: Destination) => {
+    setEditingDestination(destination);
     setFormData({
-      name: resort.name,
-      location: resort.location,
-      address: resort.address,
-      phone: resort.phone || '',
-      email: resort.email || '',
-      manager: resort.manager,
-      logo: resort.logo || ''
+      name: destination.name,
+      location: destination.location,
+      address: destination.address,
+      phone: destination.phone || '',
+      email: destination.email || '',
+      manager: destination.manager,
+      logo: destination.logo || ''
     });
-    setLogoPreview(resort.logo || '');
+    setLogoPreview(destination.logo || '');
     setIsCreateDialogOpen(true);
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Check file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast({
           title: "File too large",
@@ -91,7 +93,6 @@ export const ResortManagement = () => {
         return;
       }
 
-      // Check file type
       if (!file.type.startsWith('image/')) {
         toast({
           title: "Invalid file type",
@@ -116,57 +117,55 @@ export const ResortManagement = () => {
     setLogoPreview('');
   };
 
-  const handleSubmitResort = (e: React.FormEvent) => {
+  const handleSubmitDestination = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (editingResort) {
-      // Update existing resort
-      const updatedResort = { ...editingResort, ...formData };
-      updateResort(updatedResort);
+    if (editingDestination) {
+      const updatedDestination = { ...editingDestination, ...formData };
+      updateDestination(updatedDestination);
       toast({
-        title: "Resort updated",
+        title: "Destination updated",
         description: `${formData.name} has been successfully updated.`,
       });
     } else {
-      // Create new resort
-      const newResort: Resort = {
+      const newDestination: Destination = {
         id: formData.name.toLowerCase().replace(/\s+/g, '-'),
         ...formData,
         status: 'active',
         storeCount: 0,
         createdAt: new Date().toISOString().split('T')[0]
       };
-      addResort(newResort);
+      addDestination(newDestination);
       toast({
-        title: "Resort created",
+        title: "Destination created",
         description: `${formData.name} has been successfully created.`,
         className: "bg-green-50 border-green-200 text-green-800",
       });
     }
     
     setIsCreateDialogOpen(false);
-    setEditingResort(null);
+    setEditingDestination(null);
     setLogoPreview('');
   };
 
-  const handleDeleteResort = (resortId: string, resortName: string) => {
-    if (window.confirm(`Are you sure you want to delete "${resortName}"? This action cannot be undone.`)) {
-      deleteResort(resortId);
+  const handleDeleteDestination = (destinationId: string, destinationName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${destinationName}"? This action cannot be undone.`)) {
+      deleteDestination(destinationId);
       toast({
-        title: "Resort deleted",
-        description: "The resort has been successfully removed.",
+        title: "Destination deleted",
+        description: "The destination has been successfully removed.",
       });
     }
   };
 
-  const handleAddStore = (resortId: string) => {
-    setSelectedResortId(resortId);
+  const handleAddStore = (destinationId: string) => {
+    setSelectedDestinationId(destinationId);
     setEditingStore(null);
     setIsStoreDialogOpen(true);
   };
 
-  const handleEditStore = (resortId: string, store: any) => {
-    setSelectedResortId(resortId);
+  const handleEditStore = (destinationId: string, store: any) => {
+    setSelectedDestinationId(destinationId);
     setEditingStore(store);
     setIsStoreDialogOpen(true);
   };
@@ -189,13 +188,12 @@ export const ResortManagement = () => {
         description: `${store.name} has been successfully updated.`,
       });
     } else {
-      // Check if this is an existing store being reassigned
-      const existingStore = getStoresByResort('').find(s => s.id === store.id);
+      const existingStore = getStoresByDestination('').find(s => s.id === store.id);
       if (existingStore) {
         updateStore(store);
         toast({
           title: "Store Assigned",
-          description: `${store.name} has been assigned to this resort.`,
+          description: `${store.name} has been assigned to this destination.`,
         });
       } else {
         addStore(store);
@@ -217,29 +215,29 @@ export const ResortManagement = () => {
             <div className="space-y-2">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                 <Building2 className="h-5 w-5" />
-                Resort Management
+                Destination Management
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Manage your resort properties and their associated stores
+                Manage your destination properties and their associated stores
               </p>
             </div>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={handleCreateResort} className="flex items-center gap-2 w-full sm:w-auto">
+                <Button onClick={handleCreateDestination} className="flex items-center gap-2 w-full sm:w-auto">
                   <Plus className="h-4 w-4" />
-                  <span className="sm:inline">Add Resort</span>
+                  <span className="sm:inline">Add Destination</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[95vw] max-w-[500px] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                 <DialogHeader>
                   <DialogTitle className="text-lg sm:text-xl">
-                    {editingResort ? 'Edit Resort' : 'Create New Resort'}
+                    {editingDestination ? 'Edit Destination' : 'Create New Destination'}
                   </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmitResort} className="space-y-4 sm:space-y-6">
+                <form onSubmit={handleSubmitDestination} className="space-y-4 sm:space-y-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="logo" className="text-sm font-medium">Resort Logo</Label>
+                      <Label htmlFor="logo" className="text-sm font-medium">Destination Logo</Label>
                       <div className="mt-2">
                         {logoPreview ? (
                           <div className="relative inline-block">
@@ -289,12 +287,12 @@ export const ResortManagement = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">Resort Name</Label>
+                        <Label htmlFor="name">Destination Name</Label>
                         <Input
                           id="name"
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="e.g. Hilton Miami Beach"
+                          placeholder="e.g. Lily Hall Pensacola"
                           required
                         />
                       </div>
@@ -304,7 +302,7 @@ export const ResortManagement = () => {
                           id="location"
                           value={formData.location}
                           onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                          placeholder="e.g. Miami Beach, FL"
+                          placeholder="e.g. Pensacola, FL"
                           required
                         />
                       </div>
@@ -316,7 +314,7 @@ export const ResortManagement = () => {
                         id="address"
                         value={formData.address}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                        placeholder="e.g. 1601 Collins Ave, Miami Beach, FL 33139"
+                        placeholder="e.g. 1105 E Cervantes St, Pensacola, FL 32501"
                         required
                       />
                     </div>
@@ -328,7 +326,7 @@ export const ResortManagement = () => {
                           id="phone"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="(305) 123-4567"
+                          placeholder="(850) 208-6913"
                         />
                       </div>
                       <div>
@@ -338,13 +336,13 @@ export const ResortManagement = () => {
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="info@resort.com"
+                          placeholder="info@destination.com"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="manager">Resort Manager</Label>
+                      <Label htmlFor="manager">Destination Manager</Label>
                       <Input
                         id="manager"
                         value={formData.manager}
@@ -365,7 +363,7 @@ export const ResortManagement = () => {
                       Cancel
                     </Button>
                     <Button type="submit" className="order-1 sm:order-2">
-                      {editingResort ? 'Update Resort' : 'Create Resort'}
+                      {editingDestination ? 'Update Destination' : 'Create Destination'}
                     </Button>
                   </div>
                 </form>
@@ -375,38 +373,38 @@ export const ResortManagement = () => {
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           <div className="space-y-4 sm:space-y-6">
-            {resorts.map((resort) => {
-              const resortStores = getStoresByResort(resort.id);
+            {destinations.map((destination) => {
+              const destinationStores = getStoresByDestination(destination.id);
               
               return (
-                <Card key={resort.id} className="border-l-4 border-l-primary">
+                <Card key={destination.id} className="border-l-4 border-l-primary">
                   <CardContent className="p-4 sm:p-6">
                     <div className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                         <div className="flex-1 space-y-4">
                           <div className="flex flex-col xs:flex-row xs:items-center gap-3">
                             <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold overflow-hidden shadow-lg flex-shrink-0">
-                              {resort.logo ? (
+                              {destination.logo ? (
                                 <img
-                                  src={resort.logo}
-                                  alt={`${resort.name} logo`}
+                                  src={destination.logo}
+                                  alt={`${destination.name} logo`}
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                                  {resort.name.charAt(0)}
+                                  {destination.name.charAt(0)}
                                 </div>
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-lg sm:text-xl text-foreground truncate">{resort.name}</h3>
+                              <h3 className="font-semibold text-lg sm:text-xl text-foreground truncate">{destination.name}</h3>
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <MapPin className="h-4 w-4 flex-shrink-0" />
-                                <span className="truncate">{resort.location}</span>
+                                <span className="truncate">{destination.location}</span>
                               </div>
                             </div>
-                            <Badge variant={resort.status === 'active' ? 'default' : 'secondary'} className="flex-shrink-0">
-                              {resort.status}
+                            <Badge variant={destination.status === 'active' ? 'default' : 'secondary'} className="flex-shrink-0">
+                              {destination.status}
                             </Badge>
                           </div>
                           
@@ -414,27 +412,27 @@ export const ResortManagement = () => {
                             <div className="space-y-2">
                               <p className="flex items-start gap-2">
                                 <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                                <span className="break-words">{resort.address}</span>
+                                <span className="break-words">{destination.address}</span>
                               </p>
-                              {resort.phone && (
+                              {destination.phone && (
                                 <p className="flex items-center gap-2">
                                   <Phone className="h-4 w-4 flex-shrink-0" />
-                                  <span>{resort.phone}</span>
+                                  <span>{destination.phone}</span>
                                 </p>
                               )}
-                              {resort.email && (
+                              {destination.email && (
                                 <p className="flex items-center gap-2">
                                   <Mail className="h-4 w-4 flex-shrink-0" />
-                                  <span className="break-all">{resort.email}</span>
+                                  <span className="break-all">{destination.email}</span>
                                 </p>
                               )}
                               <p className="flex items-center gap-2">
                                 <User className="h-4 w-4 flex-shrink-0" />
-                                <span><strong>Manager:</strong> {resort.manager}</span>
+                                <span><strong>Manager:</strong> {destination.manager}</span>
                               </p>
                               <p className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4 flex-shrink-0" />
-                                <span><strong>Created:</strong> {resort.createdAt}</span>
+                                <span><strong>Created:</strong> {destination.createdAt}</span>
                               </p>
                             </div>
                           </div>
@@ -444,7 +442,7 @@ export const ResortManagement = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleEditResort(resort)}
+                            onClick={() => handleEditDestination(destination)}
                             className="flex items-center gap-1 flex-1 sm:flex-none"
                           >
                             <Edit2 className="h-3 w-3" />
@@ -453,7 +451,7 @@ export const ResortManagement = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleDeleteResort(resort.id, resort.name)}
+                            onClick={() => handleDeleteDestination(destination.id, destination.name)}
                             className="flex items-center gap-1 text-destructive hover:text-destructive-foreground hover:bg-destructive flex-1 sm:flex-none"
                           >
                             <Trash2 className="h-3 w-3" />
@@ -468,12 +466,12 @@ export const ResortManagement = () => {
                           <div className="flex items-center gap-2">
                             <StoreIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                             <h4 className="font-medium text-foreground">Assigned Stores</h4>
-                            <Badge variant="secondary">{resortStores.length}</Badge>
+                            <Badge variant="secondary">{destinationStores.length}</Badge>
                           </div>
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleAddStore(resort.id)}
+                            onClick={() => handleAddStore(destination.id)}
                             className="flex items-center gap-1 w-full sm:w-auto"
                           >
                             <Plus className="h-4 w-4" />
@@ -481,9 +479,9 @@ export const ResortManagement = () => {
                           </Button>
                         </div>
 
-                        {resortStores.length > 0 ? (
+                        {destinationStores.length > 0 ? (
                           <div className="space-y-3">
-                            {resortStores.map((store) => (
+                            {destinationStores.map((store) => (
                               <div key={store.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-background rounded-lg border">
                                 <div className="flex items-center space-x-3 flex-1 min-w-0">
                                   <StoreLogo 
@@ -508,7 +506,7 @@ export const ResortManagement = () => {
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      onClick={() => handleEditStore(resort.id, store)}
+                                      onClick={() => handleEditStore(destination.id, store)}
                                       className="h-8 w-8 p-0"
                                     >
                                       <Edit className="h-4 w-4" />
@@ -529,7 +527,7 @@ export const ResortManagement = () => {
                         ) : (
                           <div className="text-center py-6 text-muted-foreground">
                             <StoreIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground/40" />
-                            <p className="text-sm">No stores assigned to this resort yet.</p>
+                            <p className="text-sm">No stores assigned to this destination yet.</p>
                             <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Store" to get started.</p>
                           </div>
                         )}
@@ -547,9 +545,12 @@ export const ResortManagement = () => {
         isOpen={isStoreDialogOpen}
         onClose={() => setIsStoreDialogOpen(false)}
         onSave={handleStoreSave}
-        resortId={selectedResortId}
+        destinationId={selectedDestinationId}
         store={editingStore}
       />
     </div>
   );
 };
+
+// Legacy alias for backwards compatibility
+export const ResortManagement = DestinationManagement;

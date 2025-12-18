@@ -41,7 +41,7 @@ const cousinWolfHours: StoreHours[] = [
 ];
 
 // Lily Hall Pensacola venues
-const resortStores: Record<string, Store[]> = {
+const destinationStores: Record<string, Store[]> = {
   'lily-hall-pensacola': [
     {
       id: 1,
@@ -52,6 +52,7 @@ const resortStores: Record<string, Store[]> = {
       bgColor: '#8B4513',
       activeOrders: 8,
       hours: brotherFoxHours,
+      destinationId: 'lily-hall-pensacola',
       resortId: 'lily-hall-pensacola',
     },
     {
@@ -63,6 +64,7 @@ const resortStores: Record<string, Store[]> = {
       bgColor: '#4A1A2C',
       activeOrders: 12,
       hours: sisterHenHours,
+      destinationId: 'lily-hall-pensacola',
       resortId: 'lily-hall-pensacola',
     },
     {
@@ -74,12 +76,16 @@ const resortStores: Record<string, Store[]> = {
       bgColor: '#2D4A3E',
       activeOrders: 5,
       hours: cousinWolfHours,
+      destinationId: 'lily-hall-pensacola',
       resortId: 'lily-hall-pensacola',
     },
   ],
 };
 
-// Default stores for Lily Hall
-export const defaultStores: Store[] = resortStores['lily-hall-pensacola'] || [];
+// Legacy alias
+const resortStores = destinationStores;
 
-export { defaultHours, brotherFoxHours, sisterHenHours, cousinWolfHours, resortStores };
+// Default stores for Lily Hall
+export const defaultStores: Store[] = destinationStores['lily-hall-pensacola'] || [];
+
+export { defaultHours, brotherFoxHours, sisterHenHours, cousinWolfHours, resortStores, destinationStores };
