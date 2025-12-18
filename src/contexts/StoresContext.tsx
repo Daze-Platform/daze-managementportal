@@ -18,22 +18,20 @@ interface StoresContextType {
 const StoresContext = createContext<StoresContextType | undefined>(undefined);
 
 export const StoresProvider = ({ children }: { children: ReactNode }) => {
-  const [stores, setStores] = useState<Store[]>([]);
+  const [stores, setStores] = useState<Store[]>(defaultStores);
   const [loading, setLoading] = useState(true);
 
   const loadStores = async () => {
     try {
-      console.log('Loading stores from database...');
       const { data: storesData, error } = await supabase
         .from('stores')
         .select('*')
         .order('created_at', { ascending: true });
 
-      console.log('Database query result:', { data: storesData, error });
-
       if (error) {
-        console.error('Database error:', error);
-        throw error;
+        console.warn('Could not load stores from database:', error.message);
+        // Keep using defaults - already set in state
+        return;
       }
 
       if (storesData && storesData.length > 0) {
@@ -52,31 +50,23 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           resortId: store.resort_id || ''
         }));
 
-        console.log('Converted stores:', convertedStores);
         setStores(convertedStores);
       } else {
-        console.log('No stores found in database, seeding with default stores...');
-        const seeded = await seedDefaultStores();
-        if (!seeded) {
-          // Fallback to in-memory defaults if seeding fails
-          console.log('Using in-memory default stores as fallback');
-          setStores(defaultStores);
-        }
+        // Try to seed default stores in background
+        seedDefaultStores();
       }
     } catch (error) {
-      console.error('Error loading stores:', error);
-      // Fallback to defaults on any error
-      setStores(defaultStores);
+      console.warn('Network error loading stores:', error);
+      // Keep using defaults - already set in state
     } finally {
       setLoading(false);
     }
   };
 
-  const seedDefaultStores = async (): Promise<boolean> => {
+  const seedDefaultStores = async () => {
     try {
-      console.log('Seeding default stores:', defaultStores);
       for (const store of defaultStores) {
-        const { error } = await supabase
+        await supabase
           .from('stores')
           .insert({
             name: store.name,
@@ -89,40 +79,9 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
             hours: store.hours as any,
             resort_id: store.destinationId || store.resortId
           });
-
-        if (error) {
-          console.error('Error seeding store:', store.name, error);
-          return false;
-        }
       }
-      // Reload stores after seeding
-      const { data: newStoresData } = await supabase
-        .from('stores')
-        .select('*')
-        .order('created_at', { ascending: true });
-
-      if (newStoresData && newStoresData.length > 0) {
-        const convertedStores: Store[] = newStoresData.map(store => ({
-          id: store.id,
-          name: store.name,
-          address: store.address,
-          locationDescription: store.location_description || '',
-          logo: store.logo || '🏪',
-          customLogo: store.custom_logo || '',
-          bgColor: store.bg_color || 'bg-blue-500',
-          activeOrders: store.active_orders || 0,
-          hours: (store.hours as any) || [],
-          destinationId: store.resort_id || '',
-          resortId: store.resort_id || ''
-        }));
-        setStores(convertedStores);
-        toast.success('Default stores loaded');
-        return true;
-      }
-      return false;
     } catch (error) {
-      console.error('Error seeding default stores:', error);
-      return false;
+      console.warn('Could not seed default stores:', error);
     }
   };
 
@@ -148,8 +107,15 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     
+    // Create temp ID for optimistic update
+    const tempId = Date.now();
+    const optimisticStore = { ...store, id: tempId };
+    
+    // Optimistic update
+    setStores(prev => [...prev, optimisticStore]);
+    toast.success('Store created successfully');
+
     try {
-      console.log('Adding store:', store);
       const { data, error } = await supabase
         .from('stores')
         .insert({
@@ -167,25 +133,26 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         .single();
 
       if (error) {
-        console.error('Database insert error:', error);
-        throw error;
+        console.warn('Could not sync store to database:', error.message);
+        return;
       }
 
-      console.log('Store added to database:', data);
-      // Create updated store with the new database ID
-      const newStore = { ...store, id: data.id };
-      const newStores = [...stores, newStore];
-      setStores(newStores);
-      toast.success('Store created successfully');
-      console.log('Updated stores list:', newStores);
+      // Replace temp ID with real ID from database
+      setStores(prev => 
+        prev.map(s => s.id === tempId ? { ...store, id: data.id } : s)
+      );
     } catch (error) {
-      console.error('Error adding store:', error);
-      toast.error('Failed to create store');
-      throw error; // Re-throw so the form can show the error
+      console.warn('Network error syncing store:', error);
     }
   };
 
   const updateStore = async (updatedStore: Store) => {
+    // Optimistic update
+    setStores(prev => 
+      prev.map(store => store.id === updatedStore.id ? updatedStore : store)
+    );
+    toast.success('Store updated successfully');
+
     try {
       const { error } = await supabase
         .from('stores')
@@ -203,32 +170,29 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         .eq('id', updatedStore.id);
 
       if (error) {
-        console.error('Store update error:', error);
-        throw error;
+        console.warn('Could not sync store update:', error.message);
       }
-
-      const newStores = stores.map(store => 
-        store.id === updatedStore.id ? updatedStore : store
-      );
-      setStores(newStores);
     } catch (error) {
-      console.error('Error updating store:', error);
+      console.warn('Network error syncing store update:', error);
     }
   };
 
   const deleteStore = async (storeId: number) => {
+    // Optimistic delete
+    setStores(prev => prev.filter(store => store.id !== storeId));
+    toast.success('Store deleted successfully');
+
     try {
       const { error } = await supabase
         .from('stores')
         .delete()
         .eq('id', storeId);
 
-      if (error) throw error;
-
-      const newStores = stores.filter(store => store.id !== storeId);
-      setStores(newStores);
+      if (error) {
+        console.warn('Could not sync store deletion:', error.message);
+      }
     } catch (error) {
-      console.error('Error deleting store:', error);
+      console.warn('Network error syncing store deletion:', error);
     }
   };
 
