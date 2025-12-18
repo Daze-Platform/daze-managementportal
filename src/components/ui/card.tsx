@@ -1,20 +1,47 @@
 import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  interactive?: boolean;
-}
+const cardVariants = cva(
+  "rounded-xl border text-card-foreground transition-all duration-300",
+  {
+    variants: {
+      variant: {
+        default: "bg-card shadow-sm",
+        bordered: "bg-card border-2 border-border shadow-none",
+        flat: "bg-muted/50 border-transparent shadow-none",
+        shadow: "bg-card border-transparent shadow-lg shadow-foreground/5",
+        glass: "bg-card/80 backdrop-blur-md border-border/50 shadow-lg",
+      },
+      interactive: {
+        true: "cursor-pointer hover:-translate-y-1 hover:shadow-xl active:translate-y-0 active:scale-[0.99]",
+        false: "",
+      },
+      padding: {
+        none: "",
+        sm: "p-4",
+        default: "p-6",
+        lg: "p-8",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      interactive: false,
+      padding: "none",
+    },
+  }
+)
+
+interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, interactive = false, ...props }, ref) => (
+  ({ className, variant, interactive, padding, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-300 ease-smooth",
-        interactive && "cursor-pointer hover:-translate-y-1 hover:shadow-elevated-lg active:translate-y-0 active:scale-[0.99]",
-        className
-      )}
+      className={cn(cardVariants({ variant, interactive, padding }), className)}
       {...props}
     />
   )
@@ -40,7 +67,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-xl font-semibold leading-none tracking-tight",
       className
     )}
     {...props}
@@ -80,4 +107,4 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, cardVariants }
