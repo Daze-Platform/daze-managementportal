@@ -111,7 +111,7 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
                   </div>
                   
                   <motion.div 
-                    className={`w-12 h-12 lg:w-14 lg:h-14 ${card.bgLight} rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}
+                    className={`w-12 h-12 lg:w-14 lg:h-14 ${card.bgLight} rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-md ring-1 ring-black/5`}
                     whileHover={{ rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.5 }}
                   >

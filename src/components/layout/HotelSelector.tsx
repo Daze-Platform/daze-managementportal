@@ -32,15 +32,15 @@ export const HotelSelector = () => {
         <Select value={current.id} onValueChange={handleDestinationChange}>
           <SelectTrigger className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange/50 h-14 px-4 rounded-xl transition-all duration-200 backdrop-blur-sm">
             <div className="flex items-center w-full space-x-3 min-w-0">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0 overflow-hidden bg-white/10">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-gradient-to-br from-white/20 to-white/5 border border-white/20 shadow-lg ring-1 ring-white/10 backdrop-blur-sm">
                 {current.logo ? (
                   <img
                     src={current.logo}
                     alt={`${current.name} logo`}
-                    className="w-full h-full object-cover rounded-lg"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center rounded-lg">
+                  <div className="w-full h-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center">
                     <span className="text-white text-sm font-bold">
                       {current.name.charAt(0)}
                     </span>
@@ -62,15 +62,15 @@ export const HotelSelector = () => {
                 className="text-gray-900 p-3 rounded-lg m-1 focus:bg-brand-orange/10 data-[highlighted]:bg-brand-orange/10"
               >
                 <div className="flex items-center space-x-3 w-full">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0 overflow-hidden">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-gradient-to-br from-gray-50 to-white border border-gray-100 shadow-md ring-1 ring-black/5">
                     {destination.logo ? (
                       <img
                         src={destination.logo}
                         alt={`${destination.name} logo`}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center rounded-lg">
+                      <div className="w-full h-full bg-gradient-to-br from-brand-orange to-brand-orange-dark flex items-center justify-center">
                         <span className="text-white text-sm font-bold">
                           {destination.name.charAt(0)}
                         </span>

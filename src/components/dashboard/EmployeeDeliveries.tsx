@@ -51,7 +51,7 @@ export const EmployeeDeliveries = ({ employees }: EmployeeDeliveriesProps) => {
           {employees.map((employee) => (
             <div key={employee.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className={`w-8 h-8 ${employee.color} rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
+                <div className={`w-10 h-10 ${employee.color} rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md ring-1 ring-black/5`}>
                   {employee.avatar}
                 </div>
                 <div className="min-w-0 flex-1">

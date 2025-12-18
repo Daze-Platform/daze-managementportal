@@ -148,6 +148,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
               customLogo={store.customLogo}
               bgColor={store.bgColor}
               size="lg"
+              variant="sleek"
             />
             <div className="min-w-0 flex-1">
               <CardTitle className="text-lg sm:text-xl truncate">{store.name}</CardTitle>

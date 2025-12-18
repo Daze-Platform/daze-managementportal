@@ -321,28 +321,30 @@ export const DestinationManagement = () => {
                       <div className="mt-2">
                         {logoPreview ? (
                           <div className="relative inline-block">
-                            <img
-                              src={logoPreview}
-                              alt="Logo preview"
-                              className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border border-border"
-                            />
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-lg ring-1 ring-black/5">
+                              <img
+                                src={logoPreview}
+                                alt="Logo preview"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
                             <Button
                               type="button"
                               variant="outline"
                               size="sm"
-                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                              className="absolute -top-2 -right-2 h-7 w-7 rounded-full p-0 bg-white shadow-md border-gray-200 hover:bg-red-50 hover:border-red-200"
                               onClick={handleRemoveLogo}
                               disabled={isUploading}
                             >
-                              <X className="h-3 w-3" />
+                              <X className="h-3.5 w-3.5 text-gray-500 hover:text-red-500" />
                             </Button>
                           </div>
                         ) : (
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-dashed border-border rounded-lg flex items-center justify-center">
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100/50">
                             {isUploading ? (
-                              <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground animate-spin" />
+                              <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
                             ) : (
-                              <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+                              <Upload className="h-6 w-6 text-gray-400" />
                             )}
                           </div>
                         )}
@@ -476,8 +478,8 @@ export const DestinationManagement = () => {
                     <div className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                         <div className="flex-1 space-y-4">
-                          <div className="flex flex-col xs:flex-row xs:items-center gap-3">
-                            <div className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold overflow-hidden shadow-lg flex-shrink-0">
+                            <div className="flex flex-col xs:flex-row xs:items-center gap-3">
+                            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold overflow-hidden flex-shrink-0 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-md ring-1 ring-black/5">
                               {destination.logo ? (
                                 <img
                                   src={destination.logo}
@@ -485,7 +487,7 @@ export const DestinationManagement = () => {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+                                <div className="w-full h-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-xl">
                                   {destination.name.charAt(0)}
                                 </div>
                               )}
@@ -583,6 +585,7 @@ export const DestinationManagement = () => {
                                     customLogo={store.customLogo}
                                     bgColor={store.bgColor}
                                     size="md"
+                                    variant="sleek"
                                   />
                                   <div className="flex-1 min-w-0">
                                     <h5 className="font-medium text-foreground truncate">{store.name}</h5>

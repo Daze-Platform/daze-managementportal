@@ -61,9 +61,9 @@ export const TeamSection = () => {
           <div className="flex items-center gap-2">
             <motion.div 
               whileHover={{ scale: 1.1, rotate: -10 }}
-              className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"
+              className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5"
             >
-              <Users className="w-4 h-4 text-blue-600" />
+              <Users className="w-5 h-5 text-blue-600" />
             </motion.div>
             <CardTitle className="text-lg">Team Performance</CardTitle>
           </div>
@@ -88,9 +88,9 @@ export const TeamSection = () => {
                 <div className="flex items-center gap-3">
                   <motion.div 
                     whileHover={{ rotate: 10 }}
-                    className={`w-8 h-8 ${metric.bgColor} rounded-lg flex items-center justify-center`}
+                    className={`w-10 h-10 ${metric.bgColor} rounded-xl flex items-center justify-center shadow-sm ring-1 ring-black/5`}
                   >
-                    <metric.icon className={`w-4 h-4 ${metric.color}`} />
+                    <metric.icon className={`w-5 h-5 ${metric.color}`} />
                   </motion.div>
                   <span className="text-sm font-medium text-gray-900">{metric.name}</span>
                 </div>

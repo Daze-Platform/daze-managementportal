@@ -116,6 +116,7 @@ export const StoresList = ({ stores, onCreateStore, onViewStore }: StoresListPro
                                   customLogo={store.customLogo}
                                   bgColor={store.bgColor}
                                   size="md"
+                                  variant="sleek"
                                 />
                               </motion.div>
                               <div className="min-w-0 flex-1">

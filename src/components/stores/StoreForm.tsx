@@ -513,11 +513,11 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                       <div className="space-y-4">
                         {customLogo ? (
                           <div className="relative w-24 h-24 mx-auto">
-                            <div className="w-full h-full border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-background overflow-hidden">
+                            <div className="w-full h-full rounded-xl flex items-center justify-center overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-lg ring-1 ring-black/5">
                               <img 
                                 src={customLogo} 
                                 alt="Custom logo preview" 
-                                className="w-full h-full object-contain p-2"
+                                className="w-full h-full object-cover"
                               />
                             </div>
                             <Button
