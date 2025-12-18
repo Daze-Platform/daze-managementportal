@@ -24,47 +24,34 @@ const plans = [
     name: 'Free',
     price: '$0',
     period: '/month',
+    description: '10% fee charged to customers at checkout',
     features: [
-      'Basic order management',
-      'Standard support',
-      '10% commission on orders',
-      'Basic analytics'
+      'Beach & Pool ordering/delivery',
+      'Table Order & Pay',
+      'Table management software',
+      'Courier portal',
+      'Full management suite',
+      'Standard support'
     ],
-    commission: '10%',
+    commission: '10% to customer',
     popular: false,
   },
   {
-    id: 'premium',
-    name: 'Premium',
-    price: '$99',
+    id: 'commission',
+    name: 'Commission',
+    price: '$0',
     period: '/month',
+    description: '10% from every order — no cost to your customers',
     features: [
-      'Advanced order management',
-      'Priority support',
-      '5% commission on orders',
-      'Advanced analytics',
-      'Custom branding',
-      'Multi-store management'
+      'Beach & Pool ordering/delivery',
+      'Table Order & Pay',
+      'Table management software',
+      'Courier portal',
+      'Full management suite',
+      'Priority support'
     ],
-    commission: '5%',
+    commission: '10% from orders',
     popular: true,
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: '$299',
-    period: '/month',
-    features: [
-      'Full order management suite',
-      '24/7 dedicated support',
-      '2% commission on orders',
-      'Advanced analytics & reporting',
-      'White-label solution',
-      'Unlimited stores',
-      'API access'
-    ],
-    commission: '2%',
-    popular: false,
   }
 ];
 
@@ -147,10 +134,10 @@ export const Settings = () => {
                   <span className="hidden sm:inline">Profile</span>
                   <span className="sm:hidden">Prof</span>
                 </TabsTrigger>
-                <TabsTrigger value="resorts" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
+                <TabsTrigger value="destinations" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
                   <Building2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                  <span className="hidden sm:inline">Resorts</span>
-                  <span className="sm:hidden">Res</span>
+                  <span className="hidden sm:inline">Destinations</span>
+                  <span className="sm:hidden">Dest</span>
                 </TabsTrigger>
                 <TabsTrigger value="notifications" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
                   <Bell className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
@@ -251,7 +238,7 @@ export const Settings = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="resorts" className="space-y-6">
+        <TabsContent value="destinations" className="space-y-6">
           <DestinationManagement />
         </TabsContent>
 
@@ -379,11 +366,11 @@ export const Settings = () => {
               <CardHeader>
                 <CardTitle>Subscription Plans</CardTitle>
                 <p className="text-sm text-gray-600">
-                  Choose the plan that best fits your business needs. Commission fees are automatically deducted from your payouts.
+                  Choose how you want to handle fees. Both plans include the full suite of products.
                 </p>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-6 md:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2 max-w-3xl mx-auto">
                   {plans.map((plan) => (
                     <div
                       key={plan.id}
@@ -405,9 +392,10 @@ export const Settings = () => {
                           <span className="text-3xl font-bold">{plan.price}</span>
                           <span className="text-gray-500">{plan.period}</span>
                         </div>
-                        <div className="mt-2">
+                        <p className="mt-2 text-sm text-gray-600">{plan.description}</p>
+                        <div className="mt-3">
                           <Badge variant="outline" className="text-xs">
-                            {plan.commission} commission
+                            {plan.commission}
                           </Badge>
                         </div>
                       </div>
