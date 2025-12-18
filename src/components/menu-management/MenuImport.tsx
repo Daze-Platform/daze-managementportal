@@ -531,18 +531,27 @@ export const MenuImport = () => {
 
         {uploadStatus === 'idle' && (
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as ImportTab)} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="pdf" className="text-xs sm:text-sm">
+            <TabsList className="grid w-full grid-cols-3 h-12 p-1.5 bg-muted/80 rounded-xl gap-1">
+              <TabsTrigger 
+                value="pdf" 
+                className="text-xs sm:text-sm rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              >
                 <FileText className="w-4 h-4 mr-1 sm:mr-2" />
-                <span className="hidden sm:inline">PDF</span>
+                PDF
               </TabsTrigger>
-              <TabsTrigger value="weblink" className="text-xs sm:text-sm">
+              <TabsTrigger 
+                value="weblink" 
+                className="text-xs sm:text-sm rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              >
                 <Globe className="w-4 h-4 mr-1 sm:mr-2" />
-                <span className="hidden sm:inline">Web Link</span>
+                Web Link
               </TabsTrigger>
-              <TabsTrigger value="pos" className="text-xs sm:text-sm">
+              <TabsTrigger 
+                value="pos" 
+                className="text-xs sm:text-sm rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              >
                 <RefreshCw className="w-4 h-4 mr-1 sm:mr-2" />
-                <span className="hidden sm:inline">POS</span>
+                POS
               </TabsTrigger>
             </TabsList>
 
