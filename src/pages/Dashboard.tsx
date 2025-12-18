@@ -24,10 +24,10 @@ export const Dashboard = () => {
   const { toast } = useToast();
   const { currentResort } = useResort();
 
-  // Get resort-specific data or fallback to default
+  // Get resort-specific data or fallback to Lily Hall Pensacola
   const resortData = currentResort?.id && resortDashboardData[currentResort.id as keyof typeof resortDashboardData] 
     ? resortDashboardData[currentResort.id as keyof typeof resortDashboardData]
-    : resortDashboardData['hilton-pensacola-beach'];
+    : resortDashboardData['lily-hall-pensacola'];
 
   let currentStoreData = resortData[selectedStore as keyof typeof resortData];
 
