@@ -16,38 +16,6 @@
   max-width: 100%;
 }
 
-/* Animation keyframes */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Animation utility classes */
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.4s ease-out forwards;
-}
-
 /* Viewport height fix utility */
 .vh-fix {
   height: 100vh;
@@ -58,3 +26,243 @@
   min-height: 100vh;
   min-height: 100dvh;
 }
+
+/* ============================================
+   MICRO-INTERACTION UTILITIES
+   ============================================ */
+
+/* Interactive button/card press effect */
+.interactive-press {
+  @apply transition-transform duration-150 ease-out;
+}
+.interactive-press:active {
+  transform: scale(0.97);
+}
+
+/* Hover lift effect for cards */
+.hover-lift {
+  @apply transition-all duration-300 ease-smooth;
+}
+.hover-lift:hover {
+  @apply -translate-y-1 shadow-elevated-lg;
+}
+
+/* Hover scale with spring */
+.hover-scale {
+  @apply transition-transform duration-200 ease-spring;
+}
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Hover glow effect */
+.hover-glow {
+  @apply transition-shadow duration-300;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px 2px hsl(var(--primary) / 0.2);
+}
+
+/* Icon hover rotation */
+.icon-hover-rotate {
+  @apply transition-transform duration-200 ease-out;
+}
+.icon-hover-rotate:hover svg,
+.icon-hover-rotate:hover [data-icon] {
+  transform: rotate(12deg);
+}
+
+/* Underline animation on hover */
+.hover-underline {
+  @apply relative;
+}
+.hover-underline::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300 ease-out;
+}
+.hover-underline:hover::after {
+  @apply scale-x-100;
+}
+
+/* ============================================
+   STAGGERED LIST ANIMATIONS
+   ============================================ */
+
+.stagger-fade-in > * {
+  @apply opacity-0;
+  animation: slide-up-fade 0.4s ease-out forwards;
+}
+.stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-fade-in > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-fade-in > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-fade-in > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-fade-in > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-fade-in > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-fade-in > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-fade-in > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-fade-in > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-fade-in > *:nth-child(10) { animation-delay: 450ms; }
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   BUTTON STATE ANIMATIONS
+   ============================================ */
+
+/* Success state bounce */
+.btn-success-bounce {
+  animation: check-bounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Error state shake */
+.btn-error-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Loading pulse */
+.btn-loading {
+  @apply relative overflow-hidden;
+}
+.btn-loading::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============================================
+   CARD INTERACTION STATES
+   ============================================ */
+
+.card-interactive {
+  @apply transition-all duration-300 ease-smooth cursor-pointer;
+  transform-origin: center;
+}
+.card-interactive:hover {
+  @apply -translate-y-1 shadow-elevated-lg;
+}
+.card-interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Selected card state */
+.card-selected {
+  @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+  animation: pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================
+   FORM INPUT ANIMATIONS
+   ============================================ */
+
+.input-focus-glow:focus-within {
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+  @apply transition-shadow duration-200;
+}
+
+.input-error {
+  animation: shake 0.3s ease-in-out;
+  @apply ring-2 ring-destructive/50;
+}
+
+/* ============================================
+   BADGE & PILL ANIMATIONS
+   ============================================ */
+
+.badge-pop {
+  animation: pop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.badge-pulse {
+  @apply relative;
+}
+.badge-pulse::before {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-current opacity-30;
+  animation: ripple 1.5s ease-out infinite;
+}
+
+/* ============================================
+   TOOLTIP & POPOVER ANIMATIONS
+   ============================================ */
+
+.tooltip-enter {
+  animation: pop 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.dropdown-enter {
+  animation: slide-up-fade 0.2s ease-out;
+}
+
+/* ============================================
+   ICON ANIMATIONS
+   ============================================ */
+
+.icon-spin {
+  animation: spin-slow 2s linear infinite;
+}
+
+.icon-bounce {
+  animation: bounce-subtle 0.6s ease-in-out infinite;
+}
+
+.icon-wiggle:hover {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+/* ============================================
+   PROGRESS & LOADING STATES
+   ============================================ */
+
+.progress-bar-animated {
+  @apply relative overflow-hidden;
+}
+.progress-bar-animated::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent;
+  animation: shimmer 2s infinite;
+}
+
+.skeleton-wave {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--muted-foreground) / 0.08) 50%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   TRANSITION UTILITIES
+   ============================================ */
+
+.transition-spring {
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.transition-bounce {
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.transition-smooth {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Delay utilities for staggered animations */
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
