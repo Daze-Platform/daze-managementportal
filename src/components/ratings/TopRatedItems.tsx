@@ -8,41 +8,42 @@ interface TopRatedItem {
   rating: number;
   reviews: number;
   emoji: string;
+  store?: string;
 }
 
 interface TopRatedItemsProps {
   items: TopRatedItem[];
 }
 
-const foodImages = {
-  'The Crispy Bun': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop&crop=center',
-  'The Meaty One': 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=100&h=100&fit=crop&crop=center',
-  'Chicken Burrito': 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=100&h=100&fit=crop&crop=center',
-  'Chocolate cherry cheesecake': 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=100&h=100&fit=crop&crop=center',
-  'French Fries': 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=100&h=100&fit=crop&crop=center'
+const foodImages: Record<string, string> = {
+  'Charbroiled Oysters': 'https://images.unsplash.com/photo-1606731219412-3eb5a4e94673?w=100&h=100&fit=crop&crop=center',
+  'Sister Hen Old Fashioned': 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=100&h=100&fit=crop&crop=center',
+  'The Wolf Sandwich': 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=100&h=100&fit=crop&crop=center',
+  'Seafood Paella': 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=100&h=100&fit=crop&crop=center',
+  'The Lavender Bee': 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=100&h=100&fit=crop&crop=center'
 };
 
 export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
   const getImageForItem = (itemName: string) => {
-    if (foodImages[itemName as keyof typeof foodImages]) {
-      return foodImages[itemName as keyof typeof foodImages];
+    if (foodImages[itemName]) {
+      return foodImages[itemName];
     }
     
     // Fallback images based on keywords
-    if (itemName.toLowerCase().includes('burger') || itemName.toLowerCase().includes('bun')) {
-      return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=120&h=120&fit=crop&crop=center';
+    if (itemName.toLowerCase().includes('oyster') || itemName.toLowerCase().includes('seafood')) {
+      return 'https://images.unsplash.com/photo-1606731219412-3eb5a4e94673?w=120&h=120&fit=crop&crop=center';
     }
-    if (itemName.toLowerCase().includes('chicken')) {
-      return 'https://images.unsplash.com/photo-1562967914-608f82629710?w=120&h=120&fit=crop&crop=center';
+    if (itemName.toLowerCase().includes('cocktail') || itemName.toLowerCase().includes('fashioned') || itemName.toLowerCase().includes('bee')) {
+      return 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=120&h=120&fit=crop&crop=center';
     }
-    if (itemName.toLowerCase().includes('fries')) {
-      return 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=120&h=120&fit=crop&crop=center';
+    if (itemName.toLowerCase().includes('sandwich') || itemName.toLowerCase().includes('wolf')) {
+      return 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=120&h=120&fit=crop&crop=center';
     }
-    if (itemName.toLowerCase().includes('burrito') || itemName.toLowerCase().includes('taco')) {
-      return 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=120&h=120&fit=crop&crop=center';
+    if (itemName.toLowerCase().includes('paella') || itemName.toLowerCase().includes('steak')) {
+      return 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=120&h=120&fit=crop&crop=center';
     }
-    if (itemName.toLowerCase().includes('cake') || itemName.toLowerCase().includes('dessert')) {
-      return 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=120&h=120&fit=crop&crop=center';
+    if (itemName.toLowerCase().includes('taco') || itemName.toLowerCase().includes('chorizo')) {
+      return 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=120&h=120&fit=crop&crop=center';
     }
     
     return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=120&h=120&fit=crop&crop=center';
@@ -123,12 +124,17 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
                       {item.name}
                     </h3>
                     <div className="flex items-center gap-3 mt-1">
+                      {item.store && (
+                        <span className="text-xs text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full font-medium">
+                          {item.store}
+                        </span>
+                      )}
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                         <span className="text-sm font-bold text-foreground">{item.rating}</span>
                       </div>
                       <span className="text-xs text-muted-foreground">•</span>
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+                      <span className="text-xs text-muted-foreground">
                         {item.reviews} reviews
                       </span>
                     </div>
