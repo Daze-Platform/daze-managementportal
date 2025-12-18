@@ -7,71 +7,71 @@ import { TopRatedItems } from '@/components/ratings/TopRatedItems';
 import { RecentReviews } from '@/components/ratings/RecentReviews';
 
 const ratingsData = {
-  overall: 4.0,
-  totalReviews: 29,
-  reviewsChange: 2.00,
+  overall: 4.7,
+  totalReviews: 156,
+  reviewsChange: 12.50,
   breakdown: [
-    { stars: 5, count: 22, percentage: 76 },
-    { stars: 4, count: 4, percentage: 14 },
-    { stars: 3, count: 2, percentage: 7 },
-    { stars: 2, count: 1, percentage: 3 },
-    { stars: 1, count: 0, percentage: 0 }
+    { stars: 5, count: 112, percentage: 72 },
+    { stars: 4, count: 28, percentage: 18 },
+    { stars: 3, count: 10, percentage: 6 },
+    { stars: 2, count: 4, percentage: 3 },
+    { stars: 1, count: 2, percentage: 1 }
   ],
   topRatedItems: [
-    { name: 'The Crispy Bun', rating: 4.8, reviews: 72, emoji: '🍔' },
-    { name: 'The Meaty One', rating: 4.6, reviews: 12, emoji: '🥩' },
-    { name: 'Chicken Burrito', rating: 4.5, reviews: 20, emoji: '🌯' },
-    { name: 'Chocolate cherry cheesecake', rating: 4.3, reviews: 7, emoji: '🍰' },
-    { name: 'French Fries', rating: 4.1, reviews: 4, emoji: '🍟' }
+    { name: 'Charbroiled Oysters', rating: 4.9, reviews: 48, emoji: '🦪', store: 'Brother Fox' },
+    { name: 'Sister Hen Old Fashioned', rating: 4.8, reviews: 62, emoji: '🥃', store: 'Sister Hen' },
+    { name: 'The Wolf Sandwich', rating: 4.8, reviews: 35, emoji: '🥪', store: 'Cousin Wolf' },
+    { name: 'Seafood Paella', rating: 4.7, reviews: 28, emoji: '🥘', store: 'Brother Fox' },
+    { name: 'The Lavender Bee', rating: 4.6, reviews: 41, emoji: '🍸', store: 'Sister Hen' }
   ],
   recentReviews: [
     {
       customer: 'Amanda Johnson',
       orders: 8,
       rating: 5,
-      review: "Absolutely fantastic! The Crispy Bun was perfectly seasoned and arrived hot. Best burger I've had in months!",
-      orderId: '#5657676901',
-      date: 'May 9, 2021 2:30PM'
+      review: "The Charbroiled Oysters at Brother Fox were incredible! Perfectly seasoned with that herb butter and parmesan. Best oysters in Pensacola!",
+      orderId: '#LH-2024-1201',
+      date: 'Dec 15, 2024 7:30PM'
     },
     {
       customer: 'Michael Rodriguez',
       orders: 15,
       rating: 5,
-      review: "Outstanding service and incredible food quality. The chicken burrito was packed with flavor and the delivery was super quick!",
-      orderId: '#5657676902',
-      date: 'May 9, 2021 1:15PM'
+      review: "Sister Hen's Old Fashioned is a masterpiece. The smoked cherry really elevates it. Such a cozy speakeasy vibe too!",
+      orderId: '#LH-2024-1198',
+      date: 'Dec 15, 2024 9:15PM'
     },
     {
       customer: 'Sarah Chen',
       orders: 6,
       rating: 5,
-      review: "This place never disappoints! Fresh ingredients, generous portions, and always on time. Highly recommend the chocolate cheesecake!",
-      orderId: '#5657676903',
-      date: 'May 8, 2021 7:45PM'
+      review: "Cousin Wolf's breakfast tacos are my new weekend ritual! The Chorizo & Egg Taco with that salsa verde is absolutely perfect.",
+      orderId: '#LH-2024-1195',
+      date: 'Dec 14, 2024 9:45AM'
     },
     {
       customer: 'David Thompson',
       orders: 22,
       rating: 5,
-      review: "Exceptional quality every single time. The staff clearly takes pride in their work. Will definitely order again!",
-      orderId: '#5657676904',
-      date: 'May 8, 2021 6:20PM'
+      review: "The Prime Skirt Steak Asada at Brother Fox was cooked to perfection. That chimichurri sauce is incredible! Will definitely be back.",
+      orderId: '#LH-2024-1192',
+      date: 'Dec 14, 2024 8:20PM'
     },
     {
-      customer: 'Serena Smith',
+      customer: 'Emily Martinez',
       orders: 4,
       rating: 4,
-      review: "They didn't include sauce for my french fries",
-      orderId: '#5657676878',
-      date: 'May 7, 2021 11:50AM'
+      review: "Loved the Midnight Garden cocktail at Sister Hen - that mezcal and jalapeño combo is unique! Would've given 5 stars but the wait was a bit long.",
+      orderId: '#LH-2024-1188',
+      date: 'Dec 13, 2024 10:30PM'
     },
     {
-      customer: 'Johny Smith',
+      customer: 'James Wilson',
       orders: 12,
       rating: 3,
-      review: "Where are the smoothies?",
-      orderId: '#5657676878',
-      date: 'May 7, 2021 11:50AM'
+      review: "Cold Brew from Cousin Wolf was good but arrived lukewarm. Would appreciate better temperature control for deliveries.",
+      orderId: '#LH-2024-1185',
+      date: 'Dec 13, 2024 8:50AM'
     }
   ]
 };
@@ -84,7 +84,7 @@ export const Ratings = () => {
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold">Customer satisfaction</h1>
-          <p className="text-gray-500 text-sm mt-1">Last updated on Dec 28, 2021</p>
+          <p className="text-gray-500 text-sm mt-1">Last updated on Dec 18, 2024</p>
         </div>
       </div>
 
