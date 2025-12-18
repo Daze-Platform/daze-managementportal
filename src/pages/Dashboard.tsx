@@ -11,7 +11,7 @@ import { OperationalMetrics } from '@/components/dashboard/OperationalMetrics';
 import { resortDashboardData, stores, employeeDeliveries } from '@/data/dashboardData';
 import { useToast } from '@/hooks/use-toast';
 import { useFilters } from '@/contexts/FilterContext';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 
 export const Dashboard = () => {
   const { 

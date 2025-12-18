@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useStores } from '@/contexts/StoresContext';
 import { useFilters } from '@/contexts/FilterContext';
 import { format } from 'date-fns';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 import { useScrollDirection } from '@/hooks/useScrollDirection';
 import { ChevronDown, ChevronRight, DollarSign, ChevronLeft, ChevronRight as ChevronRightIcon, Calendar, Clock, MapPin, User, Receipt, Filter, Truck, Utensils, Store, CheckCircle, XCircle } from 'lucide-react';
 

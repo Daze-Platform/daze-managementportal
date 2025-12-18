@@ -1,0 +1,261 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Destination } from '@/components/settings/DestinationManagement';
+import { supabase } from '@/integrations/supabase/client';
+
+interface DestinationContextType {
+  currentDestination: Destination | null;
+  destinations: Destination[];
+  setCurrentDestination: (destination: Destination | null) => void;
+  setDestinations: (destinations: Destination[]) => void;
+  addDestination: (destination: Destination) => void;
+  updateDestination: (destination: Destination) => void;
+  deleteDestination: (destinationId: string) => void;
+  // Legacy aliases for backwards compatibility
+  currentResort: Destination | null;
+  resorts: Destination[];
+}
+
+const DestinationContext = createContext<DestinationContextType | undefined>(undefined);
+
+const defaultDestinations: Destination[] = [
+  {
+    id: 'lily-hall-pensacola',
+    name: 'Lily Hall Pensacola',
+    location: 'Old East Hill, Pensacola, FL',
+    address: '1105 E Cervantes St, Pensacola, FL 32501',
+    phone: '(850) 208-6913',
+    email: 'info@lilyhall.com',
+    manager: 'Kari Thomas',
+    status: 'active',
+    storeCount: 3,
+    createdAt: '2024-01-15',
+    logo: ''
+  }
+];
+
+export const DestinationProvider = ({ children }: { children: React.ReactNode }) => {
+  const [destinations, setDestinationsState] = useState<Destination[]>([]);
+  const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Load destinations from Supabase on mount
+  useEffect(() => {
+    loadDestinationsFromDatabase();
+  }, []);
+
+  const loadDestinationsFromDatabase = async () => {
+    try {
+      const { data: destinationsData, error } = await supabase
+        .from('resorts')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      if (destinationsData && destinationsData.length > 0) {
+        // Convert database format to our Destination type
+        const convertedDestinations: Destination[] = destinationsData.map(destination => ({
+          id: destination.id,
+          name: destination.name,
+          location: destination.location || '',
+          address: destination.address || '',
+          phone: destination.phone || '',
+          email: destination.email || '',
+          manager: destination.manager || '',
+          status: (destination.status as 'active' | 'inactive') || 'active',
+          storeCount: destination.store_count || 0,
+          createdAt: destination.created_at?.split('T')[0] || '',
+          logo: destination.logo || ''
+        }));
+
+        setDestinationsState(convertedDestinations);
+        
+        // Get current destination from localStorage or use first destination
+        const savedCurrentDestinationId = localStorage.getItem('currentDestinationId') || localStorage.getItem('currentResortId');
+        const currentDestinationToSet = savedCurrentDestinationId 
+          ? convertedDestinations.find(d => d.id === savedCurrentDestinationId) || convertedDestinations[0]
+          : convertedDestinations[0];
+        
+        setCurrentDestination(currentDestinationToSet);
+        localStorage.setItem('currentDestinationId', currentDestinationToSet.id);
+      } else {
+        // Insert default destinations if none exist
+        await insertDefaultDestinations();
+      }
+    } catch (error) {
+      console.error('Error loading destinations:', error);
+      // Fallback to defaults
+      setDestinationsState(defaultDestinations);
+      setCurrentDestination(defaultDestinations[0]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const insertDefaultDestinations = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('resorts')
+        .insert(defaultDestinations.map(destination => ({
+          id: destination.id,
+          name: destination.name,
+          location: destination.location,
+          address: destination.address,
+          phone: destination.phone,
+          email: destination.email,
+          manager: destination.manager,
+          status: destination.status,
+          store_count: destination.storeCount,
+          logo: destination.logo
+        })))
+        .select();
+
+      if (error) throw error;
+
+      setDestinationsState(defaultDestinations);
+      setCurrentDestination(defaultDestinations[0]);
+      localStorage.setItem('currentDestinationId', defaultDestinations[0].id);
+    } catch (error) {
+      console.error('Error inserting default destinations:', error);
+    }
+  };
+
+  // Save current destination ID to localStorage when it changes
+  useEffect(() => {
+    if (currentDestination) {
+      localStorage.setItem('currentDestinationId', currentDestination.id);
+    }
+  }, [currentDestination]);
+
+  const setDestinations = (newDestinations: Destination[]) => {
+    setDestinationsState(newDestinations);
+  };
+
+  const addDestination = async (destination: Destination) => {
+    try {
+      const { error } = await supabase
+        .from('resorts')
+        .insert({
+          id: destination.id,
+          name: destination.name,
+          location: destination.location,
+          address: destination.address,
+          phone: destination.phone,
+          email: destination.email,
+          manager: destination.manager,
+          status: destination.status,
+          store_count: destination.storeCount,
+          logo: destination.logo
+        });
+
+      if (error) throw error;
+
+      const newDestinations = [...destinations, destination];
+      setDestinationsState(newDestinations);
+    } catch (error) {
+      console.error('Error adding destination:', error);
+    }
+  };
+
+  const updateDestination = async (updatedDestination: Destination) => {
+    console.log('Updating destination with data:', updatedDestination);
+    console.log('Logo data length:', updatedDestination.logo?.length || 0);
+    
+    try {
+      const { error } = await supabase
+        .from('resorts')
+        .update({
+          name: updatedDestination.name,
+          location: updatedDestination.location,
+          address: updatedDestination.address,
+          phone: updatedDestination.phone,
+          email: updatedDestination.email,
+          manager: updatedDestination.manager,
+          status: updatedDestination.status,
+          store_count: updatedDestination.storeCount,
+          logo: updatedDestination.logo
+        })
+        .eq('id', updatedDestination.id);
+
+      if (error) {
+        console.error('Supabase update error:', error);
+        throw error;
+      }
+
+      console.log('Destination update successful in database');
+
+      const newDestinations = destinations.map(destination => 
+        destination.id === updatedDestination.id ? updatedDestination : destination
+      );
+      setDestinationsState(newDestinations);
+      
+      // Update current destination if it's the one being edited
+      if (currentDestination && currentDestination.id === updatedDestination.id) {
+        setCurrentDestination(updatedDestination);
+      }
+      
+      console.log('Destination state updated successfully');
+    } catch (error) {
+      console.error('Error updating destination:', error);
+    }
+  };
+
+  const deleteDestination = async (destinationId: string) => {
+    try {
+      const { error } = await supabase
+        .from('resorts')
+        .delete()
+        .eq('id', destinationId);
+
+      if (error) throw error;
+
+      const newDestinations = destinations.filter(destination => destination.id !== destinationId);
+      setDestinationsState(newDestinations);
+      
+      // If current destination is deleted, set to first available or null
+      if (currentDestination && currentDestination.id === destinationId) {
+        const nextDestination = newDestinations.length > 0 ? newDestinations[0] : null;
+        setCurrentDestination(nextDestination);
+        if (nextDestination) {
+          localStorage.setItem('currentDestinationId', nextDestination.id);
+        } else {
+          localStorage.removeItem('currentDestinationId');
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting destination:', error);
+    }
+  };
+
+  return (
+    <DestinationContext.Provider value={{
+      currentDestination,
+      destinations,
+      setCurrentDestination,
+      setDestinations,
+      addDestination,
+      updateDestination,
+      deleteDestination,
+      // Legacy aliases
+      currentResort: currentDestination,
+      resorts: destinations
+    }}>
+      {children}
+    </DestinationContext.Provider>
+  );
+};
+
+// New hook name
+export const useDestination = () => {
+  const context = useContext(DestinationContext);
+  if (context === undefined) {
+    throw new Error('useDestination must be used within a DestinationProvider');
+  }
+  return context;
+};
+
+// Legacy alias for backwards compatibility
+export const useResort = useDestination;
+
+// Legacy alias for the provider
+export const ResortProvider = DestinationProvider;

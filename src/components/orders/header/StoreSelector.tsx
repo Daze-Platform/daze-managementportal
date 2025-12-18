@@ -5,7 +5,7 @@ import { Check, ChevronDown } from "lucide-react"
 import { Badge } from '@/components/ui/badge';
 import { cn } from "@/lib/utils"
 import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/ResortContext';
+import { useResort } from '@/contexts/DestinationContext';
 
 interface OrderStore {
   id: string;

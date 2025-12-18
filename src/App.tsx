@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { ResortProvider } from "./contexts/ResortContext";
+import { DestinationProvider } from "./contexts/DestinationContext";
 import { StoresProvider } from "./contexts/StoresContext";
 import { EmployeesProvider } from "./contexts/EmployeesContext";
 import { MenusProvider } from "./contexts/MenusContext";
@@ -146,7 +146,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <ResortProvider>
+        <DestinationProvider>
           <StoresProvider>
             <EmployeesProvider>
               <MenusProvider>
@@ -160,7 +160,7 @@ const App = () => (
               </MenusProvider>
             </EmployeesProvider>
           </StoresProvider>
-        </ResortProvider>
+        </DestinationProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

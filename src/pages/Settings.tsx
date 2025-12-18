@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Mail, Smartphone, Bell, Shield, CreditCard, User, Landmark, Check, Building2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { ResortManagement } from '@/components/settings/ResortManagement';
+import { DestinationManagement } from '@/components/settings/DestinationManagement';
 import { AddBankAccountDialog } from '@/components/settings/AddBankAccountDialog';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
 import { useAuth } from '@/contexts/AuthContext';
@@ -252,7 +252,7 @@ export const Settings = () => {
         </TabsContent>
 
         <TabsContent value="resorts" className="space-y-6">
-          <ResortManagement />
+          <DestinationManagement />
         </TabsContent>
 
         <TabsContent value="notifications">

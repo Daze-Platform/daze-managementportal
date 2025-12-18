@@ -17,7 +17,9 @@ interface StoreAssignmentDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (store: Store) => void;
-  resortId: string;
+  destinationId: string;
+  // Legacy alias
+  resortId?: string;
   store?: Store | null;
 }
 
@@ -40,6 +42,7 @@ export const StoreAssignmentDialog = ({
   isOpen, 
   onClose, 
   onSave, 
+  destinationId,
   resortId, 
   store 
 }: StoreAssignmentDialogProps) => {
@@ -57,10 +60,14 @@ export const StoreAssignmentDialog = ({
   });
 
   const { toast } = useToast();
+  
+  // Use destinationId or legacy resortId
+  const targetDestinationId = destinationId || resortId || '';
 
-  // Get unassigned stores and stores from other resorts
+  // Get unassigned stores and stores from other destinations
   const availableStores = stores.filter(s => 
-    s.resortId !== resortId && 
+    s.destinationId !== targetDestinationId && 
+    s.resortId !== targetDestinationId &&
     s.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -96,16 +103,17 @@ export const StoreAssignmentDialog = ({
     if (!selectedExistingStore) {
       toast({
         title: "No store selected",
-        description: "Please select a store to assign to this resort.",
+        description: "Please select a store to assign to this destination.",
         variant: "destructive",
       });
       return;
     }
 
-    // Update the existing store with new resort assignment
+    // Update the existing store with new destination assignment
     const updatedStore: Store = {
       ...selectedExistingStore,
-      resortId: resortId,
+      destinationId: targetDestinationId,
+      resortId: targetDestinationId,
     };
 
     onSave(updatedStore);
@@ -113,7 +121,7 @@ export const StoreAssignmentDialog = ({
     
     toast({
       title: "Store Assigned",
-      description: `${selectedExistingStore.name} has been assigned to this resort.`,
+      description: `${selectedExistingStore.name} has been assigned to this destination.`,
     });
   };
 
@@ -136,7 +144,8 @@ export const StoreAssignmentDialog = ({
       bgColor: formData.bgColor,
       activeOrders: formData.activeOrders,
       hours: store?.hours || defaultHours,
-      resortId: resortId,
+      destinationId: targetDestinationId,
+      resortId: targetDestinationId,
     };
 
     onSave(newStore);
@@ -212,7 +221,7 @@ export const StoreAssignmentDialog = ({
                         </div>
                         <div className="space-y-1">
                           <Badge variant="outline">
-                            {availableStore.resortId === 'unassigned' ? 'Unassigned' : 'Other Resort'}
+                            {availableStore.destinationId === 'unassigned' || availableStore.resortId === 'unassigned' ? 'Unassigned' : 'Other Destination'}
                           </Badge>
                           <Badge variant="secondary">
                             {availableStore.activeOrders} orders
