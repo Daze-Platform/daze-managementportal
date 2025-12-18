@@ -5,6 +5,8 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { OverallRating } from '@/components/ratings/OverallRating';
 import { TopRatedItems } from '@/components/ratings/TopRatedItems';
 import { RecentReviews } from '@/components/ratings/RecentReviews';
+import { motion } from 'framer-motion';
+import { Star, Calendar } from 'lucide-react';
 
 const ratingsData = {
   overall: 4.7,
@@ -79,33 +81,72 @@ const ratingsData = {
 export const Ratings = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: 'spring' as const, stiffness: 200, damping: 20 }
+    }
+  };
+
   return (
-    <div className="min-h-screen p-6 md:p-8 space-y-6">
-      <div className="flex justify-between items-center flex-wrap gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Customer satisfaction</h1>
-          <p className="text-gray-500 text-sm mt-1">Last updated on Dec 18, 2024</p>
+    <motion.div 
+      className="min-h-screen p-6 md:p-8 space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Header */}
+      <motion.div 
+        variants={itemVariants}
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-gradient-to-br from-accent to-accent/80 rounded-2xl flex items-center justify-center shadow-lg">
+            <Star className="w-7 h-7 text-accent-foreground fill-accent-foreground" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Customer Satisfaction</h1>
+            <p className="text-muted-foreground text-sm mt-0.5 flex items-center gap-2">
+              <Calendar className="w-3.5 h-3.5" />
+              Last updated on Dec 18, 2024
+            </p>
+          </div>
         </div>
-      </div>
-
-      <div className="flex gap-4 mb-6">
+        
         <DateRangePicker value={dateRange} onChange={setDateRange} className="w-64" />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Main Grid */}
+      <motion.div 
+        variants={itemVariants}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+      >
         <OverallRating 
           overall={ratingsData.overall}
           totalReviews={ratingsData.totalReviews}
           breakdown={ratingsData.breakdown}
         />
         <TopRatedItems items={ratingsData.topRatedItems} />
-      </div>
+      </motion.div>
 
-      <RecentReviews 
-        reviews={ratingsData.recentReviews}
-        totalReviews={ratingsData.totalReviews}
-        reviewsChange={ratingsData.reviewsChange}
-      />
-    </div>
+      {/* Reviews Section */}
+      <motion.div variants={itemVariants}>
+        <RecentReviews 
+          reviews={ratingsData.recentReviews}
+          totalReviews={ratingsData.totalReviews}
+          reviewsChange={ratingsData.reviewsChange}
+        />
+      </motion.div>
+    </motion.div>
   );
 };
