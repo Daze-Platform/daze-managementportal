@@ -58,8 +58,8 @@ export const CustomerSatisfaction = ({ data }: CustomerSatisfactionProps) => {
           {/* Overall Rating */}
           <div className="flex items-center justify-between p-3 sm:p-4 bg-blue-50 rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <Star className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600 fill-current" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5">
+                <Star className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 fill-current" />
               </div>
               <div>
                 <p className="text-base sm:text-lg font-bold text-gray-900">{data.overall.toFixed(1)}</p>

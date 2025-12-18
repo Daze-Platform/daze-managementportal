@@ -99,7 +99,7 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
             <div className="flex items-center gap-4">
               {/* Rank & Image */}
               <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 rounded-xl overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-lg ring-1 ring-black/5 group-hover:shadow-xl transition-all duration-300">
                   <img
                     src={getImageForItem(item.name)}
                     alt={item.name}

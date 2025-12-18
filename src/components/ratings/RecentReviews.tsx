@@ -111,7 +111,7 @@ export const RecentReviews = ({ reviews, totalReviews, reviewsChange }: RecentRe
                   <TableRow key={index} className="hover:bg-white/50 transition-colors border-blue-100">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white text-sm font-medium shadow-sm">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white text-sm font-medium shadow-md ring-1 ring-black/5">
                           {review.customer.split(' ').map(n => n[0]).join('')}
                         </div>
                         <div>
@@ -170,10 +170,10 @@ export const RecentReviews = ({ reviews, totalReviews, reviewsChange }: RecentRe
               >
                 {/* Customer Info */}
                 <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white font-medium shadow-sm">
-                      <User className="w-5 h-5" />
-                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white font-medium shadow-md ring-1 ring-black/5">
+                        <User className="w-5 h-5" />
+                      </div>
                     <div>
                       <div className="font-semibold text-gray-900">{review.customer}</div>
                       <div className="flex items-center gap-2 mt-1">
