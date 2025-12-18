@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Globe, RefreshCw, Link, Unplug } from 'lucide-react';
+import { Upload, FileText, Loader2, CheckCircle, AlertCircle, Globe, RefreshCw, Link } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useStores } from '@/contexts/StoresContext';
 import { useMenus, MenuItem } from '@/contexts/MenusContext';
@@ -61,13 +61,8 @@ const sampleMenuItems = {
   ],
 };
 
-// Mock POS systems
-const mockPOSSystems = [
-  { id: 'toast', name: 'Toast POS', icon: '🍞', connected: true, lastSync: '2 hours ago', color: 'bg-orange-500' },
-  { id: 'square', name: 'Square', icon: '⬜', connected: true, lastSync: 'Yesterday', color: 'bg-gray-800' },
-  { id: 'clover', name: 'Clover', icon: '🍀', connected: false, lastSync: null, color: 'bg-green-500' },
-  { id: 'lightspeed', name: 'Lightspeed', icon: '⚡', connected: false, lastSync: null, color: 'bg-red-500' },
-];
+// Toast POS integration
+const toastPOS = { id: 'toast', name: 'Toast POS', logo: '/images/integrations/toast-logo.png', connected: true, lastSync: '2 hours ago' };
 
 // Generate a random price within range
 const getRandomPrice = (range: number[]): number => {
@@ -375,11 +370,10 @@ export const MenuImport = () => {
       try {
         const { menuName, items, categories } = generateMenuFromPOS(posId);
         const storeId = selectedStoreId ? parseInt(selectedStoreId) : stores[0]?.id;
-        const posSystem = mockPOSSystems.find(p => p.id === posId);
 
         await addMenu({
           name: menuName,
-          description: `Synced from ${posSystem?.name || 'POS'}`,
+          description: `Synced from ${toastPOS.name}`,
           category: 'restaurant',
           is_active: true,
           store_id: storeId,
@@ -393,7 +387,7 @@ export const MenuImport = () => {
 
         toast({
           title: "POS menu synced!",
-          description: `Imported "${menuName}" with ${items.length} items from ${posSystem?.name}.`,
+          description: `Imported "${menuName}" with ${items.length} items from ${toastPOS.name}.`,
         });
       } catch (error: any) {
         setUploadStatus('error');
@@ -528,7 +522,7 @@ export const MenuImport = () => {
           <ProgressDisplay title={
             activeTab === 'pdf' ? 'Processing PDF...' :
             activeTab === 'weblink' ? 'Analyzing Website...' :
-            `Syncing with ${mockPOSSystems.find(p => p.id === syncingPOS)?.name || 'POS'}...`
+            `Syncing with ${toastPOS.name}...`
           } />
         )}
 
@@ -627,50 +621,33 @@ export const MenuImport = () => {
                 <CardContent className="space-y-3">
                   <StoreSelector />
                   
-                  <div className="space-y-2">
-                    {mockPOSSystems.map((pos) => (
-                      <div
-                        key={pos.id}
-                        className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl">{pos.icon}</span>
-                          <div>
-                            <p className="font-medium text-sm">{pos.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {pos.connected ? `Last synced: ${pos.lastSync}` : 'Not connected'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {pos.connected ? (
-                            <>
-                              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">
-                                Connected
-                              </Badge>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handlePOSSync(pos.id)}
-                              >
-                                <RefreshCw className="w-3 h-3 mr-1" />
-                                Sync
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <Badge variant="outline" className="text-xs">
-                                <Unplug className="w-3 h-3 mr-1" />
-                                Disconnected
-                              </Badge>
-                              <Button size="sm" variant="outline" disabled>
-                                Connect
-                              </Button>
-                            </>
-                          )}
-                        </div>
+                  <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
+                    <div className="flex items-center gap-3">
+                      <img 
+                        src={toastPOS.logo} 
+                        alt="Toast POS" 
+                        className="h-8 w-auto object-contain"
+                      />
+                      <div>
+                        <p className="font-medium text-sm">{toastPOS.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Last synced: {toastPOS.lastSync}
+                        </p>
                       </div>
-                    ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">
+                        Connected
+                      </Badge>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handlePOSSync(toastPOS.id)}
+                      >
+                        <RefreshCw className="w-3 h-3 mr-1" />
+                        Sync
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="text-xs text-muted-foreground bg-blue-50 p-3 rounded-lg border border-blue-100">
