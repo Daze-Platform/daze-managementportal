@@ -11,7 +11,7 @@ import { useDestination } from '@/contexts/DestinationContext';
 import { useStores } from '@/contexts/StoresContext';
 import { StoreAssignmentDialog } from './StoreAssignmentDialog';
 import { StoreLogo } from '@/components/stores/StoreLogo';
-import { supabase } from '@/integrations/supabase/client';
+
 
 export interface Destination {
   id: string;
@@ -83,22 +83,6 @@ export const DestinationManagement = () => {
     setIsCreateDialogOpen(true);
   };
 
-  const ensureBucketExists = async () => {
-    try {
-      const { data: buckets } = await supabase.storage.listBuckets();
-      const bucketExists = buckets?.some(b => b.name === 'destination-logos');
-      
-      if (!bucketExists) {
-        await supabase.storage.createBucket('destination-logos', {
-          public: true,
-          fileSizeLimit: 5242880 // 5MB
-        });
-      }
-    } catch (error) {
-      console.log('Bucket check/create skipped:', error);
-    }
-  };
-
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -123,76 +107,30 @@ export const DestinationManagement = () => {
 
     setIsUploading(true);
 
-    try {
-      // Ensure bucket exists
-      await ensureBucketExists();
-      
-      // Generate unique filename
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `destinations/${fileName}`;
-
-      // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
-        .from('destination-logos')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (error) {
-        console.error('Storage upload error:', error);
-        // Fallback to base64 if storage fails
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const result = event.target?.result as string;
-          setFormData({ ...formData, logo: result });
-          setLogoPreview(result);
-        };
-        reader.readAsDataURL(file);
-        toast({
-          title: "Using local preview",
-          description: "Logo will be stored when you save.",
-        });
-      } else {
-        // Get public URL
-        const { data: urlData } = supabase.storage
-          .from('destination-logos')
-          .getPublicUrl(filePath);
-
-        const logoUrl = urlData.publicUrl;
-        setFormData({ ...formData, logo: logoUrl });
-        setLogoPreview(logoUrl);
-        toast({
-          title: "Logo uploaded",
-          description: "Your logo has been uploaded successfully.",
-        });
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
+    // Use base64 encoding for reliable local demo experience
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      setFormData({ ...formData, logo: result });
+      setLogoPreview(result);
+      setIsUploading(false);
+      toast({
+        title: "Logo uploaded",
+        description: "Your logo has been added successfully.",
+      });
+    };
+    reader.onerror = () => {
+      setIsUploading(false);
       toast({
         title: "Upload failed",
         description: "Please try again.",
         variant: "destructive"
       });
-    } finally {
-      setIsUploading(false);
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleRemoveLogo = async () => {
-    // If it's a storage URL, try to delete from storage
-    if (formData.logo && formData.logo.includes('destination-logos')) {
-      try {
-        const urlParts = formData.logo.split('/destination-logos/');
-        if (urlParts.length > 1) {
-          const filePath = urlParts[1];
-          await supabase.storage.from('destination-logos').remove([filePath]);
-        }
-      } catch (error) {
-        console.error('Error deleting logo from storage:', error);
-      }
-    }
+  const handleRemoveLogo = () => {
     setFormData({ ...formData, logo: '' });
     setLogoPreview('');
   };
