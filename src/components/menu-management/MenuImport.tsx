@@ -531,26 +531,26 @@ export const MenuImport = () => {
 
         {uploadStatus === 'idle' && (
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as ImportTab)} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 h-12 p-1.5 bg-muted/80 rounded-xl gap-1">
+            <TabsList className="grid w-full grid-cols-3 h-12 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
               <TabsTrigger 
                 value="pdf" 
-                className="text-xs sm:text-sm rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                className="text-sm rounded-lg h-full data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-foreground text-muted-foreground font-medium"
               >
-                <FileText className="w-4 h-4 mr-1 sm:mr-2" />
+                <FileText className="w-4 h-4 mr-2" />
                 PDF
               </TabsTrigger>
               <TabsTrigger 
                 value="weblink" 
-                className="text-xs sm:text-sm rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                className="text-sm rounded-lg h-full data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-foreground text-muted-foreground font-medium"
               >
-                <Globe className="w-4 h-4 mr-1 sm:mr-2" />
+                <Globe className="w-4 h-4 mr-2" />
                 Web Link
               </TabsTrigger>
               <TabsTrigger 
                 value="pos" 
-                className="text-xs sm:text-sm rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                className="text-sm rounded-lg h-full data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-foreground text-muted-foreground font-medium"
               >
-                <RefreshCw className="w-4 h-4 mr-1 sm:mr-2" />
+                <RefreshCw className="w-4 h-4 mr-2" />
                 POS
               </TabsTrigger>
             </TabsList>
