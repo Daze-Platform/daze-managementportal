@@ -1,6 +1,17 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import React, { createContext, useContext, useState } from 'react';
 import { toast } from 'sonner';
+import { storeMenuTemplates } from '@/data/storeMenuTemplates';
+
+export interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image?: string;
+  category: string;
+  modifierGroups?: string[];
+  modifiers?: any[];
+}
 
 export interface Menu {
   id: string;
@@ -10,7 +21,7 @@ export interface Menu {
   is_active: boolean;
   store_id?: number;
   resort_id?: string;
-  items: any[];
+  items: MenuItem[];
   created_at?: string;
   updated_at?: string;
 }
@@ -27,126 +38,146 @@ interface MenusContextType {
 
 const MenusContext = createContext<MenusContextType | undefined>(undefined);
 
+// Convert store menu templates to Menu format
+const createInitialMenus = (): Menu[] => {
+  const menus: Menu[] = [];
+  
+  // Brother Fox - Food Menu (Store ID: 1)
+  const brotherFoxTemplate = storeMenuTemplates['brother-fox'];
+  if (brotherFoxTemplate) {
+    const items: MenuItem[] = [];
+    brotherFoxTemplate.categories.forEach(category => {
+      category.items.forEach(item => {
+        items.push({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          image: item.image,
+          category: category.name,
+          modifierGroups: item.modifierGroups,
+        });
+      });
+    });
+    
+    menus.push({
+      id: 'menu-brother-fox-food',
+      name: 'Food Menu',
+      description: 'Wood-fired hearth cuisine featuring shared plates, charbroiled oysters, and seasonal dishes',
+      category: 'restaurant',
+      is_active: true,
+      store_id: 1,
+      items,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+  }
+  
+  // Sister Hen - Cocktails & Bar Snacks (Store ID: 2)
+  const sisterHenTemplate = storeMenuTemplates['sister-hen'];
+  if (sisterHenTemplate) {
+    const items: MenuItem[] = [];
+    sisterHenTemplate.categories.forEach(category => {
+      category.items.forEach(item => {
+        items.push({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          image: item.image,
+          category: category.name,
+          modifierGroups: item.modifierGroups,
+        });
+      });
+    });
+    
+    menus.push({
+      id: 'menu-sister-hen-cocktails',
+      name: 'Cocktails & Bar Snacks',
+      description: 'Prohibition-era inspired cocktails and elevated bar snacks',
+      category: 'bar',
+      is_active: true,
+      store_id: 2,
+      items,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+  }
+  
+  // Cousin Wolf - Breakfast Menu (Store ID: 3)
+  const cousinWolfTemplate = storeMenuTemplates['cousin-wolf'];
+  if (cousinWolfTemplate) {
+    const items: MenuItem[] = [];
+    cousinWolfTemplate.categories.forEach(category => {
+      category.items.forEach(item => {
+        items.push({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          image: item.image,
+          category: category.name,
+          modifierGroups: item.modifierGroups,
+        });
+      });
+    });
+    
+    menus.push({
+      id: 'menu-cousin-wolf-breakfast',
+      name: 'Breakfast Menu',
+      description: 'Grab-and-go breakfast favorites from our courtyard food truck',
+      category: 'food-truck',
+      is_active: true,
+      store_id: 3,
+      items,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+  }
+  
+  return menus;
+};
+
 export const MenusProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [menus, setMenus] = useState<Menu[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadMenus = async (showError = false) => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('menus')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error loading menus:', error);
-        // Only show toast for explicit refresh actions, not initial load
-        if (showError) {
-          toast.error('Failed to load menus');
-        }
-        return;
-      }
-
-      setMenus((data || []) as Menu[]);
-    } catch (error) {
-      console.error('Error loading menus:', error);
-      // Silently fail on network errors during initial load
-      if (showError) {
-        toast.error('Failed to load menus');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [menus, setMenus] = useState<Menu[]>(createInitialMenus);
+  const [loading] = useState(false);
 
   const refreshMenus = async () => {
-    await loadMenus(true); // Show error on explicit refresh
+    // No-op for demo mode - data is already in state
+    toast.success('Menus refreshed');
   };
 
   const addMenu = async (menuData: Omit<Menu, 'id' | 'created_at' | 'updated_at'>) => {
-    try {
-      const { data, error } = await supabase
-        .from('menus')
-        .insert([menuData])
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error adding menu:', error);
-        toast.error('Failed to add menu');
-        return;
-      }
-
-      setMenus(prev => [data as Menu, ...prev]);
-      toast.success('Menu added successfully');
-    } catch (error) {
-      console.error('Error adding menu:', error);
-      toast.error('Failed to add menu');
-    }
+    const newMenu: Menu = {
+      ...menuData,
+      id: `menu-${Date.now()}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    
+    setMenus(prev => [newMenu, ...prev]);
+    toast.success('Menu added successfully');
   };
 
   const updateMenu = async (updatedMenu: Menu) => {
-    try {
-      const { data, error } = await supabase
-        .from('menus')
-        .update({
-          name: updatedMenu.name,
-          description: updatedMenu.description,
-          category: updatedMenu.category,
-          is_active: updatedMenu.is_active,
-          store_id: updatedMenu.store_id,
-          resort_id: updatedMenu.resort_id,
-          items: updatedMenu.items,
-        })
-        .eq('id', updatedMenu.id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error updating menu:', error);
-        toast.error('Failed to update menu');
-        return;
-      }
-
-      setMenus(prev => 
-        prev.map(menu => menu.id === updatedMenu.id ? data as Menu : menu)
-      );
-      toast.success('Menu updated successfully');
-    } catch (error) {
-      console.error('Error updating menu:', error);
-      toast.error('Failed to update menu');
-    }
+    setMenus(prev => 
+      prev.map(menu => 
+        menu.id === updatedMenu.id 
+          ? { ...updatedMenu, updated_at: new Date().toISOString() }
+          : menu
+      )
+    );
+    toast.success('Menu updated successfully');
   };
 
   const deleteMenu = async (menuId: string) => {
-    try {
-      const { error } = await supabase
-        .from('menus')
-        .delete()
-        .eq('id', menuId);
-
-      if (error) {
-        console.error('Error deleting menu:', error);
-        toast.error('Failed to delete menu');
-        return;
-      }
-
-      setMenus(prev => prev.filter(menu => menu.id !== menuId));
-      toast.success('Menu deleted successfully');
-    } catch (error) {
-      console.error('Error deleting menu:', error);
-      toast.error('Failed to delete menu');
-    }
+    setMenus(prev => prev.filter(menu => menu.id !== menuId));
+    toast.success('Menu deleted successfully');
   };
 
   const getMenusByStore = (storeId: number): Menu[] => {
     return menus.filter(menu => menu.store_id === storeId);
   };
-
-  useEffect(() => {
-    loadMenus();
-  }, []);
 
   const value: MenusContextType = {
     menus,
