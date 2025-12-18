@@ -70,12 +70,12 @@ export const OrderHistory = () => {
     const allOrdersData = [
       {
         id: '#67899886',
-        storeId: '12', // Piazza ID
+        storeId: '1', // Brother Fox ID
         store: { 
-          name: 'Piazza', 
-          logo: '🅿️', 
-          bgColor: 'bg-gradient-to-br from-purple-500 to-purple-600',
-          customLogo: '/lovable-uploads/39add00a-390f-428a-b66f-acfa4920adf5.png'
+          name: 'Brother Fox', 
+          logo: '🦊', 
+          bgColor: 'bg-gradient-to-br from-amber-700 to-amber-800',
+          customLogo: '/images/stores/brother-fox-logo.jpg'
         },
         customer: 'Lucie Morgan',
         type: 'Pickup',
@@ -85,19 +85,19 @@ export const OrderHistory = () => {
         refundStatus: 'partial' as const,
         refundAmount: '$24.99',
         items: [
-          { id: '1', name: 'Large Pizza Margherita', price: 24.99, quantity: 2 },
-          { id: '2', name: 'Garlic Bread with Herbs', price: 8.99, quantity: 1 },
-          { id: '3', name: 'Coca Cola 500ml', price: 3.99, quantity: 3 }
+          { id: '1', name: 'Wood-Fired Oysters', price: 24.99, quantity: 2 },
+          { id: '2', name: 'Seasonal Vegetable Platter', price: 8.99, quantity: 1 },
+          { id: '3', name: 'Craft Lemonade', price: 3.99, quantity: 3 }
         ]
       },
       {
         id: '#67899887',
-        storeId: '13', // Red Fish Blue Fish ID
+        storeId: '2', // Sister Hen ID
         store: { 
-          name: 'Red Fish Blue Fish', 
-          logo: '🐟', 
-          bgColor: 'bg-gradient-to-br from-red-500 to-red-600',
-          customLogo: '/lovable-uploads/4670af0c-ac52-4ff7-95cc-4b34973c1a4e.png'
+          name: 'Sister Hen', 
+          logo: '🐔', 
+          bgColor: 'bg-gradient-to-br from-purple-800 to-purple-900',
+          customLogo: '/images/stores/sister-hen-logo.jpg'
         },
         customer: 'Adam Smith',
         type: 'Delivery',
@@ -105,18 +105,18 @@ export const OrderHistory = () => {
         date: 'May 7, 2021 11:50AM',
         status: 'Canceled',
         items: [
-          { id: '4', name: 'Fish Tacos (3 pieces)', price: 12.99, quantity: 2 },
-          { id: '5', name: 'Chips & Salsa Combo', price: 8.49, quantity: 2 }
+          { id: '4', name: 'Signature Cocktail', price: 12.99, quantity: 2 },
+          { id: '5', name: 'Charcuterie Board', price: 8.49, quantity: 2 }
         ]
       },
       {
         id: '#67899888',
-        storeId: '8', // Sal De Mar ID
+        storeId: '3', // Cousin Wolf ID
         store: { 
-          name: 'Sal De Mar', 
-          logo: '🌊', 
-          bgColor: 'bg-gradient-to-br from-blue-500 to-blue-600',
-          customLogo: '/lovable-uploads/6eb0a887-8107-4ebd-a887-df41759246f9.png'
+          name: 'Cousin Wolf', 
+          logo: '🐺', 
+          bgColor: 'bg-gradient-to-br from-emerald-700 to-emerald-800',
+          customLogo: '/images/stores/cousin-wolf-logo.webp'
         },
         customer: 'John Cordoba',
         type: 'Delivery',
@@ -124,19 +124,19 @@ export const OrderHistory = () => {
         date: 'May 7, 2021 11:50AM',
         status: 'Completed',
         items: [
-          { id: '6', name: 'Seafood Paella Valencia', price: 6.99, quantity: 2 },
-          { id: '7', name: 'Fresh Ceviche Bowl', price: 4.99, quantity: 1 },
-          { id: '8', name: 'Sangria Glass', price: 5.25, quantity: 2 }
+          { id: '6', name: 'Breakfast Burrito', price: 6.99, quantity: 2 },
+          { id: '7', name: 'Fresh Squeezed OJ', price: 4.99, quantity: 1 },
+          { id: '8', name: 'Coffee', price: 5.25, quantity: 2 }
         ]
       },
       {
         id: '#67899889',
-        storeId: '8', // Sal De Mar ID
+        storeId: '1', // Brother Fox ID
         store: { 
-          name: 'Sal De Mar', 
-          logo: '🌊', 
-          bgColor: 'bg-gradient-to-br from-blue-500 to-blue-600',
-          customLogo: '/lovable-uploads/6eb0a887-8107-4ebd-a887-df41759246f9.png'
+          name: 'Brother Fox', 
+          logo: '🦊', 
+          bgColor: 'bg-gradient-to-br from-amber-700 to-amber-800',
+          customLogo: '/images/stores/brother-fox-logo.jpg'
         },
         customer: 'John Cordoba',
         type: 'Delivery',
@@ -144,18 +144,18 @@ export const OrderHistory = () => {
         date: 'May 7, 2021 11:50AM',
         status: 'Completed',
         items: [
-          { id: '9', name: 'Grilled Octopus Tentacles', price: 32.50, quantity: 2 },
+          { id: '9', name: 'Charbroiled Octopus', price: 32.50, quantity: 2 },
           { id: '10', name: 'Artisan Bread & Olive Oil', price: 13.11, quantity: 2 }
         ]
       },
       {
         id: '#67899890',
-        storeId: '12', // Piazza ID
+        storeId: '2', // Sister Hen ID
         store: { 
-          name: 'Piazza', 
-          logo: '🅿️', 
-          bgColor: 'bg-gradient-to-br from-purple-500 to-purple-600',
-          customLogo: '/lovable-uploads/39add00a-390f-428a-b66f-acfa4920adf5.png'
+          name: 'Sister Hen', 
+          logo: '🐔', 
+          bgColor: 'bg-gradient-to-br from-purple-800 to-purple-900',
+          customLogo: '/images/stores/sister-hen-logo.jpg'
         },
         customer: 'Sarah Johnson',
         type: 'Pickup',
@@ -165,20 +165,20 @@ export const OrderHistory = () => {
         refundStatus: 'full' as const,
         refundAmount: '$54.32',
         items: [
-          { id: '11', name: 'Pepperoni Pizza Medium', price: 18.99, quantity: 1 },
-          { id: '12', name: 'Caesar Salad', price: 12.99, quantity: 1 },
-          { id: '13', name: 'Tiramisu', price: 8.99, quantity: 2 },
-          { id: '14', name: 'Italian Soda', price: 4.99, quantity: 3 }
+          { id: '11', name: 'Old Fashioned', price: 18.99, quantity: 1 },
+          { id: '12', name: 'Deviled Eggs', price: 12.99, quantity: 1 },
+          { id: '13', name: 'Bourbon Flight', price: 8.99, quantity: 2 },
+          { id: '14', name: 'Sparkling Water', price: 4.99, quantity: 3 }
         ]
       },
       {
         id: '#67899891',
-        storeId: '13', // Red Fish Blue Fish ID
+        storeId: '3', // Cousin Wolf ID
         store: { 
-          name: 'Red Fish Blue Fish', 
-          logo: '🐟', 
-          bgColor: 'bg-gradient-to-br from-red-500 to-red-600',
-          customLogo: '/lovable-uploads/4670af0c-ac52-4ff7-95cc-4b34973c1a4e.png'
+          name: 'Cousin Wolf', 
+          logo: '🐺', 
+          bgColor: 'bg-gradient-to-br from-emerald-700 to-emerald-800',
+          customLogo: '/images/stores/cousin-wolf-logo.webp'
         },
         customer: 'Michael Chen',
         type: 'Delivery',
@@ -186,20 +186,20 @@ export const OrderHistory = () => {
         date: 'May 6, 2021 1:15PM',
         status: 'Completed',
         items: [
-          { id: '15', name: 'Shrimp & Avocado Salad', price: 16.99, quantity: 1 },
-          { id: '16', name: 'Lobster Roll Sandwich', price: 24.99, quantity: 1 },
-          { id: '17', name: 'Sweet Potato Fries', price: 7.99, quantity: 2 },
-          { id: '18', name: 'Key Lime Pie', price: 6.99, quantity: 2 }
+          { id: '15', name: 'Avocado Toast', price: 16.99, quantity: 1 },
+          { id: '16', name: 'Southern Breakfast Plate', price: 24.99, quantity: 1 },
+          { id: '17', name: 'Hash Browns', price: 7.99, quantity: 2 },
+          { id: '18', name: 'Beignets', price: 6.99, quantity: 2 }
         ]
       },
       {
         id: '#67899892',
-        storeId: '8', // Sal De Mar ID
+        storeId: '1', // Brother Fox ID
         store: { 
-          name: 'Sal De Mar', 
-          logo: '🌊', 
-          bgColor: 'bg-gradient-to-br from-blue-500 to-blue-600',
-          customLogo: '/lovable-uploads/6eb0a887-8107-4ebd-a887-df41759246f9.png'
+          name: 'Brother Fox', 
+          logo: '🦊', 
+          bgColor: 'bg-gradient-to-br from-amber-700 to-amber-800',
+          customLogo: '/images/stores/brother-fox-logo.jpg'
         },
         customer: 'Emma Rodriguez',
         type: 'Pickup',
@@ -207,8 +207,8 @@ export const OrderHistory = () => {
         date: 'May 5, 2021 7:45PM',
         status: 'Completed',
         items: [
-          { id: '19', name: 'Mediterranean Bowl', price: 14.99, quantity: 2 },
-          { id: '20', name: 'Grilled Shrimp Skewers', price: 9.99, quantity: 1 }
+          { id: '19', name: 'Grilled Salmon', price: 14.99, quantity: 2 },
+          { id: '20', name: 'Charred Shrimp', price: 9.99, quantity: 1 }
         ]
       }
     ];
