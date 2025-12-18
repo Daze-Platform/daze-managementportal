@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft } from 'lucide-react';
 
 interface SidebarHeaderProps {
   isOpen: boolean;
@@ -12,17 +12,6 @@ interface SidebarHeaderProps {
 export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCollapse }: SidebarHeaderProps) => {
   return (
     <>
-      {/* Mobile/Tablet Close Button */}
-      <div className="lg:hidden absolute top-2 right-4 z-10">
-        <button 
-          onClick={onClose} 
-          className="p-1.5 text-white hover:text-gray-300 hover:bg-white/10 rounded-lg transition-colors flex items-center justify-center"
-          aria-label="Close sidebar"
-        >
-          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-        </button>
-      </div>
-
       {/* Logo Section */}
       <div className={`flex-shrink-0 border-b border-white/10 ${isCollapsed ? 'p-1' : 'p-4 sm:p-5 md:p-6'}`}>
         {isCollapsed ? (
@@ -52,9 +41,9 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
             </div>
           </div>
         ) : (
-          /* Expanded State - DAZE Logo + Arrow */
-          <div className="flex items-center justify-between">
-            <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
+          /* Expanded State - DAZE Logo + Controls */
+          <div className="flex items-center justify-between gap-2">
+            <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex-shrink-0">
               <img 
                 src="/lovable-uploads/db847939-b95d-4615-ab8d-a03ec8f81e50.png" 
                 alt="DAZE Logo" 
@@ -62,13 +51,24 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
               />
             </div>
             
-            <div className="hidden lg:flex items-center justify-center">
+            {/* Controls container */}
+            <div className="flex items-center gap-1">
+              {/* Desktop Collapse Button */}
               <button
                 onClick={onToggleCollapse}
-                className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center justify-center"
+                className="hidden lg:flex p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] items-center justify-center"
                 aria-label="Collapse sidebar"
               >
-                <ChevronLeft className="w-5 h-5" strokeWidth={3} />
+                <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
+              </button>
+              
+              {/* Mobile/Tablet Close Button */}
+              <button 
+                onClick={onClose} 
+                className="lg:hidden p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-colors flex items-center justify-center"
+                aria-label="Close sidebar"
+              >
+                <X className="w-5 h-5" strokeWidth={2.5} />
               </button>
             </div>
           </div>
