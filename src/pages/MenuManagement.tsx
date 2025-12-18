@@ -86,6 +86,7 @@ export const MenuManagement = () => {
         store_id: selectedStore.id,
         items: [
           {
+            id: 'sample-1',
             name: 'Grilled Chicken Caesar Salad',
             description: 'Fresh romaine lettuce, grilled chicken breast, parmesan cheese, croutons, and Caesar dressing',
             price: 14.99,
@@ -93,6 +94,7 @@ export const MenuManagement = () => {
             modifiers: []
           },
           {
+            id: 'sample-2',
             name: 'Classic Cheeseburger',
             description: 'Angus beef patty, cheddar cheese, lettuce, tomato, onion, pickle, served with fries',
             price: 16.99,
@@ -100,6 +102,7 @@ export const MenuManagement = () => {
             modifiers: []
           },
           {
+            id: 'sample-3',
             name: 'Margherita Pizza',
             description: 'Fresh mozzarella, tomato sauce, basil, olive oil on wood-fired crust',
             price: 18.99,
@@ -107,6 +110,7 @@ export const MenuManagement = () => {
             modifiers: []
           },
           {
+            id: 'sample-4',
             name: 'Fish & Chips',
             description: 'Beer-battered cod, hand-cut fries, coleslaw, tartar sauce',
             price: 19.99,
@@ -114,6 +118,7 @@ export const MenuManagement = () => {
             modifiers: []
           },
           {
+            id: 'sample-5',
             name: 'Chocolate Lava Cake',
             description: 'Warm chocolate cake with molten center, served with vanilla ice cream',
             price: 8.99,

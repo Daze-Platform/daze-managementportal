@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -6,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ClipboardList, Clock, Sparkles, Users, MoreVertical, Store } from 'lucide-react';
 import { Menu } from '@/pages/MenuManagement';
 import { useIsMobile, useIsTablet } from '@/hooks/use-mobile';
+import { useStores } from '@/contexts/StoresContext';
 
 interface MenuCardProps {
   menu: Menu;
@@ -21,6 +21,11 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, iconConfig, onEditMenu
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const isMobileOrTablet = isMobile || isTablet;
+  const { stores } = useStores();
+  
+  const storeName = menu.store_id 
+    ? stores.find(s => s.id === menu.store_id)?.name || `Store #${menu.store_id}`
+    : null;
 
   return (
     <div className="group relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
@@ -93,10 +98,10 @@ export const MenuCard: React.FC<MenuCardProps> = ({ menu, iconConfig, onEditMenu
                 <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-indigo-500" />
                 <span className="text-xs font-medium">{Array.isArray(menu.items) ? menu.items.length : 0} items</span>
               </div>
-              {menu.store_id && (
+              {storeName && (
                 <div className="flex items-center gap-1.5 text-gray-500 hover:text-primary transition-colors duration-200">
                   <Store className="w-3.5 h-3.5 flex-shrink-0 text-green-500" />
-                  <span className="text-xs">Store #{menu.store_id}</span>
+                  <span className="text-xs">{storeName}</span>
                 </div>
               )}
             </div>
