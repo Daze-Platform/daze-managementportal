@@ -120,11 +120,15 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Director">🎯 Director</SelectItem>
-                <SelectItem value="Admin">👑 Admin</SelectItem>
-                <SelectItem value="Manager">📊 Manager</SelectItem>
-                <SelectItem value="Operator">👤 Operator</SelectItem>
-                <SelectItem value="Runner">🏃 Runner</SelectItem>
+                <SelectItem value="Director">💼 Director</SelectItem>
+                <SelectItem value="Admin">🔐 Admin</SelectItem>
+                <SelectItem value="Manager">👔 Manager</SelectItem>
+                <SelectItem value="Operator">⚙️ Operator</SelectItem>
+                <SelectItem value="Runner">🚀 Runner</SelectItem>
+                <SelectItem value="Server">🍽️ Server</SelectItem>
+                <SelectItem value="Bartender">🍸 Bartender</SelectItem>
+                <SelectItem value="Room Service">🛎️ Room Service</SelectItem>
+                <SelectItem value="Kitchen Staff">👨‍🍳 Kitchen Staff</SelectItem>
               </SelectContent>
             </Select>
           </div>
