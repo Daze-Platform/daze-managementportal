@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarNavigation } from './SidebarNavigation';
@@ -15,6 +15,14 @@ export const Sidebar = ({
   onToggleCollapse?: () => void; 
 }) => {
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const toggleSubmenu = (itemName: string) => {
     setExpandedItems(prev => 
@@ -24,11 +32,14 @@ export const Sidebar = ({
     );
   };
 
+  // On desktop, sidebar is always visible
+  const shouldShow = isDesktop || isOpen;
+
   return (
     <>
       {/* Mobile/Tablet Overlay */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen && !isDesktop && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -50,7 +61,7 @@ export const Sidebar = ({
         `}
         initial={false}
         animate={{ 
-          x: isOpen ? 0 : '-100%',
+          x: shouldShow ? 0 : '-100%',
           width: isCollapsed ? 64 : undefined 
         }}
         transition={{ 

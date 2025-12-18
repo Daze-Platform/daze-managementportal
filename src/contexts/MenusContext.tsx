@@ -31,7 +31,7 @@ export const MenusProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [menus, setMenus] = useState<Menu[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadMenus = async () => {
+  const loadMenus = async (showError = false) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -41,21 +41,27 @@ export const MenusProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       if (error) {
         console.error('Error loading menus:', error);
-        toast.error('Failed to load menus');
+        // Only show toast for explicit refresh actions, not initial load
+        if (showError) {
+          toast.error('Failed to load menus');
+        }
         return;
       }
 
       setMenus((data || []) as Menu[]);
     } catch (error) {
       console.error('Error loading menus:', error);
-      toast.error('Failed to load menus');
+      // Silently fail on network errors during initial load
+      if (showError) {
+        toast.error('Failed to load menus');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const refreshMenus = async () => {
-    await loadMenus();
+    await loadMenus(true); // Show error on explicit refresh
   };
 
   const addMenu = async (menuData: Omit<Menu, 'id' | 'created_at' | 'updated_at'>) => {
