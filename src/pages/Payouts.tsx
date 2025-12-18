@@ -25,81 +25,81 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 const financialData = [
   {
     id: 1,
-    store: 'Piazza',
+    store: 'Brother Fox',
     date: 'May 7, 2021 11:50AM',
     status: 'Succeeded',
     subtotal: '$6790.89',
     serviceFee: '$679.09',
     commissions: '$679.09',
     net: '$6111.80',
-    storeIcon: '🅿️',
-    bgColor: 'bg-purple-500',
-    customLogo: '/lovable-uploads/39add00a-390f-428a-b66f-acfa4920adf5.png'
+    storeIcon: '🦊',
+    bgColor: 'bg-amber-600',
+    customLogo: '/images/stores/brother-fox-logo.jpg'
   },
   {
     id: 2,
-    store: 'Piazza',
+    store: 'Brother Fox',
     date: 'May 6, 2021 2:30PM',
     status: 'Pending',
     subtotal: '$4523.45',
     serviceFee: '$452.35',
     commissions: '$452.35',
     net: '$4071.10',
-    storeIcon: '🅿️',
-    bgColor: 'bg-purple-500',
-    customLogo: '/lovable-uploads/39add00a-390f-428a-b66f-acfa4920adf5.png'
+    storeIcon: '🦊',
+    bgColor: 'bg-amber-600',
+    customLogo: '/images/stores/brother-fox-logo.jpg'
   },
   {
     id: 3,
-    store: 'Red Fish Blue Fish',
+    store: 'Sister Hen',
     date: 'May 6, 2021 10:15AM',
     status: 'Failed',
     subtotal: '$2890.67',
     serviceFee: '$289.07',
     commissions: '$289.07',
     net: '$2601.60',
-    storeIcon: '🐟',
-    bgColor: 'bg-red-500',
-    customLogo: '/lovable-uploads/4670af0c-ac52-4ff7-95cc-4b34973c1a4e.png'
+    storeIcon: '🐔',
+    bgColor: 'bg-rose-600',
+    customLogo: '/images/stores/sister-hen-logo.jpg'
   },
   {
     id: 4,
-    store: 'Sal De Mar',
+    store: 'Cousin Wolf',
     date: 'May 5, 2021 4:45PM',
     status: 'Succeeded',
     subtotal: '$5234.12',
     serviceFee: '$523.41',
     commissions: '$523.41',
     net: '$4710.71',
-    storeIcon: '🌊',
-    bgColor: 'bg-blue-500',
-    customLogo: '/lovable-uploads/6eb0a887-8107-4ebd-a887-df41759246f9.png'
+    storeIcon: '🐺',
+    bgColor: 'bg-slate-700',
+    customLogo: '/images/stores/cousin-wolf-logo.webp'
   },
   {
     id: 5,
-    store: 'Red Fish Blue Fish',
+    store: 'Sister Hen',
     date: 'May 5, 2021 1:20PM',
     status: 'Succeeded',
     subtotal: '$3456.78',
     serviceFee: '$345.68',
     commissions: '$345.68',
     net: '$3111.10',
-    storeIcon: '🐟',
-    bgColor: 'bg-red-500',
-    customLogo: '/lovable-uploads/4670af0c-ac52-4ff7-95cc-4b34973c1a4e.png'
+    storeIcon: '🐔',
+    bgColor: 'bg-rose-600',
+    customLogo: '/images/stores/sister-hen-logo.jpg'
   },
   {
     id: 6,
-    store: 'Sal De Mar',
+    store: 'Cousin Wolf',
     date: 'May 4, 2021 11:00AM',
     status: 'Pending',
     subtotal: '$7890.34',
     serviceFee: '$789.03',
     commissions: '$789.03',
     net: '$7101.31',
-    storeIcon: '🌊',
-    bgColor: 'bg-blue-500',
-    customLogo: '/lovable-uploads/6eb0a887-8107-4ebd-a887-df41759246f9.png'
+    storeIcon: '🐺',
+    bgColor: 'bg-slate-700',
+    customLogo: '/images/stores/cousin-wolf-logo.webp'
   }
 ];
 
