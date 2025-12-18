@@ -5,12 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar } from 'lucide-react';
+import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDestination } from '@/contexts/DestinationContext';
 import { useStores } from '@/contexts/StoresContext';
 import { StoreAssignmentDialog } from './StoreAssignmentDialog';
 import { StoreLogo } from '@/components/stores/StoreLogo';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface Destination {
   id: string;
@@ -38,6 +39,7 @@ export const DestinationManagement = () => {
   const [selectedDestinationId, setSelectedDestinationId] = useState<string>('');
   const [editingStore, setEditingStore] = useState<any>(null);
   const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -81,38 +83,116 @@ export const DestinationManagement = () => {
     setIsCreateDialogOpen(true);
   };
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "File too large",
-          description: "Please select an image smaller than 5MB.",
-          variant: "destructive"
+  const ensureBucketExists = async () => {
+    try {
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const bucketExists = buckets?.some(b => b.name === 'destination-logos');
+      
+      if (!bucketExists) {
+        await supabase.storage.createBucket('destination-logos', {
+          public: true,
+          fileSizeLimit: 5242880 // 5MB
         });
-        return;
       }
-
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Invalid file type",
-          description: "Please select an image file.",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setFormData({ ...formData, logo: result });
-        setLogoPreview(result);
-      };
-      reader.readAsDataURL(file);
+    } catch (error) {
+      console.log('Bucket check/create skipped:', error);
     }
   };
 
-  const handleRemoveLogo = () => {
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      // Ensure bucket exists
+      await ensureBucketExists();
+      
+      // Generate unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `destinations/${fileName}`;
+
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('destination-logos')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        console.error('Storage upload error:', error);
+        // Fallback to base64 if storage fails
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const result = event.target?.result as string;
+          setFormData({ ...formData, logo: result });
+          setLogoPreview(result);
+        };
+        reader.readAsDataURL(file);
+        toast({
+          title: "Using local preview",
+          description: "Logo will be stored when you save.",
+        });
+      } else {
+        // Get public URL
+        const { data: urlData } = supabase.storage
+          .from('destination-logos')
+          .getPublicUrl(filePath);
+
+        const logoUrl = urlData.publicUrl;
+        setFormData({ ...formData, logo: logoUrl });
+        setLogoPreview(logoUrl);
+        toast({
+          title: "Logo uploaded",
+          description: "Your logo has been uploaded successfully.",
+        });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: "Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveLogo = async () => {
+    // If it's a storage URL, try to delete from storage
+    if (formData.logo && formData.logo.includes('destination-logos')) {
+      try {
+        const urlParts = formData.logo.split('/destination-logos/');
+        if (urlParts.length > 1) {
+          const filePath = urlParts[1];
+          await supabase.storage.from('destination-logos').remove([filePath]);
+        }
+      } catch (error) {
+        console.error('Error deleting logo from storage:', error);
+      }
+    }
     setFormData({ ...formData, logo: '' });
     setLogoPreview('');
   };
@@ -252,13 +332,18 @@ export const DestinationManagement = () => {
                               size="sm"
                               className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
                               onClick={handleRemoveLogo}
+                              disabled={isUploading}
                             >
                               <X className="h-3 w-3" />
                             </Button>
                           </div>
                         ) : (
                           <div className="w-16 h-16 sm:w-20 sm:h-20 border-2 border-dashed border-border rounded-lg flex items-center justify-center">
-                            <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+                            {isUploading ? (
+                              <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground animate-spin" />
+                            ) : (
+                              <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+                            )}
                           </div>
                         )}
                         <div className="mt-2">
@@ -268,6 +353,7 @@ export const DestinationManagement = () => {
                             accept="image/*"
                             onChange={handleLogoUpload}
                             className="hidden"
+                            disabled={isUploading}
                           />
                           <Button
                             type="button"
@@ -275,8 +361,16 @@ export const DestinationManagement = () => {
                             size="sm"
                             onClick={() => document.getElementById('logo')?.click()}
                             className="text-xs"
+                            disabled={isUploading}
                           >
-                            {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                            {isUploading ? (
+                              <>
+                                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              logoPreview ? 'Change Logo' : 'Upload Logo'
+                            )}
                           </Button>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
