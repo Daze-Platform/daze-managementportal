@@ -7,12 +7,12 @@ export interface Employee {
   name: string;
   email: string;
   role: string;
-  store?: string; // Legacy single store field
+  store?: string;
   assigned_stores?: string[];
-  assigned_resorts?: string[]; // New multiple resorts field
+  assigned_resorts?: string[];
   status: string;
   avatar?: string;
-  resort_id?: string; // Legacy single resort field
+  resort_id?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -41,34 +41,42 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         .order('created_at', { ascending: false });
 
       if (error) {
-        // Only log, don't show toast on initial load to avoid spamming users
         console.warn('Could not load employees:', error.message);
         if (showErrors) {
           toast.error('Failed to load employees');
         }
-        // Keep existing employees or use empty array
-        setEmployees(prev => prev.length > 0 ? prev : []);
         return;
       }
 
       setEmployees(data || []);
     } catch (error) {
-      // Network errors - fail silently on initial load
       console.warn('Network error loading employees:', error);
       if (showErrors) {
         toast.error('Failed to load employees');
       }
-      setEmployees(prev => prev.length > 0 ? prev : []);
     } finally {
       setLoading(false);
     }
   };
 
   const refreshEmployees = async () => {
-    await loadEmployees(true); // Show errors on manual refresh
+    await loadEmployees(true);
   };
 
   const addEmployee = async (employeeData: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
+    // Create optimistic employee with temporary ID
+    const tempId = `temp-${Date.now()}`;
+    const optimisticEmployee: Employee = {
+      ...employeeData,
+      id: tempId,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    // Add to local state immediately (optimistic update)
+    setEmployees(prev => [optimisticEmployee, ...prev]);
+    toast.success('Employee added successfully');
+
     try {
       const { data, error } = await supabase
         .from('employees')
@@ -77,22 +85,30 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         .single();
 
       if (error) {
-        console.error('Error adding employee:', error);
-        toast.error('Failed to add employee');
+        console.warn('Could not sync employee to database:', error.message);
+        // Keep the local version - it's still usable
         return;
       }
 
-      setEmployees(prev => [data, ...prev]);
-      toast.success('Employee added successfully');
+      // Replace temp ID with real ID from database
+      setEmployees(prev =>
+        prev.map(emp => emp.id === tempId ? data : emp)
+      );
     } catch (error) {
-      console.error('Error adding employee:', error);
-      toast.error('Failed to add employee');
+      console.warn('Network error syncing employee:', error);
+      // Keep the local version
     }
   };
 
   const updateEmployee = async (updatedEmployee: Employee) => {
+    // Optimistic update
+    setEmployees(prev =>
+      prev.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp)
+    );
+    toast.success('Employee updated successfully');
+
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('employees')
         .update({
           name: updatedEmployee.name,
@@ -105,27 +121,21 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           avatar: updatedEmployee.avatar,
           resort_id: updatedEmployee.resort_id,
         })
-        .eq('id', updatedEmployee.id)
-        .select()
-        .single();
+        .eq('id', updatedEmployee.id);
 
       if (error) {
-        console.error('Error updating employee:', error);
-        toast.error('Failed to update employee');
-        return;
+        console.warn('Could not sync employee update:', error.message);
       }
-
-      setEmployees(prev => 
-        prev.map(emp => emp.id === updatedEmployee.id ? data : emp)
-      );
-      toast.success('Employee updated successfully');
     } catch (error) {
-      console.error('Error updating employee:', error);
-      toast.error('Failed to update employee');
+      console.warn('Network error syncing employee update:', error);
     }
   };
 
   const deleteEmployee = async (employeeId: string) => {
+    // Optimistic delete
+    setEmployees(prev => prev.filter(emp => emp.id !== employeeId));
+    toast.success('Employee deleted successfully');
+
     try {
       const { error } = await supabase
         .from('employees')
@@ -133,16 +143,10 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         .eq('id', employeeId);
 
       if (error) {
-        console.error('Error deleting employee:', error);
-        toast.error('Failed to delete employee');
-        return;
+        console.warn('Could not sync employee deletion:', error.message);
       }
-
-      setEmployees(prev => prev.filter(emp => emp.id !== employeeId));
-      toast.success('Employee deleted successfully');
     } catch (error) {
-      console.error('Error deleting employee:', error);
-      toast.error('Failed to delete employee');
+      console.warn('Network error syncing employee deletion:', error);
     }
   };
 

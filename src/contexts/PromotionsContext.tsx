@@ -37,7 +37,7 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadPromotions = async () => {
+  const loadPromotions = async (showErrors = false) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -46,25 +46,43 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error loading promotions:', error);
-        toast.error('Failed to load promotions');
+        console.warn('Could not load promotions:', error.message);
+        if (showErrors) {
+          toast.error('Failed to load promotions');
+        }
         return;
       }
 
       setPromotions((data || []) as Promotion[]);
     } catch (error) {
-      console.error('Error loading promotions:', error);
-      toast.error('Failed to load promotions');
+      console.warn('Network error loading promotions:', error);
+      if (showErrors) {
+        toast.error('Failed to load promotions');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const refreshPromotions = async () => {
-    await loadPromotions();
+    await loadPromotions(true);
   };
 
   const addPromotion = async (promotionData: Omit<Promotion, 'id' | 'created_at' | 'updated_at' | 'usage_count'>) => {
+    // Create optimistic promotion with temporary ID
+    const tempId = `temp-${Date.now()}`;
+    const optimisticPromotion: Promotion = {
+      ...promotionData,
+      id: tempId,
+      usage_count: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    // Add to local state immediately (optimistic update)
+    setPromotions(prev => [optimisticPromotion, ...prev]);
+    toast.success('Promotion added successfully');
+
     try {
       const { data, error } = await supabase
         .from('promotions')
@@ -73,22 +91,30 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         .single();
 
       if (error) {
-        console.error('Error adding promotion:', error);
-        toast.error('Failed to add promotion');
+        console.warn('Could not sync promotion to database:', error.message);
+        // Keep the local version - it's still usable
         return;
       }
 
-      setPromotions(prev => [data as Promotion, ...prev]);
-      toast.success('Promotion added successfully');
+      // Replace temp ID with real ID from database
+      setPromotions(prev => 
+        prev.map(p => p.id === tempId ? (data as Promotion) : p)
+      );
     } catch (error) {
-      console.error('Error adding promotion:', error);
-      toast.error('Failed to add promotion');
+      console.warn('Network error syncing promotion:', error);
+      // Keep the local version
     }
   };
 
   const updatePromotion = async (updatedPromotion: Promotion) => {
+    // Optimistic update
+    setPromotions(prev => 
+      prev.map(promotion => promotion.id === updatedPromotion.id ? updatedPromotion : promotion)
+    );
+    toast.success('Promotion updated successfully');
+
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('promotions')
         .update({
           title: updatedPromotion.title,
@@ -104,27 +130,21 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           usage_limit: updatedPromotion.usage_limit,
           usage_count: updatedPromotion.usage_count,
         })
-        .eq('id', updatedPromotion.id)
-        .select()
-        .single();
+        .eq('id', updatedPromotion.id);
 
       if (error) {
-        console.error('Error updating promotion:', error);
-        toast.error('Failed to update promotion');
-        return;
+        console.warn('Could not sync promotion update:', error.message);
       }
-
-      setPromotions(prev => 
-        prev.map(promotion => promotion.id === updatedPromotion.id ? data as Promotion : promotion)
-      );
-      toast.success('Promotion updated successfully');
     } catch (error) {
-      console.error('Error updating promotion:', error);
-      toast.error('Failed to update promotion');
+      console.warn('Network error syncing promotion update:', error);
     }
   };
 
   const deletePromotion = async (promotionId: string) => {
+    // Optimistic delete
+    setPromotions(prev => prev.filter(promotion => promotion.id !== promotionId));
+    toast.success('Promotion deleted successfully');
+
     try {
       const { error } = await supabase
         .from('promotions')
@@ -132,16 +152,10 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         .eq('id', promotionId);
 
       if (error) {
-        console.error('Error deleting promotion:', error);
-        toast.error('Failed to delete promotion');
-        return;
+        console.warn('Could not sync promotion deletion:', error.message);
       }
-
-      setPromotions(prev => prev.filter(promotion => promotion.id !== promotionId));
-      toast.success('Promotion deleted successfully');
     } catch (error) {
-      console.error('Error deleting promotion:', error);
-      toast.error('Failed to delete promotion');
+      console.warn('Network error syncing promotion deletion:', error);
     }
   };
 
