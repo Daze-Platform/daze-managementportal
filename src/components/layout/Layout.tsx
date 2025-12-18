@@ -17,11 +17,19 @@ export const Layout = ({ children }: LayoutProps) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { isScrollingDown } = useFullScreenScroll();
   const [isMobile, setIsMobile] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
+    const checkScreenSize = () => {
       const mobile = window.innerWidth <= 1024;
+      const desktop = window.innerWidth >= 1024;
       setIsMobile(mobile);
+      setIsDesktop(desktop);
+      
+      // Auto-open sidebar on desktop
+      if (desktop) {
+        setSidebarOpen(true);
+      }
       
       const updateViewportHeight = () => {
         const vh = window.innerHeight * 0.01;
@@ -36,15 +44,15 @@ export const Layout = ({ children }: LayoutProps) => {
       setTimeout(updateViewportHeight, 100);
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
     window.addEventListener('orientationchange', () => {
-      setTimeout(checkMobile, 100);
+      setTimeout(checkScreenSize, 100);
     });
     
     return () => {
-      window.removeEventListener('resize', checkMobile);
-      window.removeEventListener('orientationchange', checkMobile);
+      window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener('orientationchange', checkScreenSize);
     };
   }, []);
 
