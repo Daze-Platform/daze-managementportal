@@ -83,8 +83,18 @@ export const StoreAssignmentDialog: React.FC<StoreAssignmentDialogProps> = ({
                 </SelectItem>
                 {availableStores.map(store => (
                   <SelectItem key={store.id} value={store.id.toString()}>
-                    <div className="flex items-center gap-2">
-                      <div className="text-lg">{store.logo}</div>
+                    <div className="flex items-center gap-3">
+                      {store.logo ? (
+                        <img 
+                          src={store.logo} 
+                          alt={store.name} 
+                          className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Store className="w-4 h-4 text-gray-400" />
+                        </div>
+                      )}
                       <div>
                         <div className="font-medium">{store.name}</div>
                         <div className="text-xs text-gray-500 flex items-center gap-1">
@@ -103,8 +113,18 @@ export const StoreAssignmentDialog: React.FC<StoreAssignmentDialogProps> = ({
             <Card className="border-blue-200 bg-blue-50">
               <CardContent className="p-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="text-lg">{selectedStore.logo}</div>
+                  <div className="flex items-center gap-3">
+                    {selectedStore.logo ? (
+                      <img 
+                        src={selectedStore.logo} 
+                        alt={selectedStore.name} 
+                        className="w-10 h-10 rounded-lg object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <Store className="w-5 h-5 text-gray-400" />
+                      </div>
+                    )}
                     <div>
                       <div className="font-medium text-sm">{selectedStore.name}</div>
                       <div className="text-xs text-gray-600">{selectedStore.address}</div>
