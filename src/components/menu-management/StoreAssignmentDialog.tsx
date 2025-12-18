@@ -83,23 +83,25 @@ export const StoreAssignmentDialog: React.FC<StoreAssignmentDialogProps> = ({
                 </SelectItem>
                 {availableStores.map(store => (
                   <SelectItem key={store.id} value={store.id.toString()}>
-                    <div className="flex items-center gap-3">
-                      {store.logo ? (
-                        <img 
-                          src={store.logo} 
-                          alt={store.name} 
-                          className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Store className="w-4 h-4 text-gray-400" />
-                        </div>
-                      )}
-                      <div>
-                        <div className="font-medium">{store.name}</div>
-                        <div className="text-xs text-gray-500 flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          {store.address}
+                    <div className="flex items-center gap-3 py-1">
+                      <div className="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-sm ring-1 ring-black/5">
+                        {store.logo ? (
+                          <img 
+                            src={store.logo} 
+                            alt={store.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-50">
+                            <Store className="w-4 h-4 text-gray-400" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-gray-900">{store.name}</div>
+                        <div className="text-xs text-gray-500 flex items-center gap-1 truncate">
+                          <MapPin className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{store.address}</span>
                         </div>
                       </div>
                     </div>
@@ -110,27 +112,29 @@ export const StoreAssignmentDialog: React.FC<StoreAssignmentDialogProps> = ({
           </div>
 
           {selectedStore && (
-            <Card className="border-blue-200 bg-blue-50">
-              <CardContent className="p-3">
+            <Card className="border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50/50 shadow-sm">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    {selectedStore.logo ? (
-                      <img 
-                        src={selectedStore.logo} 
-                        alt={selectedStore.name} 
-                        className="w-10 h-10 rounded-lg object-cover"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <Store className="w-5 h-5 text-gray-400" />
-                      </div>
-                    )}
+                    <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-white border border-blue-100 shadow-md ring-1 ring-blue-500/10">
+                      {selectedStore.logo ? (
+                        <img 
+                          src={selectedStore.logo} 
+                          alt={selectedStore.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-50">
+                          <Store className="w-5 h-5 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
                     <div>
-                      <div className="font-medium text-sm">{selectedStore.name}</div>
+                      <div className="font-semibold text-gray-900">{selectedStore.name}</div>
                       <div className="text-xs text-gray-600">{selectedStore.address}</div>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 border border-blue-200">
                     Selected
                   </Badge>
                 </div>
