@@ -32,7 +32,7 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadEmployees = async () => {
+  const loadEmployees = async (showErrors = false) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -41,22 +41,31 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error loading employees:', error);
-        toast.error('Failed to load employees');
+        // Only log, don't show toast on initial load to avoid spamming users
+        console.warn('Could not load employees:', error.message);
+        if (showErrors) {
+          toast.error('Failed to load employees');
+        }
+        // Keep existing employees or use empty array
+        setEmployees(prev => prev.length > 0 ? prev : []);
         return;
       }
 
       setEmployees(data || []);
     } catch (error) {
-      console.error('Error loading employees:', error);
-      toast.error('Failed to load employees');
+      // Network errors - fail silently on initial load
+      console.warn('Network error loading employees:', error);
+      if (showErrors) {
+        toast.error('Failed to load employees');
+      }
+      setEmployees(prev => prev.length > 0 ? prev : []);
     } finally {
       setLoading(false);
     }
   };
 
   const refreshEmployees = async () => {
-    await loadEmployees();
+    await loadEmployees(true); // Show errors on manual refresh
   };
 
   const addEmployee = async (employeeData: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
