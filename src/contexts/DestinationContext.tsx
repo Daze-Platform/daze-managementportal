@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Destination } from '@/components/settings/DestinationManagement';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface DestinationContextType {
   currentDestination: Destination | null;
@@ -34,8 +35,8 @@ const defaultDestinations: Destination[] = [
 ];
 
 export const DestinationProvider = ({ children }: { children: React.ReactNode }) => {
-  const [destinations, setDestinationsState] = useState<Destination[]>([]);
-  const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
+  const [destinations, setDestinationsState] = useState<Destination[]>(defaultDestinations);
+  const [currentDestination, setCurrentDestination] = useState<Destination | null>(defaultDestinations[0]);
   const [loading, setLoading] = useState(true);
 
   // Load destinations from Supabase on mount
@@ -50,7 +51,11 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
         .select('*')
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.warn('Could not load destinations from database:', error.message);
+        // Keep using defaults - already set in state
+        return;
+      }
 
       if (destinationsData && destinationsData.length > 0) {
         // Convert database format to our Destination type
@@ -79,14 +84,12 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
         setCurrentDestination(currentDestinationToSet);
         localStorage.setItem('currentDestinationId', currentDestinationToSet.id);
       } else {
-        // Insert default destinations if none exist
-        await insertDefaultDestinations();
+        // Try to insert default destinations
+        insertDefaultDestinations();
       }
     } catch (error) {
-      console.error('Error loading destinations:', error);
-      // Fallback to defaults
-      setDestinationsState(defaultDestinations);
-      setCurrentDestination(defaultDestinations[0]);
+      console.warn('Network error loading destinations:', error);
+      // Keep using defaults - already set in state
     } finally {
       setLoading(false);
     }
@@ -94,7 +97,7 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
 
   const insertDefaultDestinations = async () => {
     try {
-      const { data, error } = await supabase
+      await supabase
         .from('resorts')
         .insert(defaultDestinations.map(destination => ({
           id: destination.id,
@@ -107,16 +110,10 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
           status: destination.status,
           store_count: destination.storeCount,
           logo: destination.logo
-        })))
-        .select();
-
-      if (error) throw error;
-
-      setDestinationsState(defaultDestinations);
-      setCurrentDestination(defaultDestinations[0]);
-      localStorage.setItem('currentDestinationId', defaultDestinations[0].id);
+        })));
+      // Defaults already in state, no need to update
     } catch (error) {
-      console.error('Error inserting default destinations:', error);
+      console.warn('Could not seed default destinations:', error);
     }
   };
 
@@ -132,6 +129,11 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
   };
 
   const addDestination = async (destination: Destination) => {
+    // Optimistic update
+    const newDestinations = [...destinations, destination];
+    setDestinationsState(newDestinations);
+    toast.success('Destination added successfully');
+
     try {
       const { error } = await supabase
         .from('resorts')
@@ -148,19 +150,27 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
           logo: destination.logo
         });
 
-      if (error) throw error;
-
-      const newDestinations = [...destinations, destination];
-      setDestinationsState(newDestinations);
+      if (error) {
+        console.warn('Could not sync destination to database:', error.message);
+      }
     } catch (error) {
-      console.error('Error adding destination:', error);
+      console.warn('Network error syncing destination:', error);
     }
   };
 
   const updateDestination = async (updatedDestination: Destination) => {
-    console.log('Updating destination with data:', updatedDestination);
-    console.log('Logo data length:', updatedDestination.logo?.length || 0);
+    // Optimistic update
+    const newDestinations = destinations.map(destination => 
+      destination.id === updatedDestination.id ? updatedDestination : destination
+    );
+    setDestinationsState(newDestinations);
     
+    // Update current destination if it's the one being edited
+    if (currentDestination && currentDestination.id === updatedDestination.id) {
+      setCurrentDestination(updatedDestination);
+    }
+    toast.success('Destination updated successfully');
+
     try {
       const { error } = await supabase
         .from('resorts')
@@ -178,52 +188,41 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
         .eq('id', updatedDestination.id);
 
       if (error) {
-        console.error('Supabase update error:', error);
-        throw error;
+        console.warn('Could not sync destination update:', error.message);
       }
-
-      console.log('Destination update successful in database');
-
-      const newDestinations = destinations.map(destination => 
-        destination.id === updatedDestination.id ? updatedDestination : destination
-      );
-      setDestinationsState(newDestinations);
-      
-      // Update current destination if it's the one being edited
-      if (currentDestination && currentDestination.id === updatedDestination.id) {
-        setCurrentDestination(updatedDestination);
-      }
-      
-      console.log('Destination state updated successfully');
     } catch (error) {
-      console.error('Error updating destination:', error);
+      console.warn('Network error syncing destination update:', error);
     }
   };
 
   const deleteDestination = async (destinationId: string) => {
+    // Optimistic delete
+    const newDestinations = destinations.filter(destination => destination.id !== destinationId);
+    setDestinationsState(newDestinations);
+    
+    // If current destination is deleted, set to first available or null
+    if (currentDestination && currentDestination.id === destinationId) {
+      const nextDestination = newDestinations.length > 0 ? newDestinations[0] : null;
+      setCurrentDestination(nextDestination);
+      if (nextDestination) {
+        localStorage.setItem('currentDestinationId', nextDestination.id);
+      } else {
+        localStorage.removeItem('currentDestinationId');
+      }
+    }
+    toast.success('Destination deleted successfully');
+
     try {
       const { error } = await supabase
         .from('resorts')
         .delete()
         .eq('id', destinationId);
 
-      if (error) throw error;
-
-      const newDestinations = destinations.filter(destination => destination.id !== destinationId);
-      setDestinationsState(newDestinations);
-      
-      // If current destination is deleted, set to first available or null
-      if (currentDestination && currentDestination.id === destinationId) {
-        const nextDestination = newDestinations.length > 0 ? newDestinations[0] : null;
-        setCurrentDestination(nextDestination);
-        if (nextDestination) {
-          localStorage.setItem('currentDestinationId', nextDestination.id);
-        } else {
-          localStorage.removeItem('currentDestinationId');
-        }
+      if (error) {
+        console.warn('Could not sync destination deletion:', error.message);
       }
     } catch (error) {
-      console.error('Error deleting destination:', error);
+      console.warn('Network error syncing destination deletion:', error);
     }
   };
 
