@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Filter, X, Calendar, DollarSign, Users, Clock } from 'lucide-react';
+import { Filter, X, Calendar, DollarSign, Users, Clock, MapPin } from 'lucide-react';
 
 interface AdvancedFiltersProps {
   onFiltersChange: (filters: FilterState) => void;
@@ -24,6 +24,7 @@ export interface FilterState {
   customerType: string;
   priority: string[];
   timeRange: string;
+  orderLocationType: string;
 }
 
 export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFiltersProps) => {
@@ -51,7 +52,8 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
       orderValue: '',
       customerType: '',
       priority: [],
-      timeRange: ''
+      timeRange: '',
+      orderLocationType: ''
     });
   };
 
@@ -62,6 +64,7 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
     if (activeFilters.customerType) count++;
     if (activeFilters.priority?.length) count++;
     if (activeFilters.timeRange) count++;
+    if (activeFilters.orderLocationType) count++;
     return count;
   };
 
@@ -157,6 +160,30 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                   <SelectItem value="latenight">Late Night (12 AM - 6 AM)</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Order Location Type Filter */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4 text-gray-600" />
+                <label className="text-sm font-medium text-gray-900">Order Type</label>
+              </div>
+              <div className="bg-gray-50 border border-gray-300 rounded-xl p-3">
+                <RadioGroup 
+                  value={activeFilters.orderLocationType} 
+                  onValueChange={(value) => updateFilter('orderLocationType', value)}
+                  className="space-y-2"
+                >
+                  {['Room', 'Beach', 'Pool', 'Table'].map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <RadioGroupItem value={type} id={`location-${type}`} />
+                      <Label htmlFor={`location-${type}`} className="text-sm text-gray-700 cursor-pointer">
+                        {type}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
             </div>
 
             {/* Customer Type Filter with Radio Buttons */}

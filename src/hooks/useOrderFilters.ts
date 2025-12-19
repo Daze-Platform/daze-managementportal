@@ -39,6 +39,13 @@ export const useOrderFilters = () => {
       });
     }
 
+    // Filter by order location type (Room, Beach, Pool, Table)
+    if (advancedFilters.orderLocationType) {
+      filtered = filtered.filter(order => {
+        return order.locationType === advancedFilters.orderLocationType;
+      });
+    }
+
     return filtered;
   };
 
