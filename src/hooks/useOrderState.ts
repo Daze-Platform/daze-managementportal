@@ -16,7 +16,8 @@ export const useOrderState = () => {
     orderValue: '',
     customerType: '',
     priority: [],
-    timeRange: ''
+    timeRange: '',
+    orderLocationType: ''
   });
 
   return {

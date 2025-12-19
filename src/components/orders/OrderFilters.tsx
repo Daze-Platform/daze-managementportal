@@ -27,7 +27,8 @@ export const OrderFilters = ({
     orderValue: '',
     customerType: '',
     priority: [],
-    timeRange: ''
+    timeRange: '',
+    orderLocationType: ''
   },
   onAdvancedFiltersChange = () => {}
 }: OrderFiltersProps) => {

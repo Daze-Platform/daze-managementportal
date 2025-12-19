@@ -17,7 +17,8 @@ export interface Order {
   storeName?: string;
   courier?: string;
   scheduledFor?: string;
-  isVisible?: boolean; // Add visibility control
+  isVisible?: boolean;
+  locationType?: 'Room' | 'Beach' | 'Pool' | 'Table';
 }
 
 export interface OrderData {
@@ -298,7 +299,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$2.00',
     storeId: '1',
     storeName: 'Brother Fox',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Room'
   },
   {
     id: generateRandomOrderId().toString(),
@@ -314,7 +316,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$1.50',
     storeId: '1',
     storeName: 'Brother Fox',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Table'
   },
   {
     id: generateRandomOrderId().toString(),
@@ -330,7 +333,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$1.25',
     storeId: '1',
     storeName: 'Brother Fox',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Pool'
   },
   
   // Sister Hen orders (speakeasy bar)
@@ -348,7 +352,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$1.00',
     storeId: '2',
     storeName: 'Sister Hen',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Beach'
   },
   {
     id: generateRandomOrderId().toString(),
@@ -364,7 +369,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$1.90',
     storeId: '2',
     storeName: 'Sister Hen',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Room'
   },
   {
     id: generateRandomOrderId().toString(),
@@ -380,7 +386,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$2.25',
     storeId: '2',
     storeName: 'Sister Hen',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Table'
   },
   
   // Cousin Wolf orders (breakfast food truck)
@@ -398,7 +405,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$0.75',
     storeId: '3',
     storeName: 'Cousin Wolf',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Pool'
   },
   {
     id: generateRandomOrderId().toString(),
@@ -414,7 +422,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$1.00',
     storeId: '3',
     storeName: 'Cousin Wolf',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Beach'
   },
   {
     id: generateRandomOrderId().toString(),
@@ -430,7 +439,8 @@ const initialNewOrders: Order[] = [
     platformFee: '$1.25',
     storeId: '3',
     storeName: 'Cousin Wolf',
-    isVisible: false
+    isVisible: false,
+    locationType: 'Room'
   }
 ];
 
