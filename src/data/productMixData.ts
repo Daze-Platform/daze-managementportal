@@ -24,48 +24,55 @@ function hashString(input: string) {
   return Math.abs(hash);
 }
 
+// Brother Fox menu items
 const BASE_ITEMS: Array<Omit<ProductMixItem, "quantity" | "grossSales" | "netSales" | "avgPrice">> = [
-  { id: "1", name: "Margherita Pizza", category: "Pizza", salesChannel: "Dine-in", daypart: "Lunch" },
-  { id: "2", name: "Pepperoni Pizza", category: "Pizza", salesChannel: "Dine-in", daypart: "Dinner" },
-  { id: "3", name: "Grilled Salmon", category: "Seafood", salesChannel: "Dine-in", daypart: "Dinner" },
-  { id: "4", name: "Fish Tacos", category: "Seafood", salesChannel: "Takeout", daypart: "Lunch" },
-  { id: "5", name: "Caesar Salad", category: "Salads", salesChannel: "Dine-in", daypart: "Lunch" },
-  { id: "6", name: "House Salad", category: "Salads", salesChannel: "Delivery", daypart: "Dinner" },
-  { id: "7", name: "Margarita", category: "Drinks", salesChannel: "Dine-in", daypart: "Dinner" },
-  { id: "8", name: "Iced Tea", category: "Drinks", salesChannel: "Takeout", daypart: "Lunch" },
-  { id: "9", name: "Cheesecake", category: "Desserts", salesChannel: "Dine-in", daypart: "Dinner" },
-  { id: "10", name: "Gelato", category: "Desserts", salesChannel: "Delivery", daypart: "Late Night" },
+  // Snacks & Small Plates
+  { id: "1", name: "Pan Con Tomate", category: "Snacks & Small Plates", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "2", name: "Shishito Peppers", category: "Snacks & Small Plates", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "3", name: "Charbroiled Oysters", category: "Snacks & Small Plates", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "4", name: "Snapper Ceviche", category: "Snacks & Small Plates", salesChannel: "Takeout", daypart: "Lunch" },
+  { id: "5", name: "Drunken Goat Cheese", category: "Snacks & Small Plates", salesChannel: "Dine-in", daypart: "Dinner" },
+  // Charcuterie & Boards
+  { id: "6", name: "Charcuterie Board", category: "Charcuterie & Boards", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "7", name: "Smoked Mushroom Tartare", category: "Charcuterie & Boards", salesChannel: "Dine-in", daypart: "Dinner" },
+  // Salads
+  { id: "8", name: "Elote Salad", category: "Salads", salesChannel: "Dine-in", daypart: "Lunch" },
+  { id: "9", name: "The Wedge", category: "Salads", salesChannel: "Takeout", daypart: "Lunch" },
+  // Wood-Fired Mains
+  { id: "10", name: "Grilled Octopus", category: "Wood-Fired Mains", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "11", name: "Prime Skirt Steak Asada", category: "Wood-Fired Mains", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "12", name: "Seafood Paella", category: "Wood-Fired Mains", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "13", name: "Wood-Fired Pork Chop", category: "Wood-Fired Mains", salesChannel: "Dine-in", daypart: "Dinner" },
+  { id: "14", name: "Whole Grilled Fish", category: "Wood-Fired Mains", salesChannel: "Dine-in", daypart: "Dinner" },
+  // Desserts
+  { id: "15", name: "Mocha Torte", category: "Desserts", salesChannel: "Dine-in", daypart: "Late Night" },
+  { id: "16", name: "Churros", category: "Desserts", salesChannel: "Takeout", daypart: "Late Night" },
 ];
 
 const MODIFIERS: Array<Omit<ProductMixItem, "quantity" | "grossSales" | "netSales" | "avgPrice">> = [
-  { id: "m1", name: "+ Extra Cheese", category: "Modifiers", salesChannel: "Dine-in", daypart: "Dinner", isModifier: true },
-  { id: "m2", name: "+ Guacamole", category: "Modifiers", salesChannel: "Takeout", daypart: "Lunch", isModifier: true },
+  { id: "m1", name: "+ Extra Chimichurri", category: "Modifiers", salesChannel: "Dine-in", daypart: "Dinner", isModifier: true },
+  { id: "m2", name: "+ Spice Level Upgrade", category: "Modifiers", salesChannel: "Takeout", daypart: "Lunch", isModifier: true },
 ];
 
-function imageFor(name: string, category: string): string {
-  const n = name.toLowerCase();
-  const map: Record<string, string> = {
-    "margherita pizza": "/images/menu/margherita-pizza.jpg",
-    "pepperoni pizza": "/images/menu/pepperoni-pizza.jpg",
-    "grilled salmon": "/images/menu/grilled-salmon.jpg",
-    "fish tacos": "/images/menu/fish-tacos.jpg",
-    "caesar salad": "/images/menu/caesar-salad.jpg",
-    "house salad": "/images/menu/house-salad.jpg",
-    "margarita": "/images/menu/margarita-cocktail.jpg",
-    "iced tea": "/images/menu/iced-tea.jpg",
-    "cheesecake": "/images/menu/cheesecake.jpg",
-    "gelato": "/images/menu/gelato.jpg",
-  };
-  if (map[n]) return map[n];
-  const c = category.toLowerCase();
-  if (c.includes("pizza")) return "/images/menu/pizza.jpg";
-  if (c.includes("salad")) return "/images/menu/salad.jpg";
-  if (c.includes("seafood")) return "/images/menu/grilled-salmon.jpg";
-  if (c.includes("dessert")) return "/images/menu/cheesecake.jpg";
-  if (c.includes("drink")) return "/images/menu/iced-tea.jpg";
-  if (n.includes("taco")) return "/images/menu/fish-tacos.jpg";
-  return "/images/menu/pizza.jpg";
-}
+// Price mapping for Brother Fox items
+const PRICE_MAP: Record<string, number> = {
+  "Pan Con Tomate": 8,
+  "Shishito Peppers": 13,
+  "Charbroiled Oysters": 18,
+  "Snapper Ceviche": 16,
+  "Drunken Goat Cheese": 14,
+  "Charcuterie Board": 32,
+  "Smoked Mushroom Tartare": 15,
+  "Elote Salad": 12,
+  "The Wedge": 14,
+  "Grilled Octopus": 26,
+  "Prime Skirt Steak Asada": 38,
+  "Seafood Paella": 56,
+  "Wood-Fired Pork Chop": 34,
+  "Whole Grilled Fish": 42,
+  "Mocha Torte": 12,
+  "Churros": 10,
+};
 
 export function getProductMixData(storeId: string, dateRange?: DateRange, includeModifiers = false): ProductMixItem[] {
   // Tie data generation to both store and selected date window
@@ -92,9 +99,9 @@ export function getProductMixData(storeId: string, dateRange?: DateRange, includ
     const variance = 0.9 + ((itemSeed % 21) / 100); // 0.90 - 1.10
 
     const quantity = Math.max(1, Math.round(basePerDay * days * variance));
-    const price = base.category === "Drinks" ? 8 : base.category === "Desserts" ? 7 : base.category === "Salads" ? 10 : base.category === "Seafood" ? 22 : 16;
+    const price = PRICE_MAP[base.name] || 15; // Use actual Brother Fox pricing
     const grossSales = quantity * price;
-    const discounts = base.category === "Drinks" ? grossSales * 0.05 : 0;
+    const discounts = base.category === "Desserts" ? grossSales * 0.05 : 0;
     const netSales = grossSales - discounts;
 
     return {
@@ -103,7 +110,6 @@ export function getProductMixData(storeId: string, dateRange?: DateRange, includ
       grossSales,
       netSales,
       avgPrice: price,
-      imageUrl: imageFor(base.name, base.category),
     };
   });
 }
