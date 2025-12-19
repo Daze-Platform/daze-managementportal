@@ -105,9 +105,20 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
           <div className="p-4 space-y-4">
             {/* Date Range Filter */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4 text-gray-600" />
-                <label className="text-sm font-medium text-gray-900">Date Range</label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-4 h-4 text-gray-600" />
+                  <label className="text-sm font-medium text-gray-900">Date Range</label>
+                </div>
+                {activeFilters.dateRange && (
+                  <button
+                    onClick={() => updateFilter('dateRange', '')}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                )}
               </div>
               <Select value={activeFilters.dateRange} onValueChange={(value) => updateFilter('dateRange', value)}>
                 <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 focus:border-gray-500">
@@ -126,9 +137,20 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
 
             {/* Order Value Filter */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <DollarSign className="w-4 h-4 text-gray-600" />
-                <label className="text-sm font-medium text-gray-900">Order Value</label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="w-4 h-4 text-gray-600" />
+                  <label className="text-sm font-medium text-gray-900">Order Value</label>
+                </div>
+                {activeFilters.orderValue && (
+                  <button
+                    onClick={() => updateFilter('orderValue', '')}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                )}
               </div>
               <Select value={activeFilters.orderValue} onValueChange={(value) => updateFilter('orderValue', value)}>
                 <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 focus:border-gray-500">
@@ -145,9 +167,20 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
 
             {/* Time Range Filter */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-gray-600" />
-                <label className="text-sm font-medium text-gray-900">Time Range</label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-4 h-4 text-gray-600" />
+                  <label className="text-sm font-medium text-gray-900">Time Range</label>
+                </div>
+                {activeFilters.timeRange && (
+                  <button
+                    onClick={() => updateFilter('timeRange', '')}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                )}
               </div>
               <Select value={activeFilters.timeRange} onValueChange={(value) => updateFilter('timeRange', value)}>
                 <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 focus:border-gray-500">
@@ -164,9 +197,20 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
 
             {/* Order Location Type Filter */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-gray-600" />
-                <label className="text-sm font-medium text-gray-900">Order Type</label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="w-4 h-4 text-gray-600" />
+                  <label className="text-sm font-medium text-gray-900">Order Type</label>
+                </div>
+                {activeFilters.orderLocationType && (
+                  <button
+                    onClick={() => updateFilter('orderLocationType', '')}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                )}
               </div>
               <div className="bg-gray-50 border border-gray-300 rounded-xl p-3">
                 <RadioGroup 
@@ -188,9 +232,20 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
 
             {/* Customer Type Filter with Radio Buttons */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Users className="w-4 h-4 text-gray-600" />
-                <label className="text-sm font-medium text-gray-900">Customer Type</label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Users className="w-4 h-4 text-gray-600" />
+                  <label className="text-sm font-medium text-gray-900">Customer Type</label>
+                </div>
+                {activeFilters.customerType && (
+                  <button
+                    onClick={() => updateFilter('customerType', '')}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                )}
               </div>
               <div className="bg-gray-50 border border-gray-300 rounded-xl p-3">
                 <RadioGroup 
@@ -212,7 +267,18 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
 
             {/* Priority Filter */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-900">Priority Level</label>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-900">Priority Level</label>
+                {activeFilters.priority?.length > 0 && (
+                  <button
+                    onClick={() => updateFilter('priority', [])}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <X className="w-3 h-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
               <div className="space-y-2">
                 {['Normal', 'High Priority', 'Urgent'].map((priority) => (
                   <div key={priority} className="flex items-center space-x-2">
