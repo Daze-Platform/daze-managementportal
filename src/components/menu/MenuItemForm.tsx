@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PriceInput } from '@/components/ui/price-input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Badge } from '@/components/ui/badge';
 import { useForm } from 'react-hook-form';
@@ -56,7 +57,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
     defaultValues: {
       name: item?.name || '',
       description: item?.description || '',
-      price: item?.price?.toString() || '',
+      price: item?.price || 0,
     }
   });
 
@@ -87,7 +88,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
       id: item?.id || Date.now().toString(),
       name: data.name,
       description: data.description,
-      price: parseFloat(data.price),
+      price: typeof data.price === 'number' ? data.price : parseFloat(data.price) || 0,
       modifierGroups: selectedModifiers,
       image: imagePreview || item?.image
     };
@@ -251,11 +252,10 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                       Price ($)
                     </FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01" 
+                      <PriceInput 
                         placeholder="0.00" 
-                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
                         className={`input-modern ${isMobileOrTablet ? 'h-12 text-base' : 'text-sm sm:text-base h-10 sm:h-12'}`}
                         inputMode="decimal"
                       />

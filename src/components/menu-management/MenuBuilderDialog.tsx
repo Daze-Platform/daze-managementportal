@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { PriceInput } from '@/components/ui/price-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -305,12 +306,10 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                     </div>
                     <div>
                       <Label htmlFor="itemPrice" className="text-sm font-medium">Price ($)</Label>
-                      <Input
+                      <PriceInput
                         id="itemPrice"
-                        type="number"
-                        step="0.01"
                         value={currentItem.price}
-                        onChange={(e) => setCurrentItem(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                        onChange={(price) => setCurrentItem(prev => ({ ...prev, price }))}
                         placeholder="0.00"
                       />
                     </div>
