@@ -1,12 +1,15 @@
 import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { OrderCardAvatar } from './OrderCardAvatar';
 import { OrderCardStatusInfo } from './OrderCardStatusInfo';
 import { OrderCardContent } from './OrderCardContent';
 import { OrderCardActions } from './OrderCardActions';
 import { DeclineOrderDialog } from './DeclineOrderDialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Order {
   id: string;
@@ -50,6 +53,8 @@ const statusConfig = {
 export const ModernOrderCard = ({ order, isSelected, onClick, activeTab, onOrderUpdate, onViewDetails, showStoreBadge = false }: ModernOrderCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [showDeclineDialog, setShowDeclineDialog] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleViewDetails = (orderId: string) => {
     if (onViewDetails) {
@@ -73,8 +78,131 @@ export const ModernOrderCard = ({ order, isSelected, onClick, activeTab, onOrder
     }
   };
 
+  const parseOrderItems = () => {
+    const itemsText = order.items;
+    const itemCount = itemsText.split(' ')[0];
+    const price = itemsText.split('$')[1];
+    return { itemCount, price };
+  };
+
+  const { price } = parseOrderItems();
   const status = statusConfig[activeTab as keyof typeof statusConfig] || statusConfig.default;
 
+  // Mobile compact card
+  if (isMobile) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Card 
+          ref={cardRef}
+          className={`relative overflow-hidden bg-card border transition-all duration-200 ${
+            isSelected 
+              ? 'ring-2 ring-primary shadow-lg border-primary/30' 
+              : 'border-border/50 hover:border-border'
+          }`}
+        >
+          {/* Status Indicator */}
+          <div className={`h-1 ${status.color} relative`}>
+            {status.pulse && (
+              <motion.div 
+                className="absolute inset-0 bg-white/30"
+                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            )}
+          </div>
+          
+          <CardContent className="p-3">
+            {/* Compact Header - Always visible */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                <OrderCardAvatar customer={order.customer} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-base text-foreground">#{order.id}</h3>
+                    {order.priority === 'urgent' && (
+                      <motion.div
+                        className="w-2 h-2 rounded-full bg-destructive"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {order.customer || 'Guest Order'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <div className="text-lg font-bold text-foreground">${price}</div>
+                  <Badge 
+                    variant="outline" 
+                    className={`text-xs ${order.type === 'Delivery' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-green-50 text-green-700 border-green-200'}`}
+                  >
+                    {order.type}
+                  </Badge>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 flex-shrink-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsExpanded(!isExpanded);
+                  }}
+                >
+                  {isExpanded ? (
+                    <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
+            </div>
+            
+            {/* Expandable Content */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-3 mt-3 border-t border-border/50 space-y-3">
+                    <OrderCardStatusInfo activeTab={activeTab} time={order.time} />
+                    <OrderCardContent order={order} />
+                    <OrderCardActions
+                      order={order}
+                      activeTab={activeTab}
+                      onOrderUpdate={handleOrderUpdate}
+                      onViewDetails={handleViewDetails}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+        
+        <DeclineOrderDialog 
+          isOpen={showDeclineDialog} 
+          onClose={() => setShowDeclineDialog(false)}
+          onDecline={handleDeclineOrder}
+          orderId={order.id}
+        />
+      </motion.div>
+    );
+  }
+
+  // Desktop full card
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}

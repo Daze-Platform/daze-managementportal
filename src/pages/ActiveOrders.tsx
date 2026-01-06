@@ -5,14 +5,12 @@ import { PauseOrdersModal } from '@/components/orders/PauseOrdersModal';
 import { StoreClosedState } from '@/components/orders/StoreClosedState';
 import { MobileOrderDetailsView } from '@/components/orders/MobileOrderDetailsView';
 import { OrdersListLayout } from '@/components/orders/OrdersListLayout';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { calculateTotalRevenue } from '@/utils/orderCalculations';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useFilters } from '@/contexts/FilterContext';
 
 export const ActiveOrders = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showPauseModal, setShowPauseModal] = useState(false);
   const [viewingOrderDetails, setViewingOrderDetails] = useState<string | null>(null);
   const isMobile = useIsMobile();
@@ -129,11 +127,6 @@ export const ActiveOrders = () => {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      {/* Mobile Sidebar */}
-      {isMobile && (
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      )}
-
       <div className="min-h-screen flex flex-col">
         {/* Header */}
         <motion.div 

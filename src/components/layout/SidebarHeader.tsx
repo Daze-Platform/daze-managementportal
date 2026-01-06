@@ -13,7 +13,7 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
   return (
     <>
       {/* Logo Section */}
-      <div className={`flex-shrink-0 border-b border-white/10 ${isCollapsed ? 'p-1' : 'p-4 sm:p-5 md:p-6'}`}>
+      <div className={`flex-shrink-0 ${isCollapsed ? 'p-1' : 'p-4 sm:p-5 md:p-6'}`}>
         {isCollapsed ? (
           /* Collapsed State - Only Cloud Logo */
           <div className="flex items-center justify-center w-full h-16">
