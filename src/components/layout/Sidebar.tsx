@@ -57,18 +57,17 @@ export const Sidebar = ({
           fixed lg:static top-0 left-0 z-50 lg:z-auto
           text-sidebar-foreground h-screen flex flex-col
           border-r border-sidebar-border/30 shadow-xl lg:shadow-none
-          ${isCollapsed ? 'w-16' : 'w-64 sm:w-72 md:w-80 lg:w-64 xl:w-72'}
         `}
         initial={false}
         animate={{ 
           x: shouldShow ? 0 : '-100%',
-          width: isCollapsed ? 64 : undefined 
+          width: isCollapsed ? 64 : 256
         }}
         transition={{ 
           type: "spring", 
-          stiffness: 300, 
-          damping: 30,
-          x: { duration: 0.3 }
+          stiffness: 400, 
+          damping: 35,
+          mass: 0.8
         }}
         style={{ backgroundColor: 'hsl(222, 47%, 11%)' }}
       >
