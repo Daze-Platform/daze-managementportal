@@ -18,9 +18,18 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
   const { login, isAuthenticated, loading } = useAuth();
   const { toast } = useToast();
+
+  // Auto-hide banner after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowBanner(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
@@ -116,6 +125,20 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Demo Welcome Banner */}
+      {showBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-primary to-accent text-primary-foreground py-3 px-4 text-center shadow-lg"
+        >
+          <p className="text-sm md:text-base font-medium">
+            Welcome to Lily Hall Management Hub
+          </p>
+        </motion.div>
+      )}
+
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
       <div className="absolute inset-0 overflow-hidden">
