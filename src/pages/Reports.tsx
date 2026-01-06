@@ -22,7 +22,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DateRange } from 'react-day-picker';
 import { format, subDays } from 'date-fns';
 import { reportsData } from '@/data/reportsData';
-import { BarChart3, TrendingUp, Calendar as CalendarIcon, Filter, Check } from 'lucide-react';
+import { BarChart3, TrendingUp, Calendar as CalendarIcon, Filter, Check, Download } from 'lucide-react';
+import { exportReportsToPdf } from '@/utils/reportsPdfExport';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -287,6 +288,24 @@ export const Reports = () => {
                 </div>
               </PopoverContent>
             </Popover>
+
+            {/* PDF Export Button */}
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto bg-white/70 backdrop-blur-sm border-gray-200 hover:border-primary/50 transition-colors gap-2"
+              onClick={() => {
+                const storeName = stores.find(s => s.id === selectedStore)?.name || 'All Stores';
+                exportReportsToPdf({
+                  storeName,
+                  dateRange: selectedDateRange,
+                  visibleSections,
+                  data: currentStoreData,
+                });
+              }}
+            >
+              <Download className="w-4 h-4" />
+              <span>Export PDF</span>
+            </Button>
           </div>
 
           <motion.div 
