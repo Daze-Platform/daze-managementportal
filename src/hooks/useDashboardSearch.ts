@@ -10,11 +10,11 @@ interface SearchResult {
   data: any;
 }
 
-// Sample order history data for search
+// Sample order history data for Lily Hall venues
 const orderHistoryData = [
   {
     id: '#67899886',
-    store: 'Piazza',
+    store: 'Brother Fox',
     customer: 'Lucie Morgan',
     type: 'Pickup',
     total: '$76.45',
@@ -23,7 +23,7 @@ const orderHistoryData = [
   },
   {
     id: '#67899887',
-    store: 'Red Fish Blue Fish',
+    store: 'Sister Hen',
     customer: 'Adam Smith',
     type: 'Delivery',
     total: '$42.95',
@@ -32,7 +32,7 @@ const orderHistoryData = [
   },
   {
     id: '#67899888',
-    store: 'Sal De Mar',
+    store: 'Cousin Wolf',
     customer: 'John Cordoba',
     type: 'Delivery',
     total: '$28.47',
@@ -41,8 +41,8 @@ const orderHistoryData = [
   },
   {
     id: '#67899889',
-    store: 'Sal De Mar',
-    customer: 'John Cordoba',
+    store: 'Brother Fox',
+    customer: 'Sarah Williams',
     type: 'Delivery',
     total: '$91.23',
     date: 'May 7, 2021 11:50AM',
@@ -54,12 +54,12 @@ export const useDashboardSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
 
-  // Sample data for dashboard search
+  // Sample data for dashboard search - Lily Hall venues
   const sampleData = {
     stores: [
-      { id: 'piazza', name: 'Piazza', orders: 45 },
-      { id: 'red-fish', name: 'Red Fish Blue Fish', orders: 32 },
-      { id: 'sal-de-mar', name: 'Sal De Mar', orders: 28 },
+      { id: 'brother-fox', name: 'Brother Fox', orders: 45 },
+      { id: 'sister-hen', name: 'Sister Hen', orders: 32 },
+      { id: 'cousin-wolf', name: 'Cousin Wolf', orders: 28 },
     ],
     revenue: [
       { id: 'daily', name: 'Daily Revenue', value: 2450 },
@@ -67,14 +67,14 @@ export const useDashboardSearch = () => {
       { id: 'monthly', name: 'Monthly Revenue', value: 68900 },
     ],
     menuItems: [
-      { id: 'pizza', name: 'Pizza Margherita', orders: 120 },
-      { id: 'tacos', name: 'Fish Tacos', orders: 85 },
-      { id: 'paella', name: 'Seafood Paella', orders: 67 },
+      { id: 'oysters', name: 'Wood-Fired Oysters', orders: 120 },
+      { id: 'paella', name: 'Seafood Paella', orders: 85 },
+      { id: 'old-fashioned', name: 'Old Fashioned', orders: 67 },
     ],
     inventory: [
-      { id: 'tomatoes', name: 'Fresh Tomatoes', urgency: 'high' },
-      { id: 'fish', name: 'Fresh Fish', urgency: 'medium' },
-      { id: 'rice', name: 'Arborio Rice', urgency: 'low' },
+      { id: 'oysters-stock', name: 'Fresh Oysters', urgency: 'high' },
+      { id: 'bourbon', name: 'Bourbon Selection', urgency: 'medium' },
+      { id: 'eggs', name: 'Farm Fresh Eggs', urgency: 'low' },
     ],
   };
 

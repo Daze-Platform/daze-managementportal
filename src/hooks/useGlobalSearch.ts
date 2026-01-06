@@ -10,17 +10,17 @@ interface SearchResult {
   page?: string; // Which page this result navigates to
 }
 
-// Global sample data that can be searched from any page
+// Global sample data for Lily Hall venues
 export const globalSearchData = {
   stores: [
-    { id: 'piazza', name: 'Piazza', orders: 45, page: '/stores' },
-    { id: 'red-fish', name: 'Red Fish Blue Fish', orders: 32, page: '/stores' },
-    { id: 'sal-de-mar', name: 'Sal De Mar', orders: 28, page: '/stores' },
+    { id: 'brother-fox', name: 'Brother Fox', orders: 45, page: '/stores' },
+    { id: 'sister-hen', name: 'Sister Hen', orders: 32, page: '/stores' },
+    { id: 'cousin-wolf', name: 'Cousin Wolf', orders: 28, page: '/stores' },
   ],
   orders: [
     {
       id: '#67899886',
-      store: 'Piazza',
+      store: 'Brother Fox',
       customer: 'Lucie Morgan',
       type: 'Pickup',
       total: '$76.45',
@@ -30,7 +30,7 @@ export const globalSearchData = {
     },
     {
       id: '#67899887',
-      store: 'Red Fish Blue Fish',
+      store: 'Sister Hen',
       customer: 'Adam Smith',
       type: 'Delivery',
       total: '$42.95',
@@ -40,7 +40,7 @@ export const globalSearchData = {
     },
     {
       id: '#67899888',
-      store: 'Sal De Mar',
+      store: 'Cousin Wolf',
       customer: 'John Cordoba',
       type: 'Delivery',
       total: '$28.47',
@@ -50,20 +50,20 @@ export const globalSearchData = {
     },
   ],
   menuItems: [
-    { id: 'pizza', name: 'Pizza Margherita', orders: 120, category: 'Main Course', page: '/menu' },
-    { id: 'tacos', name: 'Fish Tacos', orders: 85, category: 'Main Course', page: '/menu' },
-    { id: 'paella', name: 'Seafood Paella', orders: 67, category: 'Main Course', page: '/menu' },
-    { id: 'burger', name: 'Crispy Burger', orders: 95, category: 'Main Course', page: '/menu' },
+    { id: 'oysters', name: 'Wood-Fired Oysters', orders: 120, category: 'Starters', page: '/menu' },
+    { id: 'paella', name: 'Seafood Paella', orders: 85, category: 'Main Course', page: '/menu' },
+    { id: 'old-fashioned', name: 'Old Fashioned', orders: 95, category: 'Cocktails', page: '/menu' },
+    { id: 'brunch-plate', name: 'Weekend Brunch Plate', orders: 67, category: 'Brunch', page: '/menu' },
   ],
   inventory: [
-    { id: 'tomatoes', name: 'Fresh Tomatoes', urgency: 'high', stock: 12, page: '/dashboard' },
-    { id: 'fish', name: 'Fresh Fish', urgency: 'medium', stock: 45, page: '/dashboard' },
-    { id: 'rice', name: 'Arborio Rice', urgency: 'low', stock: 78, page: '/dashboard' },
+    { id: 'oysters-stock', name: 'Fresh Oysters', urgency: 'high', stock: 12, page: '/dashboard' },
+    { id: 'bourbon', name: 'Bourbon Selection', urgency: 'medium', stock: 45, page: '/dashboard' },
+    { id: 'eggs', name: 'Farm Fresh Eggs', urgency: 'low', stock: 78, page: '/dashboard' },
   ],
   employees: [
-    { id: 'john-doe', name: 'John Doe', role: 'Manager', store: 'Piazza', page: '/employees' },
-    { id: 'jane-smith', name: 'Jane Smith', role: 'Chef', store: 'Red Fish Blue Fish', page: '/employees' },
-    { id: 'mike-johnson', name: 'Mike Johnson', role: 'Server', store: 'Sal De Mar', page: '/employees' },
+    { id: 'john-doe', name: 'John Doe', role: 'Manager', store: 'Brother Fox', page: '/employees' },
+    { id: 'jane-smith', name: 'Jane Smith', role: 'Bartender', store: 'Sister Hen', page: '/employees' },
+    { id: 'mike-johnson', name: 'Mike Johnson', role: 'Chef', store: 'Cousin Wolf', page: '/employees' },
   ],
   promotions: [
     { id: 'summer-deal', name: 'Summer Special', discount: '20%', status: 'Active', page: '/promotions' },
