@@ -17,28 +17,17 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
         {isCollapsed ? (
           /* Collapsed State - Only Cloud Logo */
           <div className="flex items-center justify-center w-full h-16">
-            <div 
-              className="flex items-center justify-center hover:bg-white/8 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer rounded-lg"
+            <button 
+              className="flex items-center justify-center hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer rounded-xl p-1.5"
               onClick={onToggleCollapse}
-              style={{ 
-                width: '56px', 
-                height: '56px',
-                minWidth: '56px',
-                minHeight: '56px'
-              }}
+              aria-label="Expand sidebar"
             >
               <img 
                 src="/lovable-uploads/314bc76d-4c76-4519-b8cd-5e3c08d90fe6.png" 
                 alt="App Logo" 
-                className="hover:scale-105 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] object-contain"
-                style={{ 
-                  width: '48px', 
-                  height: '48px',
-                  minWidth: '48px',
-                  minHeight: '48px'
-                }}
+                className="w-10 h-10 object-contain"
               />
-            </div>
+            </button>
           </div>
         ) : (
           /* Expanded State - DAZE Logo + Controls */
