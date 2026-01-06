@@ -429,42 +429,46 @@ export const Payouts = () => {
           </div>
 
           {/* Mobile/Tablet Cards */}
-          <div className="lg:hidden space-y-4">
+          <div className="lg:hidden space-y-3 sm:space-y-4">
             {filteredData.map((item) => (
-              <Card key={item.id} className="shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
+              <Card key={item.id} className="shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <CardContent className="p-0">
+                  {/* Header Section */}
+                  <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50/50">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                       <StoreLogo
                         logo={item.storeIcon}
                         customLogo={item.customLogo}
                         bgColor={item.bgColor}
-                        size="md"
+                        size="sm"
                       />
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{item.store}</h3>
-                        <p className="text-sm text-gray-500">{item.date}</p>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{item.store}</h3>
+                        <p className="text-xs sm:text-sm text-gray-500 truncate">{item.date}</p>
                       </div>
                     </div>
-                    {getStatusBadge(item.status)}
+                    <div className="flex-shrink-0 ml-2">
+                      {getStatusBadge(item.status)}
+                    </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 pt-3 border-t border-gray-100">
-                    <div className="text-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Subtotal</p>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{item.subtotal}</p>
+                  {/* Financial Details Grid */}
+                  <div className="grid grid-cols-2 gap-px bg-gray-100">
+                    <div className="bg-white p-3 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wide mb-1">Subtotal</p>
+                      <p className="text-sm sm:text-base font-semibold text-gray-900">{item.subtotal}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-xs text-orange-600 uppercase tracking-wide">Service Fee</p>
-                      <p className="text-sm text-orange-600 mt-1">{item.serviceFee}</p>
+                    <div className="bg-white p-3 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-orange-600 uppercase tracking-wide mb-1">Service Fee</p>
+                      <p className="text-sm sm:text-base font-medium text-orange-600">{item.serviceFee}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-xs text-red-600 uppercase tracking-wide">Commission</p>
-                      <p className="text-sm text-red-600 mt-1">{item.commissions}</p>
+                    <div className="bg-white p-3 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-red-600 uppercase tracking-wide mb-1">Commission</p>
+                      <p className="text-sm sm:text-base font-medium text-red-600">{item.commissions}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-xs text-green-600 uppercase tracking-wide">Net</p>
-                      <p className="text-sm font-bold text-green-600 mt-1">{item.net}</p>
+                    <div className="bg-white p-3 sm:p-4">
+                      <p className="text-[10px] sm:text-xs text-green-600 uppercase tracking-wide mb-1">Net Earnings</p>
+                      <p className="text-sm sm:text-base font-bold text-green-600">{item.net}</p>
                     </div>
                   </div>
                 </CardContent>
