@@ -236,25 +236,25 @@ export const Promotions = () => {
                   />
                 </div>
                 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <Button
                     variant={filterStatus === 'all' ? 'default' : 'outline'}
                     onClick={() => setFilterStatus('all')}
-                    size="sm"
+                    className="min-h-[44px] px-4 py-2"
                   >
                     All
                   </Button>
                   <Button
                     variant={filterStatus === 'active' ? 'default' : 'outline'}
                     onClick={() => setFilterStatus('active')}
-                    size="sm"
+                    className="min-h-[44px] px-4 py-2"
                   >
                     Active
                   </Button>
                   <Button
                     variant={filterStatus === 'inactive' ? 'default' : 'outline'}
                     onClick={() => setFilterStatus('inactive')}
-                    size="sm"
+                    className="min-h-[44px] px-4 py-2"
                   >
                     Inactive
                   </Button>

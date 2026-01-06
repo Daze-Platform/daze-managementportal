@@ -13,51 +13,57 @@ export const Notifications = () => {
   const [notifications, setNotifications] = useState([
     { 
       id: 1, 
-      title: 'Refund Processed',
+      title: 'Brother Fox: Refund Processed',
       message: 'Successfully refunded $10.00 for order #67899886', 
       time: '2 min ago', 
       unread: true, 
-      type: 'success' 
+      type: 'success',
+      store: 'Brother Fox'
     },
     { 
       id: 2, 
-      title: 'Menu Update',
-      message: 'Menu item "Crispy Burger" updated successfully', 
+      title: 'Sister Hen: Menu Update',
+      message: 'Menu item "Old Fashioned" updated successfully', 
       time: '1 hour ago', 
       unread: false, 
-      type: 'info' 
+      type: 'info',
+      store: 'Sister Hen'
     },
     { 
       id: 3, 
-      title: 'Report Available',
-      message: 'Daily sales report is now available for download', 
+      title: 'Lily Hall: Report Available',
+      message: 'Daily sales report for all stores is now available for download', 
       time: '3 hours ago', 
       unread: false, 
-      type: 'info' 
+      type: 'info',
+      store: 'Lily Hall'
     },
     { 
       id: 4, 
-      title: 'Order Alert',
+      title: 'Cousin Wolf: Order Alert',
       message: 'Order #67899887 is taking longer than expected', 
       time: '5 hours ago', 
       unread: true, 
-      type: 'warning' 
+      type: 'warning',
+      store: 'Cousin Wolf'
     },
     { 
       id: 5, 
-      title: 'Payment Failed',
+      title: 'Brother Fox: Payment Failed',
       message: 'Payment for order #67899888 has failed', 
       time: '1 day ago', 
       unread: false, 
-      type: 'error' 
+      type: 'error',
+      store: 'Brother Fox'
     },
     { 
       id: 6, 
-      title: 'New Review',
-      message: 'You received a 5-star review for "Grilled Chicken"', 
+      title: 'Brother Fox: New Review',
+      message: 'You received a 5-star review for "Wood-Fired Oysters"', 
       time: '2 days ago', 
       unread: false, 
-      type: 'success' 
+      type: 'success',
+      store: 'Brother Fox'
     }
   ]);
 
