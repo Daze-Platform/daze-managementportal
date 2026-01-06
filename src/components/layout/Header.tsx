@@ -632,7 +632,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
               <Button variant="ghost" className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl hover:bg-gray-100 transition-colors touch-manipulation p-0">
                 <Avatar className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl shadow-md ring-1 ring-black/5">
                   <AvatarImage src={userProfile?.avatar || ""} alt={getFullName()} className="rounded-xl" />
-                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-semibold text-xs sm:text-sm rounded-xl">{getUserInitials()}</AvatarFallback>
+                  <AvatarFallback className="bg-primary text-white font-semibold text-xs sm:text-sm rounded-xl">{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -642,7 +642,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                   <div className="flex items-center gap-3">
                     <Avatar className="h-11 w-11 rounded-xl shadow-md ring-1 ring-black/5">
                       <AvatarImage src={userProfile?.avatar || ""} alt={getFullName()} className="rounded-xl" />
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-xl">{getUserInitials()}</AvatarFallback>
+                      <AvatarFallback className="bg-primary text-white font-semibold rounded-xl">{getUserInitials()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <p className="text-sm font-medium leading-none text-gray-900">{getFullName()}</p>
