@@ -16,235 +16,188 @@ export interface ModifierGroup {
   options: ModifierOption[];
 }
 
-// Italian Restaurant Modifier Groups (Piazza)
-export const piazzaModifierGroups: ModifierGroup[] = [
-  {
-    id: 'pasta-types',
-    name: 'Pasta Type',
-    description: 'Choose your preferred pasta',
-    required: false,
-    multipleSelection: false,
-    options: [
-      { id: 'spaghetti', name: 'Spaghetti', price: 0, isDefault: true },
-      { id: 'linguine', name: 'Linguine', price: 0 },
-      { id: 'penne', name: 'Penne', price: 0 },
-      { id: 'fettuccine', name: 'Fettuccine', price: 1.00 },
-      { id: 'ravioli', name: 'Ravioli', price: 3.00 },
-      { id: 'gnocchi', name: 'Gnocchi', price: 2.50 }
-    ]
-  },
-  {
-    id: 'italian-cheeses',
-    name: 'Extra Cheese',
-    description: 'Add authentic Italian cheeses',
-    required: false,
-    multipleSelection: true,
-    maxSelections: 3,
-    options: [
-      { id: 'parmigiano', name: 'Parmigiano-Reggiano', price: 2.50 },
-      { id: 'pecorino', name: 'Pecorino Romano', price: 2.00 },
-      { id: 'gorgonzola', name: 'Gorgonzola', price: 3.00 },
-      { id: 'mozzarella-bufala', name: 'Buffalo Mozzarella', price: 4.00 },
-      { id: 'ricotta', name: 'Fresh Ricotta', price: 2.00 }
-    ]
-  },
-  {
-    id: 'pizza-sizes',
-    name: 'Pizza Size',
-    description: 'Traditional Neapolitan sizes',
-    required: true,
-    multipleSelection: false,
-    options: [
-      { id: 'individual', name: 'Individual (10")', price: 0, isDefault: true },
-      { id: 'medium', name: 'Medium (12")', price: 4.00 },
-      { id: 'large', name: 'Large (14")', price: 8.00 }
-    ]
-  },
-  {
-    id: 'italian-proteins',
-    name: 'Add Protein',
-    description: 'Traditional Italian meats',
-    required: false,
-    multipleSelection: true,
-    maxSelections: 2,
-    options: [
-      { id: 'prosciutto', name: 'Prosciutto di Parma', price: 5.00 },
-      { id: 'pancetta', name: 'Pancetta', price: 3.50 },
-      { id: 'salsiccia', name: 'Italian Sausage', price: 4.00 },
-      { id: 'speck', name: 'Speck Alto Adige', price: 4.50 },
-      { id: 'bresaola', name: 'Bresaola', price: 5.50 }
-    ]
-  },
-  {
-    id: 'italian-sides',
-    name: 'Contorni (Sides)',
-    description: 'Traditional Italian sides',
-    required: false,
-    multipleSelection: true,
-    maxSelections: 2,
-    options: [
-      { id: 'bruschetta', name: 'Bruschetta', price: 6.00 },
-      { id: 'antipasto', name: 'Mixed Antipasto', price: 8.00 },
-      { id: 'olive-tapenade', name: 'Olive Tapenade', price: 4.00 },
-      { id: 'focaccia', name: 'Rosemary Focaccia', price: 5.00 }
-    ]
-  }
-];
-
-// Seafood Restaurant Modifier Groups (Sal de Mar)
-export const salDeMarModifierGroups: ModifierGroup[] = [
+// Brother Fox - Wood-fired hearth cooking, Spanish-inspired
+export const brotherFoxModifierGroups: ModifierGroup[] = [
   {
     id: 'cooking-styles',
     name: 'Cooking Style',
-    description: 'How would you like your seafood prepared?',
-    required: true,
+    description: 'How would you like it prepared?',
+    required: false,
     multipleSelection: false,
     options: [
-      { id: 'grilled', name: 'Grilled', price: 0, isDefault: true },
-      { id: 'blackened', name: 'Blackened Cajun', price: 1.00 },
+      { id: 'wood-fired', name: 'Wood-Fired', price: 0, isDefault: true },
+      { id: 'charbroiled', name: 'Charbroiled', price: 0 },
       { id: 'pan-seared', name: 'Pan-Seared', price: 0 },
-      { id: 'broiled', name: 'Broiled with Herbs', price: 0 },
-      { id: 'fried', name: 'Beer Battered & Fried', price: 1.50 },
-      { id: 'steamed', name: 'Steamed', price: 0 }
+      { id: 'grilled', name: 'Open Flame Grilled', price: 1.00 }
     ]
   },
   {
-    id: 'seafood-sauces',
-    name: 'Signature Sauces',
-    description: 'House-made sauces to complement your dish',
+    id: 'proteins',
+    name: 'Add Protein',
+    description: 'Premium wood-fired proteins',
     required: false,
     multipleSelection: true,
     maxSelections: 2,
     options: [
-      { id: 'lemon-butter', name: 'Lemon Herb Butter', price: 2.00 },
-      { id: 'garlic-white-wine', name: 'Garlic White Wine', price: 2.50 },
-      { id: 'mango-salsa', name: 'Fresh Mango Salsa', price: 3.00 },
-      { id: 'cocktail-sauce', name: 'House Cocktail Sauce', price: 1.50 },
-      { id: 'remoulade', name: 'Creole Remoulade', price: 2.00 },
-      { id: 'mignonette', name: 'Classic Mignonette', price: 1.50 },
-      { id: 'tartar', name: 'House Tartar Sauce', price: 1.50 }
+      { id: 'chorizo', name: 'Spanish Chorizo', price: 5.00 },
+      { id: 'prawns', name: 'Gulf Prawns', price: 8.00 },
+      { id: 'chicken', name: 'Free-Range Chicken', price: 6.00 },
+      { id: 'steak', name: 'Ribeye Steak', price: 12.00 },
+      { id: 'oysters', name: 'Wood-Fired Oysters (6)', price: 15.00 }
     ]
   },
   {
-    id: 'lobster-sizes',
-    name: 'Lobster Size',
-    description: 'Fresh Maine lobster by weight',
-    required: true,
-    multipleSelection: false,
-    options: [
-      { id: '1-1.25lb', name: '1 - 1.25 lbs', price: 0, isDefault: true },
-      { id: '1.25-1.5lb', name: '1.25 - 1.5 lbs', price: 8.00 },
-      { id: '1.5-2lb', name: '1.5 - 2 lbs', price: 15.00 },
-      { id: '2lb-plus', name: '2+ lbs (Market Price)', price: 25.00 }
-    ]
-  },
-  {
-    id: 'seafood-sides',
-    name: 'Coastal Sides',
-    description: 'Perfect accompaniments to your seafood',
+    id: 'spanish-sides',
+    name: 'Spanish Sides',
+    description: 'Traditional accompaniments',
     required: false,
     multipleSelection: true,
     maxSelections: 3,
     options: [
-      { id: 'garlic-mashed', name: 'Garlic Mashed Potatoes', price: 4.00 },
-      { id: 'wild-rice', name: 'Wild Rice Pilaf', price: 3.50 },
-      { id: 'grilled-asparagus', name: 'Grilled Asparagus', price: 5.00 },
-      { id: 'coleslaw', name: 'Fresh Coleslaw', price: 3.00 },
-      { id: 'corn-on-cob', name: 'Corn on the Cob', price: 4.00 },
-      { id: 'seasonal-vegetables', name: 'Seasonal Vegetables', price: 4.50 }
+      { id: 'patatas-bravas', name: 'Patatas Bravas', price: 6.00 },
+      { id: 'pimientos', name: 'Pimientos de Padrón', price: 5.00 },
+      { id: 'manchego', name: 'Manchego & Marcona Almonds', price: 8.00 },
+      { id: 'pan-con-tomate', name: 'Pan con Tomate', price: 4.00 },
+      { id: 'olives', name: 'Marinated Olives', price: 4.00 }
     ]
   },
   {
-    id: 'spice-levels',
-    name: 'Spice Level',
-    description: 'How spicy would you like it?',
+    id: 'sauces',
+    name: 'House Sauces',
+    description: 'Made fresh daily',
     required: false,
-    multipleSelection: false,
+    multipleSelection: true,
+    maxSelections: 2,
     options: [
-      { id: 'mild', name: 'Mild', price: 0, isDefault: true },
-      { id: 'medium', name: 'Medium', price: 0 },
-      { id: 'hot', name: 'Hot', price: 0 },
-      { id: 'fire', name: 'Carolina Reaper (Fire!)', price: 1.00 }
+      { id: 'romesco', name: 'Romesco', price: 2.00 },
+      { id: 'aioli', name: 'Garlic Aioli', price: 1.50 },
+      { id: 'chimichurri', name: 'Chimichurri', price: 2.00 },
+      { id: 'salsa-verde', name: 'Salsa Verde', price: 2.00 }
     ]
   }
 ];
 
-// Fast Casual Modifier Groups (Red Fish Blue Fish)
-export const redFishBlueFishModifierGroups: ModifierGroup[] = [
+// Sister Hen - Cocktail bar focused
+export const sisterHenModifierGroups: ModifierGroup[] = [
   {
-    id: 'bowl-bases',
-    name: 'Bowl Base',
-    description: 'Choose your healthy base',
+    id: 'spirit-upgrades',
+    name: 'Spirit Upgrade',
+    description: 'Premium spirit selections',
+    required: false,
+    multipleSelection: false,
+    options: [
+      { id: 'well', name: 'Well Spirit', price: 0, isDefault: true },
+      { id: 'call', name: 'Call Spirit', price: 3.00 },
+      { id: 'premium', name: 'Premium Spirit', price: 6.00 },
+      { id: 'top-shelf', name: 'Top Shelf', price: 10.00 }
+    ]
+  },
+  {
+    id: 'cocktail-additions',
+    name: 'Cocktail Additions',
+    description: 'Customize your drink',
+    required: false,
+    multipleSelection: true,
+    maxSelections: 3,
+    options: [
+      { id: 'extra-shot', name: 'Extra Shot', price: 4.00 },
+      { id: 'egg-white', name: 'Egg White Foam', price: 1.50 },
+      { id: 'luxardo', name: 'Luxardo Cherry', price: 2.00 },
+      { id: 'orange-twist', name: 'Flamed Orange Twist', price: 1.00 },
+      { id: 'smoked', name: 'Smoked Glass', price: 3.00 }
+    ]
+  },
+  {
+    id: 'bar-snacks',
+    name: 'Bar Snacks',
+    description: 'Perfect pairings',
+    required: false,
+    multipleSelection: true,
+    maxSelections: 4,
+    options: [
+      { id: 'nuts', name: 'Spiced Mixed Nuts', price: 5.00 },
+      { id: 'olives', name: 'Castelvetrano Olives', price: 4.00 },
+      { id: 'cheese', name: 'Cheese Board', price: 14.00 },
+      { id: 'charcuterie', name: 'Charcuterie Selection', price: 16.00 },
+      { id: 'oysters', name: 'Oysters on Ice (6)', price: 18.00 }
+    ]
+  },
+  {
+    id: 'ice-preference',
+    name: 'Ice Preference',
+    description: 'Choose your ice',
+    required: false,
+    multipleSelection: false,
+    options: [
+      { id: 'regular', name: 'Regular Ice', price: 0, isDefault: true },
+      { id: 'large-cube', name: 'Large Cube', price: 0 },
+      { id: 'sphere', name: 'Ice Sphere', price: 1.00 },
+      { id: 'neat', name: 'Neat (No Ice)', price: 0 }
+    ]
+  }
+];
+
+// Cousin Wolf - Breakfast/brunch focused
+export const cousinWolfModifierGroups: ModifierGroup[] = [
+  {
+    id: 'egg-styles',
+    name: 'Egg Style',
+    description: 'How would you like your eggs?',
     required: true,
     multipleSelection: false,
     options: [
-      { id: 'sushi-rice', name: 'Sushi Rice', price: 0, isDefault: true },
-      { id: 'brown-rice', name: 'Brown Rice', price: 0 },
-      { id: 'quinoa', name: 'Quinoa', price: 1.50 },
-      { id: 'mixed-greens', name: 'Mixed Greens', price: 0 },
-      { id: 'cauliflower-rice', name: 'Cauliflower Rice', price: 2.00 },
-      { id: 'half-rice-greens', name: 'Half Rice, Half Greens', price: 0 }
+      { id: 'scrambled', name: 'Scrambled', price: 0, isDefault: true },
+      { id: 'over-easy', name: 'Over Easy', price: 0 },
+      { id: 'over-medium', name: 'Over Medium', price: 0 },
+      { id: 'over-hard', name: 'Over Hard', price: 0 },
+      { id: 'sunny', name: 'Sunny Side Up', price: 0 },
+      { id: 'poached', name: 'Poached', price: 0 }
     ]
   },
   {
-    id: 'fresh-proteins',
-    name: 'Additional Protein',
-    description: 'Add more protein to your bowl',
+    id: 'breakfast-proteins',
+    name: 'Breakfast Proteins',
+    description: 'Add your favorite protein',
+    required: false,
+    multipleSelection: true,
+    maxSelections: 3,
+    options: [
+      { id: 'bacon', name: 'Applewood Bacon', price: 4.00 },
+      { id: 'sausage', name: 'House Sausage', price: 4.00 },
+      { id: 'ham', name: 'Country Ham', price: 5.00 },
+      { id: 'salmon', name: 'Smoked Salmon', price: 8.00 },
+      { id: 'chorizo', name: 'Breakfast Chorizo', price: 5.00 }
+    ]
+  },
+  {
+    id: 'brunch-sides',
+    name: 'Brunch Sides',
+    description: 'Complete your meal',
+    required: false,
+    multipleSelection: true,
+    maxSelections: 3,
+    options: [
+      { id: 'hash-browns', name: 'Crispy Hash Browns', price: 4.00 },
+      { id: 'grits', name: 'Stone-Ground Grits', price: 3.50 },
+      { id: 'toast', name: 'Sourdough Toast', price: 2.50 },
+      { id: 'fruit', name: 'Fresh Fruit', price: 5.00 },
+      { id: 'biscuit', name: 'Buttermilk Biscuit', price: 3.00 }
+    ]
+  },
+  {
+    id: 'coffee-options',
+    name: 'Coffee & Beverages',
+    description: 'Start your morning right',
     required: false,
     multipleSelection: true,
     maxSelections: 2,
     options: [
-      { id: 'extra-tuna', name: 'Extra Ahi Tuna', price: 6.00 },
-      { id: 'grilled-shrimp', name: 'Grilled Shrimp', price: 5.00 },
-      { id: 'tofu', name: 'Marinated Tofu', price: 3.00 },
-      { id: 'edamame', name: 'Edamame', price: 2.50 },
-      { id: 'hard-boiled-egg', name: 'Hard-Boiled Egg', price: 2.00 }
-    ]
-  },
-  {
-    id: 'fresh-toppings',
-    name: 'Fresh Toppings',
-    description: 'Build your perfect bowl',
-    required: false,
-    multipleSelection: true,
-    maxSelections: 5,
-    options: [
-      { id: 'avocado', name: 'Fresh Avocado', price: 2.00 },
-      { id: 'cucumber', name: 'Cucumber', price: 1.00 },
-      { id: 'pickled-ginger', name: 'Pickled Ginger', price: 0.50 },
-      { id: 'seaweed-salad', name: 'Seaweed Salad', price: 2.50 },
-      { id: 'mango', name: 'Fresh Mango', price: 2.00 },
-      { id: 'radish', name: 'Pickled Radish', price: 1.00 },
-      { id: 'sesame-seeds', name: 'Sesame Seeds', price: 0.50 },
-      { id: 'nori', name: 'Nori Sheets', price: 1.00 }
-    ]
-  },
-  {
-    id: 'healthy-sauces',
-    name: 'Signature Sauces',
-    description: 'House-made healthy sauces',
-    required: false,
-    multipleSelection: true,
-    maxSelections: 2,
-    options: [
-      { id: 'spicy-mayo', name: 'Spicy Mayo', price: 0.50 },
-      { id: 'ponzu', name: 'Citrus Ponzu', price: 0.50 },
-      { id: 'sesame-ginger', name: 'Sesame Ginger', price: 0.50 },
-      { id: 'sriracha-aioli', name: 'Sriracha Aioli', price: 0.75 },
-      { id: 'wasabi-cream', name: 'Wasabi Cream', price: 1.00 },
-      { id: 'tahini', name: 'Lemon Tahini', price: 0.75 }
-    ]
-  },
-  {
-    id: 'portion-sizes',
-    name: 'Portion Size',
-    description: 'Choose your portion',
-    required: false,
-    multipleSelection: false,
-    options: [
-      { id: 'regular', name: 'Regular', price: 0, isDefault: true },
-      { id: 'large', name: 'Large (+50% more)', price: 4.00 },
-      { id: 'small', name: 'Small Bowl', price: -3.00 }
+      { id: 'drip-coffee', name: 'Drip Coffee', price: 3.00 },
+      { id: 'espresso', name: 'Espresso', price: 3.50 },
+      { id: 'latte', name: 'Café Latte', price: 5.00 },
+      { id: 'cold-brew', name: 'Cold Brew', price: 4.50 },
+      { id: 'mimosa', name: 'Mimosa', price: 8.00 },
+      { id: 'bloody-mary', name: 'Bloody Mary', price: 10.00 }
     ]
   }
 ];
@@ -295,11 +248,11 @@ export const defaultModifierGroups: ModifierGroup[] = [
   }
 ];
 
-// Export modifier groups by store
+// Export modifier groups by store - Lily Hall venues
 export const storeModifierGroups: Record<string, ModifierGroup[]> = {
-  '1': piazzaModifierGroups,
-  '2': salDeMarModifierGroups,
-  '3': redFishBlueFishModifierGroups,
+  '1': brotherFoxModifierGroups,
+  '2': sisterHenModifierGroups,
+  '3': cousinWolfModifierGroups,
   default: defaultModifierGroups
 };
 

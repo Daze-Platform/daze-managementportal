@@ -42,9 +42,9 @@ export const ActiveOrders = () => {
 
   const stores = [
     { id: 'all', name: 'All Stores' },
-    { id: '12', name: 'Piazza' },
-    { id: '13', name: 'Red Fish Blue Fish' },
-    { id: '8', name: 'Sal De Mar' },
+    { id: '1', name: 'Brother Fox' },
+    { id: '2', name: 'Sister Hen' },
+    { id: '3', name: 'Cousin Wolf' },
   ];
 
   const filteredOrders = getFilteredOrders();

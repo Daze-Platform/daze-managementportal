@@ -17,10 +17,12 @@ import { useResort } from '@/contexts/DestinationContext';
 import { useFilters } from '@/contexts/FilterContext';
 import { Calendar } from '@/components/ui/calendar';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
 import { DateRange } from 'react-day-picker';
 import { format, subDays } from 'date-fns';
 import { reportsData } from '@/data/reportsData';
-import { BarChart3, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
+import { BarChart3, TrendingUp, Calendar as CalendarIcon, Filter, Check } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -56,6 +58,20 @@ const gridVariants = {
   }
 };
 
+// Report section definitions
+const REPORT_SECTIONS = [
+  { id: 'customerAnalytics', label: 'Customer Analytics' },
+  { id: 'productMix', label: 'Product Mix' },
+  { id: 'revenue', label: 'Revenue' },
+  { id: 'paymentTypes', label: 'Payment Types' },
+  { id: 'cancellations', label: 'Cancellations' },
+  { id: 'downtime', label: 'Downtime' },
+  { id: 'marketing', label: 'Marketing' },
+  { id: 'team', label: 'Team Performance' },
+] as const;
+
+type SectionId = typeof REPORT_SECTIONS[number]['id'];
+
 export const Reports = () => {
   const { stores: allStores, getStoresByResort } = useStores();
   const { currentResort } = useResort();
@@ -63,6 +79,9 @@ export const Reports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('7days');
   const [customOpen, setCustomOpen] = useState(false);
   const [tempRange, setTempRange] = useState<DateRange | undefined>(selectedDateRange);
+  const [visibleSections, setVisibleSections] = useState<Set<SectionId>>(
+    new Set(REPORT_SECTIONS.map(s => s.id))
+  );
 
   // Get store-specific data
   const currentStoreData = reportsData[selectedStore as keyof typeof reportsData] || reportsData['all'];
@@ -107,6 +126,30 @@ export const Reports = () => {
     const daysBack = value === '7days' ? 6 : value === '30days' ? 29 : 89;
     setSelectedDateRange({ from: subDays(today, daysBack), to: today });
   }
+
+  const toggleSection = (sectionId: SectionId) => {
+    setVisibleSections(prev => {
+      const next = new Set(prev);
+      if (next.has(sectionId)) {
+        next.delete(sectionId);
+      } else {
+        next.add(sectionId);
+      }
+      return next;
+    });
+  };
+
+  const toggleAllSections = (show: boolean) => {
+    if (show) {
+      setVisibleSections(new Set(REPORT_SECTIONS.map(s => s.id)));
+    } else {
+      setVisibleSections(new Set());
+    }
+  };
+
+  const isSectionVisible = (sectionId: SectionId) => visibleSections.has(sectionId);
+  const visibleCount = visibleSections.size;
+  const totalCount = REPORT_SECTIONS.length;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
@@ -181,6 +224,69 @@ export const Reports = () => {
                 <SelectItem value="custom">Custom range…</SelectItem>
               </SelectContent>
             </Select>
+
+            {/* Report Section Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="w-full sm:w-auto bg-white/70 backdrop-blur-sm border-gray-200 hover:border-primary/50 transition-colors gap-2"
+                >
+                  <Filter className="w-4 h-4" />
+                  <span>Sections</span>
+                  <span className="bg-primary/10 text-primary text-xs px-1.5 py-0.5 rounded-full font-medium">
+                    {visibleCount}/{totalCount}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-64 p-3 bg-white/95 backdrop-blur-md border-gray-200 shadow-xl" align="start">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <span className="text-sm font-medium text-gray-900">Filter Sections</span>
+                    <div className="flex gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 px-2 text-xs"
+                        onClick={() => toggleAllSections(true)}
+                      >
+                        All
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 px-2 text-xs"
+                        onClick={() => toggleAllSections(false)}
+                      >
+                        None
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {REPORT_SECTIONS.map((section) => (
+                      <div 
+                        key={section.id}
+                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1.5 rounded-md transition-colors"
+                        onClick={() => toggleSection(section.id)}
+                      >
+                        <Checkbox 
+                          id={section.id}
+                          checked={isSectionVisible(section.id)}
+                          onCheckedChange={() => toggleSection(section.id)}
+                          className="pointer-events-none"
+                        />
+                        <label 
+                          htmlFor={section.id}
+                          className="text-sm text-gray-700 cursor-pointer flex-1"
+                        >
+                          {section.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
 
           <motion.div 
@@ -225,75 +331,165 @@ export const Reports = () => {
           className="p-4 sm:p-6 lg:p-8 xl:p-10 space-y-8 lg:space-y-10"
         >
           {/* Customer Analytics Section - Full width on desktop */}
-          <motion.div variants={itemVariants} className="w-full">
-            <motion.h2 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-xl lg:text-2xl font-semibold mb-4 lg:mb-6 text-gray-900 flex items-center gap-2"
-            >
-              <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
-              Customer Analytics
-            </motion.h2>
-            <div className="w-full">
-              <CustomerAnalyticsSection data={currentStoreData.customerAnalytics} />
-            </div>
-          </motion.div>
+          <AnimatePresence>
+            {isSectionVisible('customerAnalytics') && (
+              <motion.div 
+                variants={itemVariants} 
+                className="w-full"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <motion.h2 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="text-xl lg:text-2xl font-semibold mb-4 lg:mb-6 text-gray-900 flex items-center gap-2"
+                >
+                  <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
+                  Customer Analytics
+                </motion.h2>
+                <div className="w-full">
+                  <CustomerAnalyticsSection data={currentStoreData.customerAnalytics} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Product Mix - Full width */}
-          <motion.div variants={itemVariants} className="w-full">
-            <motion.h2 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-xl lg:text-2xl font-semibold mb-4 lg:mb-6 text-gray-900 flex items-center gap-2"
-            >
-              <span className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full" />
-              Product Mix
-            </motion.h2>
-            <div className="w-full">
-              <ProductMixSection selectedStore={selectedStore} selectedDateRange={selectedDateRange} />
-            </div>
-          </motion.div>
+          <AnimatePresence>
+            {isSectionVisible('productMix') && (
+              <motion.div 
+                variants={itemVariants} 
+                className="w-full"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <motion.h2 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="text-xl lg:text-2xl font-semibold mb-4 lg:mb-6 text-gray-900 flex items-center gap-2"
+                >
+                  <span className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full" />
+                  Product Mix
+                </motion.h2>
+                <div className="w-full">
+                  <ProductMixSection selectedStore={selectedStore} selectedDateRange={selectedDateRange} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Reports Grid - Better responsive layout */}
-          <motion.div variants={itemVariants} className="w-full">
-            <motion.h2 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-xl lg:text-2xl font-semibold mb-4 lg:mb-6 text-gray-900 flex items-center gap-2"
-            >
-              <span className="w-1 h-6 bg-gradient-to-b from-orange-500 to-red-500 rounded-full" />
-              Performance Reports
-            </motion.h2>
-            <motion.div 
-              variants={gridVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 lg:gap-8 xl:gap-10"
-            >
-              <motion.div variants={itemVariants} className="w-full">
-                <RevenueSection data={currentStoreData.revenue} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="w-full">
-                <PaymentTypesSection data={currentStoreData.paymentTypes} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="w-full">
-                <CancellationSection data={currentStoreData.cancellations} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="w-full">
-                <DowntimeSection />
-              </motion.div>
-              <motion.div variants={itemVariants} className="w-full">
-                <MarketingSection />
-              </motion.div>
-              <motion.div variants={itemVariants} className="w-full">
-                <TeamSection />
+          {(isSectionVisible('revenue') || isSectionVisible('paymentTypes') || 
+            isSectionVisible('cancellations') || isSectionVisible('downtime') || 
+            isSectionVisible('marketing') || isSectionVisible('team')) && (
+            <motion.div variants={itemVariants} className="w-full">
+              <motion.h2 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="text-xl lg:text-2xl font-semibold mb-4 lg:mb-6 text-gray-900 flex items-center gap-2"
+              >
+                <span className="w-1 h-6 bg-gradient-to-b from-orange-500 to-red-500 rounded-full" />
+                Performance Reports
+              </motion.h2>
+              <motion.div 
+                variants={gridVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 lg:gap-8 xl:gap-10"
+              >
+                <AnimatePresence>
+                  {isSectionVisible('revenue') && (
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="w-full"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                      <RevenueSection data={currentStoreData.revenue} />
+                    </motion.div>
+                  )}
+                  {isSectionVisible('paymentTypes') && (
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="w-full"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                      <PaymentTypesSection data={currentStoreData.paymentTypes} />
+                    </motion.div>
+                  )}
+                  {isSectionVisible('cancellations') && (
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="w-full"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                      <CancellationSection data={currentStoreData.cancellations} />
+                    </motion.div>
+                  )}
+                  {isSectionVisible('downtime') && (
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="w-full"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                      <DowntimeSection />
+                    </motion.div>
+                  )}
+                  {isSectionVisible('marketing') && (
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="w-full"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                      <MarketingSection />
+                    </motion.div>
+                  )}
+                  {isSectionVisible('team') && (
+                    <motion.div 
+                      variants={itemVariants} 
+                      className="w-full"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                      <TeamSection />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             </motion.div>
-          </motion.div>
+          )}
+
+          {/* Empty state when no sections visible */}
+          {visibleCount === 0 && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-20 text-center"
+            >
+              <Filter className="w-12 h-12 text-gray-300 mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No sections selected</h3>
+              <p className="text-gray-500 mb-4">Use the Sections filter to show report data</p>
+              <Button onClick={() => toggleAllSections(true)}>
+                Show All Sections
+              </Button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </div>
