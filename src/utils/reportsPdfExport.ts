@@ -41,6 +41,8 @@ export const exportReportsToPdf = ({
   visibleSections,
   data,
 }: ExportOptions) => {
+  console.log('PDF Export - Starting export with:', { storeName, visibleSections: Array.from(visibleSections), data });
+  
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
@@ -80,11 +82,17 @@ export const exportReportsToPdf = ({
     doc.setTextColor(50);
     doc.text(title, 14, yPosition);
     doc.setTextColor(0);
-    yPosition += 8;
+    yPosition += 10;
+  };
+
+  // Check if section is visible
+  const isSectionVisible = (sectionId: string) => {
+    return visibleSections.has(sectionId);
   };
 
   // Customer Analytics Section
-  if (visibleSections.has('customerAnalytics')) {
+  if (isSectionVisible('customerAnalytics') && data.customerAnalytics) {
+    console.log('PDF Export - Adding Customer Analytics');
     addSectionHeader('Customer Analytics');
     
     autoTable(doc, {
@@ -105,7 +113,8 @@ export const exportReportsToPdf = ({
   }
 
   // Revenue Section
-  if (visibleSections.has('revenue')) {
+  if (isSectionVisible('revenue') && data.revenue) {
+    console.log('PDF Export - Adding Revenue');
     addSectionHeader('Revenue');
     
     autoTable(doc, {
@@ -128,7 +137,8 @@ export const exportReportsToPdf = ({
   }
 
   // Payment Types Section
-  if (visibleSections.has('paymentTypes')) {
+  if (isSectionVisible('paymentTypes') && data.paymentTypes) {
+    console.log('PDF Export - Adding Payment Types');
     addSectionHeader('Payment Types');
     
     autoTable(doc, {
@@ -147,7 +157,8 @@ export const exportReportsToPdf = ({
   }
 
   // Cancellations Section
-  if (visibleSections.has('cancellations')) {
+  if (isSectionVisible('cancellations') && data.cancellations) {
+    console.log('PDF Export - Adding Cancellations');
     addSectionHeader('Cancellations');
     
     autoTable(doc, {
@@ -164,7 +175,7 @@ export const exportReportsToPdf = ({
     
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
-    if (data.cancellations.reasons.length > 0) {
+    if (data.cancellations.reasons && data.cancellations.reasons.length > 0) {
       autoTable(doc, {
         startY: yPosition,
         head: [['Reason', 'Count', 'Percentage']],
@@ -181,6 +192,8 @@ export const exportReportsToPdf = ({
       yPosition = (doc as any).lastAutoTable.finalY + 15;
     }
   }
+
+  console.log('PDF Export - Finished adding sections, saving document');
 
   // Add footer on each page
   const pageCount = (doc as any).internal.getNumberOfPages();
