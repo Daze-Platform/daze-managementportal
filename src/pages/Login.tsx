@@ -134,7 +134,7 @@ const Login = () => {
           className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-primary via-accent to-primary py-3 px-4 text-center shadow-lg"
         >
           <p className="text-sm md:text-base font-medium text-white">
-            Welcome to Lily Hall Management Hub
+            Welcome to Lily Hall Management Hub Demo
           </p>
         </motion.div>
       )}
