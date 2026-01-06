@@ -15,7 +15,7 @@ export const OrderCardCustomer = ({ customer }: OrderCardCustomerProps) => {
   
   return (
     <div className="flex items-center gap-3 mb-3 p-2.5 bg-gray-50/50 rounded-lg border border-gray-50">
-      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-semibold shadow-sm">
+      <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center text-white text-xs font-semibold shadow-sm ring-1 ring-black/5">
         {getInitials(customer)}
       </div>
       <span className="text-sm font-medium text-gray-800">{customer}</span>

@@ -12,7 +12,7 @@ export const OrderCardAvatar = ({ customer }: OrderCardAvatarProps) => {
 
   return (
     <div className="relative flex-shrink-0">
-      <div className="w-12 h-12 bg-gradient-to-br from-gray-600 to-gray-700 rounded-xl flex items-center justify-center shadow-lg ring-1 ring-black/5">
+      <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5">
         <span className="text-white font-bold text-sm">
           {getInitials(customer || '')}
         </span>
