@@ -3,7 +3,7 @@
 /* Base styles and CSS variables */
 @layer base {
   :root {
-    --background: 0 0% 99%;
+    --background: 210 40% 98%;
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -12,16 +12,18 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 217 91% 45%;
+    /* Daze sky blue - inspired by the logo cloud */
+    --primary: 200 80% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 214 32% 96%;
+    --secondary: 200 30% 96%;
     --secondary-foreground: 222 47% 11%;
 
-    --muted: 214 32% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 200 20% 96%;
+    --muted-foreground: 200 16% 47%;
 
-    --accent: 24 95% 53%;
+    /* Daze sunset coral/orange - warm accent from logo */
+    --accent: 20 92% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -33,52 +35,53 @@
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --info: 199 89% 48%;
+    --info: 200 89% 48%;
     --info-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 45%;
+    --border: 200 25% 90%;
+    --input: 200 25% 90%;
+    --ring: 200 80% 55%;
 
     --radius: 0.625rem;
 
-    --sidebar-background: 222 47% 11%;
+    /* Sidebar with Daze deep blue */
+    --sidebar-background: 210 60% 12%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 217 33% 17%;
+    --sidebar-primary-foreground: 210 60% 12%;
+    --sidebar-accent: 200 40% 20%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 24 95% 53%;
+    --sidebar-border: 200 40% 20%;
+    --sidebar-ring: 20 92% 55%;
 
-    /* Beach resort themed colors */
-    --ocean-blue: 205 89% 45%;
-    --ocean-blue-light: 205 89% 65%;
-    --ocean-blue-dark: 205 89% 25%;
-    --sunset-coral: 14 90% 63%;
-    --sunset-coral-light: 14 90% 73%;
-    --sunset-coral-dark: 14 90% 53%;
+    /* Daze themed colors - from logo gradient */
+    --ocean-blue: 200 80% 55%;
+    --ocean-blue-light: 200 80% 70%;
+    --ocean-blue-dark: 200 80% 40%;
+    --sunset-coral: 20 92% 55%;
+    --sunset-coral-light: 20 92% 68%;
+    --sunset-coral-dark: 20 92% 45%;
     --sand-beige: 45 44% 85%;
     --sand-beige-light: 45 44% 90%;
     --sand-beige-dark: 45 44% 75%;
-    --tropical-teal: 173 58% 39%;
-    --tropical-teal-light: 173 58% 55%;
-    --tropical-teal-dark: 173 58% 25%;
+    --tropical-teal: 180 58% 45%;
+    --tropical-teal-light: 180 58% 60%;
+    --tropical-teal-dark: 180 58% 30%;
     --palm-green: 142 76% 36%;
     --palm-green-light: 142 76% 50%;
     --palm-green-dark: 142 76% 25%;
     
-    /* Brand specific colors */
-    --brand-blue: 217 91% 45%;
-    --brand-blue-light: 217 91% 65%;
-    --brand-blue-dark: 217 91% 30%;
-    --brand-orange: 24 95% 53%;
-    --brand-orange-light: 24 95% 68%;
-    --brand-orange-dark: 24 95% 43%;
+    /* Brand colors - Daze inspired with Lovable flare */
+    --brand-blue: 200 80% 55%;
+    --brand-blue-light: 200 80% 70%;
+    --brand-blue-dark: 200 80% 40%;
+    --brand-orange: 20 92% 55%;
+    --brand-orange-light: 25 95% 65%;
+    --brand-orange-dark: 15 90% 45%;
 
     /* Glass effect */
     --glass-bg: 0 0% 100% / 0.7;
-    --glass-border: 0 0% 100% / 0.2;
+    --glass-border: 200 80% 55% / 0.15;
 
     /* Mobile viewport variables */
     --vh: 1vh;
@@ -87,19 +90,19 @@
   }
 
   .dark {
-    --background: 222 47% 6%;
+    --background: 210 50% 6%;
     --foreground: 0 0% 98%;
-    --card: 222 47% 8%;
+    --card: 210 50% 8%;
     --card-foreground: 0 0% 98%;
-    --popover: 222 47% 8%;
+    --popover: 210 50% 8%;
     --popover-foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 33% 17%;
+    --primary: 200 80% 60%;
+    --primary-foreground: 210 50% 8%;
+    --secondary: 200 30% 17%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 24 95% 58%;
+    --muted: 200 30% 17%;
+    --muted-foreground: 200 20% 65%;
+    --accent: 20 92% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
@@ -107,22 +110,22 @@
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 45%;
     --warning-foreground: 0 0% 100%;
-    --info: 199 89% 43%;
+    --info: 200 89% 50%;
     --info-foreground: 0 0% 100%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 217 91% 60%;
-    --sidebar-background: 222 47% 5%;
+    --border: 200 30% 17%;
+    --input: 200 30% 17%;
+    --ring: 200 80% 60%;
+    --sidebar-background: 210 50% 5%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 24 95% 58%;
+    --sidebar-primary: 20 92% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 33% 12%;
+    --sidebar-accent: 200 30% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 217 33% 12%;
-    --sidebar-ring: 24 95% 58%;
+    --sidebar-border: 200 30% 12%;
+    --sidebar-ring: 20 92% 58%;
 
-    --glass-bg: 222 47% 8% / 0.8;
-    --glass-border: 0 0% 100% / 0.1;
+    --glass-bg: 210 50% 8% / 0.8;
+    --glass-border: 200 80% 55% / 0.1;
   }
 
   * {
