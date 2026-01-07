@@ -10,7 +10,7 @@ interface MenuListProps {
   onEditMenu: (menu: Menu) => void;
   onToggleMenuStatus: (menuId: string) => void;
   onDeleteMenu: (menuId: string) => void;
-  onAssignStore: (menu: Menu) => void;
+  onAssignStore: (menu: Menu) => void; // Keep prop name for compatibility (assigns to venue)
 }
 
 const professionalMenuIconColors = [
