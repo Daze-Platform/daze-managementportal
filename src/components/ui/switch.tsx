@@ -1,5 +1,3 @@
-console.log("Switch loaded: slim-pill-v2");
-
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
 
