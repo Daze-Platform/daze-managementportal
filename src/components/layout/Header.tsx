@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Bell, Search, User, Settings, LogOut, UserCircle, Clock, X, CheckCircle, AlertCircle, Info, Menu } from 'lucide-react';
+import { Bell, Search, User, Settings, LogOut, UserCircle, Clock, X, CheckCircle, AlertCircle, Info, Menu, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -52,7 +52,8 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       message: 'Successfully refunded $10.00 for order #67899886 at Brother Fox', 
       time: '2 min ago', 
       unread: true, 
-      type: 'success' 
+      type: 'success',
+      route: '/orders/history'
     },
     { 
       id: 2, 
@@ -60,7 +61,8 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       message: 'Menu item "Grilled Salmon" updated at Sister Hen', 
       time: '1 hour ago', 
       unread: false, 
-      type: 'info' 
+      type: 'info',
+      route: '/menus'
     },
     { 
       id: 3, 
@@ -68,7 +70,8 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       message: 'Daily sales report for Lily Hall is now available', 
       time: '3 hours ago', 
       unread: false, 
-      type: 'info' 
+      type: 'info',
+      route: '/reports'
     }
   ]);
 
@@ -274,6 +277,44 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       )
     );
     console.log(`Marking notification ${id} as read`);
+  };
+
+  // Helper function to get human-readable route labels
+  const getRouteLabel = (route: string): string => {
+    const routeLabels: Record<string, string> = {
+      '/orders/history': 'Order History',
+      '/orders/active': 'Active Orders',
+      '/menus': 'Menu Management',
+      '/reports': 'Reports',
+      '/stores': 'Stores',
+      '/employees': 'Employees',
+      '/ratings': 'Ratings',
+      '/promotions': 'Promotions',
+      '/settings': 'Settings',
+    };
+    return routeLabels[route] || route;
+  };
+
+  const handleNotificationClick = (notification: {
+    id: number;
+    title: string;
+    route: string;
+  }) => {
+    // Mark as read
+    handleMarkAsRead(notification.id);
+    
+    // Close the popover
+    setNotificationPopoverOpen(false);
+    
+    // Navigate to the route
+    if (notification.route) {
+      navigate(notification.route);
+      
+      toast({
+        title: notification.title,
+        description: `Navigating to ${getRouteLabel(notification.route)}`,
+      });
+    }
   };
 
   const handleMarkAllAsRead = () => {
@@ -555,13 +596,13 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                   <p className="text-gray-400 text-sm mt-1">We'll notify you when something important happens</p>
                 </div>
               ) : (
-                notifications.map((notification) => (
+              notifications.map((notification) => (
                   <div 
                     key={notification.id} 
                     className={`p-5 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 cursor-pointer transition-all duration-200 group ${
                       getNotificationBg(notification.type, notification.unread)
                     }`}
-                    onClick={() => handleMarkAsRead(notification.id)}
+                    onClick={() => handleNotificationClick(notification)}
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 mt-0.5">
@@ -588,6 +629,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                             <div className="flex items-center mt-3 text-xs text-gray-500">
                               <Clock className="w-3 h-3 mr-1.5" />
                               {notification.time}
+                              <ChevronRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-gray-400" />
                             </div>
                           </div>
                           
