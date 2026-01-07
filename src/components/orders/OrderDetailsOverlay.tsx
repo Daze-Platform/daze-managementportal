@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { OrderDetails } from './OrderDetails';
@@ -19,19 +20,36 @@ export const OrderDetailsOverlay = ({
   onClose,
   cardPosition
 }: OrderDetailsOverlayProps) => {
+  // Handle Escape key to close
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
+  // Prevent body scroll when overlay is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   if (!cardPosition) return null;
 
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] animate-fade-in"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[9998] animate-fade-in"
         onClick={onClose}
       />
       
-      {/* Overlay Panel - Positioned below header */}
+      {/* Overlay Panel - Always fully visible in viewport */}
       <div 
-        className="fixed z-[101] bg-white animate-slide-in-right flex flex-col"
+        className="fixed z-[9999] bg-white animate-slide-in-right flex flex-col"
         style={{
           top: 'calc(var(--header-height, 64px) + 10px)',
           right: '10px',
@@ -43,7 +61,7 @@ export const OrderDetailsOverlay = ({
           border: '1px solid rgba(229, 231, 235, 0.5)'
         }}
       >
-        {/* Close button - Positioned absolutely to not interfere with OrderDetails */}
+        {/* Close button */}
         <Button
           variant="ghost"
           size="sm"
@@ -53,7 +71,7 @@ export const OrderDetailsOverlay = ({
           <X className="w-5 h-5" />
         </Button>
         
-        {/* Content - Full height with proper mobile scrolling */}
+        {/* Content */}
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           <OrderDetails 
             selectedOrder={selectedOrder} 
@@ -62,6 +80,7 @@ export const OrderDetailsOverlay = ({
           />
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
