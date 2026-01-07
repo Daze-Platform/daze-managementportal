@@ -49,7 +49,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
     { 
       id: 1, 
       title: 'Refund Processed',
-      message: 'Successfully refunded $10.00 for order #67899886', 
+      message: 'Successfully refunded $10.00 for order #67899886 at Brother Fox', 
       time: '2 min ago', 
       unread: true, 
       type: 'success' 
@@ -57,7 +57,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
     { 
       id: 2, 
       title: 'Menu Update',
-      message: 'Menu item "Crispy Burger" updated successfully', 
+      message: 'Menu item "Grilled Salmon" updated at Sister Hen', 
       time: '1 hour ago', 
       unread: false, 
       type: 'info' 
@@ -65,7 +65,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
     { 
       id: 3, 
       title: 'Report Available',
-      message: 'Daily sales report is now available for download', 
+      message: 'Daily sales report for Lily Hall is now available', 
       time: '3 hours ago', 
       unread: false, 
       type: 'info' 
