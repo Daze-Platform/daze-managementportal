@@ -1,59 +1,76 @@
-
 import React from 'react';
 import { MenuCard } from './MenuCard';
 import { Menu } from '@/pages/MenuManagement';
-import { useIsMobile, useIsTablet } from '@/hooks/use-mobile';
-import { ChefHat } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { BookOpen, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface MenuListProps {
   menus: Menu[];
   onEditMenu: (menu: Menu) => void;
   onToggleMenuStatus: (menuId: string) => void;
   onDeleteMenu: (menuId: string) => void;
-  onAssignStore: (menu: Menu) => void; // Keep prop name for compatibility (assigns to venue)
+  onAssignStore: (menu: Menu) => void;
 }
 
-const professionalMenuIconColors = [
-  { bg: 'bg-gradient-to-br from-blue-500 to-blue-600', iconColor: 'text-white' },
-  { bg: 'bg-gradient-to-br from-indigo-500 to-indigo-600', iconColor: 'text-white' },
-  { bg: 'bg-gradient-to-br from-green-500 to-green-600', iconColor: 'text-white' },
-  { bg: 'bg-gradient-to-br from-purple-500 to-purple-600', iconColor: 'text-white' },
-  { bg: 'bg-gradient-to-br from-orange-500 to-orange-600', iconColor: 'text-white' },
-];
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06 }
+  }
+};
 
-export const MenuList: React.FC<MenuListProps> = ({ menus, onEditMenu, onToggleMenuStatus, onDeleteMenu, onAssignStore }) => {
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
+const item = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0 }
+};
 
+export const MenuList: React.FC<MenuListProps> = ({ 
+  menus, 
+  onEditMenu, 
+  onToggleMenuStatus, 
+  onDeleteMenu, 
+  onAssignStore 
+}) => {
   if (menus.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center text-center py-16 px-4">
-        <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-6 shadow-lg">
-          <ChefHat className="w-10 h-10 text-white" />
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col items-center justify-center py-20 px-6"
+      >
+        <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-6">
+          <BookOpen className="w-7 h-7 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-3">
-          No menus created yet
+        <h3 className="text-lg font-semibold text-foreground mb-2">
+          No menus yet
         </h3>
-        <p className="text-gray-600 text-base max-w-md leading-relaxed">
-          Create your first professional menu to start organizing your restaurant's culinary offerings
+        <p className="text-muted-foreground text-center max-w-sm mb-6">
+          Create your first menu to start showcasing your culinary offerings to guests.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+    <motion.div 
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
+    >
       {menus.map((menu, index) => (
-        <MenuCard
-          key={menu.id}
-          menu={menu}
-          iconConfig={professionalMenuIconColors[index % professionalMenuIconColors.length]}
-          onEditMenu={onEditMenu}
-          onToggleMenuStatus={onToggleMenuStatus}
-          onDeleteMenu={onDeleteMenu}
-          onAssignStore={onAssignStore}
-        />
+        <motion.div key={menu.id} variants={item}>
+          <MenuCard
+            menu={menu}
+            onEditMenu={onEditMenu}
+            onToggleMenuStatus={onToggleMenuStatus}
+            onDeleteMenu={onDeleteMenu}
+            onAssignStore={onAssignStore}
+          />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };

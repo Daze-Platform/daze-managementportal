@@ -6,12 +6,12 @@ import { PriceInput } from '@/components/ui/price-input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Plus, Minus, ArrowLeft, Save, ClipboardList, Utensils, DollarSign, FileText, Tag } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { Plus, Trash2, ArrowLeft, ArrowRight, Save, Utensils } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MenuItem {
   name: string;
@@ -46,8 +46,6 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [currentStep, setCurrentStep] = useState(1);
-  const [showCustomCategory, setShowCustomCategory] = useState(false);
-  const [customCategory, setCustomCategory] = useState('');
   const [formData, setFormData] = useState<MenuFormData>({
     name: '',
     description: '',
@@ -56,7 +54,6 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     items: []
   });
 
-  // Reset form when dialog opens with new data
   useEffect(() => {
     if (open) {
       setFormData({
@@ -67,8 +64,6 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
         items: initialData.items || []
       });
       setCurrentStep(1);
-      setShowCustomCategory(false);
-      setCustomCategory('');
     }
   }, [open, initialData]);
 
@@ -80,13 +75,8 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     available: true
   });
 
-  const categories = [
-    'restaurant', 'breakfast', 'lunch', 'dinner', 'drinks', 'desserts', 'specials', 'custom'
-  ];
-
-  const itemCategories = [
-    'Appetizers', 'Main Course', 'Desserts', 'Beverages', 'Sides', 'Salads', 'Soups', 'Pizza', 'Burgers', 'Sandwiches'
-  ];
+  const categories = ['restaurant', 'breakfast', 'lunch', 'dinner', 'drinks', 'desserts', 'specials'];
+  const itemCategories = ['Appetizers', 'Main Course', 'Desserts', 'Beverages', 'Sides', 'Salads', 'Soups', 'Pizza', 'Burgers', 'Sandwiches'];
 
   const handleAddItem = () => {
     if (currentItem.name && currentItem.price > 0) {
@@ -120,27 +110,6 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   const handleClose = () => {
     onOpenChange(false);
     setCurrentStep(1);
-    setShowCustomCategory(false);
-    setCustomCategory('');
-  };
-
-  const handleCategoryChange = (value: string) => {
-    if (value === 'custom') {
-      setShowCustomCategory(true);
-      setFormData(prev => ({ ...prev, category: '' }));
-    } else {
-      setShowCustomCategory(false);
-      setCustomCategory('');
-      setFormData(prev => ({ ...prev, category: value }));
-    }
-  };
-
-  const handleCustomCategorySubmit = () => {
-    if (customCategory.trim()) {
-      setFormData(prev => ({ ...prev, category: customCategory.trim() }));
-      setShowCustomCategory(false);
-      setCustomCategory('');
-    }
   };
 
   const isStepValid = (step: number) => {
@@ -148,7 +117,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
       case 1:
         return formData.name.trim() !== '' && formData.category.trim() !== '';
       case 2:
-        return true; // Items are optional
+        return true;
       default:
         return true;
     }
@@ -158,385 +127,300 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className={`${
         isMobile 
-          ? 'w-[100vw] max-w-none h-[100vh] max-h-none m-0 rounded-none p-0 overflow-hidden' 
-          : 'sm:max-w-4xl w-[90vw] max-h-[90vh]'
-      } bg-white border-0 shadow-2xl rounded-2xl`}>
+          ? 'w-full max-w-none h-full max-h-none m-0 rounded-none' 
+          : 'sm:max-w-2xl max-h-[85vh]'
+      } p-0 gap-0 flex flex-col`}>
         
         {/* Header */}
-        <div className={`flex-shrink-0 ${
-          isMobile ? 'p-4 pb-3' : 'p-6 pb-4'
-        } bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100`}>
+        <div className="px-6 pt-6 pb-4 border-b border-border flex-shrink-0">
           <DialogHeader>
-            <DialogTitle className={`${
-              isMobile ? 'text-xl' : 'text-2xl'
-            } font-bold text-gray-900 flex items-center gap-3`}>
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                <ClipboardList className="w-5 h-5 text-white" />
-              </div>
-              {mode === 'create' ? 'Create New Menu' : 'Edit Menu Details'}
+            <DialogTitle className="text-xl font-semibold">
+              {mode === 'create' ? 'Create Menu' : 'Edit Menu'}
             </DialogTitle>
-            <DialogDescription className="text-gray-600 mt-1">
-              {mode === 'create' 
-                ? 'Build your menu from scratch with categories and items' 
-                : 'Update your menu information and items'}
+            <DialogDescription className="text-sm text-muted-foreground mt-1">
+              {currentStep === 1 ? 'Set up the basic details' : 'Add items to your menu'}
             </DialogDescription>
           </DialogHeader>
           
           {/* Step Indicator */}
-          <div className="flex items-center mt-5 space-x-3">
+          <div className="flex items-center gap-2 mt-4">
             <button
               onClick={() => setCurrentStep(1)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 currentStep === 1 
-                  ? 'bg-white shadow-md text-blue-600 ring-2 ring-blue-500/20' 
-                  : currentStep > 1 
-                    ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' 
-                    : 'bg-gray-100 text-gray-400'
+                  ? 'bg-foreground text-background' 
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                currentStep === 1 ? 'bg-blue-500 text-white' : currentStep > 1 ? 'bg-emerald-500 text-white' : 'bg-gray-300 text-white'
-              }`}>
-                {currentStep > 1 ? '✓' : '1'}
-              </div>
-              Menu Details
+              <span className="w-5 h-5 rounded-full bg-current/20 text-[11px] flex items-center justify-center font-bold">
+                1
+              </span>
+              Details
             </button>
-            <div className={`w-8 h-0.5 rounded ${currentStep > 1 ? 'bg-emerald-300' : 'bg-gray-200'}`} />
+            <div className="w-6 h-px bg-border" />
             <button
               onClick={() => isStepValid(1) && setCurrentStep(2)}
               disabled={!isStepValid(1)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 currentStep === 2 
-                  ? 'bg-white shadow-md text-blue-600 ring-2 ring-blue-500/20' 
-                  : 'bg-gray-100 text-gray-400 hover:bg-gray-200 disabled:hover:bg-gray-100'
+                  ? 'bg-foreground text-background' 
+                  : 'text-muted-foreground hover:text-foreground disabled:opacity-50'
               }`}
             >
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                currentStep === 2 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-white'
-              }`}>
+              <span className="w-5 h-5 rounded-full bg-current/20 text-[11px] flex items-center justify-center font-bold">
                 2
-              </div>
-              Menu Items
+              </span>
+              Items
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <ScrollArea className={`flex-1 ${isMobile ? 'h-[calc(100vh-220px)]' : 'max-h-[calc(90vh-280px)]'}`}>
-          <div className={`${isMobile ? 'p-4' : 'p-6'}`}>
-            {currentStep === 1 && (
-              <div className="space-y-6">
-                {/* Menu Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="menuName" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                    <FileText className="w-4 h-4 text-gray-400" />
-                    Menu Name *
-                  </Label>
-                  <Input
-                    id="menuName"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="e.g., Summer Menu 2024"
-                    className="h-12 text-base border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Category */}
+        <ScrollArea className="flex-1">
+          <div className="p-6">
+            <AnimatePresence mode="wait">
+              {currentStep === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  className="space-y-5"
+                >
+                  {/* Menu Name */}
                   <div className="space-y-2">
-                    <Label htmlFor="menuCategory" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                      <Tag className="w-4 h-4 text-gray-400" />
-                      Category
+                    <Label htmlFor="menuName" className="text-sm font-medium">
+                      Menu Name <span className="text-destructive">*</span>
                     </Label>
-                    {!showCustomCategory ? (
-                      <Select 
-                        value={formData.category} 
-                        onValueChange={handleCategoryChange}
-                      >
-                        <SelectTrigger className="h-12 border-gray-200">
+                    <Input
+                      id="menuName"
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="e.g., Summer Menu 2024"
+                      className="h-11"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {/* Category */}
+                    <div className="space-y-2">
+                      <Label htmlFor="menuCategory" className="text-sm font-medium">
+                        Category
+                      </Label>
+                      <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+                        <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white rounded-xl shadow-xl border-gray-200">
-                          {categories.filter(cat => cat !== 'custom').map(cat => (
-                            <SelectItem key={cat} value={cat} className="py-2.5">
+                        <SelectContent>
+                          {categories.map(cat => (
+                            <SelectItem key={cat} value={cat}>
                               {cat.charAt(0).toUpperCase() + cat.slice(1)}
                             </SelectItem>
                           ))}
-                          <SelectItem value="custom" className="text-blue-600 font-medium py-2.5">
-                            + Add New Category
-                          </SelectItem>
                         </SelectContent>
                       </Select>
-                    ) : (
-                      <div className="flex gap-2">
-                        <Input
-                          value={customCategory}
-                          onChange={(e) => setCustomCategory(e.target.value)}
-                          placeholder="Enter custom category name"
-                          className="flex-1 h-12"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleCustomCategorySubmit();
-                            } else if (e.key === 'Escape') {
-                              setShowCustomCategory(false);
-                              setCustomCategory('');
-                            }
-                          }}
+                    </div>
+
+                    {/* Active Status */}
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Status</Label>
+                      <div className="flex items-center justify-between h-11 px-3 rounded-md border border-input bg-background">
+                        <span className={`text-sm ${formData.isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
+                          {formData.isActive ? 'Active' : 'Draft'}
+                        </span>
+                        <Switch
+                          checked={formData.isActive}
+                          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
                         />
-                        <Button
-                          type="button"
-                          onClick={handleCustomCategorySubmit}
-                          disabled={!customCategory.trim()}
-                          className="h-12 px-4"
-                        >
-                          Add
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => {
-                            setShowCustomCategory(false);
-                            setCustomCategory('');
-                          }}
-                          className="h-12 px-4"
-                        >
-                          Cancel
-                        </Button>
                       </div>
-                    )}
+                    </div>
                   </div>
 
-                  {/* Active Status */}
+                  {/* Description */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-gray-700">Status</Label>
-                    <div 
-                      onClick={() => setFormData(prev => ({ ...prev, isActive: !prev.isActive }))}
-                      className={`h-12 flex items-center gap-3 px-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                        formData.isActive 
-                          ? 'border-emerald-500 bg-emerald-50' 
-                          : 'border-gray-200 bg-gray-50 hover:border-gray-300'
-                      }`}
-                    >
-                      <Checkbox
-                        id="menuActive"
-                        checked={formData.isActive}
-                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: !!checked }))}
-                        className="w-5 h-5 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
-                      />
-                      <Label htmlFor="menuActive" className={`text-sm font-medium select-none cursor-pointer ${
-                        formData.isActive ? 'text-emerald-700' : 'text-gray-600'
-                      }`}>
-                        {formData.isActive ? 'Menu is Active' : 'Menu is Inactive'}
-                      </Label>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="space-y-2">
-                  <Label htmlFor="menuDescription" className="text-sm font-semibold text-gray-700">Description</Label>
-                  <Textarea
-                    id="menuDescription"
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Describe your menu - highlight specialties, seasonal offerings, or cuisine style..."
-                    className="min-h-[120px] text-base border-gray-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
-                  />
-                </div>
-              </div>
-            )}
-
-          {currentStep === 2 && (
-            <div className="space-y-6">
-              {/* Add Item Form */}
-              <Card className="border-gray-200 shadow-sm overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50 border-b border-gray-100 py-4">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Utensils className="w-5 h-5 text-gray-500" />
-                    Add Menu Item
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 p-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="itemName" className="text-sm font-semibold text-gray-700">Item Name</Label>
-                      <Input
-                        id="itemName"
-                        value={currentItem.name}
-                        onChange={(e) => setCurrentItem(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="e.g., Grilled Chicken"
-                        className="h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="itemPrice" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <DollarSign className="w-4 h-4 text-gray-400" />
-                        Price
-                      </Label>
-                      <PriceInput
-                        id="itemPrice"
-                        value={currentItem.price}
-                        onChange={(price) => setCurrentItem(prev => ({ ...prev, price }))}
-                        placeholder="0.00"
-                        className="h-11"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="itemDescription" className="text-sm font-semibold text-gray-700">Description</Label>
+                    <Label htmlFor="menuDescription" className="text-sm font-medium">Description</Label>
                     <Textarea
-                      id="itemDescription"
-                      value={currentItem.description}
-                      onChange={(e) => setCurrentItem(prev => ({ ...prev, description: e.target.value }))}
-                      placeholder="Describe the item..."
-                      className="h-20 resize-none"
+                      id="menuDescription"
+                      value={formData.description}
+                      onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Describe your menu..."
+                      className="min-h-[100px] resize-none"
                     />
                   </div>
+                </motion.div>
+              )}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="itemCategory" className="text-sm font-semibold text-gray-700">Category</Label>
-                      <Select value={currentItem.category} onValueChange={(value) => setCurrentItem(prev => ({ ...prev, category: value }))}>
-                        <SelectTrigger className="h-11">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white rounded-xl shadow-xl">
-                          {itemCategories.map(cat => (
-                            <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-sm font-semibold text-gray-700">Availability</Label>
-                      <div 
-                        onClick={() => setCurrentItem(prev => ({ ...prev, available: !prev.available }))}
-                        className={`h-11 flex items-center gap-3 px-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                          currentItem.available 
-                            ? 'border-emerald-500 bg-emerald-50' 
-                            : 'border-gray-200 bg-gray-50'
-                        }`}
-                      >
-                        <Checkbox
-                          id="itemAvailable"
-                          checked={currentItem.available}
-                          onCheckedChange={(checked) => setCurrentItem(prev => ({ ...prev, available: !!checked }))}
-                          className="w-4 h-4 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+              {currentStep === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className="space-y-6"
+                >
+                  {/* Add Item Form */}
+                  <div className="p-4 rounded-lg border border-border bg-muted/30">
+                    <h4 className="text-sm font-medium mb-4">Add Item</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="itemName" className="text-xs text-muted-foreground">Item Name</Label>
+                        <Input
+                          id="itemName"
+                          value={currentItem.name}
+                          onChange={(e) => setCurrentItem(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="e.g., Grilled Chicken"
+                          className="h-10"
                         />
-                        <Label htmlFor="itemAvailable" className={`text-sm font-medium select-none cursor-pointer ${
-                          currentItem.available ? 'text-emerald-700' : 'text-gray-600'
-                        }`}>
-                          {currentItem.available ? 'Available' : 'Unavailable'}
-                        </Label>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="itemPrice" className="text-xs text-muted-foreground">Price</Label>
+                        <PriceInput
+                          id="itemPrice"
+                          value={currentItem.price}
+                          onChange={(price) => setCurrentItem(prev => ({ ...prev, price }))}
+                          placeholder="0.00"
+                          className="h-10"
+                        />
                       </div>
                     </div>
-                  </div>
-
-                  <Button 
-                    onClick={handleAddItem} 
-                    className="w-full h-11 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-md" 
-                    disabled={!currentItem.name || currentItem.price <= 0}
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Item to Menu
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Items List */}
-              {formData.items.length > 0 && (
-                <Card className="border-gray-200 shadow-sm overflow-hidden">
-                  <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-100 py-4">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <ClipboardList className="w-5 h-5 text-indigo-500" />
-                      Menu Items ({formData.items.length})
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      {formData.items.map((item, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                              <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                              <Badge variant="secondary" className="text-xs font-medium bg-gray-200 text-gray-700">{item.category}</Badge>
-                              {item.available ? (
-                                <Badge className="text-xs bg-emerald-100 text-emerald-700 border-0">Available</Badge>
-                              ) : (
-                                <Badge variant="secondary" className="text-xs bg-red-100 text-red-700 border-0">Unavailable</Badge>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-500 mb-1.5 line-clamp-1">{item.description || 'No description'}</p>
-                            <p className="text-base font-bold text-emerald-600">${item.price.toFixed(2)}</p>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleRemoveItem(index)}
-                            className="ml-3 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg"
-                          >
-                            <Minus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
+                    
+                    <div className="space-y-2 mb-4">
+                      <Label htmlFor="itemDescription" className="text-xs text-muted-foreground">Description</Label>
+                      <Textarea
+                        id="itemDescription"
+                        value={currentItem.description}
+                        onChange={(e) => setCurrentItem(prev => ({ ...prev, description: e.target.value }))}
+                        placeholder="Describe the item..."
+                        className="h-16 resize-none"
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              )}
 
-              {formData.items.length === 0 && (
-                <div className="text-center py-12 px-4">
-                  <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Utensils className="w-8 h-8 text-gray-400" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="itemCategory" className="text-xs text-muted-foreground">Category</Label>
+                        <Select value={currentItem.category} onValueChange={(value) => setCurrentItem(prev => ({ ...prev, category: value }))}>
+                          <SelectTrigger className="h-10">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {itemCategories.map(cat => (
+                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs text-muted-foreground">Availability</Label>
+                        <div className="flex items-center justify-between h-10 px-3 rounded-md border border-input bg-background">
+                          <span className={`text-sm ${currentItem.available ? 'text-foreground' : 'text-muted-foreground'}`}>
+                            {currentItem.available ? 'Available' : 'Unavailable'}
+                          </span>
+                          <Switch
+                            checked={currentItem.available}
+                            onCheckedChange={(checked) => setCurrentItem(prev => ({ ...prev, available: checked }))}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button 
+                      onClick={handleAddItem} 
+                      className="w-full h-10 bg-foreground hover:bg-foreground/90 text-background" 
+                      disabled={!currentItem.name || currentItem.price <= 0}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Item
+                    </Button>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No items yet</h3>
-                  <p className="text-gray-500 text-sm max-w-sm mx-auto">
-                    Add your first menu item using the form above. You can always add more items later.
-                  </p>
-                </div>
+
+                  {/* Items List */}
+                  {formData.items.length > 0 ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-sm font-medium">
+                          Menu Items <span className="text-muted-foreground">({formData.items.length})</span>
+                        </h4>
+                      </div>
+                      <div className="space-y-2">
+                        {formData.items.map((item, index) => (
+                          <motion.div 
+                            key={index}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="group flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:border-foreground/20 transition-colors"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <span className="font-medium text-sm text-foreground">{item.name}</span>
+                                <Badge variant="secondary" className="text-[10px]">{item.category}</Badge>
+                                {!item.available && (
+                                  <Badge variant="secondary" className="text-[10px] bg-destructive/10 text-destructive">Unavailable</Badge>
+                                )}
+                              </div>
+                              <p className="text-xs text-muted-foreground line-clamp-1">{item.description || 'No description'}</p>
+                            </div>
+                            <div className="flex items-center gap-3 ml-3">
+                              <span className="text-sm font-semibold tabular-nums text-success">${item.price.toFixed(2)}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemoveItem(index)}
+                                className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive transition-opacity"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-10">
+                      <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center mx-auto mb-3">
+                        <Utensils className="w-5 h-5 text-muted-foreground" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">No items yet. Add your first item above.</p>
+                    </div>
+                  )}
+                </motion.div>
               )}
-            </div>
-          )}
+            </AnimatePresence>
           </div>
         </ScrollArea>
 
         {/* Footer */}
-        <div className={`flex-shrink-0 bg-gray-50 border-t border-gray-100 ${
-          isMobile ? 'p-4' : 'px-6 py-4'
-        }`}>
-          <div className="flex justify-between items-center">
-            <div>
-              {currentStep > 1 && (
-                <Button variant="ghost" onClick={() => setCurrentStep(currentStep - 1)} className="text-gray-600">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
-              )}
-            </div>
-            <div className="flex gap-3">
-              <Button variant="outline" onClick={handleClose} className="border-gray-200">
-                Cancel
+        <div className="px-6 py-4 border-t border-border bg-muted/30 flex items-center justify-between flex-shrink-0">
+          <div>
+            {currentStep > 1 && (
+              <Button variant="ghost" onClick={() => setCurrentStep(currentStep - 1)}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
               </Button>
-              {currentStep < 2 ? (
-                <Button 
-                  onClick={() => setCurrentStep(currentStep + 1)}
-                  disabled={!isStepValid(currentStep)}
-                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-md"
-                >
-                  Continue to Items
-                </Button>
-              ) : (
-                <Button 
-                  onClick={handleSave} 
-                  disabled={!isStepValid(1)}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-md"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {mode === 'create' ? 'Create Menu' : 'Save Changes'}
-                </Button>
-              )}
-            </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button variant="ghost" onClick={handleClose}>
+              Cancel
+            </Button>
+            {currentStep < 2 ? (
+              <Button 
+                onClick={() => setCurrentStep(currentStep + 1)}
+                disabled={!isStepValid(currentStep)}
+                className="bg-foreground hover:bg-foreground/90 text-background gap-2"
+              >
+                Continue
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleSave} 
+                disabled={!isStepValid(1)}
+                className="bg-foreground hover:bg-foreground/90 text-background gap-2"
+              >
+                <Save className="w-4 h-4" />
+                {mode === 'create' ? 'Create Menu' : 'Save Changes'}
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>
