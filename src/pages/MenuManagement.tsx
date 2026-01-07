@@ -22,7 +22,7 @@ export interface Menu {
   updated_at?: string;
 }
 
-// Legacy interface for compatibility with existing components - now renamed to avoid conflict
+// Legacy interface for compatibility with existing components
 interface LegacyMenuForRef {
   id: string;
   name: string;
@@ -64,7 +64,6 @@ export const MenuManagement = () => {
     address: 'No address'
   });
 
-  // Pass Supabase menus directly to components
   const legacyMenus = menus;
 
   const handleShowCreateDialog = () => {
@@ -78,7 +77,6 @@ export const MenuManagement = () => {
       setEditingMenu(null);
       setShowMenuBuilder(true);
     } else if (option === 'sample') {
-      // Create sample menu with template data
       await addMenu({
         name: 'Sample Restaurant Menu',
         description: 'Professional menu template with sample items',
@@ -133,7 +131,6 @@ export const MenuManagement = () => {
 
   const handleMenuBuilderSave = async (menuData: any) => {
     if (editingMenu) {
-      // Update existing menu
       await updateMenu({
         ...editingMenu,
         name: menuData.name,
@@ -143,7 +140,6 @@ export const MenuManagement = () => {
         items: menuData.items
       });
     } else {
-      // Create new menu
       await addMenu({
         name: menuData.name,
         description: menuData.description,
@@ -163,7 +159,6 @@ export const MenuManagement = () => {
   };
 
   const handleEditMenu = (menu: Menu) => {
-    // For now, just toggle active status
     const originalMenu = menus.find(m => m.id === menu.id);
     if (originalMenu) {
       updateMenu({
@@ -214,61 +209,67 @@ export const MenuManagement = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Editorial Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        {/* Header */}
         <motion.header 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-10 sm:mb-14"
+          className="mb-8"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="h-px flex-1 bg-border max-w-[60px]" />
-            <span className="text-[11px] font-medium tracking-[0.2em] uppercase text-muted-foreground">
-              F&B Operations
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-3">
+          <nav className="text-sm text-muted-foreground mb-4">
+            <span>Operations</span>
+            <span className="mx-2">/</span>
+            <span className="text-foreground font-medium">Menu Management</span>
+          </nav>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
             Menu Management
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Design, organize, and publish your culinary offerings with precision.
-          </p>
         </motion.header>
 
-        {/* Refined Tab Navigation */}
+        {/* Tab Navigation */}
         <motion.nav 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-10"
+          className="border-b border-border mb-8"
         >
-          <div className="flex items-center gap-1 p-1 bg-muted/50 rounded-lg w-fit">
+          <div className="flex gap-8">
             <button
               onClick={() => setActiveTab('menus')}
-              className={`relative px-5 py-2.5 text-sm font-medium rounded-md transition-all duration-200 ${
+              className={`relative pb-3 text-sm font-medium transition-colors ${
                 activeTab === 'menus'
-                  ? 'bg-background text-foreground shadow-sm'
+                  ? 'text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              <span className="relative z-10">Menus</span>
+              Menus
               {legacyMenus.length > 0 && (
-                <span className={`ml-2 text-xs tabular-nums ${
-                  activeTab === 'menus' ? 'text-foreground' : 'text-muted-foreground'
-                }`}>
+                <span className="ml-2 text-xs tabular-nums text-muted-foreground">
                   {legacyMenus.length}
                 </span>
+              )}
+              {activeTab === 'menus' && (
+                <motion.div 
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground"
+                />
               )}
             </button>
             <button
               onClick={() => setActiveTab('modifiers')}
-              className={`relative px-5 py-2.5 text-sm font-medium rounded-md transition-all duration-200 ${
+              className={`relative pb-3 text-sm font-medium transition-colors ${
                 activeTab === 'modifiers'
-                  ? 'bg-background text-foreground shadow-sm'
+                  ? 'text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               Option Sets
+              {activeTab === 'modifiers' && (
+                <motion.div 
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground"
+                />
+              )}
             </button>
           </div>
         </motion.nav>
@@ -278,7 +279,7 @@ export const MenuManagement = () => {
           key={activeTab}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.15 }}
         >
           {activeTab === 'menus' ? (
             <>

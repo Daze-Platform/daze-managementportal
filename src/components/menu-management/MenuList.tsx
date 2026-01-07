@@ -2,8 +2,7 @@ import React from 'react';
 import { MenuCard } from './MenuCard';
 import { Menu } from '@/pages/MenuManagement';
 import { motion } from 'framer-motion';
-import { BookOpen, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { UtensilsCrossed } from 'lucide-react';
 
 interface MenuListProps {
   menus: Menu[];
@@ -17,13 +16,13 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.06 }
+    transition: { staggerChildren: 0.05 }
   }
 };
 
 const item = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.2 } }
 };
 
 export const MenuList: React.FC<MenuListProps> = ({ 
@@ -35,21 +34,17 @@ export const MenuList: React.FC<MenuListProps> = ({
 }) => {
   if (menus.length === 0) {
     return (
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center justify-center py-20 px-6"
-      >
-        <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-6">
-          <BookOpen className="w-7 h-7 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+        <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
+          <UtensilsCrossed className="w-6 h-6 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2">
+        <h3 className="text-base font-medium text-foreground mb-1">
           No menus yet
         </h3>
-        <p className="text-muted-foreground text-center max-w-sm mb-6">
-          Create your first menu to start showcasing your culinary offerings to guests.
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Create your first menu to start managing your offerings.
         </p>
-      </motion.div>
+      </div>
     );
   }
 
@@ -58,9 +53,9 @@ export const MenuList: React.FC<MenuListProps> = ({
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
     >
-      {menus.map((menu, index) => (
+      {menus.map((menu) => (
         <motion.div key={menu.id} variants={item}>
           <MenuCard
             menu={menu}

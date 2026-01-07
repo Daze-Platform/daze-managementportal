@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Sparkles, FileText, Check, ArrowRight } from 'lucide-react';
+import { Sparkles, FileText, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CreateMenuDialogProps {
@@ -33,15 +33,13 @@ export const CreateMenuDialog: React.FC<CreateMenuDialogProps> = ({ open, onOpen
       id: 'scratch',
       icon: Sparkles,
       title: 'Start from scratch',
-      description: 'Create a blank menu and build it exactly the way you want.',
-      features: ['Full customization', 'Your own structure']
+      description: 'Create a blank menu and build it your way.'
     },
     {
       id: 'sample',
       icon: FileText,
       title: 'Use a template',
-      description: 'Start with a professionally designed menu template.',
-      features: ['25+ sample items', 'Ready to customize']
+      description: 'Start with a pre-built menu template.'
     }
   ];
 
@@ -50,68 +48,49 @@ export const CreateMenuDialog: React.FC<CreateMenuDialogProps> = ({ open, onOpen
       <DialogContent className={`${
         isMobile 
           ? 'w-full max-w-none h-full max-h-none m-0 rounded-none' 
-          : 'sm:max-w-lg'
+          : 'sm:max-w-md'
       } p-0 gap-0`}>
         
-        {/* Header */}
-        <div className="px-6 pt-6 pb-4">
+        <div className="p-6 pb-4">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
-              Create a new menu
-            </DialogTitle>
+            <DialogTitle className="text-lg font-semibold">Create Menu</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Choose how you'd like to get started.
+            </DialogDescription>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground mt-1">
-            Choose how you'd like to get started.
-          </p>
         </div>
 
-        {/* Options */}
-        <div className="px-6 pb-6 space-y-3">
+        <div className="px-6 pb-6 space-y-2">
           {options.map((option) => {
             const isSelected = selectedOption === option.id;
             const Icon = option.icon;
             
             return (
-              <motion.div
+              <motion.button
                 key={option.id}
+                type="button"
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedOption(option.id)}
-                className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-150 ${
+                className={`w-full text-left p-4 rounded-lg border transition-colors ${
                   isSelected 
-                    ? 'border-foreground bg-foreground/5' 
-                    : 'border-border hover:border-foreground/30'
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-border hover:border-muted-foreground/40'
                 }`}
               >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    isSelected ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                    isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
                   }`}>
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4" />
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-medium text-foreground">
-                        {option.title}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      {option.description}
-                    </p>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      {option.features.map((feature, i) => (
-                        <span key={i} className="flex items-center gap-1">
-                          <span className="w-1 h-1 rounded-full bg-current" />
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
+                    <h3 className="font-medium text-sm text-foreground">{option.title}</h3>
+                    <p className="text-xs text-muted-foreground">{option.description}</p>
                   </div>
                   
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    isSelected 
-                      ? 'border-foreground bg-foreground' 
-                      : 'border-muted-foreground/30'
+                    isSelected ? 'border-primary bg-primary' : 'border-muted-foreground/30'
                   }`}>
                     <AnimatePresence>
                       {isSelected && (
@@ -120,32 +99,23 @@ export const CreateMenuDialog: React.FC<CreateMenuDialogProps> = ({ open, onOpen
                           animate={{ scale: 1 }}
                           exit={{ scale: 0 }}
                         >
-                          <Check className="w-3 h-3 text-background" />
+                          <Check className="w-3 h-3 text-primary-foreground" />
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
                 </div>
-              </motion.div>
+              </motion.button>
             );
           })}
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-border bg-muted/30 flex justify-end gap-3">
-          <Button 
-            variant="ghost" 
-            onClick={() => onOpenChange(false)}
-          >
+        <div className="px-6 py-4 border-t border-border flex justify-end gap-2 bg-muted/30">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button 
-            onClick={handleContinue}
-            disabled={!selectedOption}
-            className="bg-foreground hover:bg-foreground/90 text-background gap-2"
-          >
+          <Button onClick={handleContinue} disabled={!selectedOption}>
             Continue
-            <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       </DialogContent>

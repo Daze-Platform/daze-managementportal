@@ -6,7 +6,6 @@ import { useStores } from '@/contexts/StoresContext';
 import { useResort } from '@/contexts/DestinationContext';
 import { Menu } from '@/pages/MenuManagement';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface VenueAssignmentDialogProps {
   open: boolean;
@@ -26,17 +25,17 @@ export const StoreAssignmentDialog: React.FC<VenueAssignmentDialogProps> = ({
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (menu) {
+    if (open && menu) {
       setSelectedStoreId(menu.store_id || null);
     }
-  }, [menu]);
+  }, [open, menu]);
 
   const availableVenues = stores.filter(store => 
     currentResort ? store.resortId === currentResort.id : true
   );
 
   const handleAssign = () => {
-    if (menu) {
+    if (menu && selectedStoreId !== null) {
       onAssign(menu.id, selectedStoreId);
       onOpenChange(false);
     }
@@ -49,119 +48,99 @@ export const StoreAssignmentDialog: React.FC<VenueAssignmentDialogProps> = ({
     }
   };
 
+  if (!menu) return null;
+
+  const isAssigned = menu.store_id !== undefined && menu.store_id !== null;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md p-0 gap-0">
-        {/* Header */}
-        <div className="px-6 pt-6 pb-4">
+        <div className="p-6 pb-4">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">
-              Assign to Venue
-            </DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground mt-1">
-              {menu ? (
-                <>Assigning <span className="font-medium text-foreground">{menu.name}</span></>
-              ) : (
-                'Select a venue for this menu'
-              )}
+            <DialogTitle className="text-lg font-semibold">Assign Venue</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Select a venue for "{menu.name}"
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        {/* Venue List */}
-        <div className="px-6 pb-6">
-          <ScrollArea className="h-72 -mx-1">
-            <div className="space-y-1 px-1">
-              {availableVenues.map(venue => {
+        <ScrollArea className="max-h-[300px]">
+          <div className="px-6 pb-4 space-y-1">
+            {availableVenues.length > 0 ? (
+              availableVenues.map((venue) => {
                 const isSelected = selectedStoreId === venue.id;
-                
                 return (
-                  <motion.div
+                  <button
                     key={venue.id}
-                    whileTap={{ scale: 0.98 }}
+                    type="button"
                     onClick={() => setSelectedStoreId(venue.id)}
-                    className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                      isSelected 
-                        ? 'bg-foreground/5 ring-1 ring-foreground/10' 
-                        : 'hover:bg-muted/50'
+                    className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                      isSelected
+                        ? 'border-primary bg-primary/5'
+                        : 'border-transparent hover:bg-muted/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                      {venue.logo ? (
-                        <img 
-                          src={venue.logo} 
-                          alt={venue.name} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Building2 className="w-4 h-4 text-muted-foreground" />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-9 h-9 rounded-lg overflow-hidden flex items-center justify-center ${
+                          isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                        }`}>
+                          {venue.logo ? (
+                            <img 
+                              src={venue.logo} 
+                              alt={venue.name} 
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <Building2 className="w-4 h-4" />
+                          )}
                         </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{venue.name}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {venue.address}
+                          </p>
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <Check className="w-4 h-4 text-primary" />
                       )}
                     </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-foreground text-sm">{venue.name}</div>
-                      <div className="text-xs text-muted-foreground flex items-center gap-1 truncate">
-                        <MapPin className="w-3 h-3 flex-shrink-0" />
-                        <span className="truncate">{venue.address}</span>
-                      </div>
-                    </div>
-                    
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                      isSelected 
-                        ? 'border-foreground bg-foreground' 
-                        : 'border-muted-foreground/30'
-                    }`}>
-                      <AnimatePresence>
-                        {isSelected && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0 }}
-                          >
-                            <Check className="w-3 h-3 text-background" />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </motion.div>
+                  </button>
                 );
-              })}
-              
-              {availableVenues.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
-                  <Building2 className="w-8 h-8 mx-auto mb-3 opacity-40" />
-                  <p className="font-medium text-sm">No venues available</p>
-                  <p className="text-xs mt-1">Create a venue first</p>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-        </div>
+              })
+            ) : (
+              <div className="text-center py-8">
+                <Building2 className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
+                <p className="text-sm text-muted-foreground">No venues available</p>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-border bg-muted/30 flex items-center justify-between">
-          {menu?.store_id ? (
-            <Button 
-              variant="ghost" 
-              onClick={handleUnassign}
-              className="text-muted-foreground hover:text-destructive"
-            >
-              <X className="w-4 h-4 mr-1.5" />
-              Remove
-            </Button>
-          ) : (
-            <div />
-          )}
+        <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-muted/30">
+          <div>
+            {isAssigned && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleUnassign}
+                className="text-destructive hover:text-destructive"
+              >
+                <X className="w-4 h-4 mr-1" />
+                Remove
+              </Button>
+            )}
+          </div>
           <div className="flex gap-2">
-            <Button variant="ghost" onClick={() => onOpenChange(false)}>
+            <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button 
-              onClick={handleAssign} 
-              disabled={!selectedStoreId}
-              className="bg-foreground hover:bg-foreground/90 text-background"
+            <Button
+              size="sm"
+              onClick={handleAssign}
+              disabled={selectedStoreId === null}
             >
               Assign
             </Button>

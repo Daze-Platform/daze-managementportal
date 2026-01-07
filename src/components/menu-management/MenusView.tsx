@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, FileUp, Sparkles } from 'lucide-react';
+import { Plus, FileUp } from 'lucide-react';
 import { MenuList } from './MenuList';
 import { MenuImport } from './MenuImport';
 import { Menu } from '@/pages/MenuManagement';
-import { motion } from 'framer-motion';
 
 interface MenusViewProps {
   menus: Menu[];
@@ -26,21 +25,20 @@ export const MenusView: React.FC<MenusViewProps> = ({
   onAssignStore
 }) => {
   return (
-    <div className="space-y-8">
-      {/* Action Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+    <div className="space-y-6">
+      {/* Toolbar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border">
+        <div className="text-sm text-muted-foreground">
           <span className="font-medium text-foreground">{menus.length}</span>
-          <span>{menus.length === 1 ? 'menu' : 'menus'}</span>
-          <span className="text-border">•</span>
-          <span>{selectedStoreName}</span>
+          {' '}{menus.length === 1 ? 'menu' : 'menus'}
+          {' '}in {selectedStoreName}
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <MenuImport />
           <Button 
             onClick={onShowCreateDialog}
-            className="h-10 px-4 bg-foreground hover:bg-foreground/90 text-background font-medium"
+            className="flex-1 sm:flex-none h-9 px-4"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Menu
@@ -48,7 +46,7 @@ export const MenusView: React.FC<MenusViewProps> = ({
         </div>
       </div>
 
-      {/* Menu Grid or Empty State */}
+      {/* Menu Grid */}
       <MenuList
         menus={menus}
         onEditMenu={onEditMenu}

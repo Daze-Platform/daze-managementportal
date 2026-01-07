@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Edit, Trash2, Settings2, ChevronRight } from 'lucide-react';
+import { Plus, Edit2, Trash2, Settings } from 'lucide-react';
 import { getModifierGroupsForStore } from '@/data/modifierGroups';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
@@ -19,13 +19,13 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.05 }
+    transition: { staggerChildren: 0.04 }
   }
 };
 
 const item = {
   hidden: { opacity: 0, y: 8 },
-  show: { opacity: 1, y: 0 }
+  show: { opacity: 1, y: 0, transition: { duration: 0.2 } }
 };
 
 export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName }) => {
@@ -49,17 +49,10 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
       return;
     }
 
-    if (editingGroup) {
-      toast({
-        title: "Option Set Updated",
-        description: `${formData.name} has been updated successfully.`,
-      });
-    } else {
-      toast({
-        title: "Option Set Created",
-        description: `${formData.name} has been created successfully.`,
-      });
-    }
+    toast({
+      title: editingGroup ? "Option Set Updated" : "Option Set Created",
+      description: `${formData.name} has been ${editingGroup ? 'updated' : 'created'} successfully.`,
+    });
 
     handleCloseDialog();
   };
@@ -85,127 +78,109 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
   };
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-muted-foreground">
-            {modifierGroups.length} option {modifierGroups.length === 1 ? 'set' : 'sets'} for {storeName}
-          </p>
+    <div className="space-y-6">
+      {/* Toolbar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border">
+        <div className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">{modifierGroups.length}</span>
+          {' '}{modifierGroups.length === 1 ? 'option set' : 'option sets'}
         </div>
         
-        <Button 
-          onClick={() => setIsDialogOpen(true)}
-          className="h-10 px-4 bg-foreground hover:bg-foreground/90 text-background font-medium"
-        >
+        <Button onClick={() => setIsDialogOpen(true)} className="h-9 px-4">
           <Plus className="w-4 h-4 mr-2" />
           New Option Set
         </Button>
       </div>
 
-      {/* Option Sets List */}
+      {/* Option Sets Grid */}
       {modifierGroups.length > 0 ? (
         <motion.div 
           variants={container}
           initial="hidden"
           animate="show"
-          className="space-y-3"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           {modifierGroups.map((group) => (
             <motion.div 
               key={group.id} 
               variants={item}
-              className="group bg-card border border-border rounded-xl p-5 hover:border-foreground/20 transition-all duration-200"
+              className="bg-card rounded-xl border border-border p-5 hover:shadow-sm transition-shadow"
             >
-              <div className="flex items-start justify-between gap-4">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3 mb-4">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-foreground">{group.name}</h3>
-                    <div className="flex items-center gap-2">
-                      {group.required && (
-                        <Badge variant="secondary" className="text-[10px] font-medium bg-destructive/10 text-destructive border-0">
-                          Required
-                        </Badge>
-                      )}
-                      {group.multipleSelection && (
-                        <Badge variant="secondary" className="text-[10px] font-medium">
-                          Multi-select
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {group.description && (
-                    <p className="text-sm text-muted-foreground mb-3">{group.description}</p>
-                  )}
-                  
-                  {/* Options preview */}
-                  <div className="flex flex-wrap gap-2">
-                    {group.options.slice(0, 4).map((option) => (
-                      <span 
-                        key={option.id}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-muted/50 rounded-md text-xs text-muted-foreground"
-                      >
-                        <span>{option.name}</span>
-                        {option.price !== 0 && (
-                          <span className={option.price > 0 ? 'text-success' : ''}>
-                            {option.price > 0 ? `+$${option.price.toFixed(2)}` : `-$${Math.abs(option.price).toFixed(2)}`}
-                          </span>
-                        )}
-                      </span>
-                    ))}
-                    {group.options.length > 4 && (
-                      <span className="inline-flex items-center px-2.5 py-1 text-xs text-muted-foreground">
-                        +{group.options.length - 4} more
-                      </span>
+                  <h3 className="font-semibold text-foreground mb-2">{group.name}</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {group.required && (
+                      <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
+                        Required
+                      </Badge>
                     )}
+                    <Badge variant="secondary" className="text-xs">
+                      {group.multipleSelection ? 'Multi-select' : 'Single choice'}
+                    </Badge>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1">
                   <Button 
                     variant="ghost" 
-                    size="sm" 
+                    size="sm"
                     onClick={() => handleEditGroup(group)} 
                     className="h-8 w-8 p-0"
                   >
-                    <Edit className="w-4 h-4" />
+                    <Edit2 className="w-4 h-4" />
                   </Button>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                    className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
+              
+              {/* Options Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {group.options.slice(0, 6).map((option) => (
+                  <div 
+                    key={option.id}
+                    className="flex items-center justify-between px-3 py-2 bg-muted/50 rounded-lg text-sm"
+                  >
+                    <span className="text-foreground truncate">{option.name}</span>
+                    {option.price !== 0 && (
+                      <span className={`text-xs font-medium ml-2 shrink-0 ${option.price > 0 ? 'text-success' : 'text-destructive'}`}>
+                        {option.price > 0 ? '+' : ''}{option.price.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {group.options.length > 6 && (
+                  <div className="flex items-center justify-center px-3 py-2 text-sm text-muted-foreground">
+                    +{group.options.length - 6} more
+                  </div>
+                )}
+              </div>
             </motion.div>
           ))}
         </motion.div>
       ) : (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center py-20 px-6"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-6">
-            <Settings2 className="w-7 h-7 text-muted-foreground" />
+        <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+          <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
+            <Settings className="w-6 h-6 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">
+          <h3 className="text-base font-medium text-foreground mb-1">
             No option sets yet
           </h3>
-          <p className="text-muted-foreground text-center max-w-sm mb-6">
-            Create option sets to add customizations like sizes, toppings, or extras to your menu items.
+          <p className="text-sm text-muted-foreground max-w-xs mb-4">
+            Create option sets to add customizations like sizes or toppings.
           </p>
-          <Button 
-            onClick={() => setIsDialogOpen(true)}
-            className="bg-foreground hover:bg-foreground/90 text-background"
-          >
+          <Button onClick={() => setIsDialogOpen(true)} variant="outline" size="sm">
             <Plus className="w-4 h-4 mr-2" />
             Create Option Set
           </Button>
-        </motion.div>
+        </div>
       )}
 
       {/* Dialog */}
@@ -216,11 +191,11 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
               {editingGroup ? 'Edit Option Set' : 'New Option Set'}
             </DialogTitle>
             <DialogDescription>
-              Create modifiers that can be applied to menu items.
+              Option sets can be applied to menu items for customization.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-5 py-4">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="groupName">Name</Label>
               <Input
@@ -234,50 +209,43 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
             <div className="space-y-3">
               <div 
                 onClick={() => setFormData({ ...formData, required: !formData.required })}
-                className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
-                  formData.required 
-                    ? 'border-foreground bg-foreground/5' 
-                    : 'border-border hover:border-foreground/30'
+                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                  formData.required ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground/30'
                 }`}
               >
                 <Checkbox
                   checked={formData.required}
                   onCheckedChange={(checked) => setFormData({ ...formData, required: checked as boolean })}
                 />
-                <div>
-                  <Label className="cursor-pointer font-medium">Required</Label>
-                  <p className="text-xs text-muted-foreground">Customer must choose an option</p>
+                <div className="flex-1">
+                  <Label className="cursor-pointer text-sm font-medium">Required</Label>
+                  <p className="text-xs text-muted-foreground">Customer must select an option</p>
                 </div>
               </div>
               
               <div 
                 onClick={() => setFormData({ ...formData, multipleSelection: !formData.multipleSelection })}
-                className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
-                  formData.multipleSelection 
-                    ? 'border-foreground bg-foreground/5' 
-                    : 'border-border hover:border-foreground/30'
+                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                  formData.multipleSelection ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground/30'
                 }`}
               >
                 <Checkbox
                   checked={formData.multipleSelection}
                   onCheckedChange={(checked) => setFormData({ ...formData, multipleSelection: checked as boolean })}
                 />
-                <div>
-                  <Label className="cursor-pointer font-medium">Allow Multiple</Label>
+                <div className="flex-1">
+                  <Label className="cursor-pointer text-sm font-medium">Allow Multiple</Label>
                   <p className="text-xs text-muted-foreground">Customer can select multiple options</p>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={handleCloseDialog}>
               Cancel
             </Button>
-            <Button 
-              onClick={handleSaveModifierGroup}
-              className="bg-foreground hover:bg-foreground/90 text-background"
-            >
+            <Button onClick={handleSaveModifierGroup}>
               {editingGroup ? 'Save Changes' : 'Create'}
             </Button>
           </div>
