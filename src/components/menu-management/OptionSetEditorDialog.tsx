@@ -314,7 +314,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
             <TabsContent value="options" className="mt-0 space-y-4">
               {/* Add new option */}
               <div className="p-4 rounded-xl border border-dashed border-border bg-muted/20">
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     value={newOptionName}
                     onChange={(e) => setNewOptionName(e.target.value)}
@@ -322,24 +322,26 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                     className="flex-1 h-10"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddOption()}
                   />
-                  <Input
-                    value={newOptionPrice}
-                    onChange={(e) => setNewOptionPrice(e.target.value)}
-                    placeholder="+$0.00"
-                    className="w-24 h-10"
-                    type="number"
-                    step="0.01"
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddOption()}
-                  />
-                  <Button 
-                    type="button"
-                    onClick={handleAddOption}
-                    disabled={!newOptionName.trim()}
-                    size="icon"
-                    className="h-10 w-10 shrink-0"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Input
+                      value={newOptionPrice}
+                      onChange={(e) => setNewOptionPrice(e.target.value)}
+                      placeholder="+$0.00"
+                      className="flex-1 sm:w-24 h-10"
+                      type="number"
+                      step="0.01"
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddOption()}
+                    />
+                    <Button 
+                      type="button"
+                      onClick={handleAddOption}
+                      disabled={!newOptionName.trim()}
+                      size="icon"
+                      className="h-10 w-10 shrink-0"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
                   Press Enter or click + to add option

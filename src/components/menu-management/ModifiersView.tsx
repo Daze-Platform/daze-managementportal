@@ -162,9 +162,10 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
     <div className="space-y-6">
       {/* Toolbar */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary" className="h-7 px-3">
+        {/* Row 1: Badge count + New button */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="secondary" className="h-7 px-3 shrink-0">
               {modifierGroups.length} option set{modifierGroups.length !== 1 ? 's' : ''}
             </Badge>
             {searchQuery && (
@@ -174,28 +175,28 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
             )}
           </div>
           
-          <Button onClick={() => setIsDialogOpen(true)} className="h-9 px-4">
-            <Plus className="w-4 h-4 mr-2" />
-            New Option Set
+          <Button onClick={() => setIsDialogOpen(true)} className="h-10 shrink-0">
+            <Plus className="w-4 h-4 xs:mr-2" />
+            <span className="hidden xs:inline">New Option Set</span>
           </Button>
         </div>
 
-        {/* Search and Filters */}
+        {/* Row 2: Search + Filters - responsive layout */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search option sets..."
-              className="pl-9 h-10"
+              className="pl-9 h-10 w-full"
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-between sm:justify-start">
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-              <SelectTrigger className="w-[140px] h-10">
-                <SlidersHorizontal className="w-4 h-4 mr-2" />
+              <SelectTrigger className="flex-1 sm:flex-none sm:w-[140px] h-10">
+                <SlidersHorizontal className="w-4 h-4 mr-2 shrink-0" />
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -205,7 +206,7 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
               </SelectContent>
             </Select>
 
-            <div className="flex items-center rounded-lg border border-border p-1">
+            <div className="flex items-center rounded-lg border border-border p-1 shrink-0">
               <Button
                 variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
                 size="icon"
