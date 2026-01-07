@@ -86,28 +86,30 @@ export const MenuCard: React.FC<MenuCardProps> = ({
             aria-label="Toggle menu status"
           />
           
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5 sm:gap-1">
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => onEditMenu(menu)}
-              className="h-8 px-3 text-xs"
+              className="h-9 w-9 sm:w-auto sm:px-3 p-0"
+              title="Edit menu"
             >
-              <Edit3 className="w-3.5 h-3.5 mr-1.5" />
-              Edit
+              <Edit3 className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline text-xs">Edit</span>
             </Button>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => onAssignStore(menu)}
-              className="h-8 px-3 text-xs"
+              className="h-9 w-9 sm:w-auto sm:px-3 p-0"
+              title="Assign to venue"
             >
-              <Building2 className="w-3.5 h-3.5 mr-1.5" />
-              Assign
+              <Building2 className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline text-xs">Assign</span>
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>

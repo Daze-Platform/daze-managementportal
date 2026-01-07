@@ -502,10 +502,11 @@ export const MenuImport = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full relative">
-          <FileText className="w-4 h-4 mr-2" />
-          Import Menu
-          <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+        <Button variant="outline" className="h-10 flex-1 xs:flex-none relative">
+          <FileText className="w-4 h-4 xs:mr-2" />
+          <span className="hidden xs:inline">Import Menu</span>
+          <span className="xs:hidden">Import</span>
+          <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full">
             BETA
           </span>
         </Button>

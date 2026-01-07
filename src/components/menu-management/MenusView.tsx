@@ -27,18 +27,20 @@ export const MenusView: React.FC<MenusViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border">
-        <div className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{menus.length}</span>
-          {' '}{menus.length === 1 ? 'menu' : 'menus'}
-          {' '}in {selectedStoreName}
+      <div className="flex flex-col gap-4 pb-4 border-b border-border">
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">{menus.length}</span>
+            {' '}{menus.length === 1 ? 'menu' : 'menus'}
+            {' '}in {selectedStoreName}
+          </div>
         </div>
         
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-col xs:flex-row gap-2 w-full">
           <MenuImport />
           <Button 
             onClick={onShowCreateDialog}
-            className="flex-1 sm:flex-none h-9 px-4"
+            className="h-10 flex-1 xs:flex-none"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Menu
