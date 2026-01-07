@@ -228,8 +228,8 @@
     @apply leading-relaxed text-sm sm:text-base text-muted-foreground;
   }
 
-  /* Touch-friendly elements */
-  button, [role="button"] {
+  /* Touch-friendly elements - exclude switch components */
+  button:not([data-switch-ui]), [role="button"]:not([data-switch-ui]) {
     @apply min-h-[44px] min-w-[44px];
     -webkit-user-select: none;
     user-select: none;
