@@ -102,7 +102,7 @@ export const Layout = ({ children }: LayoutProps) => {
         </main>
         
         {isDashboard && (
-          <div className="flex-shrink-0 bg-muted/30 border-t border-border">
+          <div className="flex-shrink-0 bg-muted/30 border-t border-border w-full">
             <PromotionCard />
           </div>
         )}

@@ -11,8 +11,8 @@ export const PromotionCard = () => {
   };
 
   return (
-    <div className="flex justify-center px-3 sm:px-4">
-      <div className="relative bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 p-[2px] sm:p-1 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group w-full max-w-5xl">
+    <div className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6">
+      <div className="relative bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 p-[2px] sm:p-1 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group w-full">
         
         {/* Background glow effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 pointer-events-none"></div>
