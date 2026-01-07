@@ -212,49 +212,42 @@ export const MenuManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 max-w-7xl">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Menu Management</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-1">Professional menu creation and management tools for F&B operations</p>
-          </div>
+    <div className="min-h-screen bg-background">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1400px] mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-xl font-semibold text-foreground">Menu Management</h1>
+          <p className="text-sm text-muted-foreground mt-1">Create and manage your venue menus</p>
         </div>
 
-      {/* Improved Tab Navigation */}
-      <div className="mb-8">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+        {/* Tab Navigation */}
+        <div className="border-b border-border mb-6">
+          <nav className="flex gap-6" aria-label="Tabs">
             <button
               onClick={() => setActiveTab('menus')}
-              className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'menus'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-foreground text-foreground'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
               Menus
-              <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
-                activeTab === 'menus' 
-                  ? 'bg-primary/10 text-primary' 
-                  : 'bg-gray-100 text-gray-600'
-              }`}>
+              <span className="ml-2 text-xs text-muted-foreground">
                 {legacyMenus.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab('modifiers')}
-              className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'modifiers'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-foreground text-foreground'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
-              Option Sets
+              Modifiers
             </button>
           </nav>
         </div>
-      </div>
 
       {activeTab === 'menus' ? (
         <>
