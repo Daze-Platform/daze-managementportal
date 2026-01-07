@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, ChevronLeft } from 'lucide-react';
+import { X, PanelLeftClose, PanelLeft } from 'lucide-react';
 
 interface SidebarHeaderProps {
   isOpen: boolean;
@@ -15,18 +15,14 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
       {/* Logo Section */}
       <div className={`flex-shrink-0 ${isCollapsed ? 'p-1' : 'p-4 sm:p-5 md:p-6'}`}>
         {isCollapsed ? (
-          /* Collapsed State - Only Cloud Logo */
+          /* Collapsed State - Expand Icon */
           <div className="flex items-center justify-center w-full h-16">
             <button 
-              className="flex items-center justify-center hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer rounded-xl p-1.5"
+              className="flex items-center justify-center hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer rounded-xl p-2"
               onClick={onToggleCollapse}
               aria-label="Expand sidebar"
             >
-              <img 
-                src="/lovable-uploads/314bc76d-4c76-4519-b8cd-5e3c08d90fe6.png" 
-                alt="App Logo" 
-                className="w-10 h-10 object-contain"
-              />
+              <PanelLeft className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
             </button>
           </div>
         ) : (
@@ -45,10 +41,10 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
               {/* Desktop Collapse Button */}
               <button
                 onClick={onToggleCollapse}
-                className="hidden lg:flex p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] items-center justify-center"
+                className="hidden lg:flex p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-all duration-200 items-center justify-center"
                 aria-label="Collapse sidebar"
               >
-                <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
+                <PanelLeftClose className="w-5 h-5" strokeWidth={2} />
               </button>
               
               {/* Mobile/Tablet Close Button */}
