@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { X, PanelLeftClose, ChevronRight } from 'lucide-react';
 
 interface SidebarHeaderProps {
   isOpen: boolean;
@@ -15,14 +15,24 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
       {/* Logo Section */}
       <div className={`flex-shrink-0 ${isCollapsed ? 'p-1' : 'p-4 sm:p-5 md:p-6'}`}>
         {isCollapsed ? (
-          /* Collapsed State - Expand Icon */
+          /* Collapsed State - Cloud Logo with Hover Chevron */
           <div className="flex items-center justify-center w-full h-16">
             <button 
-              className="flex items-center justify-center hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer rounded-xl p-2"
+              className="relative flex items-center justify-center hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer rounded-xl p-2 group"
               onClick={onToggleCollapse}
               aria-label="Expand sidebar"
             >
-              <PanelLeft className="w-5 h-5 text-white/70 hover:text-white transition-colors" />
+              {/* Cloud Logo - visible by default, fades on hover */}
+              <img 
+                src="/lovable-uploads/db847939-b95d-4615-ab8d-a03ec8f81e50.png" 
+                alt="DAZE Logo" 
+                className="h-5 w-auto object-contain transition-opacity duration-200 lg:group-hover:opacity-0"
+              />
+              
+              {/* Chevron - hidden by default, appears on hover (desktop only) */}
+              <ChevronRight 
+                className="absolute w-5 h-5 text-white/70 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200" 
+              />
             </button>
           </div>
         ) : (
