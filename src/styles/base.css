@@ -87,6 +87,15 @@
     --vh: 1vh;
     --vw: 1vw;
     --ios-vh: 100vh;
+    
+    /* Header height for overlay positioning */
+    --header-height: 56px;
+  }
+
+  @media (min-width: 640px) {
+    :root {
+      --header-height: 64px;
+    }
   }
 
   .dark {
