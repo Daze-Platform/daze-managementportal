@@ -29,13 +29,13 @@ export const OrderDetailsOverlay = ({
         onClick={onClose}
       />
       
-      {/* Overlay Panel - Mobile optimized positioning */}
+      {/* Overlay Panel - Positioned below header */}
       <div 
         className="fixed z-[101] bg-white animate-slide-in-right flex flex-col"
         style={{
-          top: '10px',
+          top: 'calc(var(--header-height, 64px) + 10px)',
           right: '10px',
-          bottom: '10px',
+          bottom: 'calc(10px + env(safe-area-inset-bottom, 0px))',
           width: '480px',
           maxWidth: 'calc(100vw - 20px)',
           borderRadius: '12px',
