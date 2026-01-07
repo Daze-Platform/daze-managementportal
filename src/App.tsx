@@ -57,13 +57,14 @@ const AppRoutes = () => {
           </Layout>
         </ProtectedRoute>
       } />
-      <Route path="/stores" element={
+      <Route path="/venues" element={
         <ProtectedRoute>
           <Layout>
             <Stores />
           </Layout>
         </ProtectedRoute>
       } />
+      <Route path="/stores" element={<Navigate to="/venues" replace />} />
       <Route path="/orders/active" element={
         <ProtectedRoute>
           <Layout>

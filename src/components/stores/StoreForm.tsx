@@ -279,7 +279,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
           <div className="flex-shrink-0 px-4 py-4 border-b bg-background relative z-20">
             <DialogHeader>
               <DialogTitle className="text-lg font-semibold pr-8">
-                {store ? 'Edit Store' : 'Add New Store'}
+                {store ? 'Edit Venue' : 'Add New Venue'}
               </DialogTitle>
             </DialogHeader>
             <button
@@ -308,10 +308,10 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium">Store Name</FormLabel>
+                        <FormLabel className="text-sm font-medium">Venue Name</FormLabel>
                         <FormControl>
                           <Input 
-                            placeholder="Enter store name" 
+                            placeholder="Enter venue name" 
                             {...field} 
                             className="w-full h-12 text-base"
                           />
@@ -329,7 +329,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                         <FormLabel className="text-sm font-medium">Address</FormLabel>
                         <FormControl>
                           <Input 
-                            placeholder="Enter store address" 
+                            placeholder="Enter venue address" 
                             {...field} 
                             className="w-full h-12 text-base"
                           />
@@ -366,7 +366,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                           </SelectContent>
                         </Select>
                         <FormDescription className="text-xs text-gray-500">
-                          You can assign this store to a resort or leave unassigned
+                          You can assign this venue to a resort or leave unassigned
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -390,7 +390,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                           />
                         </FormControl>
                         <FormDescription className="text-xs text-gray-500">
-                          Help customers find your store more easily with specific location details
+                          Help customers find your venue more easily with specific location details
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -398,7 +398,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                   />
 
                   <div className="space-y-4">
-                    <FormLabel className="text-sm font-medium">Store Hours</FormLabel>
+                    <FormLabel className="text-sm font-medium">Venue Hours</FormLabel>
                     <div className="space-y-4 rounded-lg border p-4 bg-gray-50">
                       {fields.map((item, index) => (
                         <div key={item.id} className="space-y-3">
@@ -614,7 +614,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                 form="store-form"
                 className="h-12 text-base"
               >
-                {store ? 'Update Store' : 'Create Store'}
+                {store ? 'Update Venue' : 'Create Venue'}
               </Button>
             </div>
           </div>

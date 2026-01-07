@@ -286,7 +286,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       '/orders/active': 'Active Orders',
       '/menus': 'Menu Management',
       '/reports': 'Reports',
-      '/stores': 'Stores',
+      '/venues': 'Venues',
       '/employees': 'Employees',
       '/ratings': 'Ratings',
       '/promotions': 'Promotions',

@@ -71,7 +71,7 @@ export const MenuManagementHeader: React.FC<MenuManagementHeaderProps> = ({ sele
             <div className="p-3 border-b border-gray-100 mb-2">
               <div className="flex items-center space-x-2 text-gray-600">
                 <Building2 className="w-4 h-4" />
-                <span className="text-sm font-medium">Select Store</span>
+                <span className="text-sm font-medium">Select Venue</span>
               </div>
             </div>
             {stores.map((store) => (

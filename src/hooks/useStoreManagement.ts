@@ -42,8 +42,8 @@ export const useStoreManagement = () => {
     setView('list');
     setSelectedStore(undefined);
     toast({
-      title: "Store deleted",
-      description: "The store has been successfully removed.",
+      title: "Venue deleted",
+      description: "The venue has been successfully removed.",
     });
   };
 
@@ -71,8 +71,8 @@ export const useStoreManagement = () => {
       };
       updateStore(updatedStore);
       toast({
-        title: "Store updated",
-        description: "The store has been successfully updated.",
+        title: "Venue updated",
+        description: "The venue has been successfully updated.",
       });
     } else {
       // Create new store
@@ -83,18 +83,18 @@ export const useStoreManagement = () => {
           customLogo: storeData.customLogo,
           hours: storeData.hours || defaultHours
         };
-        console.log('Creating new store:', newStore);
+        console.log('Creating new venue:', newStore);
         await addStore(newStore);
         toast({
-          title: "Store created",
-          description: "The new store has been successfully added.",
+          title: "Venue created",
+          description: "The new venue has been successfully added.",
           className: "bg-green-50 border-green-200 text-green-800",
         });
       } catch (error) {
-        console.error('Store creation failed:', error);
+        console.error('Venue creation failed:', error);
         toast({
           title: "Error",
-          description: "Failed to create store. Please try again.",
+          description: "Failed to create venue. Please try again.",
           variant: "destructive",
         });
         return;

@@ -102,8 +102,8 @@ export const StoreAssignmentDialog = ({
   const handleAssignExisting = () => {
     if (!selectedExistingStore) {
       toast({
-        title: "No store selected",
-        description: "Please select a store to assign to this destination.",
+        title: "No venue selected",
+        description: "Please select a venue to assign to this destination.",
         variant: "destructive",
       });
       return;
@@ -120,7 +120,7 @@ export const StoreAssignmentDialog = ({
     onClose();
     
     toast({
-      title: "Store Assigned",
+      title: "Venue Assigned",
       description: `${selectedExistingStore.name} has been assigned to this destination.`,
     });
   };
@@ -153,7 +153,7 @@ export const StoreAssignmentDialog = ({
     
     toast({
       title: "Success",
-      description: `Store ${store ? 'updated' : 'created'} successfully.`,
+      description: `Venue ${store ? 'updated' : 'created'} successfully.`,
       className: store ? undefined : "bg-green-50 border-green-200 text-green-800",
     });
   };
@@ -163,7 +163,7 @@ export const StoreAssignmentDialog = ({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {store ? 'Edit Store' : 'Manage Store Assignment'}
+            {store ? 'Edit Venue' : 'Manage Venue Assignment'}
           </DialogTitle>
         </DialogHeader>
 
@@ -171,21 +171,21 @@ export const StoreAssignmentDialog = ({
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="assign" className="flex items-center gap-2">
               <Search className="h-4 w-4" />
-              Assign Existing Store
+              Assign Existing Venue
             </TabsTrigger>
             <TabsTrigger value="create" className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              Create New Store
+              Create New Venue
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="assign" className="space-y-4 mt-4">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="search">Search Available Stores</Label>
+                <Label htmlFor="search">Search Available Venues</Label>
                 <Input
                   id="search"
-                  placeholder="Search stores..."
+                  placeholder="Search venues..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -233,8 +233,8 @@ export const StoreAssignmentDialog = ({
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     <Search className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-                    <p className="text-sm">No available stores found</p>
-                    <p className="text-xs text-gray-400">Try adjusting your search or create a new store</p>
+                    <p className="text-sm">No available venues found</p>
+                    <p className="text-xs text-gray-400">Try adjusting your search or create a new venue</p>
                   </div>
                 )}
               </div>
@@ -246,12 +246,12 @@ export const StoreAssignmentDialog = ({
           {/* Basic Information */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Store Name *</Label>
+              <Label htmlFor="name">Venue Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Enter store name"
+                placeholder="Enter venue name"
               />
             </div>
 
@@ -261,7 +261,7 @@ export const StoreAssignmentDialog = ({
                 id="address"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Enter store address"
+                placeholder="Enter venue address"
               />
             </div>
 
@@ -271,7 +271,7 @@ export const StoreAssignmentDialog = ({
                 id="description"
                 value={formData.locationDescription}
                 onChange={(e) => setFormData({ ...formData, locationDescription: e.target.value })}
-                placeholder="Describe the store location for easy finding"
+                placeholder="Describe the venue location for easy finding"
                 rows={3}
               />
             </div>
@@ -280,7 +280,7 @@ export const StoreAssignmentDialog = ({
           {/* Visual Settings */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="logo">Store Logo (Emoji)</Label>
+              <Label htmlFor="logo">Venue Logo (Emoji)</Label>
               <Input
                 id="logo"
                 value={formData.logo}
@@ -322,7 +322,7 @@ export const StoreAssignmentDialog = ({
             </div>
           </div>
 
-          {/* Store Preview */}
+          {/* Venue Preview */}
           <div className="border rounded-lg p-4 bg-gray-50">
             <Label className="text-sm font-medium text-gray-700 mb-2 block">Preview</Label>
             <div className="flex items-center space-x-4 p-4 bg-white rounded-lg border">
@@ -330,8 +330,8 @@ export const StoreAssignmentDialog = ({
                 {formData.logo}
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900">{formData.name || 'Store Name'}</h3>
-                <p className="text-sm text-gray-600">{formData.address || 'Store Address'}</p>
+                <h3 className="font-semibold text-gray-900">{formData.name || 'Venue Name'}</h3>
+                <p className="text-sm text-gray-600">{formData.address || 'Venue Address'}</p>
                 {formData.locationDescription && (
                   <p className="text-xs text-gray-500 mt-1">{formData.locationDescription}</p>
                 )}
@@ -348,11 +348,11 @@ export const StoreAssignmentDialog = ({
           </Button>
           {activeTab === 'assign' ? (
             <Button onClick={handleAssignExisting} disabled={!selectedExistingStore}>
-              Assign Store
+              Assign Venue
             </Button>
           ) : (
             <Button onClick={handleCreateNew}>
-              {store ? 'Update Store' : 'Create Store'}
+              {store ? 'Update Venue' : 'Create Venue'}
             </Button>
           )}
         </DialogFooter>

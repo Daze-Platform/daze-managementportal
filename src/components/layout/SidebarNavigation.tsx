@@ -24,8 +24,8 @@ const menuItems = [
     iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
   },
   { 
-    name: 'Stores', 
-    path: '/stores', 
+    name: 'Venues', 
+    path: '/venues', 
     icon: Store,
     iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
   },
