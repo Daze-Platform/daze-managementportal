@@ -404,11 +404,11 @@ export const MenuImport = () => {
 
   // Store selector component
   const StoreSelector = () => (
-    <div className="space-y-2">
-      <Label htmlFor="store-select">Assign to Store</Label>
+    <div className="space-y-1.5">
+      <Label htmlFor="store-select" className="text-sm font-medium">Assign to Venue</Label>
       <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
-        <SelectTrigger id="store-select">
-          <SelectValue placeholder="Select a store (optional)" />
+        <SelectTrigger id="store-select" className="h-10">
+          <SelectValue placeholder="Select venue (optional)" />
         </SelectTrigger>
         <SelectContent>
           {stores.map((store) => (
@@ -502,19 +502,16 @@ export const MenuImport = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full relative">
-          <FileText className="w-4 h-4 mr-2" />
-          Import Menu
-          <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-            BETA
-          </span>
+        <Button variant="outline" size="sm" className="h-8 px-3 text-sm font-medium">
+          <Upload className="w-4 h-4 mr-1.5" />
+          Import
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Import Menu</DialogTitle>
-          <DialogDescription>
-            Import menus from multiple sources - PDF files, web links, or your POS system.
+      <DialogContent className="sm:max-w-md p-0 gap-0">
+        <DialogHeader className="px-6 py-4 border-b border-border">
+          <DialogTitle className="text-base font-semibold">Import Menu</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            Import from PDF, web link, or POS system
           </DialogDescription>
         </DialogHeader>
 
