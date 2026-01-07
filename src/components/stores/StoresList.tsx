@@ -26,9 +26,9 @@ export const StoresList = ({ stores, onCreateStore, onViewStore }: StoresListPro
           <CardContent className="p-5 sm:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Stores</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Venues</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Manage your business locations ({uniqueStores.length} {uniqueStores.length === 1 ? 'store' : 'stores'})
+                  Manage your venue locations ({uniqueStores.length} {uniqueStores.length === 1 ? 'venue' : 'venues'})
                 </p>
               </div>
               <motion.div
@@ -37,14 +37,14 @@ export const StoresList = ({ stores, onCreateStore, onViewStore }: StoresListPro
               >
                 <Button 
                   onClick={() => {
-                    console.log('Add Store button clicked!');
+                    console.log('Add Venue button clicked!');
                     onCreateStore();
                   }}
                   className="w-full sm:w-auto gradient-primary text-primary-foreground hover:opacity-90 shadow-md"
                   size="default"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Store
+                  Add Venue
                 </Button>
               </motion.div>
             </div>
@@ -66,10 +66,10 @@ export const StoresList = ({ stores, onCreateStore, onViewStore }: StoresListPro
                   <span className="text-4xl">🏪</span>
                 </motion.div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">
-                  No stores yet
+                  No venues yet
                 </h3>
                 <p className="text-muted-foreground text-sm max-w-sm mb-6">
-                  Create your first store to start managing your business locations
+                  Create your first venue to start managing your locations
                 </p>
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -81,7 +81,7 @@ export const StoresList = ({ stores, onCreateStore, onViewStore }: StoresListPro
                     className="gradient-primary text-primary-foreground hover:opacity-90 shadow-md"
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add Your First Store
+                    Add Your First Venue
                   </Button>
                 </motion.div>
               </div>

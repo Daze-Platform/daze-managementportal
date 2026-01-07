@@ -94,7 +94,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-lg sm:text-2xl font-semibold text-gray-900 truncate">Store Details</h1>
+          <h1 className="text-lg sm:text-2xl font-semibold text-gray-900 truncate">Venue Details</h1>
         </div>
         <div className="flex items-center space-x-2">
           <Button 
@@ -103,7 +103,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
             size="sm"
           >
             <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Edit Store</span>
+            <span className="hidden sm:inline">Edit Venue</span>
             <span className="sm:hidden">Edit</span>
           </Button>
           
@@ -121,7 +121,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Delete Store</AlertDialogTitle>
+                <AlertDialogTitle>Delete Venue</AlertDialogTitle>
                 <AlertDialogDescription>
                   Are you sure you want to delete "{store.name}"? This action cannot be undone.
                 </AlertDialogDescription>
@@ -132,7 +132,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
                   onClick={handleDelete}
                   className="bg-red-600 hover:bg-red-700"
                 >
-                  Delete Store
+                  Delete Venue
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -168,10 +168,10 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
         <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Store Information</h3>
+              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Venue Information</h3>
               <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Store ID:</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Venue ID:</span>
                   <p className="font-medium text-sm sm:text-base mt-1">#{store.id}</p>
                 </div>
                 <div>
@@ -212,7 +212,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
                   </div>
                 </div>
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Store Status:</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Venue Status:</span>
                   <div className="mt-2">
                     <Badge variant="default" className="bg-blue-500 text-xs">
                       Operational

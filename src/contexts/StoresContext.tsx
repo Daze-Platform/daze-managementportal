@@ -113,7 +113,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
     
     // Optimistic update
     setStores(prev => [...prev, optimisticStore]);
-    toast.success('Store created successfully');
+    toast.success('Venue created successfully');
 
     try {
       const { data, error } = await supabase
@@ -151,7 +151,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
     setStores(prev => 
       prev.map(store => store.id === updatedStore.id ? updatedStore : store)
     );
-    toast.success('Store updated successfully');
+    toast.success('Venue updated successfully');
 
     try {
       const { error } = await supabase
@@ -180,7 +180,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
   const deleteStore = async (storeId: number) => {
     // Optimistic delete
     setStores(prev => prev.filter(store => store.id !== storeId));
-    toast.success('Store deleted successfully');
+    toast.success('Venue deleted successfully');
 
     try {
       const { error } = await supabase

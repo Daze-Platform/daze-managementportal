@@ -192,7 +192,7 @@ export const DestinationManagement = () => {
     if (window.confirm(`Are you sure you want to delete "${storeName}"? This action cannot be undone.`)) {
       deleteStore(storeId);
       toast({
-        title: "Store Deleted",
+        title: "Venue Deleted",
         description: `${storeName} has been successfully deleted.`,
       });
     }
@@ -202,7 +202,7 @@ export const DestinationManagement = () => {
     if (editingStore) {
       updateStore(store);
       toast({
-        title: "Store Updated",
+        title: "Venue Updated",
         description: `${store.name} has been successfully updated.`,
       });
     } else {
@@ -210,13 +210,13 @@ export const DestinationManagement = () => {
       if (existingStore) {
         updateStore(store);
         toast({
-          title: "Store Assigned",
+          title: "Venue Assigned",
           description: `${store.name} has been assigned to this destination.`,
         });
       } else {
         addStore(store);
         toast({
-          title: "Store Created",
+          title: "Venue Created",
           description: `${store.name} has been successfully created.`,
           className: "bg-green-50 border-green-200 text-green-800",
         });
@@ -236,7 +236,7 @@ export const DestinationManagement = () => {
                 Destination Management
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Manage your destination properties and their associated stores
+                Manage your destination properties and their associated venues
               </p>
             </div>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -494,12 +494,12 @@ export const DestinationManagement = () => {
                         </div>
                       </div>
 
-                      {/* Store Management Section */}
+                      {/* Venue Management Section */}
                       <div className="mt-6 p-3 sm:p-4 bg-muted/50 rounded-lg space-y-3">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                           <div className="flex items-center gap-2">
                             <StoreIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                            <h4 className="font-medium text-foreground">Assigned Stores</h4>
+                            <h4 className="font-medium text-foreground">Assigned Venues</h4>
                             <Badge variant="secondary">{destinationStores.length}</Badge>
                           </div>
                           <Button
@@ -509,7 +509,7 @@ export const DestinationManagement = () => {
                             className="flex items-center gap-1 w-full sm:w-auto"
                           >
                             <Plus className="h-4 w-4" />
-                            <span>Add Store</span>
+                            <span>Add Venue</span>
                           </Button>
                         </div>
 
@@ -562,8 +562,8 @@ export const DestinationManagement = () => {
                         ) : (
                           <div className="text-center py-6 text-muted-foreground">
                             <StoreIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground/40" />
-                            <p className="text-sm">No stores assigned to this destination yet.</p>
-                            <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Store" to get started.</p>
+                            <p className="text-sm">No venues assigned to this destination yet.</p>
+                            <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Venue" to get started.</p>
                           </div>
                         )}
                       </div>
