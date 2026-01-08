@@ -6,8 +6,10 @@ import { PriceInput } from '@/components/ui/price-input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Badge } from '@/components/ui/badge';
 import { useForm } from 'react-hook-form';
-import { Settings, Check, Plus, ChefHat, Upload, X } from 'lucide-react';
+import { Settings, Check, Plus, ChefHat, Upload, X, Sparkles, Loader2 } from 'lucide-react';
 import { useIsMobile, useIsTablet } from '@/hooks/use-mobile';
+import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ModifierOption {
   id: string;
@@ -39,6 +41,20 @@ interface MenuItemFormProps {
   onCancel: () => void;
 }
 
+// Demo food images for AI generation simulation
+const DEMO_FOOD_IMAGES = [
+  '/images/menu/grilled-salmon.jpg',
+  '/images/menu/margherita-pizza.jpg',
+  '/images/menu/caesar-salad.jpg',
+  '/images/menu/cheesecake.jpg',
+  '/images/menu/fish-tacos.jpg',
+  '/images/menu/gelato.jpg',
+  '/images/menu/pepperoni-pizza.jpg',
+  '/images/menu/house-salad.jpg',
+  '/images/menu/burger.jpg',
+  '/images/menu/tacos.jpg',
+];
+
 export const MenuItemForm: React.FC<MenuItemFormProps> = ({ 
   item, 
   availableModifierGroups, 
@@ -48,6 +64,8 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
   const [selectedModifiers, setSelectedModifiers] = useState<string[]>(item?.modifierGroups || []);
   const [imagePreview, setImagePreview] = useState<string | null>(item?.image || null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
   
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -60,6 +78,10 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
       price: item?.price || 0,
     }
   });
+
+  const watchedName = form.watch('name');
+  const watchedDescription = form.watch('description');
+  const canGenerate = watchedName.trim() || watchedDescription.trim();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -76,11 +98,41 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
   const handleRemoveImage = () => {
     setImagePreview(null);
     setImageFile(null);
-    // Reset the file input
     const fileInput = document.getElementById('image-upload') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
     }
+  };
+
+  const handleGenerateImage = async () => {
+    if (!canGenerate) {
+      toast.error("Please enter an item name or description first");
+      return;
+    }
+
+    setIsGenerating(true);
+    setGenerationProgress(0);
+
+    // Simulate AI generation with smooth progress animation
+    const totalDuration = 2500; // 2.5 seconds
+    const steps = 20;
+    const stepDuration = totalDuration / steps;
+
+    for (let i = 1; i <= steps; i++) {
+      await new Promise(resolve => setTimeout(resolve, stepDuration));
+      // Use easing for more natural progress feel
+      const progress = Math.min(100, Math.round((i / steps) * 100));
+      setGenerationProgress(progress);
+    }
+
+    // Select a random demo image
+    const randomImage = DEMO_FOOD_IMAGES[Math.floor(Math.random() * DEMO_FOOD_IMAGES.length)];
+    setImagePreview(randomImage);
+    setImageFile(null);
+    
+    setIsGenerating(false);
+    setGenerationProgress(0);
+    toast.success("Image generated successfully!");
   };
 
   const handleSubmit = (data: any) => {
@@ -125,81 +177,152 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className={`space-y-4 ${isMobileOrTablet ? 'px-1' : 'sm:space-y-6 px-1'}`}>
               
-              {/* Image Upload Section */}
+              {/* Image Upload & Generation Section */}
               <div className="space-y-3">
                 <FormLabel className={`text-gray-800 font-medium ${isMobileOrTablet ? 'text-base' : 'text-sm sm:text-base'}`}>
                   Item Image
                 </FormLabel>
                 
-                {imagePreview ? (
-                  <div className="relative">
-                    <div className={`relative ${isMobileOrTablet ? 'h-40' : 'h-48'} w-full rounded-lg overflow-hidden bg-gray-100`}>
-                      <img
-                        src={imagePreview}
-                        alt="Menu item preview"
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleRemoveImage}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className={`border-2 border-dashed border-gray-300 rounded-lg ${isMobileOrTablet ? 'p-6' : 'p-8'} text-center hover:border-gray-400 transition-colors`}>
-                    <Upload className={`${isMobileOrTablet ? 'w-8 h-8' : 'w-10 h-10'} text-gray-400 mx-auto mb-3`} />
-                    <p className={`${isMobileOrTablet ? 'text-sm' : 'text-base'} text-gray-600 mb-2`}>
-                      Upload an image for this menu item
-                    </p>
-                    <p className={`${isMobileOrTablet ? 'text-xs' : 'text-sm'} text-gray-500 mb-4`}>
-                      PNG, JPG up to 10MB
-                    </p>
-                    <label htmlFor="image-upload" className="cursor-pointer">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className={`${isMobileOrTablet ? 'h-10 text-sm' : 'h-10 text-sm'}`}
-                        asChild
-                      >
-                        <span>Choose File</span>
-                      </Button>
-                    </label>
-                    <input
-                      id="image-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </div>
-                )}
+                <AnimatePresence mode="wait">
+                  {isGenerating ? (
+                    <motion.div
+                      key="generating"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className={`relative ${isMobileOrTablet ? 'h-40' : 'h-48'} w-full rounded-xl overflow-hidden`}
+                    >
+                      {/* Animated gradient background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-pink-50 to-indigo-100">
+                        <motion.div 
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                          animate={{ x: ['-100%', '100%'] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                        />
+                      </div>
+                      
+                      {/* Centered content */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <motion.div
+                          animate={{ 
+                            scale: [1, 1.1, 1],
+                            rotate: [0, 5, -5, 0]
+                          }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <Sparkles className="w-10 h-10 text-purple-500 mb-3" />
+                        </motion.div>
+                        <p className="text-purple-700 font-medium text-sm mb-4">Generating image...</p>
+                        
+                        {/* Progress bar */}
+                        <div className="w-40 h-2 bg-purple-200/60 rounded-full overflow-hidden backdrop-blur-sm">
+                          <motion.div
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${generationProgress}%` }}
+                            transition={{ duration: 0.15, ease: "easeOut" }}
+                          />
+                        </div>
+                        <p className="text-purple-600 text-xs mt-2">{generationProgress}%</p>
+                      </div>
+                    </motion.div>
+                  ) : imagePreview ? (
+                    <motion.div
+                      key="preview"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="relative"
+                    >
+                      <div className={`relative ${isMobileOrTablet ? 'h-40' : 'h-48'} w-full rounded-xl overflow-hidden bg-gray-100 shadow-md`}>
+                        <motion.img
+                          src={imagePreview}
+                          alt="Menu item preview"
+                          className="w-full h-full object-cover"
+                          initial={{ scale: 1.1, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ duration: 0.4, ease: "easeOut" }}
+                        />
+                        <motion.button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors shadow-lg"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <X className="w-4 h-4" />
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="empty"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`border-2 border-dashed border-gray-300 rounded-xl ${isMobileOrTablet ? 'p-6' : 'p-8'} text-center hover:border-gray-400 transition-colors bg-gray-50/50`}
+                    >
+                      <Upload className={`${isMobileOrTablet ? 'w-8 h-8' : 'w-10 h-10'} text-gray-400 mx-auto mb-3`} />
+                      <p className={`${isMobileOrTablet ? 'text-sm' : 'text-base'} text-gray-600 mb-1`}>
+                        Upload an image or generate one with AI
+                      </p>
+                      <p className={`${isMobileOrTablet ? 'text-xs' : 'text-sm'} text-gray-500`}>
+                        PNG, JPG up to 10MB
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 
-                {!imagePreview && (
-                  <div className="flex justify-center">
-                    <label htmlFor="image-upload" className="cursor-pointer">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className={`${isMobileOrTablet ? 'h-10 text-sm' : 'h-10 text-sm'}`}
-                        asChild
-                      >
-                        <span className="flex items-center gap-2">
-                          <Upload className="w-4 h-4" />
-                          Upload Image
-                        </span>
-                      </Button>
-                    </label>
-                    <input
-                      id="image-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </div>
+                {/* Action Buttons */}
+                <div className={`flex ${isMobileOrTablet ? 'flex-col' : 'flex-row'} gap-2`}>
+                  <label htmlFor="image-upload" className={`${isMobileOrTablet ? 'w-full' : 'flex-1'}`}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={`w-full gap-2 ${isMobileOrTablet ? 'h-11' : 'h-10'} border-gray-300 hover:bg-gray-50`}
+                      disabled={isGenerating}
+                      asChild
+                    >
+                      <span>
+                        <Upload className="w-4 h-4" />
+                        Upload Image
+                      </span>
+                    </Button>
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleGenerateImage}
+                    disabled={isGenerating || !canGenerate}
+                    className={`${isMobileOrTablet ? 'w-full h-11' : 'flex-1 h-10'} gap-2 border-purple-200 hover:bg-purple-50 hover:border-purple-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200`}
+                  >
+                    {isGenerating ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-purple-600" />
+                    ) : (
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                    )}
+                    <span className="text-purple-700">Generate with AI</span>
+                    <Badge className="bg-purple-100 text-purple-700 text-[10px] px-1.5 py-0 font-medium border-0">
+                      BETA
+                    </Badge>
+                  </Button>
+                </div>
+                
+                {!canGenerate && !imagePreview && !isGenerating && (
+                  <p className="text-xs text-gray-500 text-center">
+                    Enter an item name or description to enable AI image generation
+                  </p>
                 )}
               </div>
 
@@ -394,8 +517,8 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                   Cancel
                 </Button>
                 <Button 
-                  type="submit" 
-                  className={`bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow hover:shadow-lg transition-all duration-200 ${isMobileOrTablet ? 'h-12 text-base font-semibold' : 'h-10 sm:h-12 text-sm sm:text-base'} touch-manipulation`}
+                  type="submit"
+                  className={`bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-500/20 ${isMobileOrTablet ? 'h-12 text-base' : 'h-10 sm:h-12 text-sm sm:text-base'} touch-manipulation`}
                 >
                   {item ? 'Update Item' : 'Add Item'}
                 </Button>
