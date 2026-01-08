@@ -232,6 +232,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                       placeholder="Describe your menu..."
                       className="min-h-[80px] resize-none"
+                      onPointerDown={(e) => e.stopPropagation()}
                     />
                   </div>
                 </motion.div>

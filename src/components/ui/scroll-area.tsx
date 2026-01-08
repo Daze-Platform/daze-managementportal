@@ -23,11 +23,6 @@ const ScrollArea = React.forwardRef<
         scrollPaddingTop: '1rem',
         scrollPaddingBottom: '2rem',
         overscrollBehavior: 'contain',
-        WebkitTransform: 'translate3d(0, 0, 0)',
-        transform: 'translate3d(0, 0, 0)',
-        WebkitBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden',
-        willChange: 'scroll-position',
         paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 20px)'
       }}
     >
