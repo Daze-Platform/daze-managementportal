@@ -41,8 +41,8 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   open,
   onOpenChange,
   onSave,
-  initialData = {},
-  mode = 'create'
+  initialData,
+  mode = 'create',
 }) => {
   const isMobile = useIsMobile();
   const [currentStep, setCurrentStep] = useState(1);
@@ -55,16 +55,16 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   });
 
   useEffect(() => {
-    if (open) {
-      setFormData({
-        name: initialData.name || '',
-        description: initialData.description || '',
-        category: initialData.category || 'restaurant',
-        isActive: initialData.isActive ?? true,
-        items: initialData.items || []
-      });
-      setCurrentStep(1);
-    }
+    if (!open) return;
+
+    setFormData({
+      name: initialData?.name ?? '',
+      description: initialData?.description ?? '',
+      category: initialData?.category ?? 'restaurant',
+      isActive: initialData?.isActive ?? true,
+      items: initialData?.items ?? [],
+    });
+    setCurrentStep(1);
   }, [open, initialData]);
 
   const [currentItem, setCurrentItem] = useState<MenuItem>({
