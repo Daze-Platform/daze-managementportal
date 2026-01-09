@@ -153,7 +153,7 @@ export const Reports = () => {
   const totalCount = REPORT_SECTIONS.length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-full bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Animated Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -341,9 +341,9 @@ export const Reports = () => {
         </Dialog>
       </motion.div>
 
-      {/* Scrollable Content - Animated */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <motion.div 
+      {/* Content */}
+      <div>
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
