@@ -24,8 +24,8 @@ export const StoreClosedState = ({
   const getDisplayInfo = () => {
     if (storeStatus === 'closed') {
       return {
-        title: 'Store Closed',
-        message: storeName === 'All Stores' ? 'All stores are currently closed' : `${storeName} is currently closed`,
+        title: 'Venue Closed',
+        message: storeName === 'All Venues' ? 'All venues are currently closed' : `${storeName} is currently closed`,
         buttonText: 'Start Orders',
         buttonAction: () => {
           // When store is closed, opening it should also activate orders
@@ -34,20 +34,20 @@ export const StoreClosedState = ({
           }
           onResumeOrders();
         },
-        statusText: 'Store closed',
+        statusText: 'Venue closed',
         statusColor: 'red',
         icon: Store
       };
     } else if (orderStatus === 'paused') {
       return {
         title: 'All caught up!',
-        message: 'No new orders at the moment. Your store is currently paused from receiving new orders.',
+        message: 'No new orders at the moment. Your venue is currently paused from receiving new orders.',
         buttonText: 'Resume Taking Orders',
         buttonAction: () => {
           console.log('Resume Taking Orders button clicked');
           onResumeOrders();
         },
-        statusText: 'Store is paused',
+        statusText: 'Venue is paused',
         statusColor: 'orange',
         icon: Pause
       };
@@ -105,12 +105,12 @@ export const StoreClosedState = ({
                 className="w-full border border-gray-200 hover:bg-gray-50 text-gray-800 py-3 sm:py-4 text-base sm:text-lg font-medium"
               >
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-                Store Settings
+                Venue Settings
               </Button>
             </Link>
             
             <p className="text-xs sm:text-sm text-gray-500 mt-4 sm:mt-6 leading-relaxed px-2">
-              Need help? Check your <Link to="/settings" className="text-blue-600 hover:text-blue-700 hover:underline font-medium">store settings</Link> or contact support.
+              Need help? Check your <Link to="/settings" className="text-blue-600 hover:text-blue-700 hover:underline font-medium">venue settings</Link> or contact support.
             </p>
           </CardContent>
         </Card>

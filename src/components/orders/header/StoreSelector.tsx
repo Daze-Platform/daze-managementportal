@@ -118,9 +118,9 @@ export const StoreSelector = ({ selectedStore, onStoreChange, className }: Store
   
   console.log('StoreSelector - Available stores:', availableStores);
   
-  // Transform stores to match order format and add "All Stores" option
+  // Transform stores to match order format and add "All Venues" option
   const stores: OrderStore[] = [
-    { id: 'all', name: 'All Stores' },
+    { id: 'all', name: 'All Venues' },
     ...availableStores.map(store => ({
       id: store.id.toString(),
       name: store.name

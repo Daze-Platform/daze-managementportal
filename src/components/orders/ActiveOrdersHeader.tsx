@@ -41,11 +41,11 @@ export const ActiveOrdersHeader = ({
   // Helper function to get proper status message for desktop view
   const getDesktopStatusMessage = () => {
     if (storeStatus === 'closed') {
-      return selectedStoreName === 'All Stores' ? 'All stores are closed' : `${selectedStoreName} is closed`;
+      return selectedStoreName === 'All Venues' ? 'All venues are closed' : `${selectedStoreName} is closed`;
     } else if (orderStatus === 'paused') {
-      return selectedStoreName === 'All Stores' ? 'Orders are paused for all stores' : `Orders are paused for ${selectedStoreName}`;
+      return selectedStoreName === 'All Venues' ? 'Orders are paused for all venues' : `Orders are paused for ${selectedStoreName}`;
     } else {
-      return selectedStoreName === 'All Stores' ? 'All stores are active' : `${selectedStoreName} is active`;
+      return selectedStoreName === 'All Venues' ? 'All venues are active' : `${selectedStoreName} is active`;
     }
   };
 

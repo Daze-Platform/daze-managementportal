@@ -117,7 +117,7 @@ export const Payouts = () => {
 
   // Transform stores to match dropdown format
   const stores = [
-    { id: 'all', name: 'All Stores' },
+    { id: 'all', name: 'All Venues' },
     ...availableStores.map(store => ({
       id: store.id.toString(),
       name: store.name

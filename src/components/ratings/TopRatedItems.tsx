@@ -10,7 +10,7 @@ interface TopRatedItem {
   rating: number;
   reviews: number;
   emoji: string;
-  store?: string;
+  venue?: string;
 }
 
 interface TopRatedItemsProps {
@@ -177,9 +177,9 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
                           {item.name}
                         </h3>
                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                          {item.store && (
+                          {item.venue && (
                             <Badge variant="secondary" className="text-xs px-2 py-0.5 font-medium">
-                              {item.store}
+                              {item.venue}
                             </Badge>
                           )}
                           <div className="flex items-center gap-1">

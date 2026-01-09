@@ -166,7 +166,7 @@ export const Employees = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <div className="text-sm font-medium text-gray-700">Stores</div>
+                    <div className="text-sm font-medium text-gray-700">Venues</div>
                     <StoreBadges stores={employee.assigned_stores} />
                   </div>
                   
@@ -193,7 +193,7 @@ export const Employees = () => {
               <tr>
                 <th className="text-left p-4 font-medium">Employee</th>
                 <th className="text-left p-4 font-medium">Role</th>
-                <th className="text-left p-4 font-medium">Stores</th>
+                <th className="text-left p-4 font-medium">Venues</th>
                 <th className="text-left p-4 font-medium">Resorts</th>
                 <th className="text-left p-4 font-medium">Status</th>
                 <th className="text-left p-4 font-medium">Actions</th>
