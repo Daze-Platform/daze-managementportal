@@ -10,11 +10,11 @@ interface StatusDisplayProps {
 export const StatusDisplay = ({ storeStatus, orderStatus, selectedStoreName }: StatusDisplayProps) => {
   const getStatusText = () => {
     if (storeStatus === 'closed') {
-      return selectedStoreName === 'All Stores' ? 'All stores are closed' : 'Closed';
+      return selectedStoreName === 'All Venues' ? 'All venues are closed' : 'Closed';
     } else if (orderStatus === 'paused') {
-      return selectedStoreName === 'All Stores' ? 'Orders paused' : 'Paused';
+      return selectedStoreName === 'All Venues' ? 'Orders paused' : 'Paused';
     } else {
-      return selectedStoreName === 'All Stores' ? 'All stores active' : 'Active';
+      return selectedStoreName === 'All Venues' ? 'All venues active' : 'Active';
     }
   };
 

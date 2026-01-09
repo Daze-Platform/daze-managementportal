@@ -402,13 +402,13 @@ export const MenuImport = () => {
     }, 2800);
   };
 
-  // Store selector component
+  // Venue selector component
   const StoreSelector = () => (
     <div className="space-y-2">
-      <Label htmlFor="store-select">Assign to Store</Label>
+      <Label htmlFor="store-select">Assign to Venue</Label>
       <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
         <SelectTrigger id="store-select">
-          <SelectValue placeholder="Select a store (optional)" />
+          <SelectValue placeholder="Select a venue (optional)" />
         </SelectTrigger>
         <SelectContent>
           {stores.map((store) => (

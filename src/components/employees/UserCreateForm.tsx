@@ -143,7 +143,7 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
           </div>
 
           <div>
-            <Label>Assigned Stores</Label>
+            <Label>Assigned Venues</Label>
             <div className="space-y-2 mt-2 max-h-32 overflow-y-auto">
               {stores.map((store) => (
                 <div key={store.id} className="flex items-center space-x-2">

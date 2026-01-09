@@ -183,8 +183,8 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
     
     if (!formData.store) {
       toast({
-        title: "Store Required",
-        description: "Please select a store for this promotion.",
+        title: "Venue Required",
+        description: "Please select a venue for this promotion.",
         variant: "destructive"
       });
       return;
@@ -242,12 +242,12 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
   return (
     <div className="h-full">
       <form onSubmit={handleSubmit} className="space-y-6 p-1">
-        {/* Store Selection */}
+        {/* Venue Selection */}
         <div>
-          <Label htmlFor="store">Store *</Label>
+          <Label htmlFor="store">Venue *</Label>
           <Select value={formData.store} onValueChange={(value) => setFormData({ ...formData, store: value })}>
             <SelectTrigger>
-              <SelectValue placeholder="Select a store" />
+              <SelectValue placeholder="Select a venue" />
             </SelectTrigger>
             <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
               {availableStores.map((store) => (

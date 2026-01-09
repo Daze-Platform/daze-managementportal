@@ -20,11 +20,11 @@ const ratingsData = {
     { stars: 1, count: 2, percentage: 1 }
   ],
   topRatedItems: [
-    { name: 'Charbroiled Oysters', rating: 4.9, reviews: 48, emoji: '🦪', store: 'Brother Fox' },
-    { name: 'Sister Hen Old Fashioned', rating: 4.8, reviews: 62, emoji: '🥃', store: 'Sister Hen' },
-    { name: 'The Wolf Sandwich', rating: 4.8, reviews: 35, emoji: '🥪', store: 'Cousin Wolf' },
-    { name: 'Seafood Paella', rating: 4.7, reviews: 28, emoji: '🥘', store: 'Brother Fox' },
-    { name: 'The Lavender Bee', rating: 4.6, reviews: 41, emoji: '🍸', store: 'Sister Hen' }
+    { name: 'Charbroiled Oysters', rating: 4.9, reviews: 48, emoji: '🦪', venue: 'Brother Fox' },
+    { name: 'Sister Hen Old Fashioned', rating: 4.8, reviews: 62, emoji: '🥃', venue: 'Sister Hen' },
+    { name: 'The Wolf Sandwich', rating: 4.8, reviews: 35, emoji: '🥪', venue: 'Cousin Wolf' },
+    { name: 'Seafood Paella', rating: 4.7, reviews: 28, emoji: '🥘', venue: 'Brother Fox' },
+    { name: 'The Lavender Bee', rating: 4.6, reviews: 41, emoji: '🍸', venue: 'Sister Hen' }
   ],
   recentReviews: [
     {

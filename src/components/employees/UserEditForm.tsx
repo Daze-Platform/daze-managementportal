@@ -134,7 +134,7 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
           </div>
 
           <div>
-            <Label>Assigned Stores</Label>
+            <Label>Assigned Venues</Label>
             <div className="space-y-2 mt-2 max-h-32 overflow-y-auto border rounded p-2">
               {stores.map((store) => (
                 <div key={store.id} className="flex items-center space-x-2">

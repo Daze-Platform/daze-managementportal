@@ -58,7 +58,7 @@ export const OrderHistory = () => {
 
   // Transform stores to match dropdown format
   const stores = [
-    { id: 'all', name: 'All stores' },
+    { id: 'all', name: 'All venues' },
     ...availableStores.map(store => ({
       id: store.id.toString(),
       name: store.name

@@ -41,7 +41,7 @@ export const ActiveOrders = () => {
   } = useOrderManagement();
 
   const stores = [
-    { id: 'all', name: 'All Stores' },
+    { id: 'all', name: 'All Venues' },
     { id: '1', name: 'Brother Fox' },
     { id: '2', name: 'Sister Hen' },
     { id: '3', name: 'Cousin Wolf' },
@@ -87,7 +87,7 @@ export const ActiveOrders = () => {
     setSelectedStore(storeId);
   };
 
-  const selectedStoreName = stores.find(store => store.id === selectedStore)?.name || 'All Stores';
+  const selectedStoreName = stores.find(store => store.id === selectedStore)?.name || 'All Venues';
   const totalRevenue = calculateTotalRevenue(filteredOrders);
 
   const handleMobileOrderSelect = (orderId: string) => {
