@@ -126,37 +126,43 @@ export const Settings = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4 sm:space-y-6">
-          <div className="sticky top-0 z-10 bg-gray-50 pb-4 border-b border-border">
-            <div className="overflow-x-auto scrollbar-none" style={{ scrollBehavior: 'smooth' }}>
-              <TabsList className="grid w-full grid-cols-5 min-w-[500px] sm:min-w-0 bg-background mx-auto">
-                <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
+          <Card className="sticky top-0 z-10 overflow-hidden p-1">
+            <div 
+              className="overflow-x-auto scrollbar-none"
+              style={{ 
+                scrollBehavior: 'smooth',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
+              <TabsList className="inline-flex w-full sm:grid sm:grid-cols-5 gap-1 bg-muted/50">
+                <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
                   <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Profile</span>
                   <span className="sm:hidden">Prof</span>
                 </TabsTrigger>
-                <TabsTrigger value="destinations" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
+                <TabsTrigger value="destinations" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
                   <Building2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Destinations</span>
                   <span className="sm:hidden">Dest</span>
                 </TabsTrigger>
-                <TabsTrigger value="notifications" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
+                <TabsTrigger value="notifications" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
                   <Bell className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Notifications</span>
                   <span className="sm:hidden">Not</span>
                 </TabsTrigger>
-                <TabsTrigger value="security" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
+                <TabsTrigger value="security" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
                   <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Security</span>
                   <span className="sm:hidden">Sec</span>
                 </TabsTrigger>
-                <TabsTrigger value="billing" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap">
+                <TabsTrigger value="billing" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
                   <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Billing</span>
                   <span className="sm:hidden">Bill</span>
                 </TabsTrigger>
               </TabsList>
             </div>
-          </div>
+          </Card>
 
         <TabsContent value="profile" className="space-y-6">
           <Card>
