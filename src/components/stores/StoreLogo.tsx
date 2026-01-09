@@ -83,7 +83,7 @@ export const StoreLogo = ({
         <div className="w-full h-full rounded-lg overflow-hidden bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
           <img 
             src={imageToShow} 
-            alt="Store logo" 
+            alt="Venue logo" 
             className="w-full h-full object-cover"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
@@ -94,18 +94,7 @@ export const StoreLogo = ({
     );
   }
 
-  // Check if it's an emoji
-  const isEmoji = logo && /\p{Emoji}/u.test(logo) && !logoIsImage;
-
-  if (isEmoji) {
-    return (
-      <div className={cn(containerBase, bgColor)}>
-        <span className={cn(textSizeClasses[size], 'drop-shadow-sm')}>{logo}</span>
-      </div>
-    );
-  }
-
-  // Default fallback with icon
+  // Default fallback with icon (no emoji support for venues)
   return (
     <div className={cn(containerBase, 'bg-gradient-to-br from-gray-100 to-gray-50')}>
       <Store className={cn(iconSizeClasses[size], 'text-gray-400')} />

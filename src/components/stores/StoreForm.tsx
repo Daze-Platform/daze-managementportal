@@ -57,7 +57,6 @@ interface StoreFormProps {
   store?: Store;
 }
 
-const logoOptions = ['🅿️', '🍕', '🍔', '🌮', '🍜', '🥗', '🍰', '☕'];
 const colorOptions = [
   { value: 'bg-purple-500', label: 'Purple' },
   { value: 'bg-red-500', label: 'Red' },
@@ -72,7 +71,6 @@ const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 
 export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) => {
   const [customLogo, setCustomLogo] = useState<string>('');
-  const [logoType, setLogoType] = useState<'emoji' | 'custom'>('emoji');
   const [resorts, setResorts] = useState<{id: string, name: string}[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
@@ -82,7 +80,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
       name: '',
       address: '',
       locationDescription: '',
-      logo: '🅿️',
+      logo: '',
       customLogo: '',
       bgColor: 'bg-purple-500',
       activeOrders: 0,
@@ -108,7 +106,7 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
         name: store.name,
         address: store.address,
         locationDescription: store.locationDescription || '',
-        logo: store.logo || '🅿️',
+        logo: store.logo || '',
         customLogo: store.customLogo || '',
         bgColor: store.bgColor || 'bg-purple-500',
         activeOrders: store.activeOrders || 0,
@@ -116,16 +114,15 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
         resortId: store.resortId || null,
       });
       
-      // Set logo states
+      // Set logo state
       setCustomLogo(store.customLogo || '');
-      setLogoType(store.customLogo ? 'custom' : 'emoji');
     } else {
       // Reset form for new store
       form.reset({
         name: '',
         address: '',
         locationDescription: '',
-        logo: '🅿️',
+        logo: '',
         customLogo: '',
         bgColor: 'bg-purple-500',
         activeOrders: 0,
@@ -134,7 +131,6 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
       });
       
       setCustomLogo('');
-      setLogoType('emoji');
     }
   }, [store, form]);
 
@@ -205,7 +201,6 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
           const result = e.target?.result as string;
           setCustomLogo(result);
           form.setValue('customLogo', result);
-          setLogoType('custom');
         };
         reader.readAsDataURL(file);
         toast({
@@ -220,7 +215,6 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
         const logoUrl = urlData.publicUrl;
         setCustomLogo(logoUrl);
         form.setValue('customLogo', logoUrl);
-        setLogoType('custom');
         toast({
           title: "Logo uploaded",
           description: "Your logo has been uploaded successfully.",
@@ -253,19 +247,17 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
     }
     setCustomLogo('');
     form.setValue('customLogo', '');
-    setLogoType('emoji');
   };
 
   const handleSubmit = (data: Store) => {
     const finalData = {
       ...data,
-      customLogo: logoType === 'custom' ? customLogo : '',
+      customLogo: customLogo,
     };
     
     onSubmit({ ...finalData, id: store?.id });
     form.reset();
     setCustomLogo('');
-    setLogoType('emoji');
     onClose();
   };
 
@@ -461,105 +453,57 @@ export const StoreForm = ({ isOpen, onClose, onSubmit, store }: StoreFormProps) 
                   </div>
 
                   <div className="space-y-4">
-                    <FormLabel className="text-sm font-medium">Logo</FormLabel>
+                    <FormLabel className="text-sm font-medium">Venue Logo</FormLabel>
                     
-                    {/* Logo Type Toggle */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button
-                        type="button"
-                        variant={logoType === 'emoji' ? 'default' : 'outline'}
-                        onClick={() => setLogoType('emoji')}
-                        className="h-12"
-                      >
-                        Emoji
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={logoType === 'custom' ? 'default' : 'outline'}
-                        onClick={() => setLogoType('custom')}
-                        className="h-12"
-                      >
-                        Custom Image
-                      </Button>
-                    </div>
-
-                    {logoType === 'emoji' && (
-                      <FormField
-                        control={form.control}
-                        name="logo"
-                        render={({ field }) => (
-                          <FormItem>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger className="w-full h-12">
-                                  <SelectValue placeholder="Select a logo" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {logoOptions.map((logo) => (
-                                  <SelectItem key={logo} value={logo}>
-                                    <span className="text-2xl">{logo}</span>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
-
-                    {logoType === 'custom' && (
-                      <div className="space-y-4">
-                        {customLogo ? (
-                          <div className="relative w-24 h-24 mx-auto">
-                            <div className="w-full h-full rounded-xl flex items-center justify-center overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-lg ring-1 ring-black/5">
-                              <img 
-                                src={customLogo} 
-                                alt="Custom logo preview" 
-                                className="w-full h-full object-cover"
-                              />
+                    <div className="space-y-4">
+                      {customLogo ? (
+                        <div className="relative w-24 h-24 mx-auto">
+                          <div className="w-full h-full rounded-xl flex items-center justify-center overflow-hidden bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-lg ring-1 ring-black/5">
+                            <img 
+                              src={customLogo} 
+                              alt="Venue logo preview" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleRemoveCustomLogo}
+                            className="absolute -top-2 -right-2 h-8 w-8 rounded-full p-0"
+                            disabled={isUploading}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="w-full">
+                          <label className={`flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/50 hover:bg-muted active:bg-muted/80 transition-colors ${isUploading ? 'pointer-events-none opacity-60' : ''}`}>
+                            <div className="flex flex-col items-center justify-center">
+                              {isUploading ? (
+                                <>
+                                  <Loader2 className="w-8 h-8 mb-2 text-muted-foreground animate-spin" />
+                                  <p className="text-sm text-muted-foreground">Uploading...</p>
+                                </>
+                              ) : (
+                                <>
+                                  <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
+                                  <p className="text-sm text-muted-foreground">Upload logo image</p>
+                                  <p className="text-xs text-muted-foreground/70">Max 5MB</p>
+                                </>
+                              )}
                             </div>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={handleRemoveCustomLogo}
-                              className="absolute -top-2 -right-2 h-8 w-8 rounded-full p-0"
+                            <input
+                              type="file"
+                              className="hidden"
+                              accept="image/*"
+                              onChange={handleImageUpload}
                               disabled={isUploading}
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="w-full">
-                            <label className={`flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/50 hover:bg-muted active:bg-muted/80 transition-colors ${isUploading ? 'pointer-events-none opacity-60' : ''}`}>
-                              <div className="flex flex-col items-center justify-center">
-                                {isUploading ? (
-                                  <>
-                                    <Loader2 className="w-8 h-8 mb-2 text-muted-foreground animate-spin" />
-                                    <p className="text-sm text-muted-foreground">Uploading...</p>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
-                                    <p className="text-sm text-muted-foreground">Upload image</p>
-                                    <p className="text-xs text-muted-foreground/70">Max 5MB</p>
-                                  </>
-                                )}
-                              </div>
-                              <input
-                                type="file"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                disabled={isUploading}
-                              />
-                            </label>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                            />
+                          </label>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <FormField
