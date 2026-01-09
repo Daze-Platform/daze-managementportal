@@ -5,13 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar, Loader2 } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar, Loader2, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDestination } from '@/contexts/DestinationContext';
 import { useStores } from '@/contexts/StoresContext';
 import { StoreAssignmentDialog } from './StoreAssignmentDialog';
 import { StoreLogo } from '@/components/stores/StoreLogo';
-
 
 export interface Destination {
   id: string;
@@ -494,79 +494,84 @@ export const DestinationManagement = () => {
                         </div>
                       </div>
 
-                      {/* Venue Management Section */}
-                      <div className="mt-6 p-3 sm:p-4 bg-muted/50 rounded-lg space-y-3">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                          <div className="flex items-center gap-2">
-                            <StoreIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                            <h4 className="font-medium text-foreground">Assigned Venues</h4>
-                            <Badge variant="secondary">{destinationStores.length}</Badge>
+                      {/* Venue Management Section - Collapsible */}
+                      <Collapsible defaultOpen={false} className="mt-6">
+                        <div className="p-3 sm:p-4 bg-muted/50 rounded-lg space-y-3">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <CollapsibleTrigger className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer group flex-1">
+                              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                              <StoreIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                              <h4 className="font-medium text-foreground">Assigned Venues</h4>
+                              <Badge variant="secondary">{destinationStores.length}</Badge>
+                            </CollapsibleTrigger>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAddStore(destination.id)}
+                              className="flex items-center gap-1 w-full sm:w-auto"
+                            >
+                              <Plus className="h-4 w-4" />
+                              <span>Add Venue</span>
+                            </Button>
                           </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleAddStore(destination.id)}
-                            className="flex items-center gap-1 w-full sm:w-auto"
-                          >
-                            <Plus className="h-4 w-4" />
-                            <span>Add Venue</span>
-                          </Button>
-                        </div>
 
-                        {destinationStores.length > 0 ? (
-                          <div className="space-y-3">
-                            {destinationStores.map((store) => (
-                              <div key={store.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-background rounded-lg border">
-                                <div className="flex items-center space-x-3 flex-1 min-w-0">
-                                  <StoreLogo 
-                                    logo={store.logo}
-                                    customLogo={store.customLogo}
-                                    bgColor={store.bgColor}
-                                    size="md"
-                                    variant="sleek"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <h5 className="font-medium text-foreground truncate">{store.name}</h5>
-                                    <p className="text-sm text-muted-foreground truncate">{store.address}</p>
-                                    {store.locationDescription && (
-                                      <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-2">{store.locationDescription}</p>
-                                    )}
+                          <CollapsibleContent className="space-y-3 data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+                            {destinationStores.length > 0 ? (
+                              <div className="space-y-3 pt-2">
+                                {destinationStores.map((store) => (
+                                  <div key={store.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-background rounded-lg border">
+                                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                                      <StoreLogo 
+                                        logo={store.logo}
+                                        customLogo={store.customLogo}
+                                        bgColor={store.bgColor}
+                                        size="md"
+                                        variant="sleek"
+                                      />
+                                      <div className="flex-1 min-w-0">
+                                        <h5 className="font-medium text-foreground truncate">{store.name}</h5>
+                                        <p className="text-sm text-muted-foreground truncate">{store.address}</p>
+                                        {store.locationDescription && (
+                                          <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-2">{store.locationDescription}</p>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                                      <Badge variant="outline" className="text-xs flex-shrink-0">
+                                        {store.activeOrders} orders
+                                      </Badge>
+                                      <div className="flex gap-1">
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => handleEditStore(destination.id, store)}
+                                          className="h-8 w-8 p-0"
+                                        >
+                                          <Edit className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => handleStoreDelete(store.id, store.name)}
+                                          className="h-8 w-8 p-0 text-destructive hover:text-destructive-foreground hover:bg-destructive"
+                                        >
+                                          <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="flex items-center gap-2 w-full sm:w-auto">
-                                  <Badge variant="outline" className="text-xs flex-shrink-0">
-                                    {store.activeOrders} orders
-                                  </Badge>
-                                  <div className="flex gap-1">
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => handleEditStore(destination.id, store)}
-                                      className="h-8 w-8 p-0"
-                                    >
-                                      <Edit className="h-4 w-4" />
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => handleStoreDelete(store.id, store.name)}
-                                      className="h-8 w-8 p-0 text-destructive hover:text-destructive-foreground hover:bg-destructive"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </div>
-                                </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="text-center py-6 text-muted-foreground">
-                            <StoreIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground/40" />
-                            <p className="text-sm">No venues assigned to this destination yet.</p>
-                            <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Venue" to get started.</p>
-                          </div>
-                        )}
-                      </div>
+                            ) : (
+                              <div className="text-center py-6 text-muted-foreground">
+                                <StoreIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground/40" />
+                                <p className="text-sm">No venues assigned to this destination yet.</p>
+                                <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Venue" to get started.</p>
+                              </div>
+                            )}
+                          </CollapsibleContent>
+                        </div>
+                      </Collapsible>
                     </div>
                   </CardContent>
                 </Card>
