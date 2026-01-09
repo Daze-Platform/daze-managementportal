@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Trash2, ArrowLeft, ArrowRight, Utensils, Upload, Sparkles, X, Building2 } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, ArrowRight, Utensils, Upload, Sparkles, X, Building2, Pencil, Check } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from '@/hooks/use-toast';
@@ -62,6 +62,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null);
+  const isEditMode = editingItemIndex !== null;
   const { stores, getStoresByDestination } = useStores();
   const { currentDestination } = useDestination();
   const [currentStep, setCurrentStep] = useState(1);
@@ -196,6 +199,59 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
       ...prev,
       items: prev.items.filter((_, i) => i !== index)
     }));
+    // If we're editing this item, cancel edit mode
+    if (editingItemIndex === index) {
+      handleCancelEdit();
+    } else if (editingItemIndex !== null && index < editingItemIndex) {
+      // Adjust index if we removed an item before the one being edited
+      setEditingItemIndex(editingItemIndex - 1);
+    }
+  };
+
+  const handleEditItem = (index: number) => {
+    const item = formData.items[index];
+    setCurrentItem({
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      category: item.category,
+      available: item.available
+    });
+    setImagePreview(item.image || '');
+    setEditingItemIndex(index);
+    // Scroll to form
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  const handleUpdateItem = () => {
+    if (editingItemIndex !== null && currentItem.name && currentItem.price > 0) {
+      setFormData(prev => ({
+        ...prev,
+        items: prev.items.map((item, i) =>
+          i === editingItemIndex
+            ? { ...currentItem, image: imagePreview || undefined }
+            : item
+        )
+      }));
+      handleCancelEdit();
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setCurrentItem({
+      name: '',
+      description: '',
+      price: 0,
+      category: 'Main Course',
+      available: true
+    });
+    setImagePreview('');
+    setEditingItemIndex(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleSave = () => {
@@ -373,9 +429,16 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                   exit={{ opacity: 0, x: -10 }}
                   className="space-y-5"
                 >
-                  {/* Add Item Form */}
-                  <div className="p-4 rounded-lg border border-border bg-muted/30">
-                    <h4 className="text-sm font-medium mb-3">Add Item</h4>
+                  {/* Add/Edit Item Form */}
+                  <div ref={formRef} className={`p-4 rounded-lg border bg-muted/30 ${isEditMode ? 'border-primary ring-1 ring-primary/20' : 'border-border'}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-medium">{isEditMode ? 'Edit Item' : 'Add Item'}</h4>
+                      {isEditMode && (
+                        <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-6 w-6 p-0">
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
                     
                     {/* Name & Price - FIRST (most important fields) */}
                     <div className="grid grid-cols-2 gap-3 mb-3">
@@ -544,15 +607,35 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       </div>
                     </div>
 
-                    {/* Add Item Button */}
-                    <Button 
-                      onClick={handleAddItem} 
-                      className="w-full h-9" 
-                      disabled={!currentItem.name || currentItem.price <= 0}
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Item
-                    </Button>
+                    {/* Add/Update Item Button */}
+                    {isEditMode ? (
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline"
+                          onClick={handleCancelEdit} 
+                          className="flex-1 h-9"
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          onClick={handleUpdateItem} 
+                          className="flex-1 h-9" 
+                          disabled={!currentItem.name || currentItem.price <= 0}
+                        >
+                          <Check className="w-4 h-4 mr-2" />
+                          Save Changes
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button 
+                        onClick={handleAddItem} 
+                        className="w-full h-9" 
+                        disabled={!currentItem.name || currentItem.price <= 0}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Item
+                      </Button>
+                    )}
                   </div>
 
                   {/* Items List */}
@@ -565,14 +648,22 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                         {formData.items.map((item, index) => (
                           <div 
                             key={index}
-                            className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card"
+                            className={`flex items-center gap-3 p-3 rounded-lg border bg-card transition-colors ${
+                              editingItemIndex === index 
+                                ? 'border-primary ring-1 ring-primary/20' 
+                                : 'border-border'
+                            }`}
                           >
-                            {item.image && (
+                            {item.image ? (
                               <img
                                 src={item.image}
                                 alt={item.name}
                                 className="w-12 h-12 rounded-md object-cover flex-shrink-0"
                               />
+                            ) : (
+                              <div className="w-12 h-12 rounded-md bg-muted flex items-center justify-center flex-shrink-0">
+                                <Utensils className="w-5 h-5 text-muted-foreground" />
+                              </div>
                             )}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-0.5">
@@ -581,8 +672,16 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                               </div>
                               <p className="text-xs text-muted-foreground truncate">{item.description || 'No description'}</p>
                             </div>
-                            <div className="flex items-center gap-2 ml-3">
-                              <span className="text-sm font-medium text-success">${item.price.toFixed(2)}</span>
+                            <div className="flex items-center gap-1 ml-3">
+                              <span className="text-sm font-medium text-success mr-1">${item.price.toFixed(2)}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditItem(index)}
+                                className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
                               <Button
                                 variant="ghost"
                                 size="sm"
