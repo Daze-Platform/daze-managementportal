@@ -144,6 +144,25 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
+
+  /* Dialog/Modal Scroll Container - Single scroll area inside dialogs */
+  .dialog-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
+    touch-action: pan-y;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: scroll-position;
+    /* Safe area padding for bottom content reach */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+    scroll-padding-bottom: 20px;
+  }
 }
 
 /* Enhanced iPad specific optimizations */

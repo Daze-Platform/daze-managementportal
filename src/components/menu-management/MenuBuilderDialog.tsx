@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 import { Switch } from '@/components/ui/switch';
 import { Plus, Trash2, ArrowLeft, ArrowRight, Utensils, Upload, Sparkles, X, Building2, Pencil, Check } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -280,9 +280,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className={`${
         isMobile 
-          ? 'w-full max-w-none h-full max-h-none m-0 rounded-none' 
+          ? 'fixed inset-0 w-full max-w-none h-[100dvh] max-h-none m-0 rounded-none translate-x-0 translate-y-0 left-0 top-0' 
           : 'sm:max-w-xl max-h-[85vh]'
-      } p-0 gap-0 flex flex-col`}>
+      } p-0 gap-0 flex flex-col overflow-hidden`}>
         
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-border flex-shrink-0">
@@ -326,8 +326,11 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
           </div>
         </div>
 
-        {/* Content */}
-        <ScrollArea className="flex-1">
+        {/* Content - Single Scroll Container */}
+        <div 
+          className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y dialog-scroll-container"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           <div className="p-6">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
@@ -707,7 +710,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
               )}
             </AnimatePresence>
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-border flex items-center justify-between flex-shrink-0 bg-muted/30">
