@@ -9,10 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Trash2, ArrowLeft, ArrowRight, Utensils, Upload, Sparkles, X } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, ArrowRight, Utensils, Upload, Sparkles, X, Building2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from '@/hooks/use-toast';
+import { useStores } from '@/contexts/StoresContext';
+import { useDestination } from '@/contexts/DestinationContext';
 
 const DEMO_FOOD_IMAGES = [
   '/images/menu/grilled-salmon.jpg',
@@ -40,6 +42,7 @@ interface MenuFormData {
   category: string;
   isActive: boolean;
   items: MenuItem[];
+  venueId?: string;
 }
 
 interface MenuBuilderDialogProps {
@@ -59,14 +62,22 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { stores, getStoresByDestination } = useStores();
+  const { currentDestination } = useDestination();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<MenuFormData>({
     name: '',
     description: '',
     category: 'restaurant',
     isActive: true,
-    items: []
+    items: [],
+    venueId: ''
   });
+
+  // Get venues for current destination
+  const availableVenues = currentDestination 
+    ? getStoresByDestination(currentDestination.id)
+    : stores;
 
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -81,6 +92,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
       category: initialData?.category ?? 'restaurant',
       isActive: initialData?.isActive ?? true,
       items: initialData?.items ?? [],
+      venueId: ''
     });
     setCurrentStep(1);
     setImagePreview('');
@@ -320,6 +332,36 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       onPointerDown={(e) => e.stopPropagation()}
                     />
                   </div>
+
+                  {/* Venue Assignment */}
+                  <div className="space-y-2">
+                    <Label>Assign to Venue</Label>
+                    <Select 
+                      value={formData.venueId} 
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, venueId: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a venue" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableVenues.length > 0 ? (
+                          availableVenues.map(venue => (
+                            <SelectItem key={venue.id} value={venue.id.toString()}>
+                              <div className="flex items-center gap-2">
+                                <Building2 className="w-4 h-4 text-muted-foreground" />
+                                {venue.name}
+                              </div>
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <SelectItem value="none" disabled>No venues available</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      The menu will be available at this venue
+                    </p>
+                  </div>
                 </motion.div>
               )}
 
@@ -335,117 +377,10 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                   <div className="p-4 rounded-lg border border-border bg-muted/30">
                     <h4 className="text-sm font-medium mb-3">Add Item</h4>
                     
-                    {/* Image Section */}
-                    <div className="mb-4">
-                      <Label className="text-xs mb-2 block">Image</Label>
-                      <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-border bg-muted/50">
-                        <AnimatePresence mode="wait">
-                          {isGenerating ? (
-                            <motion.div
-                              key="generating"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-purple-500/20"
-                            >
-                              <motion.div
-                                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
-                              >
-                                <Sparkles className="w-8 h-8 text-purple-500" />
-                              </motion.div>
-                              <p className="text-sm text-muted-foreground mt-2">Generating image...</p>
-                              <div className="w-32 h-1.5 bg-muted rounded-full mt-3 overflow-hidden">
-                                <motion.div
-                                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${generationProgress}%` }}
-                                  transition={{ duration: 0.2 }}
-                                />
-                              </div>
-                            </motion.div>
-                          ) : imagePreview ? (
-                            <motion.div
-                              key="preview"
-                              initial={{ opacity: 0, scale: 0.95 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 0.95 }}
-                              className="relative w-full h-full"
-                            >
-                              <img
-                                src={imagePreview}
-                                alt="Item preview"
-                                className="w-full h-full object-cover"
-                              />
-                              <button
-                                type="button"
-                                onClick={handleRemoveImage}
-                                className="absolute top-2 right-2 p-1.5 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-                              >
-                                <X className="w-4 h-4" />
-                              </button>
-                            </motion.div>
-                          ) : (
-                            <motion.div
-                              key="empty"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="absolute inset-0 flex items-center justify-center"
-                            >
-                              <div className="text-center">
-                                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mx-auto mb-1">
-                                  <Upload className="w-4 h-4 text-muted-foreground" />
-                                </div>
-                                <p className="text-xs text-muted-foreground">No image</p>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                      
-                      {/* Image Action Buttons */}
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          id="item-image-upload"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="h-8"
-                          onClick={() => fileInputRef.current?.click()}
-                          disabled={isGenerating}
-                        >
-                          <Upload className="w-3.5 h-3.5 mr-1.5" />
-                          Upload
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="h-8 relative"
-                          onClick={handleGenerateImage}
-                          disabled={isGenerating || !currentItem.name}
-                        >
-                          <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                          Generate
-                          <Badge variant="secondary" className="ml-1.5 text-[9px] px-1 py-0">BETA</Badge>
-                        </Button>
-                      </div>
-                      {!currentItem.name && (
-                        <p className="text-[10px] text-muted-foreground mt-1">Enter item name to enable AI generation</p>
-                      )}
-                    </div>
-
+                    {/* Name & Price - FIRST (most important fields) */}
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div className="space-y-1">
-                        <Label className="text-xs">Name</Label>
+                        <Label className="text-xs">Name <span className="text-destructive">*</span></Label>
                         <Input
                           value={currentItem.name}
                           onChange={(e) => setCurrentItem(prev => ({ ...prev, name: e.target.value }))}
@@ -454,7 +389,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                         />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-xs">Price</Label>
+                        <Label className="text-xs">Price <span className="text-destructive">*</span></Label>
                         <PriceInput
                           value={currentItem.price}
                           onChange={(price) => setCurrentItem(prev => ({ ...prev, price }))}
@@ -464,17 +399,19 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       </div>
                     </div>
                     
+                    {/* Description */}
                     <div className="space-y-1 mb-3">
                       <Label className="text-xs">Description</Label>
                       <Input
                         value={currentItem.description}
                         onChange={(e) => setCurrentItem(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Brief description"
+                        placeholder="Brief description (optional)"
                         className="h-9"
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mb-3">
+                    {/* Category & Availability */}
+                    <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="space-y-1">
                         <Label className="text-xs">Category</Label>
                         <Select value={currentItem.category} onValueChange={(value) => setCurrentItem(prev => ({ ...prev, category: value }))}>
@@ -500,6 +437,114 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       </div>
                     </div>
 
+                    {/* Image Section - LAST (compact, optional) */}
+                    <div className="mb-4">
+                      <Label className="text-xs mb-2 block">Image (optional)</Label>
+                      <div className="flex items-start gap-3">
+                        {/* Compact square preview */}
+                        <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-border bg-muted/50 flex-shrink-0">
+                          <AnimatePresence mode="wait">
+                            {isGenerating ? (
+                              <motion.div
+                                key="generating"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-purple-500/20"
+                              >
+                                <motion.div
+                                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                                  transition={{ duration: 1.5, repeat: Infinity }}
+                                >
+                                  <Sparkles className="w-5 h-5 text-purple-500" />
+                                </motion.div>
+                              </motion.div>
+                            ) : imagePreview ? (
+                              <motion.div
+                                key="preview"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="relative w-full h-full"
+                              >
+                                <img
+                                  src={imagePreview}
+                                  alt="Item preview"
+                                  className="w-full h-full object-cover"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={handleRemoveImage}
+                                  className="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                key="empty"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-center"
+                              >
+                                <Upload className="w-5 h-5 text-muted-foreground" />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                        
+                        {/* Action buttons - stacked vertically */}
+                        <div className="flex flex-col gap-2 flex-1">
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            id="item-image-upload"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 justify-start"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isGenerating}
+                          >
+                            <Upload className="w-3.5 h-3.5 mr-2" />
+                            Upload Image
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 justify-start"
+                            onClick={handleGenerateImage}
+                            disabled={isGenerating || !currentItem.name}
+                          >
+                            <Sparkles className="w-3.5 h-3.5 mr-2" />
+                            Generate with AI
+                            <Badge variant="secondary" className="ml-auto text-[9px] px-1 py-0">BETA</Badge>
+                          </Button>
+                          {isGenerating && (
+                            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                              <motion.div
+                                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${generationProgress}%` }}
+                                transition={{ duration: 0.2 }}
+                              />
+                            </div>
+                          )}
+                          {!currentItem.name && !isGenerating && (
+                            <p className="text-[10px] text-muted-foreground">Enter item name to enable AI generation</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Add Item Button */}
                     <Button 
                       onClick={handleAddItem} 
                       className="w-full h-9" 
