@@ -629,48 +629,61 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                         {formData.items.map((item, index) => (
                           <div 
                             key={index}
-                            className={`flex items-center gap-3 p-3 rounded-lg border bg-card transition-colors ${
+                            className={`p-3 rounded-lg border bg-card transition-colors ${
                               editingItemIndex === index 
                                 ? 'border-primary ring-1 ring-primary/20' 
                                 : 'border-border'
                             }`}
                           >
-                            {item.image ? (
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-12 h-12 rounded-md object-cover flex-shrink-0"
-                              />
-                            ) : (
-                              <div className="w-12 h-12 rounded-md bg-muted flex items-center justify-center flex-shrink-0">
-                                <Utensils className="w-5 h-5 text-muted-foreground" />
+                            {/* Mobile: stacked layout, Desktop: horizontal */}
+                            <div className="flex gap-3">
+                              {/* Image */}
+                              {item.image ? (
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-12 h-12 rounded-md object-cover flex-shrink-0"
+                                />
+                              ) : (
+                                <div className="w-12 h-12 rounded-md bg-muted flex items-center justify-center flex-shrink-0">
+                                  <Utensils className="w-5 h-5 text-muted-foreground" />
+                                </div>
+                              )}
+                              
+                              {/* Content */}
+                              <div className="flex-1 min-w-0">
+                                {/* Name and actions row */}
+                                <div className="flex items-start justify-between gap-2">
+                                  <span className="font-medium text-sm leading-tight">{item.name}</span>
+                                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleEditItem(index)}
+                                      className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                                    >
+                                      <Pencil className="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleRemoveItem(index)}
+                                      className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
+                                  </div>
+                                </div>
+                                
+                                {/* Description */}
+                                <p className="text-xs text-muted-foreground truncate mt-0.5">{item.description || 'No description'}</p>
+                                
+                                {/* Category and price row */}
+                                <div className="flex items-center justify-between gap-2 mt-1.5">
+                                  <Badge variant="secondary" className="text-[10px] max-w-[120px] truncate">{item.category}</Badge>
+                                  <span className="text-sm font-semibold text-success">${item.price.toFixed(2)}</span>
+                                </div>
                               </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-0.5">
-                                <span className="font-medium text-sm">{item.name}</span>
-                                <Badge variant="secondary" className="text-[10px]">{item.category}</Badge>
-                              </div>
-                              <p className="text-xs text-muted-foreground truncate">{item.description || 'No description'}</p>
-                            </div>
-                            <div className="flex items-center gap-1 ml-3">
-                              <span className="text-sm font-medium text-success mr-1">${item.price.toFixed(2)}</span>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEditItem(index)}
-                                className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
-                              >
-                                <Pencil className="w-3.5 h-3.5" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleRemoveItem(index)}
-                                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </Button>
                             </div>
                           </div>
                         ))}
