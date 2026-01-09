@@ -15,17 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from '@/hooks/use-toast';
 import { useStores } from '@/contexts/StoresContext';
 import { useDestination } from '@/contexts/DestinationContext';
-
-const DEMO_FOOD_IMAGES = [
-  '/images/menu/grilled-salmon.jpg',
-  '/images/menu/margherita-pizza.jpg',
-  '/images/menu/caesar-salad.jpg',
-  '/images/menu/cheesecake.jpg',
-  '/images/menu/fish-tacos.jpg',
-  '/images/menu/gelato.jpg',
-  '/images/menu/pepperoni-pizza.jpg',
-  '/images/menu/house-salad.jpg',
-];
+import { findBestMatchingImage, simulateImageGeneration } from '@/utils/menuImageMatcher';
 
 interface MenuItem {
   name: string;
@@ -142,32 +132,20 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     setIsGenerating(true);
     setGenerationProgress(0);
 
-    // Simulate progress
-    const progressInterval = setInterval(() => {
-      setGenerationProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(progressInterval);
-          return prev;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 200);
+    // Simulate AI generation with progress animation
+    await simulateImageGeneration((progress) => {
+      setGenerationProgress(progress);
+    });
 
-    // Simulate AI generation delay
-    await new Promise(resolve => setTimeout(resolve, 2500));
-
-    clearInterval(progressInterval);
-    setGenerationProgress(100);
-
-    // Pick a random demo image
-    const randomImage = DEMO_FOOD_IMAGES[Math.floor(Math.random() * DEMO_FOOD_IMAGES.length)];
-    setImagePreview(randomImage);
+    // Smart keyword-based image matching
+    const matchedImage = findBestMatchingImage(currentItem.name, currentItem.description);
+    setImagePreview(matchedImage);
     setIsGenerating(false);
     setGenerationProgress(0);
 
     toast({
       title: "Image generated!",
-      description: "AI has created an image for your menu item",
+      description: "AI matched an image for your menu item",
     });
   };
 

@@ -41,19 +41,7 @@ interface MenuItemFormProps {
   onCancel: () => void;
 }
 
-// Demo food images for AI generation simulation
-const DEMO_FOOD_IMAGES = [
-  '/images/menu/grilled-salmon.jpg',
-  '/images/menu/margherita-pizza.jpg',
-  '/images/menu/caesar-salad.jpg',
-  '/images/menu/cheesecake.jpg',
-  '/images/menu/fish-tacos.jpg',
-  '/images/menu/gelato.jpg',
-  '/images/menu/pepperoni-pizza.jpg',
-  '/images/menu/house-salad.jpg',
-  '/images/menu/burger.jpg',
-  '/images/menu/tacos.jpg',
-];
+import { findBestMatchingImage, simulateImageGeneration } from '@/utils/menuImageMatcher';
 
 export const MenuItemForm: React.FC<MenuItemFormProps> = ({ 
   item, 
@@ -113,21 +101,14 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
     setIsGenerating(true);
     setGenerationProgress(0);
 
-    // Simulate AI generation with smooth progress animation
-    const totalDuration = 2500; // 2.5 seconds
-    const steps = 20;
-    const stepDuration = totalDuration / steps;
-
-    for (let i = 1; i <= steps; i++) {
-      await new Promise(resolve => setTimeout(resolve, stepDuration));
-      // Use easing for more natural progress feel
-      const progress = Math.min(100, Math.round((i / steps) * 100));
+    // Simulate AI generation with progress animation
+    await simulateImageGeneration((progress) => {
       setGenerationProgress(progress);
-    }
+    });
 
-    // Select a random demo image
-    const randomImage = DEMO_FOOD_IMAGES[Math.floor(Math.random() * DEMO_FOOD_IMAGES.length)];
-    setImagePreview(randomImage);
+    // Smart keyword-based image matching
+    const matchedImage = findBestMatchingImage(watchedName, watchedDescription);
+    setImagePreview(matchedImage);
     setImageFile(null);
     
     setIsGenerating(false);
