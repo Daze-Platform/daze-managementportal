@@ -394,10 +394,10 @@ export const Payouts = () => {
                       <TableHead className="font-semibold">Store</TableHead>
                       <TableHead className="font-semibold">Date</TableHead>
                       <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="font-semibold">Subtotal</TableHead>
-                      <TableHead className="font-semibold">Service Fee</TableHead>
-                      <TableHead className="font-semibold">Commission</TableHead>
-                      <TableHead className="font-semibold">NET</TableHead>
+                      <TableHead className="font-semibold text-right">Subtotal</TableHead>
+                      <TableHead className="font-semibold text-right">Service Fee</TableHead>
+                      <TableHead className="font-semibold text-right">Commission</TableHead>
+                      <TableHead className="font-semibold text-right">NET</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -416,10 +416,10 @@ export const Payouts = () => {
                         </TableCell>
                         <TableCell className="text-gray-600">{item.date}</TableCell>
                         <TableCell>{getStatusBadge(item.status)}</TableCell>
-                        <TableCell className="font-medium">{item.subtotal}</TableCell>
-                        <TableCell className="text-orange-600">{item.serviceFee}</TableCell>
-                        <TableCell className="text-red-600">{item.commissions}</TableCell>
-                        <TableCell className="font-bold text-green-600">{item.net}</TableCell>
+                        <TableCell className="font-medium text-right">{item.subtotal}</TableCell>
+                        <TableCell className="text-orange-600 text-right">{item.serviceFee}</TableCell>
+                        <TableCell className="text-red-600 text-right">{item.commissions}</TableCell>
+                        <TableCell className="font-bold text-green-600 text-right">{item.net}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

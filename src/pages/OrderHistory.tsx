@@ -14,7 +14,7 @@ import { useFilters } from '@/contexts/FilterContext';
 import { format } from 'date-fns';
 import { useResort } from '@/contexts/DestinationContext';
 import { useScrollDirection } from '@/hooks/useScrollDirection';
-import { ChevronDown, ChevronRight, DollarSign, ChevronLeft, ChevronRight as ChevronRightIcon, Calendar, Clock, MapPin, User, Receipt, Filter, Truck, Utensils, Store, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronDown, ChevronRight, DollarSign, ChevronLeft, ChevronRight as ChevronRightIcon, Clock, User, Receipt, Filter, Truck, Store, CheckCircle, XCircle } from 'lucide-react';
 
 interface OrderItem {
   id: string;
@@ -272,72 +272,48 @@ export const OrderHistory = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return (
-          <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-100 font-semibold px-3 py-1.5 flex items-center gap-2 w-fit shadow-sm">
-            <CheckCircle className="w-4 h-4" />
-            <span>Completed</span>
-          </Badge>
-        );
-      case 'Canceled':
-        return (
-          <Badge className="bg-red-100 text-red-800 border-red-300 hover:bg-red-100 font-semibold px-3 py-1.5 flex items-center gap-2 w-fit shadow-sm">
-            <XCircle className="w-4 h-4" />
-            <span>Canceled</span>
-          </Badge>
-        );
-      default:
-        return (
-          <Badge variant="outline" className="font-medium px-3 py-1.5 flex items-center gap-2 w-fit">
-            <span>{status}</span>
-          </Badge>
-        );
-    }
-  };
+  const getOrderMetaBadges = (order: Order) => {
+    const refundLabel = order.refundStatus
+      ? order.refundStatus === 'partial'
+        ? `Partial refund ${order.refundAmount}`
+        : `Full refund ${order.refundAmount}`
+      : undefined;
 
-  const getOrderTypeBadge = (type: string) => {
-    if (type === 'Delivery') {
-      return (
-        <Badge className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50 font-medium px-3 py-1.5 flex items-center gap-2 w-fit">
-          <Utensils className="w-3.5 h-3.5" />
-          <span>Delivery</span>
-        </Badge>
-      );
-    } else {
-      return (
-        <Badge className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50 font-medium px-3 py-1.5 flex items-center gap-2 w-fit">
-          <Store className="w-3.5 h-3.5" />
-          <span>Pickup</span>
-        </Badge>
-      );
-    }
-  };
-
-  const getRefundBadge = (order: Order) => {
-    if (!order.refundStatus || order.refundStatus === 'none') {
-      return null;
-    }
-
-    switch (order.refundStatus) {
-      case 'partial':
-        return (
-          <Badge className="bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-100 font-semibold px-3 py-1.5 flex items-center gap-2 w-fit shadow-sm animate-fade-in">
-            <DollarSign className="w-4 h-4" />
-            <span>Partially Refunded {order.refundAmount}</span>
-          </Badge>
-        );
-      case 'full':
-        return (
-          <Badge className="bg-rose-100 text-rose-800 border-rose-300 hover:bg-rose-100 font-semibold px-3 py-1.5 flex items-center gap-2 w-fit shadow-sm animate-fade-in">
-            <DollarSign className="w-4 h-4" />
-            <span>Fully Refunded {order.refundAmount}</span>
-          </Badge>
-        );
-      default:
-        return null;
-    }
+    return (
+      <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
+        <span className="inline-flex items-center gap-1" title={order.type}>
+          {order.type === 'Delivery' ? (
+            <Truck className="w-3.5 h-3.5 text-blue-600" />
+          ) : (
+            <Store className="w-3.5 h-3.5 text-amber-600" />
+          )}
+          <span>{order.type}</span>
+        </span>
+        <span className="h-3 w-px bg-gray-300" aria-hidden="true" />
+        <span
+          className={`inline-flex items-center gap-1 ${
+            order.status === 'Completed' ? 'text-emerald-700' : 'text-red-700'
+          }`}
+          title={order.status}
+        >
+          {order.status === 'Completed' ? (
+            <CheckCircle className="w-3.5 h-3.5" />
+          ) : (
+            <XCircle className="w-3.5 h-3.5" />
+          )}
+          <span>{order.status}</span>
+        </span>
+        {refundLabel && (
+          <>
+            <span className="h-3 w-px bg-gray-300" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 text-orange-700" title={refundLabel}>
+              <DollarSign className="w-3.5 h-3.5" />
+              <span>Refunded</span>
+            </span>
+          </>
+        )}
+      </div>
+    );
   };
 
   const StoreLogoDisplay = ({ store }: { store: Order['store'] }) => (
@@ -392,9 +368,8 @@ export const OrderHistory = () => {
             </div>
             <div className="text-right">
               <div className="font-bold text-lg text-gray-900 mb-2">{order.total}</div>
-              <div className="flex flex-col gap-2">
-                {getStatusBadge(order.status)}
-                {getRefundBadge(order)}
+              <div className="flex justify-end">
+                {getOrderMetaBadges(order)}
               </div>
             </div>
           </div>
@@ -408,7 +383,7 @@ export const OrderHistory = () => {
               <span className="text-gray-600">{order.customer}</span>
             </div>
             <div className="flex items-center justify-start">
-              {getOrderTypeBadge(order.type)}
+              {getOrderMetaBadges(order)}
             </div>
             <div className="flex items-center space-x-2 col-span-2">
               <Clock className="w-4 h-4 text-gray-400" />
@@ -555,7 +530,7 @@ export const OrderHistory = () => {
                       <TableHead className="font-semibold">Store</TableHead>
                       <TableHead className="font-semibold">Customer</TableHead>
                       <TableHead className="font-semibold">Type</TableHead>
-                      <TableHead className="font-semibold">Total</TableHead>
+                      <TableHead className="font-semibold text-right">Total</TableHead>
                       <TableHead className="font-semibold">Date</TableHead>
                       <TableHead className="font-semibold">Actions</TableHead>
                     </TableRow>
@@ -592,15 +567,9 @@ export const OrderHistory = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center space-x-3 mb-2">
-                              {getOrderTypeBadge(order.type)}
-                              {getStatusBadge(order.status)}
-                            </div>
-                            <div>
-                              {getRefundBadge(order)}
-                            </div>
+                            {getOrderMetaBadges(order)}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="text-right">
                             <span className="font-bold text-lg text-gray-900">{order.total}</span>
                           </TableCell>
                           <TableCell>

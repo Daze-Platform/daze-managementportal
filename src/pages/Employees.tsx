@@ -29,7 +29,7 @@ export const Employees = () => {
 
   // Helper functions
   const getStatusBadge = (status: string) => {
-    const variant = status === 'Active' ? 'default' : status === 'Pending' ? 'secondary' : 'destructive';
+    const variant = status === 'Active' ? 'success' : status === 'Pending' ? 'secondary' : 'destructive';
     return <Badge variant={variant}>{status}</Badge>;
   };
 
