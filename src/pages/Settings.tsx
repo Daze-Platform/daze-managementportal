@@ -134,28 +134,48 @@ export const Settings = () => {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              <TabsList className="inline-flex w-full sm:grid sm:grid-cols-5 gap-1 bg-muted/50">
-                <TabsTrigger value="profile" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
+              <TabsList variant="underlined" className="inline-flex w-full sm:grid sm:grid-cols-5 bg-transparent border-b border-gray-200 p-0">
+                <TabsTrigger 
+                  value="profile" 
+                  variant="underlined" 
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary"
+                >
                   <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Profile</span>
                   <span className="sm:hidden">Prof</span>
                 </TabsTrigger>
-                <TabsTrigger value="destinations" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
+                <TabsTrigger 
+                  value="destinations" 
+                  variant="underlined" 
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary"
+                >
                   <Building2 className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Destinations</span>
                   <span className="sm:hidden">Dest</span>
                 </TabsTrigger>
-                <TabsTrigger value="notifications" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
+                <TabsTrigger 
+                  value="notifications" 
+                  variant="underlined" 
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary"
+                >
                   <Bell className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Notifications</span>
                   <span className="sm:hidden">Not</span>
                 </TabsTrigger>
-                <TabsTrigger value="security" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
+                <TabsTrigger 
+                  value="security" 
+                  variant="underlined" 
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary"
+                >
                   <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Security</span>
                   <span className="sm:hidden">Sec</span>
                 </TabsTrigger>
-                <TabsTrigger value="billing" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm whitespace-nowrap px-3 py-2">
+                <TabsTrigger 
+                  value="billing" 
+                  variant="underlined" 
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary"
+                >
                   <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Billing</span>
                   <span className="sm:hidden">Bill</span>

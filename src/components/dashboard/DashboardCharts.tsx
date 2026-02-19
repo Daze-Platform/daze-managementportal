@@ -65,6 +65,10 @@ const itemVariants = {
 };
 
 export const DashboardCharts = ({ storeName, revenueData, orderData, topItems }: DashboardChartsProps) => {
+  const isLoading = revenueData.length === 0 || orderData.length === 0;
+  const hasRevenueData = revenueData.some((point) => typeof point.value === 'number');
+  const hasOrderData = orderData.some((point) => typeof point.orders === 'number');
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
       {/* Revenue Chart */}
@@ -83,55 +87,61 @@ export const DashboardCharts = ({ storeName, revenueData, orderData, topItems }:
             </div>
           </CardHeader>
           <CardContent className="pb-4">
-            <div className="h-52 lg:h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={revenueData}
-                  margin={{
-                    top: 5,
-                    right: 5,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10 }}
-                  />
-                  <YAxis 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10 }}
-                    tickFormatter={(value) => `$${value}`}
-                  />
-                  <Tooltip 
-                    formatter={(value) => [`$${value}`, 'Revenue']}
-                    labelStyle={{ color: '#374151' }}
-                    contentStyle={{ 
-                      borderRadius: '8px', 
-                      border: 'none',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                      fontSize: '12px'
+            {isLoading ? (
+              <ChartSkeleton />
+            ) : !hasRevenueData ? (
+              <EmptyChartState message="No data available" />
+            ) : (
+              <div className="h-52 lg:h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={revenueData}
+                    margin={{
+                      top: 5,
+                      right: 5,
+                      left: 0,
+                      bottom: 0,
                     }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#3B82F6" 
-                    strokeWidth={2}
-                    dot={{ fill: '#3B82F6', strokeWidth: 2, r: 3 }}
-                    activeDot={{ r: 4, stroke: '#3B82F6', strokeWidth: 2 }}
-                    isAnimationActive={true}
-                    animationDuration={1500}
-                    animationEasing="ease-out"
-                    animationBegin={200}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis 
+                      dataKey="name" 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10 }}
+                    />
+                    <YAxis 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10 }}
+                      tickFormatter={(value) => `$${value}`}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [`$${value}`, 'Revenue']}
+                      labelStyle={{ color: '#374151' }}
+                      contentStyle={{ 
+                        borderRadius: '8px', 
+                        border: 'none',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        fontSize: '12px'
+                      }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#3B82F6" 
+                      strokeWidth={2}
+                      dot={{ fill: '#3B82F6', strokeWidth: 2, r: 3 }}
+                      activeDot={{ r: 4, stroke: '#3B82F6', strokeWidth: 2 }}
+                      isAnimationActive={true}
+                      animationDuration={1500}
+                      animationEasing="ease-out"
+                      animationBegin={200}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>
@@ -216,51 +226,57 @@ export const DashboardCharts = ({ storeName, revenueData, orderData, topItems }:
             </div>
           </CardHeader>
           <CardContent className="pb-4">
-            <div className="h-52 lg:h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={orderData}
-                  margin={{
-                    top: 5,
-                    right: 5,
-                    left: 0,
-                    bottom: 0,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10 }}
-                  />
-                  <YAxis 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10 }}
-                  />
-                  <Tooltip 
-                    formatter={(value) => [`${value}`, 'Orders']}
-                    labelStyle={{ color: '#374151' }}
-                    contentStyle={{ 
-                      borderRadius: '8px', 
-                      border: 'none',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                      fontSize: '12px'
+            {isLoading ? (
+              <ChartSkeleton />
+            ) : !hasOrderData ? (
+              <EmptyChartState message="No data available" />
+            ) : (
+              <div className="h-52 lg:h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={orderData}
+                    margin={{
+                      top: 5,
+                      right: 5,
+                      left: 0,
+                      bottom: 0,
                     }}
-                  />
-                  <Bar 
-                    dataKey="orders" 
-                    fill="#10B981" 
-                    radius={[2, 2, 0, 0]}
-                    isAnimationActive={true}
-                    animationDuration={1200}
-                    animationEasing="ease-out"
-                    animationBegin={400}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis 
+                      dataKey="name" 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10 }}
+                    />
+                    <YAxis 
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10 }}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [`${value}`, 'Orders']}
+                      labelStyle={{ color: '#374151' }}
+                      contentStyle={{ 
+                        borderRadius: '8px', 
+                        border: 'none',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        fontSize: '12px'
+                      }}
+                    />
+                    <Bar 
+                      dataKey="orders" 
+                      fill="#10B981" 
+                      radius={[2, 2, 0, 0]}
+                      isAnimationActive={true}
+                      animationDuration={1200}
+                      animationEasing="ease-out"
+                      animationBegin={400}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>

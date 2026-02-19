@@ -378,6 +378,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
   };
 
   const handleViewAllNotifications = () => {
+    setNotificationPopoverOpen(false); // Close the popover
     navigate('/notifications');
   };
 
