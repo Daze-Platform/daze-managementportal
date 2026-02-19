@@ -98,7 +98,7 @@ export const DashboardHeader = ({
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-0.5">Welcome back! Here's what's happening with your stores.</p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 text-xs text-gray-600">
           <Clock className="w-3 h-3" />
           Last updated: 2 min ago
         </div>

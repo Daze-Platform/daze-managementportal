@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -55,6 +56,15 @@ const plans = [
   }
 ];
 
+type ProfileData = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    timezone: string;
+    language: string;
+  };
+
 export const Settings = () => {
   const { toast } = useToast();
   const { userProfile, updateUserProfile } = useAuth();
@@ -70,37 +80,60 @@ export const Settings = () => {
   const [isAddBankDialogOpen, setIsAddBankDialogOpen] = useState(false);
   const [currentPlan, setCurrentPlan] = useState('free');
 
-  const [profileData, setProfileData] = useState({
-    firstName: userProfile?.firstName || 'Manuel',
-    lastName: userProfile?.lastName || 'Rodriguez',
-    email: userProfile?.email || 'manuel.rodriguez@restaurant.com',
-    phone: userProfile?.phone || '+1 850 555 0123',
-    timezone: userProfile?.timezone || 'America/Chicago',
-    language: userProfile?.language || 'English'
+  const initialProfileDataRef = useRef<ProfileData | null>(null);
+
+  const [profileData, setProfileData] = useState<ProfileData>(() => {
+    const defaultData: ProfileData = {
+      firstName: userProfile?.firstName || 'Manuel',
+      lastName: userProfile?.lastName || 'Rodriguez',
+      email: userProfile?.email || 'manuel.rodriguez@restaurant.com',
+      phone: userProfile?.phone || '+1 850 555 0123',
+      timezone: userProfile?.timezone || 'America/Chicago',
+      language: userProfile?.language || 'English'
+    };
+    initialProfileDataRef.current = defaultData;
+    return defaultData;
   });
 
-  // Update local state when userProfile changes
-  React.useEffect(() => {
+  // Update local state when userProfile changes, and also reset initialProfileDataRef
+  useEffect(() => {
     if (userProfile) {
-      setProfileData({
-        firstName: userProfile.firstName,
-        lastName: userProfile.lastName,
-        email: userProfile.email,
-        phone: userProfile.phone,
-        timezone: userProfile.timezone,
-        language: userProfile.language
-      });
+      const updatedData: ProfileData = {
+        firstName: userProfile.firstName || '',
+        lastName: userProfile.lastName || '',
+        email: userProfile.email || '',
+        phone: userProfile.phone || '',
+        timezone: userProfile.timezone || '',
+        language: userProfile.language || '',
+      };
+      setProfileData(updatedData);
+      initialProfileDataRef.current = updatedData; // Reset initial data when userProfile changes
     }
   }, [userProfile]);
+
+  const hasUnsavedChanges = initialProfileDataRef.current
+    ? JSON.stringify(profileData) !== JSON.stringify(initialProfileDataRef.current)
+    : false;
+
+  const handleCancelChanges = () => {
+    if (initialProfileDataRef.current) {
+      setProfileData(initialProfileDataRef.current);
+    }
+    toast({
+      title: "Changes discarded",
+      description: "Your unsaved changes have been reverted.",
+      variant: "destructive",
+    });
+  };
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Updating profile:', profileData);
     
-    // Update the user profile in AuthContext
     updateUserProfile(profileData);
     
-    // Show success toast
+    initialProfileDataRef.current = profileData;
+
     toast({
       title: "Profile updated successfully",
       description: `Changes saved for ${profileData.firstName} ${profileData.lastName}`,
@@ -190,7 +223,7 @@ export const Settings = () => {
               <CardTitle>Profile Information</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleProfileUpdate} className="space-y-4">
+              <form id="profile-form" onSubmit={handleProfileUpdate} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First name</Label>
@@ -525,6 +558,31 @@ export const Settings = () => {
       </Tabs>
       <AddBankAccountDialog isOpen={isAddBankDialogOpen} onOpenChange={setIsAddBankDialogOpen} />
       </div>
+
+      {/* Sticky Save Bar */}
+      <AnimatePresence>
+        {hasUnsavedChanges && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 p-4 shadow-lg z-50"
+          >
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
+              <p className="text-sm text-gray-700">You have unsaved changes.</p>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleCancelChanges} className="hover:bg-gray-100">
+                  Cancel
+                </Button>
+                <Button onClick={handleProfileUpdate} type="submit" form="profile-form">
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

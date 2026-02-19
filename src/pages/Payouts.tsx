@@ -108,6 +108,7 @@ export const Payouts = () => {
   const { currentResort } = useResort();
   const { toast } = useToast();
   const { selectedStore, setSelectedStore, selectedDateRange, setSelectedDateRange } = useFilters();
+  const lastUpdatedLabel = format(new Date(), 'MMM dd, yyyy');
 
   // Get all stores regardless of resort assignment and remove duplicates
   // This ensures all stores are available in dropdowns without duplicates
@@ -372,8 +373,8 @@ export const Payouts = () => {
             </div>
           </div>
 
-          <div className="text-xs sm:text-sm text-gray-500 text-center sm:text-right">
-            Last updated on Dec 28, 2021
+          <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-right">
+            Last updated {lastUpdatedLabel}
           </div>
         </div>
       </div>

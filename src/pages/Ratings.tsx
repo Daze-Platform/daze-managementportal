@@ -8,6 +8,8 @@ import { RecentReviews } from '@/components/ratings/RecentReviews';
 import { motion } from 'framer-motion';
 import { Star, Calendar } from 'lucide-react';
 
+import { format } from 'date-fns';
+
 const ratingsData = {
   overall: 4.7,
   totalReviews: 156,
@@ -80,6 +82,7 @@ const ratingsData = {
 
 export const Ratings = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const lastUpdatedLabel = format(new Date(), 'MMM dd, yyyy');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -116,9 +119,9 @@ export const Ratings = () => {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-foreground">Customer Satisfaction</h1>
-            <p className="text-muted-foreground text-sm mt-0.5 flex items-center gap-2">
+            <p className="text-gray-600 text-sm mt-0.5 flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5" />
-              Last updated on Dec 18, 2024
+              Last updated {lastUpdatedLabel}
             </p>
           </div>
         </div>
