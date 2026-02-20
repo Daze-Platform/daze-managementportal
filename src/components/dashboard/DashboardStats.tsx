@@ -1,7 +1,14 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
-import { DollarSign, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  DollarSign,
+  ShoppingCart,
+  Users,
+  TrendingUp,
+  ArrowUpRight,
+  ArrowDownRight,
+} from "lucide-react";
 
 interface StoreStats {
   revenue: number;
@@ -21,41 +28,41 @@ interface DashboardStatsProps {
 }
 
 const statCards = [
-  { 
-    key: 'revenue', 
-    label: 'Total Revenue', 
-    icon: DollarSign, 
+  {
+    key: "revenue",
+    label: "Total Revenue",
+    icon: DollarSign,
     format: (v: number) => `$${v.toLocaleString()}`,
-    gradient: 'from-emerald-500 to-teal-600',
-    bgLight: 'bg-emerald-50',
-    iconColor: 'text-emerald-600'
+    gradient: "from-emerald-500 to-teal-600",
+    bgLight: "bg-emerald-50",
+    iconColor: "text-emerald-600",
   },
-  { 
-    key: 'orders', 
-    label: 'Total Orders', 
-    icon: ShoppingCart, 
+  {
+    key: "orders",
+    label: "Total Orders",
+    icon: ShoppingCart,
     format: (v: number) => v.toLocaleString(),
-    gradient: 'from-blue-500 to-indigo-600',
-    bgLight: 'bg-blue-50',
-    iconColor: 'text-blue-600'
+    gradient: "from-blue-500 to-indigo-600",
+    bgLight: "bg-blue-50",
+    iconColor: "text-blue-600",
   },
-  { 
-    key: 'customers', 
-    label: 'Active Customers', 
-    icon: Users, 
+  {
+    key: "customers",
+    label: "Active Customers",
+    icon: Users,
     format: (v: number) => v.toLocaleString(),
-    gradient: 'from-violet-500 to-purple-600',
-    bgLight: 'bg-violet-50',
-    iconColor: 'text-violet-600'
+    gradient: "from-violet-500 to-purple-600",
+    bgLight: "bg-violet-50",
+    iconColor: "text-violet-600",
   },
-  { 
-    key: 'avgOrder', 
-    label: 'Avg. Order Value', 
-    icon: TrendingUp, 
+  {
+    key: "avgOrder",
+    label: "Avg. Order Value",
+    icon: TrendingUp,
     format: (v: number) => `$${v.toFixed(2)}`,
-    gradient: 'from-amber-500 to-orange-600',
-    bgLight: 'bg-amber-50',
-    iconColor: 'text-amber-600'
+    gradient: "from-amber-500 to-orange-600",
+    bgLight: "bg-amber-50",
+    iconColor: "text-amber-600",
   },
 ];
 
@@ -63,10 +70,10 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
   const formatTrend = (value: number) => {
     const isPositive = value >= 0;
     return {
-      value: `${isPositive ? '+' : ''}${value}%`,
-      color: isPositive ? 'text-emerald-600' : 'text-red-500',
-      bgColor: isPositive ? 'bg-emerald-50' : 'bg-red-50',
-      icon: isPositive ? ArrowUpRight : ArrowDownRight
+      value: `${isPositive ? "+" : ""}${value}%`,
+      color: isPositive ? "text-emerald-600" : "text-red-500",
+      bgColor: isPositive ? "bg-emerald-50" : "bg-red-50",
+      icon: isPositive ? ArrowUpRight : ArrowDownRight,
     };
   };
 
@@ -84,19 +91,25 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
             key={card.key}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            transition={{
+              delay: index * 0.1,
+              duration: 0.4,
+              ease: [0.4, 0, 0.2, 1],
+            }}
           >
             <Card className="group relative overflow-hidden border-border/50 bg-card hover:shadow-elevated-lg transition-all duration-300 hover:-translate-y-1">
               {/* Gradient accent line */}
-              <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient} opacity-80`} />
-              
+              <div
+                className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient} opacity-80`}
+              />
+
               <CardContent className="p-4 lg:p-6">
                 <div className="flex items-start justify-between">
                   <div className="min-w-0 flex-1 space-y-3">
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    <p className="text-xs font-medium text-foreground/70 uppercase tracking-wide">
                       {card.label}
                     </p>
-                    <motion.p 
+                    <motion.p
                       className="text-2xl lg:text-3xl font-bold text-foreground"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -104,18 +117,24 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
                     >
                       {card.format(value)}
                     </motion.p>
-                    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full ${trend.bgColor}`}>
+                    <div
+                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-full ${trend.bgColor}`}
+                    >
                       <TrendIcon className={`w-3 h-3 ${trend.color}`} />
-                      <span className={`text-xs font-semibold ${trend.color}`}>{trend.value}</span>
+                      <span className={`text-xs font-semibold ${trend.color}`}>
+                        {trend.value}
+                      </span>
                     </div>
                   </div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     className={`w-12 h-12 lg:w-14 lg:h-14 ${card.bgLight} rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-md ring-1 ring-black/5`}
                     whileHover={{ rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Icon className={`w-6 h-6 lg:w-7 lg:h-7 ${card.iconColor}`} />
+                    <Icon
+                      className={`w-6 h-6 lg:w-7 lg:h-7 ${card.iconColor}`}
+                    />
                   </motion.div>
                 </div>
               </CardContent>
