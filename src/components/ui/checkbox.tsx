@@ -1,9 +1,8 @@
+import * as React from "react";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import { Check } from "lucide-react";
 
-import * as React from "react"
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { Check } from "lucide-react"
-
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -13,17 +12,19 @@ const Checkbox = React.forwardRef<
     ref={ref}
     className={cn(
       "peer h-6 w-6 min-h-[24px] min-w-[24px] max-h-[24px] max-w-[24px] shrink-0 rounded-md border border-primary ring-offset-background transition-all duration-200 ease-spring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:scale-105 hover:border-primary/70 hover:shadow-sm active:scale-95 flex-shrink-0",
-      className
+      className,
     )}
     {...props}
   >
     <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current animate-check-bounce")}
+      className={cn(
+        "flex items-center justify-center text-current animate-check-bounce",
+      )}
     >
       <Check className="h-4 w-4" strokeWidth={3} />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
-))
-Checkbox.displayName = CheckboxPrimitive.Root.displayName
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-export { Checkbox }
+export { Checkbox };

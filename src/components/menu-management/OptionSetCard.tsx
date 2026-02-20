@@ -1,21 +1,15 @@
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  Edit2, 
-  Trash2, 
-  Copy,
-  MoreHorizontal,
-  Link2
-} from 'lucide-react';
+import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Edit2, Trash2, Copy, MoreHorizontal, Link2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { motion } from 'framer-motion';
+} from "@/components/ui/dropdown-menu";
+import { motion } from "framer-motion";
 
 interface ModifierOption {
   id: string;
@@ -50,13 +44,13 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
-  onAssign
+  onAssign,
 }) => {
   const selectionText = group.multipleSelection
     ? group.minSelections && group.minSelections > 0
-      ? `${group.minSelections}–${group.maxSelections || '∞'} selections`
-      : `Up to ${group.maxSelections || '∞'} selections`
-    : 'Single choice';
+      ? `${group.minSelections}–${group.maxSelections || "∞"} selections`
+      : `Up to ${group.maxSelections || "∞"} selections`
+    : "Single choice";
 
   return (
     <motion.div
@@ -86,7 +80,7 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
           >
             <Edit2 className="w-4 h-4" />
           </Button>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -111,7 +105,7 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => onDelete(group)}
                 className="text-destructive focus:text-destructive"
               >
@@ -126,23 +120,26 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
       {/* Badges */}
       <div className="flex items-center gap-2 flex-wrap mb-4">
         {group.required && (
-          <Badge variant="secondary" className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-medium">
+          <Badge
+            variant="secondary"
+            className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-medium"
+          >
             Required
           </Badge>
         )}
-        <Badge 
-          variant="secondary" 
+        <Badge
+          variant="secondary"
           className={`text-xs font-medium ${
-            group.multipleSelection 
-              ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' 
-              : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+            group.multipleSelection
+              ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+              : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
           }`}
         >
           {selectionText}
         </Badge>
         {assignedItemsCount > 0 && (
           <Badge variant="outline" className="text-xs font-medium">
-            {assignedItemsCount} item{assignedItemsCount !== 1 ? 's' : ''}
+            {assignedItemsCount} item{assignedItemsCount !== 1 ? "s" : ""}
           </Badge>
         )}
       </div>
@@ -150,7 +147,7 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
       {/* Options Preview */}
       <div className="space-y-1.5">
         {group.options.slice(0, 4).map((option) => (
-          <div 
+          <div
             key={option.id}
             className="flex items-center justify-between px-3 py-2 bg-muted/50 rounded-lg text-sm"
           >
@@ -161,17 +158,21 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
               <span className="text-foreground truncate">{option.name}</span>
             </div>
             {option.price !== 0 && (
-              <span className={`text-xs font-medium ml-2 shrink-0 ${
-                option.price > 0 ? 'text-success' : 'text-destructive'
-              }`}>
-                {option.price > 0 ? '+' : ''}${Math.abs(option.price).toFixed(2)}
+              <span
+                className={`text-xs font-medium ml-2 shrink-0 ${
+                  option.price > 0 ? "text-success" : "text-destructive"
+                }`}
+              >
+                {option.price > 0 ? "+" : ""}$
+                {Math.abs(option.price).toFixed(2)}
               </span>
             )}
           </div>
         ))}
         {group.options.length > 4 && (
           <div className="flex items-center justify-center px-3 py-2 text-sm text-muted-foreground">
-            +{group.options.length - 4} more option{group.options.length - 4 !== 1 ? 's' : ''}
+            +{group.options.length - 4} more option
+            {group.options.length - 4 !== 1 ? "s" : ""}
           </div>
         )}
         {group.options.length === 0 && (

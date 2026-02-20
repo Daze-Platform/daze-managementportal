@@ -97,12 +97,12 @@ export const OrderHistory = () => {
     const allOrdersData = [
       {
         id: "#67899886",
-        storeId: "1", // Brother Fox ID
+        storeId: "1", // Windrose Restaurant ID
         store: {
-          name: "Brother Fox",
+          name: "Windrose Restaurant",
           logo: "🦊",
           bgColor: "bg-gradient-to-br from-amber-700 to-amber-800",
-          customLogo: "/images/stores/brother-fox-logo.jpg",
+          customLogo: "/images/stores/windrose-restaurant-logo.jpg",
         },
         customer: "Lucie Morgan",
         type: "Pickup",
@@ -124,12 +124,12 @@ export const OrderHistory = () => {
       },
       {
         id: "#67899887",
-        storeId: "2", // Sister Hen ID
+        storeId: "2", // Tiki Bar ID
         store: {
-          name: "Sister Hen",
+          name: "Tiki Bar",
           logo: "🐔",
           bgColor: "bg-gradient-to-br from-purple-800 to-purple-900",
-          customLogo: "/images/stores/sister-hen-logo.jpg",
+          customLogo: "/images/stores/tiki-bar-logo.jpg",
         },
         customer: "Adam Smith",
         type: "Delivery",
@@ -143,12 +143,12 @@ export const OrderHistory = () => {
       },
       {
         id: "#67899888",
-        storeId: "3", // Cousin Wolf ID
+        storeId: "3", // Salty Rose Beach Bar ID
         store: {
-          name: "Cousin Wolf",
+          name: "Salty Rose Beach Bar",
           logo: "🐺",
           bgColor: "bg-gradient-to-br from-emerald-700 to-emerald-800",
-          customLogo: "/images/stores/cousin-wolf-logo.webp",
+          customLogo: "/images/stores/salty-rose-beach-bar-logo.webp",
         },
         customer: "John Cordoba",
         type: "Delivery",
@@ -163,12 +163,12 @@ export const OrderHistory = () => {
       },
       {
         id: "#67899889",
-        storeId: "1", // Brother Fox ID
+        storeId: "1", // Windrose Restaurant ID
         store: {
-          name: "Brother Fox",
+          name: "Windrose Restaurant",
           logo: "🦊",
           bgColor: "bg-gradient-to-br from-amber-700 to-amber-800",
-          customLogo: "/images/stores/brother-fox-logo.jpg",
+          customLogo: "/images/stores/windrose-restaurant-logo.jpg",
         },
         customer: "John Cordoba",
         type: "Delivery",
@@ -187,12 +187,12 @@ export const OrderHistory = () => {
       },
       {
         id: "#67899890",
-        storeId: "2", // Sister Hen ID
+        storeId: "2", // Tiki Bar ID
         store: {
-          name: "Sister Hen",
+          name: "Tiki Bar",
           logo: "🐔",
           bgColor: "bg-gradient-to-br from-purple-800 to-purple-900",
-          customLogo: "/images/stores/sister-hen-logo.jpg",
+          customLogo: "/images/stores/tiki-bar-logo.jpg",
         },
         customer: "Sarah Johnson",
         type: "Pickup",
@@ -210,12 +210,12 @@ export const OrderHistory = () => {
       },
       {
         id: "#67899891",
-        storeId: "3", // Cousin Wolf ID
+        storeId: "3", // Salty Rose Beach Bar ID
         store: {
-          name: "Cousin Wolf",
+          name: "Salty Rose Beach Bar",
           logo: "🐺",
           bgColor: "bg-gradient-to-br from-emerald-700 to-emerald-800",
-          customLogo: "/images/stores/cousin-wolf-logo.webp",
+          customLogo: "/images/stores/salty-rose-beach-bar-logo.webp",
         },
         customer: "Michael Chen",
         type: "Delivery",
@@ -236,12 +236,12 @@ export const OrderHistory = () => {
       },
       {
         id: "#67899892",
-        storeId: "1", // Brother Fox ID
+        storeId: "1", // Windrose Restaurant ID
         store: {
-          name: "Brother Fox",
+          name: "Windrose Restaurant",
           logo: "🦊",
           bgColor: "bg-gradient-to-br from-amber-700 to-amber-800",
-          customLogo: "/images/stores/brother-fox-logo.jpg",
+          customLogo: "/images/stores/windrose-restaurant-logo.jpg",
         },
         customer: "Emma Rodriguez",
         type: "Pickup",

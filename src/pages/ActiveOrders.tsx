@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ActiveOrdersHeader } from '@/components/orders/ActiveOrdersHeader';
-import { PauseOrdersModal } from '@/components/orders/PauseOrdersModal';
-import { StoreClosedState } from '@/components/orders/StoreClosedState';
-import { MobileOrderDetailsView } from '@/components/orders/MobileOrderDetailsView';
-import { OrdersListLayout } from '@/components/orders/OrdersListLayout';
-import { useOrderManagement } from '@/hooks/useOrderManagement';
-import { calculateTotalRevenue } from '@/utils/orderCalculations';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useFilters } from '@/contexts/FilterContext';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ActiveOrdersHeader } from "@/components/orders/ActiveOrdersHeader";
+import { PauseOrdersModal } from "@/components/orders/PauseOrdersModal";
+import { StoreClosedState } from "@/components/orders/StoreClosedState";
+import { MobileOrderDetailsView } from "@/components/orders/MobileOrderDetailsView";
+import { OrdersListLayout } from "@/components/orders/OrdersListLayout";
+import { useOrderManagement } from "@/hooks/useOrderManagement";
+import { calculateTotalRevenue } from "@/utils/orderCalculations";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useFilters } from "@/contexts/FilterContext";
 
 export const ActiveOrders = () => {
   const [showPauseModal, setShowPauseModal] = useState(false);
-  const [viewingOrderDetails, setViewingOrderDetails] = useState<string | null>(null);
+  const [viewingOrderDetails, setViewingOrderDetails] = useState<string | null>(
+    null,
+  );
   const isMobile = useIsMobile();
 
   const { selectedDateRange, setSelectedDateRange } = useFilters();
@@ -37,57 +39,74 @@ export const ActiveOrders = () => {
     handleOrderSelect,
     handleOrderUpdate,
     getFilteredOrders,
-    getOrderTypeCount
+    getOrderTypeCount,
   } = useOrderManagement();
 
   const stores = [
-    { id: 'all', name: 'All Venues' },
-    { id: '1', name: 'Brother Fox' },
-    { id: '2', name: 'Sister Hen' },
-    { id: '3', name: 'Cousin Wolf' },
+    { id: "all", name: "All Venues" },
+    { id: "1", name: "Windrose Restaurant" },
+    { id: "2", name: "Tiki Bar" },
+    { id: "3", name: "Salty Rose Beach Bar" },
   ];
 
   const filteredOrders = getFilteredOrders();
 
   const tabs = [
-    { id: 'new', label: 'New Orders', count: getOrderTypeCount('new') || 0 },
-    { id: 'progress', label: 'In Progress', count: getOrderTypeCount('progress') || 0 },
-    { id: 'ready', label: 'Ready', count: getOrderTypeCount('ready') || 0 },
-    { id: 'fulfillment', label: 'Out for Delivery', count: getOrderTypeCount('fulfillment') || 0 },
-    { id: 'fulfilled', label: 'Completed', count: getOrderTypeCount('fulfilled') || 0 },
-    { id: 'scheduled', label: 'Scheduled', count: getOrderTypeCount('scheduled') || 0 }
+    { id: "new", label: "New Orders", count: getOrderTypeCount("new") || 0 },
+    {
+      id: "progress",
+      label: "In Progress",
+      count: getOrderTypeCount("progress") || 0,
+    },
+    { id: "ready", label: "Ready", count: getOrderTypeCount("ready") || 0 },
+    {
+      id: "fulfillment",
+      label: "Out for Delivery",
+      count: getOrderTypeCount("fulfillment") || 0,
+    },
+    {
+      id: "fulfilled",
+      label: "Completed",
+      count: getOrderTypeCount("fulfilled") || 0,
+    },
+    {
+      id: "scheduled",
+      label: "Scheduled",
+      count: getOrderTypeCount("scheduled") || 0,
+    },
   ];
 
   const toggleStoreOrOrderStatus = () => {
-    if (storeStatus === 'closed') {
-      setStoreStatus('open');
-      setOrderStatus('active');
-    } else if (orderStatus === 'active') {
+    if (storeStatus === "closed") {
+      setStoreStatus("open");
+      setOrderStatus("active");
+    } else if (orderStatus === "active") {
       setShowPauseModal(true);
     } else {
-      setOrderStatus('active');
+      setOrderStatus("active");
     }
   };
 
   const handleConfirmPause = () => {
-    setOrderStatus('paused');
+    setOrderStatus("paused");
     setShowPauseModal(false);
   };
 
   const handleOpenStore = () => {
-    setStoreStatus('open');
-    setOrderStatus('active');
+    setStoreStatus("open");
+    setOrderStatus("active");
   };
-  
+
   const handleResumeOrders = () => {
-    setOrderStatus('active');
+    setOrderStatus("active");
   };
 
   const handleStoreChange = (storeId: string) => {
     setSelectedStore(storeId);
   };
 
-  const selectedStoreName = stores.find(store => store.id === selectedStore)?.name || 'All Venues';
+  const selectedStoreName =
+    stores.find((store) => store.id === selectedStore)?.name || "All Venues";
   const totalRevenue = calculateTotalRevenue(filteredOrders);
 
   const handleMobileOrderSelect = (orderId: string) => {
@@ -110,7 +129,10 @@ export const ActiveOrders = () => {
   };
 
   // Mobile order details view
-  if ((showOrderDetails && selectedOrder && isMobile) || (viewingOrderDetails && isMobile)) {
+  if (
+    (showOrderDetails && selectedOrder && isMobile) ||
+    (viewingOrderDetails && isMobile)
+  ) {
     const orderIdToShow = viewingOrderDetails || selectedOrder;
     return (
       <MobileOrderDetailsView
@@ -122,14 +144,15 @@ export const ActiveOrders = () => {
     );
   }
 
-  const shouldShowClosedState = storeStatus === 'closed' || 
-    (orderStatus === 'paused' && filteredOrders.length === 0);
+  const shouldShowClosedState =
+    storeStatus === "closed" ||
+    (orderStatus === "paused" && filteredOrders.length === 0);
 
   return (
     <div className="min-h-screen w-full bg-background">
       <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="flex-shrink-0 bg-card border-b border-border z-10"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -159,7 +182,7 @@ export const ActiveOrders = () => {
                 exit={{ opacity: 0 }}
                 className="min-h-screen"
               >
-                <StoreClosedState 
+                <StoreClosedState
                   storeName={selectedStoreName}
                   storeStatus={storeStatus}
                   orderStatus={orderStatus}
@@ -180,8 +203,8 @@ export const ActiveOrders = () => {
                   onTabChange={setActiveTab}
                   orderType={orderType}
                   onOrderTypeChange={setOrderType}
-                  pickupCount={getOrderTypeCount('pickup')}
-                  deliveryCount={getOrderTypeCount('delivery')}
+                  pickupCount={getOrderTypeCount("pickup")}
+                  deliveryCount={getOrderTypeCount("delivery")}
                   totalCount={filteredOrders.length}
                   advancedFilters={advancedFilters}
                   onAdvancedFiltersChange={setAdvancedFilters}

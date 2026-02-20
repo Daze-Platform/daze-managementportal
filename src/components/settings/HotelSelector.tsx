@@ -1,9 +1,14 @@
-
-import React, { useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2 } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building2 } from "lucide-react";
 
 interface Hotel {
   id: string;
@@ -13,47 +18,47 @@ interface Hotel {
 
 const hotels: Hotel[] = [
   {
-    id: 'oceanview-grand',
-    name: 'Oceanview Grand Resort',
-    location: 'Pensacola Beach, Florida'
+    id: "oceanview-grand",
+    name: "Oceanview Grand Resort",
+    location: "Pensacola Beach, Florida",
   },
   {
-    id: 'emerald-coast-inn',
-    name: 'Emerald Coast Inn & Suites',
-    location: 'Destin, Florida'
+    id: "emerald-coast-inn",
+    name: "Emerald Coast Inn & Suites",
+    location: "Destin, Florida",
   },
   {
-    id: 'gulf-shores-resort',
-    name: 'Gulf Shores Beach Resort',
-    location: 'Gulf Shores, Alabama'
+    id: "gulf-shores-resort",
+    name: "Gulf Shores Beach Resort",
+    location: "Gulf Shores, Alabama",
   },
   {
-    id: 'panama-city-plaza',
-    name: 'Panama City Beach Plaza',
-    location: 'Panama City Beach, Florida'
+    id: "panama-city-plaza",
+    name: "Panama City Beach Plaza",
+    location: "Panama City Beach, Florida",
   },
   {
-    id: 'mobile-bay-hotel',
-    name: 'Mobile Bay Waterfront Hotel',
-    location: 'Mobile, Alabama'
+    id: "mobile-bay-hotel",
+    name: "Mobile Bay Waterfront Hotel",
+    location: "Mobile, Alabama",
   },
   {
-    id: 'fort-walton-beach',
-    name: 'Fort Walton Beach Resort',
-    location: 'Fort Walton Beach, Florida'
-  }
+    id: "fort-walton-beach",
+    name: "Fort Walton Beach Resort",
+    location: "Fort Walton Beach, Florida",
+  },
 ];
 
 export const HotelSelector = () => {
-  const [selectedHotel, setSelectedHotel] = useState('oceanview-grand');
+  const [selectedHotel, setSelectedHotel] = useState("oceanview-grand");
 
   const handleHotelChange = (hotelId: string) => {
     setSelectedHotel(hotelId);
-    console.log('Hotel changed to:', hotelId);
+    console.log("Hotel changed to:", hotelId);
     // Here you would typically update the global state or make an API call
   };
 
-  const currentHotel = hotels.find(hotel => hotel.id === selectedHotel);
+  const currentHotel = hotels.find((hotel) => hotel.id === selectedHotel);
 
   return (
     <Card>
@@ -75,14 +80,16 @@ export const HotelSelector = () => {
                 <SelectItem key={hotel.id} value={hotel.id}>
                   <div className="flex flex-col">
                     <span className="font-medium">{hotel.name}</span>
-                    <span className="text-sm text-gray-500">{hotel.location}</span>
+                    <span className="text-sm text-gray-500">
+                      {hotel.location}
+                    </span>
                   </div>
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        
+
         {currentHotel && (
           <div className="bg-blue-50 p-4 rounded-lg">
             <h4 className="font-medium text-blue-900">{currentHotel.name}</h4>

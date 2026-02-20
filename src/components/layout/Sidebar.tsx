@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SidebarHeader } from './SidebarHeader';
-import { SidebarNavigation } from './SidebarNavigation';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { SidebarHeader } from "./SidebarHeader";
+import { SidebarNavigation } from "./SidebarNavigation";
 
-export const Sidebar = ({ 
-  isOpen = true, 
-  isCollapsed = false, 
-  onClose, 
-  onToggleCollapse 
-}: { 
-  isOpen?: boolean; 
-  isCollapsed?: boolean; 
-  onClose?: () => void; 
-  onToggleCollapse?: () => void; 
+export const Sidebar = ({
+  isOpen = true,
+  isCollapsed = false,
+  onClose,
+  onToggleCollapse,
+}: {
+  isOpen?: boolean;
+  isCollapsed?: boolean;
+  onClose?: () => void;
+  onToggleCollapse?: () => void;
 }) => {
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -20,15 +20,15 @@ export const Sidebar = ({
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
     checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-    return () => window.removeEventListener('resize', checkDesktop);
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
   const toggleSubmenu = (itemName: string) => {
-    setExpandedItems(prev => 
-      prev.includes(itemName) 
-        ? prev.filter(item => item !== itemName)
-        : [...prev, itemName]
+    setExpandedItems((prev) =>
+      prev.includes(itemName)
+        ? prev.filter((item) => item !== itemName)
+        : [...prev, itemName],
     );
   };
 
@@ -40,45 +40,45 @@ export const Sidebar = ({
       {/* Mobile/Tablet Overlay */}
       <AnimatePresence>
         {isOpen && !isDesktop && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="lg:hidden fixed inset-0 bg-foreground/30 backdrop-blur-sm z-40" 
-            onClick={onClose} 
+            className="lg:hidden fixed inset-0 bg-foreground/30 backdrop-blur-sm z-40"
+            onClick={onClose}
           />
         )}
       </AnimatePresence>
-      
+
       {/* Sidebar */}
-      <motion.div 
+      <motion.div
         className={`
           fixed lg:static top-0 left-0 z-50 lg:z-auto
           text-sidebar-foreground h-screen flex flex-col
           border-r border-sidebar-border/30 shadow-xl lg:shadow-none
         `}
         initial={false}
-        animate={{ 
-          x: shouldShow ? 0 : '-100%',
-          width: isCollapsed ? 64 : 256
+        animate={{
+          x: shouldShow ? 0 : "-100%",
+          width: isCollapsed ? 64 : 256,
         }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 400, 
+        transition={{
+          type: "spring",
+          stiffness: 400,
           damping: 35,
-          mass: 0.8
+          mass: 0.8,
         }}
-        style={{ backgroundColor: 'hsl(222, 47%, 11%)' }}
+        style={{ backgroundColor: "hsl(222, 47%, 11%)" }}
       >
         {/* Gradient overlay for depth */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
-        
-        <SidebarHeader 
-          isOpen={isOpen} 
-          isCollapsed={isCollapsed} 
-          onClose={onClose} 
-          onToggleCollapse={onToggleCollapse} 
+
+        <SidebarHeader
+          isOpen={isOpen}
+          isCollapsed={isCollapsed}
+          onClose={onClose}
+          onToggleCollapse={onToggleCollapse}
         />
 
         <SidebarNavigation
@@ -88,7 +88,7 @@ export const Sidebar = ({
           isCollapsed={isCollapsed}
           onToggleCollapse={onToggleCollapse}
         />
-        
+
         {/* Footer spacer */}
         <div className="flex-shrink-0 h-4 sm:h-6" />
       </motion.div>

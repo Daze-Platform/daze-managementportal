@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface Employee {
   id: string;
@@ -20,15 +20,21 @@ export interface Employee {
 interface EmployeesContextType {
   employees: Employee[];
   loading: boolean;
-  addEmployee: (employee: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => Promise<void>;
+  addEmployee: (
+    employee: Omit<Employee, "id" | "created_at" | "updated_at">,
+  ) => Promise<void>;
   updateEmployee: (employee: Employee) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
   refreshEmployees: () => Promise<void>;
 }
 
-const EmployeesContext = createContext<EmployeesContextType | undefined>(undefined);
+const EmployeesContext = createContext<EmployeesContextType | undefined>(
+  undefined,
+);
 
-export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,23 +42,23 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('employees')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .from("employees")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.warn('Could not load employees:', error.message);
+        console.warn("Could not load employees:", error.message);
         if (showErrors) {
-          toast.error('Failed to load employees');
+          toast.error("Failed to load employees");
         }
         return;
       }
 
       setEmployees(data || []);
     } catch (error) {
-      console.warn('Network error loading employees:', error);
+      console.warn("Network error loading employees:", error);
       if (showErrors) {
-        toast.error('Failed to load employees');
+        toast.error("Failed to load employees");
       }
     } finally {
       setLoading(false);
@@ -63,7 +69,9 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     await loadEmployees(true);
   };
 
-  const addEmployee = async (employeeData: Omit<Employee, 'id' | 'created_at' | 'updated_at'>) => {
+  const addEmployee = async (
+    employeeData: Omit<Employee, "id" | "created_at" | "updated_at">,
+  ) => {
     // Create optimistic employee with temporary ID
     const tempId = `temp-${Date.now()}`;
     const optimisticEmployee: Employee = {
@@ -74,42 +82,44 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
 
     // Add to local state immediately (optimistic update)
-    setEmployees(prev => [optimisticEmployee, ...prev]);
-    toast.success('Employee added successfully');
+    setEmployees((prev) => [optimisticEmployee, ...prev]);
+    toast.success("Employee added successfully");
 
     try {
       const { data, error } = await supabase
-        .from('employees')
+        .from("employees")
         .insert([employeeData])
         .select()
         .single();
 
       if (error) {
-        console.warn('Could not sync employee to database:', error.message);
+        console.warn("Could not sync employee to database:", error.message);
         // Keep the local version - it's still usable
         return;
       }
 
       // Replace temp ID with real ID from database
-      setEmployees(prev =>
-        prev.map(emp => emp.id === tempId ? data : emp)
+      setEmployees((prev) =>
+        prev.map((emp) => (emp.id === tempId ? data : emp)),
       );
     } catch (error) {
-      console.warn('Network error syncing employee:', error);
+      console.warn("Network error syncing employee:", error);
       // Keep the local version
     }
   };
 
   const updateEmployee = async (updatedEmployee: Employee) => {
     // Optimistic update
-    setEmployees(prev =>
-      prev.map(emp => emp.id === updatedEmployee.id ? updatedEmployee : emp)
+    setEmployees((prev) =>
+      prev.map((emp) =>
+        emp.id === updatedEmployee.id ? updatedEmployee : emp,
+      ),
     );
-    toast.success('Employee updated successfully');
+    toast.success("Employee updated successfully");
 
     try {
       const { error } = await supabase
-        .from('employees')
+        .from("employees")
         .update({
           name: updatedEmployee.name,
           email: updatedEmployee.email,
@@ -121,32 +131,32 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           avatar: updatedEmployee.avatar,
           resort_id: updatedEmployee.resort_id,
         })
-        .eq('id', updatedEmployee.id);
+        .eq("id", updatedEmployee.id);
 
       if (error) {
-        console.warn('Could not sync employee update:', error.message);
+        console.warn("Could not sync employee update:", error.message);
       }
     } catch (error) {
-      console.warn('Network error syncing employee update:', error);
+      console.warn("Network error syncing employee update:", error);
     }
   };
 
   const deleteEmployee = async (employeeId: string) => {
     // Optimistic delete
-    setEmployees(prev => prev.filter(emp => emp.id !== employeeId));
-    toast.success('Employee deleted successfully');
+    setEmployees((prev) => prev.filter((emp) => emp.id !== employeeId));
+    toast.success("Employee deleted successfully");
 
     try {
       const { error } = await supabase
-        .from('employees')
+        .from("employees")
         .delete()
-        .eq('id', employeeId);
+        .eq("id", employeeId);
 
       if (error) {
-        console.warn('Could not sync employee deletion:', error.message);
+        console.warn("Could not sync employee deletion:", error.message);
       }
     } catch (error) {
-      console.warn('Network error syncing employee deletion:', error);
+      console.warn("Network error syncing employee deletion:", error);
     }
   };
 
@@ -173,7 +183,7 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 export const useEmployees = (): EmployeesContextType => {
   const context = useContext(EmployeesContext);
   if (!context) {
-    throw new Error('useEmployees must be used within an EmployeesProvider');
+    throw new Error("useEmployees must be used within an EmployeesProvider");
   }
   return context;
 };

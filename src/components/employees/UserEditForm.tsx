@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/DestinationContext';
-import { Employee } from '@/contexts/EmployeesContext';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useStores } from "@/contexts/StoresContext";
+import { useResort } from "@/contexts/DestinationContext";
+import { Employee } from "@/contexts/EmployeesContext";
 
 interface UserEditFormProps {
   employee: Employee;
@@ -16,43 +27,48 @@ interface UserEditFormProps {
   onSave: (employee: Employee) => Promise<void>;
 }
 
-export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditFormProps) => {
+export const UserEditForm = ({
+  employee,
+  isOpen,
+  onClose,
+  onSave,
+}: UserEditFormProps) => {
   const { stores } = useStores();
   const { resorts } = useResort();
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    role: 'Director',
-    store: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "Director",
+    store: "",
     assignedStores: [] as string[],
     assignedResorts: [] as string[],
-    status: 'Active',
-    avatar: '/placeholder.svg'
+    status: "Active",
+    avatar: "/placeholder.svg",
   });
 
   // Load employee data when employee prop changes
   useEffect(() => {
     if (employee) {
-      const nameParts = employee.name.split(' ');
+      const nameParts = employee.name.split(" ");
       setFormData({
-        firstName: nameParts[0] || '',
-        lastName: nameParts.slice(1).join(' ') || '',
+        firstName: nameParts[0] || "",
+        lastName: nameParts.slice(1).join(" ") || "",
         email: employee.email,
         role: employee.role,
-        store: employee.store || '',
+        store: employee.store || "",
         assignedStores: employee.assigned_stores || [],
         assignedResorts: employee.assigned_resorts || [],
         status: employee.status,
-        avatar: employee.avatar || '/placeholder.svg'
+        avatar: employee.avatar || "/placeholder.svg",
       });
     }
   }, [employee]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const updatedEmployee: Employee = {
       ...employee,
       name: `${formData.firstName} ${formData.lastName}`,
@@ -62,7 +78,7 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
       assigned_stores: formData.assignedStores,
       assigned_resorts: formData.assignedResorts,
       status: formData.status,
-      avatar: formData.avatar
+      avatar: formData.avatar,
     };
 
     await onSave(updatedEmployee);
@@ -79,7 +95,7 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
         <DialogHeader>
           <DialogTitle>Edit Employee</DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -87,7 +103,9 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 required
               />
             </div>
@@ -96,7 +114,9 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
                 required
               />
             </div>
@@ -108,14 +128,21 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
 
           <div>
             <Label htmlFor="role">Role</Label>
-            <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
+            <Select
+              value={formData.role}
+              onValueChange={(value) =>
+                setFormData({ ...formData, role: value })
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -143,19 +170,29 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
                     checked={formData.assignedStores.includes(store.name)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setFormData({ 
-                          ...formData, 
-                          assignedStores: [...formData.assignedStores, store.name] 
+                        setFormData({
+                          ...formData,
+                          assignedStores: [
+                            ...formData.assignedStores,
+                            store.name,
+                          ],
                         });
                       } else {
-                        setFormData({ 
-                          ...formData, 
-                          assignedStores: formData.assignedStores.filter(s => s !== store.name) 
+                        setFormData({
+                          ...formData,
+                          assignedStores: formData.assignedStores.filter(
+                            (s) => s !== store.name,
+                          ),
                         });
                       }
                     }}
                   />
-                  <Label htmlFor={`edit-store-${store.id}`} className="text-sm font-normal">{store.name}</Label>
+                  <Label
+                    htmlFor={`edit-store-${store.id}`}
+                    className="text-sm font-normal"
+                  >
+                    {store.name}
+                  </Label>
                 </div>
               ))}
             </div>
@@ -171,19 +208,29 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
                     checked={formData.assignedResorts.includes(resort.id)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setFormData({ 
-                          ...formData, 
-                          assignedResorts: [...formData.assignedResorts, resort.id] 
+                        setFormData({
+                          ...formData,
+                          assignedResorts: [
+                            ...formData.assignedResorts,
+                            resort.id,
+                          ],
                         });
                       } else {
-                        setFormData({ 
-                          ...formData, 
-                          assignedResorts: formData.assignedResorts.filter(r => r !== resort.id) 
+                        setFormData({
+                          ...formData,
+                          assignedResorts: formData.assignedResorts.filter(
+                            (r) => r !== resort.id,
+                          ),
                         });
                       }
                     }}
                   />
-                  <Label htmlFor={`edit-resort-${resort.id}`} className="text-sm font-normal">{resort.name}</Label>
+                  <Label
+                    htmlFor={`edit-resort-${resort.id}`}
+                    className="text-sm font-normal"
+                  >
+                    {resort.name}
+                  </Label>
                 </div>
               ))}
             </div>
@@ -191,7 +238,12 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
 
           <div>
             <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+            <Select
+              value={formData.status}
+              onValueChange={(value) =>
+                setFormData({ ...formData, status: value })
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -207,9 +259,7 @@ export const UserEditForm = ({ employee, isOpen, onClose, onSave }: UserEditForm
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button type="submit">
-              Save Changes
-            </Button>
+            <Button type="submit">Save Changes</Button>
           </div>
         </form>
       </DialogContent>

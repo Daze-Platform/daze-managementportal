@@ -1,17 +1,43 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Plus, Building2, MapPin, Edit2, Trash2, Upload, X, Store as StoreIcon, Edit, Phone, Mail, User, Calendar, Loader2, ChevronDown } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useDestination } from '@/contexts/DestinationContext';
-import { useStores } from '@/contexts/StoresContext';
-import { StoreAssignmentDialog } from './StoreAssignmentDialog';
-import { StoreLogo } from '@/components/stores/StoreLogo';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Plus,
+  Building2,
+  MapPin,
+  Edit2,
+  Trash2,
+  Upload,
+  X,
+  Store as StoreIcon,
+  Edit,
+  Phone,
+  Mail,
+  User,
+  Calendar,
+  Loader2,
+  ChevronDown,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useDestination } from "@/contexts/DestinationContext";
+import { useStores } from "@/contexts/StoresContext";
+import { StoreAssignmentDialog } from "./StoreAssignmentDialog";
+import { StoreLogo } from "@/components/stores/StoreLogo";
 
 export interface Destination {
   id: string;
@@ -21,7 +47,7 @@ export interface Destination {
   phone?: string;
   email?: string;
   manager: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
   storeCount: number;
   createdAt: string;
   logo?: string;
@@ -31,40 +57,44 @@ export interface Destination {
 export type Resort = Destination;
 
 export const DestinationManagement = () => {
-  const { destinations, addDestination, updateDestination, deleteDestination } = useDestination();
-  const { getStoresByDestination, addStore, updateStore, deleteStore } = useStores();
+  const { destinations, addDestination, updateDestination, deleteDestination } =
+    useDestination();
+  const { getStoresByDestination, addStore, updateStore, deleteStore } =
+    useStores();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [editingDestination, setEditingDestination] = useState<Destination | null>(null);
+  const [editingDestination, setEditingDestination] =
+    useState<Destination | null>(null);
   const [isStoreDialogOpen, setIsStoreDialogOpen] = useState(false);
-  const [selectedDestinationId, setSelectedDestinationId] = useState<string>('');
+  const [selectedDestinationId, setSelectedDestinationId] =
+    useState<string>("");
   const [editingStore, setEditingStore] = useState<any>(null);
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
-    address: '',
-    phone: '',
-    email: '',
-    manager: '',
-    logo: ''
+    name: "",
+    location: "",
+    address: "",
+    phone: "",
+    email: "",
+    manager: "",
+    logo: "",
   });
 
-  const [logoPreview, setLogoPreview] = useState<string>('');
+  const [logoPreview, setLogoPreview] = useState<string>("");
 
   const handleCreateDestination = () => {
     setEditingDestination(null);
     setFormData({
-      name: '',
-      location: '',
-      address: '',
-      phone: '',
-      email: '',
-      manager: '',
-      logo: ''
+      name: "",
+      location: "",
+      address: "",
+      phone: "",
+      email: "",
+      manager: "",
+      logo: "",
     });
-    setLogoPreview('');
+    setLogoPreview("");
     setIsCreateDialogOpen(true);
   };
 
@@ -74,12 +104,12 @@ export const DestinationManagement = () => {
       name: destination.name,
       location: destination.location,
       address: destination.address,
-      phone: destination.phone || '',
-      email: destination.email || '',
+      phone: destination.phone || "",
+      email: destination.email || "",
       manager: destination.manager,
-      logo: destination.logo || ''
+      logo: destination.logo || "",
     });
-    setLogoPreview(destination.logo || '');
+    setLogoPreview(destination.logo || "");
     setIsCreateDialogOpen(true);
   };
 
@@ -91,16 +121,16 @@ export const DestinationManagement = () => {
       toast({
         title: "File too large",
         description: "Please select an image smaller than 5MB.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       toast({
         title: "Invalid file type",
         description: "Please select an image file.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -124,20 +154,20 @@ export const DestinationManagement = () => {
       toast({
         title: "Upload failed",
         description: "Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     };
     reader.readAsDataURL(file);
   };
 
   const handleRemoveLogo = () => {
-    setFormData({ ...formData, logo: '' });
-    setLogoPreview('');
+    setFormData({ ...formData, logo: "" });
+    setLogoPreview("");
   };
 
   const handleSubmitDestination = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (editingDestination) {
       const updatedDestination = { ...editingDestination, ...formData };
       updateDestination(updatedDestination);
@@ -147,11 +177,11 @@ export const DestinationManagement = () => {
       });
     } else {
       const newDestination: Destination = {
-        id: formData.name.toLowerCase().replace(/\s+/g, '-'),
+        id: formData.name.toLowerCase().replace(/\s+/g, "-"),
         ...formData,
-        status: 'active',
+        status: "active",
         storeCount: 0,
-        createdAt: new Date().toISOString().split('T')[0]
+        createdAt: new Date().toISOString().split("T")[0],
       };
       addDestination(newDestination);
       toast({
@@ -160,14 +190,21 @@ export const DestinationManagement = () => {
         className: "bg-green-50 border-green-200 text-green-800",
       });
     }
-    
+
     setIsCreateDialogOpen(false);
     setEditingDestination(null);
-    setLogoPreview('');
+    setLogoPreview("");
   };
 
-  const handleDeleteDestination = (destinationId: string, destinationName: string) => {
-    if (window.confirm(`Are you sure you want to delete "${destinationName}"? This action cannot be undone.`)) {
+  const handleDeleteDestination = (
+    destinationId: string,
+    destinationName: string,
+  ) => {
+    if (
+      window.confirm(
+        `Are you sure you want to delete "${destinationName}"? This action cannot be undone.`,
+      )
+    ) {
       deleteDestination(destinationId);
       toast({
         title: "Destination deleted",
@@ -189,7 +226,11 @@ export const DestinationManagement = () => {
   };
 
   const handleStoreDelete = (storeId: number, storeName: string) => {
-    if (window.confirm(`Are you sure you want to delete "${storeName}"? This action cannot be undone.`)) {
+    if (
+      window.confirm(
+        `Are you sure you want to delete "${storeName}"? This action cannot be undone.`,
+      )
+    ) {
       deleteStore(storeId);
       toast({
         title: "Venue Deleted",
@@ -206,7 +247,9 @@ export const DestinationManagement = () => {
         description: `${store.name} has been successfully updated.`,
       });
     } else {
-      const existingStore = getStoresByDestination('').find(s => s.id === store.id);
+      const existingStore = getStoresByDestination("").find(
+        (s) => s.id === store.id,
+      );
       if (existingStore) {
         updateStore(store);
         toast({
@@ -239,9 +282,15 @@ export const DestinationManagement = () => {
                 Manage your destination properties and their associated venues
               </p>
             </div>
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <Dialog
+              open={isCreateDialogOpen}
+              onOpenChange={setIsCreateDialogOpen}
+            >
               <DialogTrigger asChild>
-                <Button onClick={handleCreateDestination} className="flex items-center gap-2 w-full sm:w-auto">
+                <Button
+                  onClick={handleCreateDestination}
+                  className="flex items-center gap-2 w-full sm:w-auto"
+                >
                   <Plus className="h-4 w-4" />
                   <span className="sm:inline">Add Destination</span>
                 </Button>
@@ -249,13 +298,20 @@ export const DestinationManagement = () => {
               <DialogContent className="w-[95vw] max-w-[500px] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                 <DialogHeader>
                   <DialogTitle className="text-lg sm:text-xl">
-                    {editingDestination ? 'Edit Destination' : 'Create New Destination'}
+                    {editingDestination
+                      ? "Edit Destination"
+                      : "Create New Destination"}
                   </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmitDestination} className="space-y-4 sm:space-y-6">
+                <form
+                  onSubmit={handleSubmitDestination}
+                  className="space-y-4 sm:space-y-6"
+                >
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="logo" className="text-sm font-medium">Destination Logo</Label>
+                      <Label htmlFor="logo" className="text-sm font-medium">
+                        Destination Logo
+                      </Label>
                       <div className="mt-2">
                         {logoPreview ? (
                           <div className="relative inline-block">
@@ -299,7 +355,9 @@ export const DestinationManagement = () => {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => document.getElementById('logo')?.click()}
+                            onClick={() =>
+                              document.getElementById("logo")?.click()
+                            }
                             className="text-xs"
                             disabled={isUploading}
                           >
@@ -308,8 +366,10 @@ export const DestinationManagement = () => {
                                 <Loader2 className="h-3 w-3 mr-1 animate-spin" />
                                 Uploading...
                               </>
+                            ) : logoPreview ? (
+                              "Change Logo"
                             ) : (
-                              logoPreview ? 'Change Logo' : 'Upload Logo'
+                              "Upload Logo"
                             )}
                           </Button>
                         </div>
@@ -325,8 +385,10 @@ export const DestinationManagement = () => {
                         <Input
                           id="name"
                           value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="e.g. Lily Hall Pensacola"
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                          placeholder="e.g. Pensacola Beach Resort"
                           required
                         />
                       </div>
@@ -335,19 +397,26 @@ export const DestinationManagement = () => {
                         <Input
                           id="location"
                           value={formData.location}
-                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              location: e.target.value,
+                            })
+                          }
                           placeholder="e.g. Pensacola, FL"
                           required
                         />
                       </div>
                     </div>
-                  
+
                     <div>
                       <Label htmlFor="address">Full Address</Label>
                       <Input
                         id="address"
                         value={formData.address}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, address: e.target.value })
+                        }
                         placeholder="e.g. 1105 E Cervantes St, Pensacola, FL 32501"
                         required
                       />
@@ -359,7 +428,9 @@ export const DestinationManagement = () => {
                         <Input
                           id="phone"
                           value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, phone: e.target.value })
+                          }
                           placeholder="(850) 208-6913"
                         />
                       </div>
@@ -369,7 +440,9 @@ export const DestinationManagement = () => {
                           id="email"
                           type="email"
                           value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                          }
                           placeholder="info@destination.com"
                         />
                       </div>
@@ -380,7 +453,9 @@ export const DestinationManagement = () => {
                       <Input
                         id="manager"
                         value={formData.manager}
-                        onChange={(e) => setFormData({ ...formData, manager: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, manager: e.target.value })
+                        }
                         placeholder="Manager name"
                         required
                       />
@@ -388,16 +463,18 @@ export const DestinationManagement = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2 pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
+                    <Button
+                      type="button"
+                      variant="outline"
                       onClick={() => setIsCreateDialogOpen(false)}
                       className="order-2 sm:order-1"
                     >
                       Cancel
                     </Button>
                     <Button type="submit" className="order-1 sm:order-2">
-                      {editingDestination ? 'Update Destination' : 'Create Destination'}
+                      {editingDestination
+                        ? "Update Destination"
+                        : "Create Destination"}
                     </Button>
                   </div>
                 </form>
@@ -409,14 +486,17 @@ export const DestinationManagement = () => {
           <div className="space-y-4 sm:space-y-6">
             {destinations.map((destination) => {
               const destinationStores = getStoresByDestination(destination.id);
-              
+
               return (
-                <Card key={destination.id} className="border-l-4 border-l-primary">
+                <Card
+                  key={destination.id}
+                  className="border-l-4 border-l-primary"
+                >
                   <CardContent className="p-4 sm:p-6">
                     <div className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                         <div className="flex-1 space-y-4">
-                            <div className="flex flex-col xs:flex-row xs:items-center gap-3">
+                          <div className="flex flex-col xs:flex-row xs:items-center gap-3">
                             <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold overflow-hidden flex-shrink-0 bg-gradient-to-br from-white to-gray-50 border border-gray-100 shadow-md ring-1 ring-black/5">
                               {destination.logo ? (
                                 <img
@@ -431,22 +511,35 @@ export const DestinationManagement = () => {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-lg sm:text-xl text-foreground truncate">{destination.name}</h3>
+                              <h3 className="font-semibold text-lg sm:text-xl text-foreground truncate">
+                                {destination.name}
+                              </h3>
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <MapPin className="h-4 w-4 flex-shrink-0" />
-                                <span className="truncate">{destination.location}</span>
+                                <span className="truncate">
+                                  {destination.location}
+                                </span>
                               </div>
                             </div>
-                            <Badge variant={destination.status === 'active' ? 'default' : 'secondary'} className="flex-shrink-0">
+                            <Badge
+                              variant={
+                                destination.status === "active"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                              className="flex-shrink-0"
+                            >
                               {destination.status}
                             </Badge>
                           </div>
-                          
+
                           <div className="grid grid-cols-1 gap-3 text-sm text-muted-foreground">
                             <div className="space-y-2">
                               <p className="flex items-start gap-2">
                                 <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                                <span className="break-words">{destination.address}</span>
+                                <span className="break-words">
+                                  {destination.address}
+                                </span>
                               </p>
                               {destination.phone && (
                                 <p className="flex items-center gap-2">
@@ -457,21 +550,29 @@ export const DestinationManagement = () => {
                               {destination.email && (
                                 <p className="flex items-center gap-2">
                                   <Mail className="h-4 w-4 flex-shrink-0" />
-                                  <span className="break-all">{destination.email}</span>
+                                  <span className="break-all">
+                                    {destination.email}
+                                  </span>
                                 </p>
                               )}
                               <p className="flex items-center gap-2">
                                 <User className="h-4 w-4 flex-shrink-0" />
-                                <span><strong>Manager:</strong> {destination.manager}</span>
+                                <span>
+                                  <strong>Manager:</strong>{" "}
+                                  {destination.manager}
+                                </span>
                               </p>
                               <p className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4 flex-shrink-0" />
-                                <span><strong>Created:</strong> {destination.createdAt}</span>
+                                <span>
+                                  <strong>Created:</strong>{" "}
+                                  {destination.createdAt}
+                                </span>
                               </p>
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
                           <Button
                             variant="outline"
@@ -485,7 +586,12 @@ export const DestinationManagement = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleDeleteDestination(destination.id, destination.name)}
+                            onClick={() =>
+                              handleDeleteDestination(
+                                destination.id,
+                                destination.name,
+                              )
+                            }
                             className="flex items-center gap-1 text-destructive hover:text-destructive-foreground hover:bg-destructive flex-1 sm:flex-none"
                           >
                             <Trash2 className="h-3 w-3" />
@@ -501,8 +607,12 @@ export const DestinationManagement = () => {
                             <CollapsibleTrigger className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer group flex-1">
                               <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
                               <StoreIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
-                              <h4 className="font-medium text-foreground">Assigned Venues</h4>
-                              <Badge variant="secondary">{destinationStores.length}</Badge>
+                              <h4 className="font-medium text-foreground">
+                                Assigned Venues
+                              </h4>
+                              <Badge variant="secondary">
+                                {destinationStores.length}
+                              </Badge>
                             </CollapsibleTrigger>
                             <Button
                               variant="outline"
@@ -519,9 +629,12 @@ export const DestinationManagement = () => {
                             {destinationStores.length > 0 ? (
                               <div className="space-y-3 pt-2">
                                 {destinationStores.map((store) => (
-                                  <div key={store.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-background rounded-lg border">
+                                  <div
+                                    key={store.id}
+                                    className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-background rounded-lg border"
+                                  >
                                     <div className="flex items-center space-x-3 flex-1 min-w-0">
-                                      <StoreLogo 
+                                      <StoreLogo
                                         logo={store.logo}
                                         customLogo={store.customLogo}
                                         bgColor={store.bgColor}
@@ -529,22 +642,36 @@ export const DestinationManagement = () => {
                                         variant="sleek"
                                       />
                                       <div className="flex-1 min-w-0">
-                                        <h5 className="font-medium text-foreground truncate">{store.name}</h5>
-                                        <p className="text-sm text-muted-foreground truncate">{store.address}</p>
+                                        <h5 className="font-medium text-foreground truncate">
+                                          {store.name}
+                                        </h5>
+                                        <p className="text-sm text-muted-foreground truncate">
+                                          {store.address}
+                                        </p>
                                         {store.locationDescription && (
-                                          <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-2">{store.locationDescription}</p>
+                                          <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-2">
+                                            {store.locationDescription}
+                                          </p>
                                         )}
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                                      <Badge variant="outline" className="text-xs flex-shrink-0">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs flex-shrink-0"
+                                      >
                                         {store.activeOrders} orders
                                       </Badge>
                                       <div className="flex gap-1">
                                         <Button
                                           variant="ghost"
                                           size="sm"
-                                          onClick={() => handleEditStore(destination.id, store)}
+                                          onClick={() =>
+                                            handleEditStore(
+                                              destination.id,
+                                              store,
+                                            )
+                                          }
                                           className="h-8 w-8 p-0"
                                         >
                                           <Edit className="h-4 w-4" />
@@ -552,7 +679,12 @@ export const DestinationManagement = () => {
                                         <Button
                                           variant="ghost"
                                           size="sm"
-                                          onClick={() => handleStoreDelete(store.id, store.name)}
+                                          onClick={() =>
+                                            handleStoreDelete(
+                                              store.id,
+                                              store.name,
+                                            )
+                                          }
                                           className="h-8 w-8 p-0 text-destructive hover:text-destructive-foreground hover:bg-destructive"
                                         >
                                           <Trash2 className="h-4 w-4" />
@@ -565,8 +697,12 @@ export const DestinationManagement = () => {
                             ) : (
                               <div className="text-center py-6 text-muted-foreground">
                                 <StoreIcon className="h-12 w-12 mx-auto mb-2 text-muted-foreground/40" />
-                                <p className="text-sm">No venues assigned to this destination yet.</p>
-                                <p className="text-xs text-muted-foreground/60 mt-1">Click "Add Venue" to get started.</p>
+                                <p className="text-sm">
+                                  No venues assigned to this destination yet.
+                                </p>
+                                <p className="text-xs text-muted-foreground/60 mt-1">
+                                  Click "Add Venue" to get started.
+                                </p>
                               </div>
                             )}
                           </CollapsibleContent>

@@ -1,30 +1,34 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Play, Pause } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Play, Pause } from "lucide-react";
 
 interface ControlButtonProps {
-  storeStatus: 'open' | 'closed';
-  orderStatus: 'active' | 'paused';
+  storeStatus: "open" | "closed";
+  orderStatus: "active" | "paused";
   onClick: () => void;
   className?: string;
 }
 
-export const ControlButton = ({ storeStatus, orderStatus, onClick, className }: ControlButtonProps) => {
+export const ControlButton = ({
+  storeStatus,
+  orderStatus,
+  onClick,
+  className,
+}: ControlButtonProps) => {
   const getButtonVariant = () => {
-    if (storeStatus === 'closed') return 'default';
-    if (orderStatus === 'paused') return 'default';
-    return 'destructive';
+    if (storeStatus === "closed") return "default";
+    if (orderStatus === "paused") return "default";
+    return "destructive";
   };
 
   const getButtonText = () => {
-    if (storeStatus === 'closed') return 'Start';
-    if (orderStatus === 'paused') return 'Resume';
-    return 'Pause';
+    if (storeStatus === "closed") return "Start";
+    if (orderStatus === "paused") return "Resume";
+    return "Pause";
   };
 
   const getButtonIcon = () => {
-    if (storeStatus === 'closed' || orderStatus === 'paused') return Play;
+    if (storeStatus === "closed" || orderStatus === "paused") return Play;
     return Pause;
   };
 

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -13,10 +13,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { MapPin, Edit, ArrowLeft, Info, Trash2 } from 'lucide-react';
-import { StoreLogo } from './StoreLogo';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/alert-dialog";
+import { MapPin, Edit, ArrowLeft, Info, Trash2 } from "lucide-react";
+import { StoreLogo } from "./StoreLogo";
+import { useToast } from "@/hooks/use-toast";
 
 interface Store {
   id: number;
@@ -36,7 +36,12 @@ interface StoreDetailsProps {
   onDelete: (storeId: number) => void;
 }
 
-export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsProps) => {
+export const StoreDetails = ({
+  store,
+  onClose,
+  onEdit,
+  onDelete,
+}: StoreDetailsProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -48,7 +53,9 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
 
   const handleViewOrders = () => {
     // Navigate to active orders page and show only this store's orders
-    navigate('/orders/active', { state: { selectedStoreId: store.id.toString() } });
+    navigate("/orders/active", {
+      state: { selectedStoreId: store.id.toString() },
+    });
     toast({
       title: "Viewing Orders",
       description: `Showing orders for ${store.name}`,
@@ -57,7 +64,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
 
   const handleViewMenu = () => {
     // Navigate to menu management page
-    navigate('/menus');
+    navigate("/menus");
     toast({
       title: "Menu Management",
       description: `Opening menu management for ${store.name}`,
@@ -66,7 +73,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
 
   const handleViewReports = () => {
     // Navigate to reports page
-    navigate('/reports');
+    navigate("/reports");
     toast({
       title: "Reports",
       description: `Opening reports for ${store.name}`,
@@ -75,7 +82,7 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
 
   const handleManageStaff = () => {
     // Navigate to employees page
-    navigate('/employees');
+    navigate("/employees");
     toast({
       title: "Staff Management",
       description: `Opening staff management for ${store.name}`,
@@ -94,10 +101,12 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-lg sm:text-2xl font-semibold text-gray-900 truncate">Venue Details</h1>
+          <h1 className="text-lg sm:text-2xl font-semibold text-gray-900 truncate">
+            Venue Details
+          </h1>
         </div>
         <div className="flex items-center space-x-2">
-          <Button 
+          <Button
             onClick={onEdit}
             className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base px-3 sm:px-4 py-2"
             size="sm"
@@ -106,11 +115,14 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
             <span className="hidden sm:inline">Edit Venue</span>
             <span className="sm:hidden">Edit</span>
           </Button>
-          
-          <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+
+          <AlertDialog
+            open={showDeleteDialog}
+            onOpenChange={setShowDeleteDialog}
+          >
             <AlertDialogTrigger asChild>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
               >
@@ -123,12 +135,13 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Venue</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete "{store.name}"? This action cannot be undone.
+                  Are you sure you want to delete "{store.name}"? This action
+                  cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction 
+                <AlertDialogAction
                   onClick={handleDelete}
                   className="bg-red-600 hover:bg-red-700"
                 >
@@ -151,15 +164,21 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
               variant="sleek"
             />
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-lg sm:text-xl truncate">{store.name}</CardTitle>
+              <CardTitle className="text-lg sm:text-xl truncate">
+                {store.name}
+              </CardTitle>
               <div className="flex items-center text-gray-600 mt-2">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
-                <span className="text-sm sm:text-base truncate">{store.address}</span>
+                <span className="text-sm sm:text-base truncate">
+                  {store.address}
+                </span>
               </div>
               {store.locationDescription && (
                 <div className="flex items-start text-blue-600 mt-2 bg-blue-50 p-2 rounded-md">
                   <Info className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-xs sm:text-sm font-medium">{store.locationDescription}</span>
+                  <span className="text-xs sm:text-sm font-medium">
+                    {store.locationDescription}
+                  </span>
                 </div>
               )}
             </div>
@@ -168,36 +187,58 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
         <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Venue Information</h3>
+              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+                Venue Information
+              </h3>
               <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Venue ID:</span>
-                  <p className="font-medium text-sm sm:text-base mt-1">#{store.id}</p>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Venue ID:
+                  </span>
+                  <p className="font-medium text-sm sm:text-base mt-1">
+                    #{store.id}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Name:</span>
-                  <p className="font-medium text-sm sm:text-base break-words mt-1">{store.name}</p>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Name:
+                  </span>
+                  <p className="font-medium text-sm sm:text-base break-words mt-1">
+                    {store.name}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Address:</span>
-                  <p className="font-medium text-sm sm:text-base break-words mt-1">{store.address}</p>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Address:
+                  </span>
+                  <p className="font-medium text-sm sm:text-base break-words mt-1">
+                    {store.address}
+                  </p>
                 </div>
                 {store.locationDescription && (
                   <div>
-                    <span className="text-xs sm:text-sm text-gray-600">Location Details:</span>
-                    <p className="font-medium text-sm sm:text-base break-words mt-1">{store.locationDescription}</p>
+                    <span className="text-xs sm:text-sm text-gray-600">
+                      Location Details:
+                    </span>
+                    <p className="font-medium text-sm sm:text-base break-words mt-1">
+                      {store.locationDescription}
+                    </p>
                   </div>
                 )}
               </div>
             </div>
-            
+
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Current Status</h3>
+              <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+                Current Status
+              </h3>
               <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Active Orders:</span>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Active Orders:
+                  </span>
                   <div className="flex items-center space-x-2 mt-2">
-                    <Badge 
+                    <Badge
                       variant={store.activeOrders > 0 ? "default" : "secondary"}
                       className={`text-xs ${store.activeOrders > 0 ? "bg-green-500" : ""}`}
                     >
@@ -206,13 +247,17 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
                     {store.activeOrders > 0 && (
                       <div className="flex items-center space-x-1">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-xs sm:text-sm text-green-600 font-medium">Active</span>
+                        <span className="text-xs sm:text-sm text-green-600 font-medium">
+                          Active
+                        </span>
                       </div>
                     )}
                   </div>
                 </div>
                 <div>
-                  <span className="text-xs sm:text-sm text-gray-600">Venue Status:</span>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    Venue Status:
+                  </span>
                   <div className="mt-2">
                     <Badge variant="default" className="bg-blue-500 text-xs">
                       Operational
@@ -224,38 +269,40 @@ export const StoreDetails = ({ store, onClose, onEdit, onDelete }: StoreDetailsP
           </div>
 
           <div className="border-t pt-4 sm:pt-6">
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Quick Actions</h3>
+            <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">
+              Quick Actions
+            </h3>
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="text-xs sm:text-sm"
                 onClick={handleViewOrders}
               >
                 <span className="hidden sm:inline">View Orders</span>
                 <span className="sm:hidden">Orders</span>
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="text-xs sm:text-sm"
                 onClick={handleViewMenu}
               >
                 <span className="hidden sm:inline">View Menu</span>
                 <span className="sm:hidden">Menu</span>
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="text-xs sm:text-sm"
                 onClick={handleViewReports}
               >
                 <span className="hidden sm:inline">View Reports</span>
                 <span className="sm:hidden">Reports</span>
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="text-xs sm:text-sm"
                 onClick={handleManageStaff}
               >
