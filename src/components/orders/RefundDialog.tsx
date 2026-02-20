@@ -1,16 +1,21 @@
-
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { AlertCircle, DollarSign } from 'lucide-react';
-import { StoreLogo } from '@/components/stores/StoreLogo';
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { AlertCircle, DollarSign } from "lucide-react";
+import { StoreLogo } from "@/components/stores/StoreLogo";
 
 interface OrderItem {
   id: string;
@@ -37,15 +42,22 @@ interface RefundDialogProps {
   onRefund: (refundData: any) => void;
 }
 
-export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogProps) => {
-  const [refundType, setRefundType] = useState<'full' | 'partial' | 'items'>('full');
-  const [partialAmount, setPartialAmount] = useState('');
+export const RefundDialog = ({
+  order,
+  isOpen,
+  onClose,
+  onRefund,
+}: RefundDialogProps) => {
+  const [refundType, setRefundType] = useState<"full" | "partial" | "items">(
+    "full",
+  );
+  const [partialAmount, setPartialAmount] = useState("");
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
 
   if (!order) return null;
 
-  const orderTotal = parseFloat(order.total.replace('$', ''));
+  const orderTotal = parseFloat(order.total.replace("$", ""));
 
   const handleItemSelection = (itemId: string, checked: boolean) => {
     const newSelection = new Set(selectedItems);
@@ -59,17 +71,17 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
 
   const calculateItemsRefund = () => {
     return order.items
-      .filter(item => selectedItems.has(item.id))
-      .reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      .filter((item) => selectedItems.has(item.id))
+      .reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const getRefundAmount = () => {
     switch (refundType) {
-      case 'full':
+      case "full":
         return orderTotal;
-      case 'partial':
+      case "partial":
         return parseFloat(partialAmount) || 0;
-      case 'items':
+      case "items":
         return calculateItemsRefund();
       default:
         return 0;
@@ -78,19 +90,20 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
 
   const handleRefund = async () => {
     setIsProcessing(true);
-    
+
     const refundData = {
       orderId: order.id,
       refundType,
       amount: getRefundAmount(),
-      selectedItems: refundType === 'items' ? Array.from(selectedItems) : undefined,
+      selectedItems:
+        refundType === "items" ? Array.from(selectedItems) : undefined,
     };
 
     try {
       await onRefund(refundData);
       onClose();
     } catch (error) {
-      console.error('Refund failed:', error);
+      console.error("Refund failed:", error);
     } finally {
       setIsProcessing(false);
     }
@@ -117,7 +130,7 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
-                  <StoreLogo 
+                  <StoreLogo
                     logo={order.store.logo}
                     customLogo={order.store.customLogo}
                     bgColor={order.store.bgColor}
@@ -125,7 +138,9 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
                   />
                   <div>
                     <div className="font-semibold">{order.store.name}</div>
-                    <div className="text-sm text-gray-600">{order.customer} • {order.type}</div>
+                    <div className="text-sm text-gray-600">
+                      {order.customer} • {order.type}
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -133,7 +148,13 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
                   <div className="text-sm text-gray-600">{order.date}</div>
                 </div>
               </div>
-              <Badge variant={order.status === 'Completed' ? 'default' : 'destructive'}>
+              <Badge
+                className={
+                  order.status === "Completed"
+                    ? "bg-green-100 text-green-700 hover:bg-green-100"
+                    : "bg-red-100 text-red-700 hover:bg-red-100"
+                }
+              >
                 {order.status}
               </Badge>
             </CardContent>
@@ -141,15 +162,19 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
 
           {/* Refund Type Selection */}
           <div>
-            <Label className="text-base font-semibold mb-4 block">Refund Type</Label>
-            <ToggleGroup 
-              type="single" 
-              value={refundType} 
-              onValueChange={(value: 'full' | 'partial' | 'items') => value && setRefundType(value)}
+            <Label className="text-base font-semibold mb-4 block">
+              Refund Type
+            </Label>
+            <ToggleGroup
+              type="single"
+              value={refundType}
+              onValueChange={(value: "full" | "partial" | "items") =>
+                value && setRefundType(value)
+              }
               className="flex-col items-stretch space-y-2"
             >
-              <ToggleGroupItem 
-                value="full" 
+              <ToggleGroupItem
+                value="full"
                 className="w-full justify-start h-12 px-4 rounded-full border-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 size="sm"
               >
@@ -160,9 +185,9 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
                   <span>Full refund ({order.total})</span>
                 </div>
               </ToggleGroupItem>
-              
-              <ToggleGroupItem 
-                value="partial" 
+
+              <ToggleGroupItem
+                value="partial"
                 className="w-full justify-start h-12 px-4 rounded-full border-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 size="sm"
               >
@@ -173,9 +198,9 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
                   <span>Partial amount</span>
                 </div>
               </ToggleGroupItem>
-              
-              <ToggleGroupItem 
-                value="items" 
+
+              <ToggleGroupItem
+                value="items"
                 className="w-full justify-start h-12 px-4 rounded-full border-2 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 size="sm"
               >
@@ -190,9 +215,11 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
           </div>
 
           {/* Partial Amount Input */}
-          {refundType === 'partial' && (
+          {refundType === "partial" && (
             <div>
-              <Label htmlFor="amount" className="text-sm font-medium">Refund Amount</Label>
+              <Label htmlFor="amount" className="text-sm font-medium">
+                Refund Amount
+              </Label>
               <div className="relative mt-1">
                 <span className="absolute left-3 top-2.5 text-gray-500">$</span>
                 <Input
@@ -211,19 +238,28 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
           )}
 
           {/* Items Selection */}
-          {refundType === 'items' && (
+          {refundType === "items" && (
             <div>
-              <Label className="text-sm font-medium mb-3 block">Select Items to Refund</Label>
+              <Label className="text-sm font-medium mb-3 block">
+                Select Items to Refund
+              </Label>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {order.items.map((item) => (
-                  <div key={item.id} className="flex items-center space-x-3 p-3 border rounded-lg">
+                  <div
+                    key={item.id}
+                    className="flex items-center space-x-3 p-3 border rounded-lg"
+                  >
                     <Checkbox
                       checked={selectedItems.has(item.id)}
-                      onCheckedChange={(checked) => handleItemSelection(item.id, checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        handleItemSelection(item.id, checked as boolean)
+                      }
                     />
                     <div className="flex-1">
                       <div className="font-medium">{item.name}</div>
-                      <div className="text-sm text-gray-600">Qty: {item.quantity}</div>
+                      <div className="text-sm text-gray-600">
+                        Qty: {item.quantity}
+                      </div>
                     </div>
                     <div className="font-semibold">
                       ${(item.price * item.quantity).toFixed(2)}
@@ -246,7 +282,9 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
               {getRefundAmount() > orderTotal && (
                 <div className="flex items-center space-x-2 mt-2 text-red-600">
                   <AlertCircle className="w-4 h-4" />
-                  <span className="text-sm">Refund amount cannot exceed order total</span>
+                  <span className="text-sm">
+                    Refund amount cannot exceed order total
+                  </span>
                 </div>
               )}
             </CardContent>
@@ -257,12 +295,14 @@ export const RefundDialog = ({ order, isOpen, onClose, onRefund }: RefundDialogP
           <Button variant="outline" onClick={onClose} disabled={isProcessing}>
             Cancel
           </Button>
-          <Button 
-            onClick={handleRefund} 
+          <Button
+            onClick={handleRefund}
             disabled={!isValidRefund() || isProcessing}
             className="bg-red-600 hover:bg-red-700"
           >
-            {isProcessing ? 'Processing...' : `Refund $${getRefundAmount().toFixed(2)}`}
+            {isProcessing
+              ? "Processing..."
+              : `Refund $${getRefundAmount().toFixed(2)}`}
           </Button>
         </DialogFooter>
       </DialogContent>

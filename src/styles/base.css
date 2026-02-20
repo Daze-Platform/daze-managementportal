@@ -42,7 +42,7 @@
     --input: 200 25% 90%;
     --ring: 200 80% 55%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
     /* Sidebar with Daze deep blue */
     --sidebar-background: 210 60% 12%;
@@ -70,7 +70,7 @@
     --palm-green: 142 76% 36%;
     --palm-green-light: 142 76% 50%;
     --palm-green-dark: 142 76% 25%;
-    
+
     /* Brand colors - Daze inspired with Lovable flare */
     --brand-blue: 200 80% 55%;
     --brand-blue-light: 200 80% 70%;
@@ -87,7 +87,7 @@
     --vh: 1vh;
     --vw: 1vw;
     --ios-vh: 100vh;
-    
+
     /* Header height for overlay positioning */
     --header-height: 56px;
   }
@@ -158,7 +158,9 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
     height: 100%;
     height: 100vh;
     height: 100dvh;
@@ -217,7 +219,12 @@
   }
 
   /* Typography */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-semibold tracking-tight text-foreground;
   }
 
@@ -238,14 +245,17 @@
   }
 
   /* Touch-friendly elements - exclude switch components */
-  button:not([data-switch-ui]), [role="button"]:not([data-switch-ui]) {
+  button:not([data-switch-ui]),
+  [role="button"]:not([data-switch-ui]) {
     @apply min-h-[44px] min-w-[44px];
     -webkit-user-select: none;
     user-select: none;
     touch-action: manipulation;
   }
 
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     @apply min-h-[44px];
     font-size: 16px;
     touch-action: manipulation;
@@ -280,7 +290,7 @@
       height: -webkit-fill-available;
       min-height: -webkit-fill-available;
     }
-    
+
     body {
       height: -webkit-fill-available;
       min-height: -webkit-fill-available;
@@ -303,19 +313,37 @@
 
   /* Gradient backgrounds */
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary) / 0.8) 100%
+    );
   }
 
   .gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent) / 0.8) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--accent)) 0%,
+      hsl(var(--accent) / 0.8) 100%
+    );
   }
 
   .gradient-subtle {
-    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+    background: linear-gradient(
+      180deg,
+      hsl(var(--background)) 0%,
+      hsl(var(--muted)) 100%
+    );
   }
 
   .gradient-animated {
-    background: linear-gradient(-45deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary) / 0.8), hsl(var(--accent) / 0.8));
+    background: linear-gradient(
+      -45deg,
+      hsl(var(--primary)),
+      hsl(var(--accent)),
+      hsl(var(--primary) / 0.8),
+      hsl(var(--accent) / 0.8)
+    );
     background-size: 400% 400%;
     animation: gradient-shift 8s ease infinite;
   }
@@ -345,9 +373,16 @@
     animation: shimmer 1.5s ease-in-out infinite;
   }
 
+  .page-fade-in {
+    animation: fade-in 220ms ease-out;
+  }
+
   /* HeroUI-inspired transitions */
   .transition-heroui {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
   }
 
   /* HeroUI-inspired focus ring */
@@ -421,7 +456,8 @@
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {

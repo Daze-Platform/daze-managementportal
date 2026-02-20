@@ -1,152 +1,189 @@
-
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Download, File, DollarSign, Filter, FileText, FileSpreadsheet } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Download,
+  File,
+  DollarSign,
+  Filter,
+  FileText,
+  FileSpreadsheet,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { useToast } from '@/hooks/use-toast';
-import { StoreLogo } from '@/components/stores/StoreLogo';
-import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/DestinationContext';
-import { useFilters } from '@/contexts/FilterContext';
-import { format } from 'date-fns';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
+} from "@/components/ui/dropdown-menu";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { useToast } from "@/hooks/use-toast";
+import { StoreLogo } from "@/components/stores/StoreLogo";
+import { useStores } from "@/contexts/StoresContext";
+import { useResort } from "@/contexts/DestinationContext";
+import { useFilters } from "@/contexts/FilterContext";
+import { format } from "date-fns";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 
 const financialData = [
   {
     id: 1,
-    store: 'Brother Fox',
-    date: 'May 7, 2021 11:50AM',
-    status: 'Succeeded',
-    subtotal: '$6790.89',
-    serviceFee: '$679.09',
-    commissions: '$679.09',
-    net: '$6111.80',
-    storeIcon: '🦊',
-    bgColor: 'bg-amber-600',
-    customLogo: '/images/stores/brother-fox-logo.jpg'
+    store: "Brother Fox",
+    date: "May 7, 2021 11:50AM",
+    status: "Succeeded",
+    subtotal: "$6790.89",
+    serviceFee: "$679.09",
+    commissions: "$679.09",
+    net: "$6111.80",
+    storeIcon: "🦊",
+    bgColor: "bg-amber-600",
+    customLogo: "/images/stores/brother-fox-logo.jpg",
   },
   {
     id: 2,
-    store: 'Brother Fox',
-    date: 'May 6, 2021 2:30PM',
-    status: 'Pending',
-    subtotal: '$4523.45',
-    serviceFee: '$452.35',
-    commissions: '$452.35',
-    net: '$4071.10',
-    storeIcon: '🦊',
-    bgColor: 'bg-amber-600',
-    customLogo: '/images/stores/brother-fox-logo.jpg'
+    store: "Brother Fox",
+    date: "May 6, 2021 2:30PM",
+    status: "Pending",
+    subtotal: "$4523.45",
+    serviceFee: "$452.35",
+    commissions: "$452.35",
+    net: "$4071.10",
+    storeIcon: "🦊",
+    bgColor: "bg-amber-600",
+    customLogo: "/images/stores/brother-fox-logo.jpg",
   },
   {
     id: 3,
-    store: 'Sister Hen',
-    date: 'May 6, 2021 10:15AM',
-    status: 'Failed',
-    subtotal: '$2890.67',
-    serviceFee: '$289.07',
-    commissions: '$289.07',
-    net: '$2601.60',
-    storeIcon: '🐔',
-    bgColor: 'bg-rose-600',
-    customLogo: '/images/stores/sister-hen-logo.jpg'
+    store: "Sister Hen",
+    date: "May 6, 2021 10:15AM",
+    status: "Failed",
+    subtotal: "$2890.67",
+    serviceFee: "$289.07",
+    commissions: "$289.07",
+    net: "$2601.60",
+    storeIcon: "🐔",
+    bgColor: "bg-rose-600",
+    customLogo: "/images/stores/sister-hen-logo.jpg",
   },
   {
     id: 4,
-    store: 'Cousin Wolf',
-    date: 'May 5, 2021 4:45PM',
-    status: 'Succeeded',
-    subtotal: '$5234.12',
-    serviceFee: '$523.41',
-    commissions: '$523.41',
-    net: '$4710.71',
-    storeIcon: '🐺',
-    bgColor: 'bg-slate-700',
-    customLogo: '/images/stores/cousin-wolf-logo.webp'
+    store: "Cousin Wolf",
+    date: "May 5, 2021 4:45PM",
+    status: "Succeeded",
+    subtotal: "$5234.12",
+    serviceFee: "$523.41",
+    commissions: "$523.41",
+    net: "$4710.71",
+    storeIcon: "🐺",
+    bgColor: "bg-slate-700",
+    customLogo: "/images/stores/cousin-wolf-logo.webp",
   },
   {
     id: 5,
-    store: 'Sister Hen',
-    date: 'May 5, 2021 1:20PM',
-    status: 'Succeeded',
-    subtotal: '$3456.78',
-    serviceFee: '$345.68',
-    commissions: '$345.68',
-    net: '$3111.10',
-    storeIcon: '🐔',
-    bgColor: 'bg-rose-600',
-    customLogo: '/images/stores/sister-hen-logo.jpg'
+    store: "Sister Hen",
+    date: "May 5, 2021 1:20PM",
+    status: "Succeeded",
+    subtotal: "$3456.78",
+    serviceFee: "$345.68",
+    commissions: "$345.68",
+    net: "$3111.10",
+    storeIcon: "🐔",
+    bgColor: "bg-rose-600",
+    customLogo: "/images/stores/sister-hen-logo.jpg",
   },
   {
     id: 6,
-    store: 'Cousin Wolf',
-    date: 'May 4, 2021 11:00AM',
-    status: 'Pending',
-    subtotal: '$7890.34',
-    serviceFee: '$789.03',
-    commissions: '$789.03',
-    net: '$7101.31',
-    storeIcon: '🐺',
-    bgColor: 'bg-slate-700',
-    customLogo: '/images/stores/cousin-wolf-logo.webp'
-  }
+    store: "Cousin Wolf",
+    date: "May 4, 2021 11:00AM",
+    status: "Pending",
+    subtotal: "$7890.34",
+    serviceFee: "$789.03",
+    commissions: "$789.03",
+    net: "$7101.31",
+    storeIcon: "🐺",
+    bgColor: "bg-slate-700",
+    customLogo: "/images/stores/cousin-wolf-logo.webp",
+  },
 ];
 
 export const Payouts = () => {
   const { stores: allStores, getStoresByResort } = useStores();
   const { currentResort } = useResort();
   const { toast } = useToast();
-  const { selectedStore, setSelectedStore, selectedDateRange, setSelectedDateRange } = useFilters();
-  const lastUpdatedLabel = format(new Date(), 'MMM dd, yyyy');
+  const {
+    selectedStore,
+    setSelectedStore,
+    selectedDateRange,
+    setSelectedDateRange,
+  } = useFilters();
+  const lastUpdatedLabel = format(new Date(), "MMM dd, yyyy");
 
   // Get all stores regardless of resort assignment and remove duplicates
   // This ensures all stores are available in dropdowns without duplicates
-  const availableStores = allStores.filter((store, index, self) => 
-    index === self.findIndex(s => s.id === store.id)
+  const availableStores = allStores.filter(
+    (store, index, self) => index === self.findIndex((s) => s.id === store.id),
   );
 
   // Transform stores to match dropdown format
   const stores = [
-    { id: 'all', name: 'All Venues' },
-    ...availableStores.map(store => ({
+    { id: "all", name: "All Venues" },
+    ...availableStores.map((store) => ({
       id: store.id.toString(),
-      name: store.name
-    }))
+      name: store.name,
+    })),
   ];
 
   // Log filter changes for debugging
   useEffect(() => {
-    console.log('Payouts filters changed:', { selectedStore, selectedDateRange });
+    console.log("Payouts filters changed:", {
+      selectedStore,
+      selectedDateRange,
+    });
   }, [selectedStore, selectedDateRange]);
 
   // Format date range for display
   const formatDateRangeForPayouts = () => {
-    if (!selectedDateRange?.from) return 'No date selected';
+    if (!selectedDateRange?.from) return "No date selected";
     if (selectedDateRange.from && selectedDateRange.to) {
-      return `${format(selectedDateRange.from, 'MMM dd, yyyy')} - ${format(selectedDateRange.to, 'MMM dd, yyyy')}`;
+      return `${format(selectedDateRange.from, "MMM dd, yyyy")} - ${format(selectedDateRange.to, "MMM dd, yyyy")}`;
     }
-    return format(selectedDateRange.from, 'MMM dd, yyyy');
+    return format(selectedDateRange.from, "MMM dd, yyyy");
   };
 
   const exportToCsv = () => {
-    const filteredData = selectedStore === 'all' ? financialData : 
-      financialData.filter(item => item.store === selectedStore);
+    const filteredData =
+      selectedStore === "all"
+        ? financialData
+        : financialData.filter((item) => item.store === selectedStore);
 
-    const headers = ['Store', 'Date', 'Status', 'Subtotal', 'Service Fee', 'Commissions', 'NET'];
+    const headers = [
+      "Store",
+      "Date",
+      "Status",
+      "Subtotal",
+      "Service Fee",
+      "Commissions",
+      "NET",
+    ];
     const csvRows = [
-      headers.join(','),
-      ...filteredData.map(item => 
+      headers.join(","),
+      ...filteredData.map((item) =>
         [
           `"${item.store}"`,
           `"${item.date}"`,
@@ -154,29 +191,37 @@ export const Payouts = () => {
           `"${item.subtotal}"`,
           `"${item.serviceFee}"`,
           `"${item.commissions}"`,
-          `"${item.net}"`
-        ].join(',')
-      )
+          `"${item.net}"`,
+        ].join(","),
+      ),
     ];
-    
-    const csvContent = csvRows.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    
-    const storeFilter = selectedStore === 'all' ? 'all-stores' : selectedStore.toLowerCase().replace(/\s+/g, '-');
-    const dateFilter = formatDateRangeForPayouts().toLowerCase().replace(/\s+/g, '-');
-    link.setAttribute('download', `payouts-${storeFilter}-${dateFilter}-${new Date().toISOString().split('T')[0]}.csv`);
-    
-    link.style.visibility = 'hidden';
+    link.setAttribute("href", url);
+
+    const storeFilter =
+      selectedStore === "all"
+        ? "all-stores"
+        : selectedStore.toLowerCase().replace(/\s+/g, "-");
+    const dateFilter = formatDateRangeForPayouts()
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    link.setAttribute(
+      "download",
+      `payouts-${storeFilter}-${dateFilter}-${new Date().toISOString().split("T")[0]}.csv`,
+    );
+
+    link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
     toast({
-      title: 'Export successful!',
+      title: "Export successful!",
       description: `Exported ${filteredData.length} payout records as CSV file.`,
     });
   };
@@ -184,40 +229,42 @@ export const Payouts = () => {
   const exportToPdf = () => {
     try {
       console.log("PDF export triggered - starting download...");
-      const filteredData = selectedStore === 'all' ? financialData : 
-        financialData.filter(item => item.store === selectedStore);
+      const filteredData =
+        selectedStore === "all"
+          ? financialData
+          : financialData.filter((item) => item.store === selectedStore);
 
       // Simple approach: create a text-based content for PDF
       const reportContent = [
-        'PAYOUT REPORT',
-        '=============',
-        '',
-        `Store Filter: ${selectedStore === 'all' ? 'All Stores' : selectedStore}`,
+        "PAYOUT REPORT",
+        "=============",
+        "",
+        `Store Filter: ${selectedStore === "all" ? "All Stores" : selectedStore}`,
         `Date Range: ${formatDateRangeForPayouts()}`,
         `Generated: ${new Date().toLocaleDateString()}`,
-        '',
-        'PAYOUT DETAILS:',
-        '---------------',
-        ...filteredData.map((item, index) => 
-          `${index + 1}. ${item.store}\n   Date: ${item.date}\n   Status: ${item.status}\n   NET: ${item.net}\n`
-        )
-      ].join('\n');
+        "",
+        "PAYOUT DETAILS:",
+        "---------------",
+        ...filteredData.map(
+          (item, index) =>
+            `${index + 1}. ${item.store}\n   Date: ${item.date}\n   Status: ${item.status}\n   NET: ${item.net}\n`,
+        ),
+      ].join("\n");
 
       // Create PDF using basic jsPDF
       const doc = new jsPDF();
       const lines = doc.splitTextToSize(reportContent, 170);
       doc.text(lines, 20, 20);
-      
+
       // Download the PDF
-      const timestamp = new Date().toISOString().split('T')[0];
+      const timestamp = new Date().toISOString().split("T")[0];
       const filename = `payouts-report-${timestamp}.pdf`;
       doc.save(filename);
 
       toast({
-        title: 'PDF Downloaded!',
+        title: "PDF Downloaded!",
         description: `Successfully exported ${filteredData.length} payout records.`,
       });
-
     } catch (error) {
       console.error("PDF failed, switching to CSV:", error);
       // If PDF fails, automatically try CSV
@@ -226,78 +273,137 @@ export const Payouts = () => {
   };
 
   const exportToExcel = () => {
-    const filteredData = selectedStore === 'all' ? financialData : 
-      financialData.filter(item => item.store === selectedStore);
+    const filteredData =
+      selectedStore === "all"
+        ? financialData
+        : financialData.filter((item) => item.store === selectedStore);
 
     // Create Excel-like CSV with enhanced formatting
-    const headers = ['Store', 'Date', 'Status', 'Subtotal', 'Service Fee', 'Commissions', 'NET', 'Store Logo'];
+    const headers = [
+      "Store",
+      "Date",
+      "Status",
+      "Subtotal",
+      "Service Fee",
+      "Commissions",
+      "NET",
+      "Store Logo",
+    ];
     const csvRows = [
-      headers.join(','),
-      ...filteredData.map(item => 
+      headers.join(","),
+      ...filteredData.map((item) =>
         [
           `"${item.store}"`,
           `"${item.date}"`,
           `"${item.status}"`,
-          item.subtotal.replace('$', ''),
-          item.serviceFee.replace('$', ''),
-          item.commissions.replace('$', ''),
-          item.net.replace('$', ''),
-          `"${item.customLogo || 'No logo'}"`
-        ].join(',')
+          item.subtotal.replace("$", ""),
+          item.serviceFee.replace("$", ""),
+          item.commissions.replace("$", ""),
+          item.net.replace("$", ""),
+          `"${item.customLogo || "No logo"}"`,
+        ].join(","),
       ),
-      '', // Empty row
-      'SUMMARY', // Summary section
+      "", // Empty row
+      "SUMMARY", // Summary section
       `Total Records: ${filteredData.length}`,
       `Date Range: ${formatDateRangeForPayouts()}`,
       `Export Date: ${new Date().toLocaleDateString()}`,
-      `Filter Applied: ${selectedStore === 'all' ? 'All Stores' : selectedStore}`
+      `Filter Applied: ${selectedStore === "all" ? "All Stores" : selectedStore}`,
     ];
-    
-    const csvContent = csvRows.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    
-    const storeFilter = selectedStore === 'all' ? 'all-stores' : selectedStore.toLowerCase().replace(/\s+/g, '-');
-    const dateFilter = formatDateRangeForPayouts().toLowerCase().replace(/\s+/g, '-');
-    link.setAttribute('download', `payouts-excel-${storeFilter}-${dateFilter}-${new Date().toISOString().split('T')[0]}.csv`);
-    
-    link.style.visibility = 'hidden';
+    link.setAttribute("href", url);
+
+    const storeFilter =
+      selectedStore === "all"
+        ? "all-stores"
+        : selectedStore.toLowerCase().replace(/\s+/g, "-");
+    const dateFilter = formatDateRangeForPayouts()
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+    link.setAttribute(
+      "download",
+      `payouts-excel-${storeFilter}-${dateFilter}-${new Date().toISOString().split("T")[0]}.csv`,
+    );
+
+    link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
     toast({
-      title: 'Excel Export Successful!',
+      title: "Excel Export Successful!",
       description: `Exported ${filteredData.length} records in Excel-compatible format.`,
     });
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Succeeded':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">✓ Succeeded</Badge>;
-      case 'Pending':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">⏳ Pending</Badge>;
-      case 'Failed':
-        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">✗ Failed</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
+    const normalized = status.toLowerCase();
+
+    if (
+      normalized === "succeeded" ||
+      normalized === "active" ||
+      normalized === "completed"
+    ) {
+      return (
+        <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+          ✓ {status}
+        </Badge>
+      );
     }
+
+    if (normalized === "pending") {
+      return (
+        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
+          ⏳ Pending
+        </Badge>
+      );
+    }
+
+    if (
+      normalized === "failed" ||
+      normalized === "cancelled" ||
+      normalized === "canceled"
+    ) {
+      return (
+        <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+          ✗ {status}
+        </Badge>
+      );
+    }
+
+    if (normalized === "inactive") {
+      return (
+        <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
+          Inactive
+        </Badge>
+      );
+    }
+
+    return (
+      <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100">
+        {status}
+      </Badge>
+    );
   };
 
   // Filter data based on selected store
-  const filteredData = selectedStore === 'all' 
-    ? financialData 
-    : financialData.filter(item => {
-        const selectedStoreName = stores.find(s => s.id === selectedStore)?.name;
-        return item.store === selectedStoreName;
-      });
+  const filteredData =
+    selectedStore === "all"
+      ? financialData
+      : financialData.filter((item) => {
+          const selectedStoreName = stores.find(
+            (s) => s.id === selectedStore,
+          )?.name;
+          return item.store === selectedStoreName;
+        });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 page-fade-in">
       {/* Fixed Header */}
       <div className="flex-shrink-0 bg-white border-b px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -306,8 +412,12 @@ export const Payouts = () => {
               <DollarSign className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Payouts</h1>
-              <p className="text-sm text-gray-600">Track payouts and financial performance</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                Payouts
+              </h1>
+              <p className="text-sm text-gray-600">
+                Track payouts and financial performance
+              </p>
             </div>
           </div>
 
@@ -342,7 +452,9 @@ export const Payouts = () => {
               <span className="text-white text-xs">i</span>
             </div>
             <p className="text-sm text-blue-800">
-              <strong>Commission Structure:</strong> A 10% service fee is automatically added to customer orders and deducted from your payouts. NET amount reflects your earnings after commission.
+              <strong>Commission Structure:</strong> A 10% service fee is
+              automatically added to customer orders and deducted from your
+              payouts. NET amount reflects your earnings after commission.
             </p>
           </div>
         </div>
@@ -358,7 +470,11 @@ export const Payouts = () => {
                 </SelectTrigger>
                 <SelectContent className="animate-in fade-in-0 zoom-in-95 duration-200 bg-white border-gray-300 shadow-lg z-50">
                   {stores.map((store) => (
-                    <SelectItem key={store.id} value={store.id} className="hover:bg-blue-50 transition-colors cursor-pointer">
+                    <SelectItem
+                      key={store.id}
+                      value={store.id}
+                      className="hover:bg-blue-50 transition-colors cursor-pointer"
+                    >
                       <div className="flex items-center gap-2">
                         <span>{store.name}</span>
                       </div>
@@ -369,7 +485,10 @@ export const Payouts = () => {
             </div>
 
             <div className="w-full sm:w-64">
-              <DateRangePicker value={selectedDateRange} onChange={setSelectedDateRange} />
+              <DateRangePicker
+                value={selectedDateRange}
+                onChange={setSelectedDateRange}
+              />
             </div>
           </div>
 
@@ -380,13 +499,18 @@ export const Payouts = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div
+        className="flex-1 overflow-y-auto"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         <div className="p-4 sm:p-6">
           {/* Desktop Table */}
           <div className="hidden lg:block">
-            <Card className="shadow-sm">
+            <Card className="rounded-xl border border-border/50 shadow-sm">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Payout Transactions</CardTitle>
+                <CardTitle className="text-lg font-semibold">
+                  Payout Transactions
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <Table>
@@ -395,10 +519,18 @@ export const Payouts = () => {
                       <TableHead className="font-semibold">Store</TableHead>
                       <TableHead className="font-semibold">Date</TableHead>
                       <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="font-semibold text-right">Subtotal</TableHead>
-                      <TableHead className="font-semibold text-right">Service Fee</TableHead>
-                      <TableHead className="font-semibold text-right">Commission</TableHead>
-                      <TableHead className="font-semibold text-right">NET</TableHead>
+                      <TableHead className="font-semibold text-right">
+                        Subtotal
+                      </TableHead>
+                      <TableHead className="font-semibold text-right">
+                        Service Fee
+                      </TableHead>
+                      <TableHead className="font-semibold text-right">
+                        Commission
+                      </TableHead>
+                      <TableHead className="font-semibold text-right">
+                        NET
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -415,12 +547,22 @@ export const Payouts = () => {
                             <span className="font-medium">{item.store}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-gray-600">{item.date}</TableCell>
+                        <TableCell className="text-gray-600">
+                          {item.date}
+                        </TableCell>
                         <TableCell>{getStatusBadge(item.status)}</TableCell>
-                        <TableCell className="font-medium text-right">{item.subtotal}</TableCell>
-                        <TableCell className="text-orange-600 text-right">{item.serviceFee}</TableCell>
-                        <TableCell className="text-red-600 text-right">{item.commissions}</TableCell>
-                        <TableCell className="font-bold text-green-600 text-right">{item.net}</TableCell>
+                        <TableCell className="font-medium text-right">
+                          {item.subtotal}
+                        </TableCell>
+                        <TableCell className="text-orange-600 text-right">
+                          {item.serviceFee}
+                        </TableCell>
+                        <TableCell className="text-red-600 text-right">
+                          {item.commissions}
+                        </TableCell>
+                        <TableCell className="font-bold text-green-600 text-right">
+                          {item.net}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -432,7 +574,10 @@ export const Payouts = () => {
           {/* Mobile/Tablet Cards */}
           <div className="lg:hidden space-y-3 sm:space-y-4">
             {filteredData.map((item) => (
-              <Card key={item.id} className="shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+              <Card
+                key={item.id}
+                className="rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+              >
                 <CardContent className="p-0">
                   {/* Header Section */}
                   <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50/50">
@@ -444,32 +589,52 @@ export const Payouts = () => {
                         size="sm"
                       />
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{item.store}</h3>
-                        <p className="text-xs sm:text-sm text-gray-500 truncate">{item.date}</p>
+                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                          {item.store}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-gray-500 truncate">
+                          {item.date}
+                        </p>
                       </div>
                     </div>
                     <div className="flex-shrink-0 ml-2">
                       {getStatusBadge(item.status)}
                     </div>
                   </div>
-                  
+
                   {/* Financial Details Grid */}
                   <div className="grid grid-cols-2 gap-px bg-gray-100">
                     <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wide mb-1">Subtotal</p>
-                      <p className="text-sm sm:text-base font-semibold text-gray-900">{item.subtotal}</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wide mb-1">
+                        Subtotal
+                      </p>
+                      <p className="text-sm sm:text-base font-semibold text-gray-900">
+                        {item.subtotal}
+                      </p>
                     </div>
                     <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-orange-600 uppercase tracking-wide mb-1">Service Fee</p>
-                      <p className="text-sm sm:text-base font-medium text-orange-600">{item.serviceFee}</p>
+                      <p className="text-[10px] sm:text-xs text-orange-600 uppercase tracking-wide mb-1">
+                        Service Fee
+                      </p>
+                      <p className="text-sm sm:text-base font-medium text-orange-600">
+                        {item.serviceFee}
+                      </p>
                     </div>
                     <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-red-600 uppercase tracking-wide mb-1">Commission</p>
-                      <p className="text-sm sm:text-base font-medium text-red-600">{item.commissions}</p>
+                      <p className="text-[10px] sm:text-xs text-red-600 uppercase tracking-wide mb-1">
+                        Commission
+                      </p>
+                      <p className="text-sm sm:text-base font-medium text-red-600">
+                        {item.commissions}
+                      </p>
                     </div>
                     <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-green-600 uppercase tracking-wide mb-1">Net Earnings</p>
-                      <p className="text-sm sm:text-base font-bold text-green-600">{item.net}</p>
+                      <p className="text-[10px] sm:text-xs text-green-600 uppercase tracking-wide mb-1">
+                        Net Earnings
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-green-600">
+                        {item.net}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -479,9 +644,7 @@ export const Payouts = () => {
 
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 border-t gap-4">
-            <span className="text-sm text-gray-600">
-              Rows per page: 10
-            </span>
+            <span className="text-sm text-gray-600">Rows per page: 10</span>
             <span className="text-sm text-gray-600">
               1-{filteredData.length} of {filteredData.length}
             </span>
