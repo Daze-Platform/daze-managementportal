@@ -1,20 +1,31 @@
-
-import React from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useResort } from '@/contexts/DestinationContext';
+import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useResort } from "@/contexts/DestinationContext";
 
 export const HotelSelector = () => {
-  const { currentDestination, destinations, setCurrentDestination, currentResort, resorts } = useResort();
-  
+  const {
+    currentDestination,
+    destinations,
+    setCurrentDestination,
+    currentResort,
+    resorts,
+  } = useResort();
+
   // Use new naming or legacy aliases
   const current = currentDestination || currentResort;
   const allDestinations = destinations || resorts;
 
   const handleDestinationChange = (destinationId: string) => {
-    const selected = allDestinations.find(d => d.id === destinationId);
+    const selected = allDestinations.find((d) => d.id === destinationId);
     if (selected) {
       setCurrentDestination(selected);
-      console.log('Destination changed to:', selected);
+      console.log("Destination changed to:", selected);
     }
   };
 
@@ -56,9 +67,9 @@ export const HotelSelector = () => {
           </SelectTrigger>
           <SelectContent className="bg-white border-gray-200 min-w-[280px] rounded-xl shadow-xl">
             {allDestinations.map((destination) => (
-              <SelectItem 
-                key={destination.id} 
-                value={destination.id} 
+              <SelectItem
+                key={destination.id}
+                value={destination.id}
                 className="text-gray-900 p-3 rounded-lg m-1 focus:bg-brand-orange/10 data-[highlighted]:bg-brand-orange/10"
               >
                 <div className="flex items-center space-x-3 w-full">
@@ -78,7 +89,9 @@ export const HotelSelector = () => {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">{destination.name}</div>
+                    <div className="font-medium text-gray-900">
+                      {destination.name}
+                    </div>
                   </div>
                 </div>
               </SelectItem>

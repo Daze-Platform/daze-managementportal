@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Star, TrendingUp, Users } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Star, TrendingUp, Users } from "lucide-react";
 
 interface CustomerSatisfactionData {
   overall: number;
@@ -22,33 +21,39 @@ export const CustomerSatisfaction = ({ data }: CustomerSatisfactionProps) => {
       <Star
         key={i}
         className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${
-          i < Math.floor(rating) 
-            ? 'text-yellow-400 fill-current' 
-            : i < rating 
-            ? 'text-yellow-400 fill-current opacity-50' 
-            : 'text-gray-300'
+          i < Math.floor(rating)
+            ? "text-yellow-400 fill-current"
+            : i < rating
+              ? "text-yellow-400 fill-current opacity-50"
+              : "text-gray-300"
         }`}
       />
     ));
   };
 
   const categories = [
-    { label: 'Food Quality', value: data.foodQuality, icon: '🍽️' },
-    { label: 'Service Speed', value: data.serviceSpeed, icon: '⚡' },
-    { label: 'Cleanliness', value: data.cleanliness, icon: '✨' },
-    { label: 'Value', value: data.value, icon: '💰' },
+    { label: "Food Quality", value: data.foodQuality, icon: "🍽️" },
+    { label: "Service Speed", value: data.serviceSpeed, icon: "⚡" },
+    { label: "Cleanliness", value: data.cleanliness, icon: "✨" },
+    { label: "Value", value: data.value, icon: "💰" },
   ];
 
   return (
     <Card className="shadow-sm h-full">
       <CardHeader className="pb-2 px-3 sm:px-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base sm:text-lg lg:text-xl">Customer Satisfaction</CardTitle>
+          <CardTitle className="text-base sm:text-lg lg:text-xl">
+            Customer Satisfaction
+          </CardTitle>
           <div className="flex items-center gap-1 sm:gap-2">
             <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
             <span className="text-xs sm:text-sm text-gray-600">
-              <span className="hidden sm:inline">{data.totalReviews.toLocaleString()} reviews</span>
-              <span className="sm:hidden">{data.totalReviews.toLocaleString()}</span>
+              <span className="hidden sm:inline">
+                {data.totalReviews.toLocaleString()} reviews
+              </span>
+              <span className="sm:hidden">
+                {data.totalReviews.toLocaleString()}
+              </span>
             </span>
           </div>
         </div>
@@ -62,8 +67,12 @@ export const CustomerSatisfaction = ({ data }: CustomerSatisfactionProps) => {
                 <Star className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 fill-current" />
               </div>
               <div>
-                <p className="text-base sm:text-lg font-bold text-gray-900">{data.overall.toFixed(1)}</p>
-                <p className="text-xs sm:text-sm text-gray-600">Overall Rating</p>
+                <p className="text-base sm:text-lg font-bold text-gray-900">
+                  {data.overall.toFixed(1)}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  Overall Rating
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -74,10 +83,15 @@ export const CustomerSatisfaction = ({ data }: CustomerSatisfactionProps) => {
           {/* Category Breakdown */}
           <div className="space-y-2 sm:space-y-3">
             {categories.map((category, index) => (
-              <div key={index} className="flex items-center justify-between p-2 sm:p-3 rounded-lg bg-gray-50">
+              <div
+                key={index}
+                className="flex items-center justify-between p-2 sm:p-3 rounded-lg bg-gray-50"
+              >
                 <div className="flex items-center gap-2 sm:gap-3">
                   <span className="text-base sm:text-lg">{category.icon}</span>
-                  <span className="text-xs sm:text-sm font-medium text-gray-900">{category.label}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900">
+                    {category.label}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">

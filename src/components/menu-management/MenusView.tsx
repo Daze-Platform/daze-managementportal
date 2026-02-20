@@ -1,9 +1,9 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Plus, FileUp } from 'lucide-react';
-import { MenuList } from './MenuList';
-import { MenuImport } from './MenuImport';
-import { Menu } from '@/pages/MenuManagement';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Plus, FileUp } from "lucide-react";
+import { MenuList } from "./MenuList";
+import { MenuImport } from "./MenuImport";
+import { Menu } from "@/pages/MenuManagement";
 
 interface MenusViewProps {
   menus: Menu[];
@@ -22,7 +22,7 @@ export const MenusView: React.FC<MenusViewProps> = ({
   onEditMenu,
   onToggleMenuStatus,
   onDeleteMenu,
-  onAssignStore
+  onAssignStore,
 }) => {
   return (
     <div className="space-y-6">
@@ -30,15 +30,14 @@ export const MenusView: React.FC<MenusViewProps> = ({
       <div className="flex flex-col gap-4 pb-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{menus.length}</span>
-            {' '}{menus.length === 1 ? 'menu' : 'menus'}
-            {' '}in {selectedStoreName}
+            <span className="font-medium text-foreground">{menus.length}</span>{" "}
+            {menus.length === 1 ? "menu" : "menus"} in {selectedStoreName}
           </div>
         </div>
-        
+
         <div className="flex flex-col xs:flex-row gap-2 w-full">
           <MenuImport />
-          <Button 
+          <Button
             onClick={onShowCreateDialog}
             className="h-10 flex-1 xs:flex-none"
           >

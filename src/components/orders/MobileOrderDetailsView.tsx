@@ -1,13 +1,22 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import { OrderDetails } from './OrderDetails';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { OrderDetails } from "./OrderDetails";
 
 interface MobileOrderDetailsViewProps {
   selectedOrder: string;
   activeTab: string;
-  onOrderUpdate: (orderId: string, action: 'accept' | 'decline' | 'ready' | 'complete' | 'fulfill' | 'schedule' | 'activate') => void;
+  onOrderUpdate: (
+    orderId: string,
+    action:
+      | "accept"
+      | "decline"
+      | "ready"
+      | "complete"
+      | "fulfill"
+      | "schedule"
+      | "activate",
+  ) => void;
   onBackToList: () => void;
 }
 
@@ -15,7 +24,7 @@ export const MobileOrderDetailsView = ({
   selectedOrder,
   activeTab,
   onOrderUpdate,
-  onBackToList
+  onBackToList,
 }: MobileOrderDetailsViewProps) => {
   return (
     <div className="page-container">
@@ -31,12 +40,15 @@ export const MobileOrderDetailsView = ({
         </Button>
         <h1 className="text-lg font-semibold text-gray-900">Order Details</h1>
       </div>
-      
+
       {/* Order Details - Mobile optimized scrolling */}
-      <div className="flex-1 order-details-mobile-scroll md:overflow-y-auto md:scroll-smooth md:overscroll-contain md:touch-pan-y" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <OrderDetails 
-          selectedOrder={selectedOrder} 
-          activeTab={activeTab} 
+      <div
+        className="flex-1 order-details-mobile-scroll md:overflow-y-auto md:scroll-smooth md:overscroll-contain md:touch-pan-y"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
+        <OrderDetails
+          selectedOrder={selectedOrder}
+          activeTab={activeTab}
           onOrderUpdate={onOrderUpdate}
         />
       </div>

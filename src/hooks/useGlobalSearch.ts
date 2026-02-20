@@ -1,8 +1,17 @@
-import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 interface SearchResult {
-  type: 'store' | 'revenue' | 'menu-item' | 'inventory' | 'order' | 'employee' | 'promotion' | 'setting' | 'report';
+  type:
+    | "store"
+    | "revenue"
+    | "menu-item"
+    | "inventory"
+    | "order"
+    | "employee"
+    | "promotion"
+    | "setting"
+    | "report";
   title: string;
   description: string;
   id: string;
@@ -10,84 +19,196 @@ interface SearchResult {
   page?: string; // Which page this result navigates to
 }
 
-// Global sample data for Lily Hall venues
+// Global sample data for Pensacola Beach Resort venues
 export const globalSearchData = {
   stores: [
-    { id: 'brother-fox', name: 'Brother Fox', orders: 45, page: '/stores' },
-    { id: 'sister-hen', name: 'Sister Hen', orders: 32, page: '/stores' },
-    { id: 'cousin-wolf', name: 'Cousin Wolf', orders: 28, page: '/stores' },
+    {
+      id: "windrose-restaurant",
+      name: "Windrose Restaurant",
+      orders: 45,
+      page: "/stores",
+    },
+    { id: "tiki-bar", name: "Tiki Bar", orders: 32, page: "/stores" },
+    {
+      id: "salty-rose-beach-bar",
+      name: "Salty Rose Beach Bar",
+      orders: 28,
+      page: "/stores",
+    },
   ],
   orders: [
     {
-      id: '#67899886',
-      store: 'Brother Fox',
-      customer: 'Lucie Morgan',
-      type: 'Pickup',
-      total: '$76.45',
-      date: 'May 7, 2021 11:50AM',
-      status: 'Completed',
-      page: '/orders/history'
+      id: "#67899886",
+      store: "Windrose Restaurant",
+      customer: "Lucie Morgan",
+      type: "Pickup",
+      total: "$76.45",
+      date: "May 7, 2021 11:50AM",
+      status: "Completed",
+      page: "/orders/history",
     },
     {
-      id: '#67899887',
-      store: 'Sister Hen',
-      customer: 'Adam Smith',
-      type: 'Delivery',
-      total: '$42.95',
-      date: 'May 7, 2021 11:50AM',
-      status: 'Canceled',
-      page: '/orders/history'
+      id: "#67899887",
+      store: "Tiki Bar",
+      customer: "Adam Smith",
+      type: "Delivery",
+      total: "$42.95",
+      date: "May 7, 2021 11:50AM",
+      status: "Canceled",
+      page: "/orders/history",
     },
     {
-      id: '#67899888',
-      store: 'Cousin Wolf',
-      customer: 'John Cordoba',
-      type: 'Delivery',
-      total: '$28.47',
-      date: 'May 7, 2021 11:50AM',
-      status: 'Completed',
-      page: '/orders/history'
+      id: "#67899888",
+      store: "Salty Rose Beach Bar",
+      customer: "John Cordoba",
+      type: "Delivery",
+      total: "$28.47",
+      date: "May 7, 2021 11:50AM",
+      status: "Completed",
+      page: "/orders/history",
     },
   ],
   menuItems: [
-    { id: 'oysters', name: 'Wood-Fired Oysters', orders: 120, category: 'Starters', page: '/menu' },
-    { id: 'paella', name: 'Seafood Paella', orders: 85, category: 'Main Course', page: '/menu' },
-    { id: 'old-fashioned', name: 'Old Fashioned', orders: 95, category: 'Cocktails', page: '/menu' },
-    { id: 'brunch-plate', name: 'Weekend Brunch Plate', orders: 67, category: 'Brunch', page: '/menu' },
+    {
+      id: "oysters",
+      name: "Wood-Fired Oysters",
+      orders: 120,
+      category: "Starters",
+      page: "/menu",
+    },
+    {
+      id: "paella",
+      name: "Seafood Paella",
+      orders: 85,
+      category: "Main Course",
+      page: "/menu",
+    },
+    {
+      id: "old-fashioned",
+      name: "Old Fashioned",
+      orders: 95,
+      category: "Cocktails",
+      page: "/menu",
+    },
+    {
+      id: "brunch-plate",
+      name: "Weekend Brunch Plate",
+      orders: 67,
+      category: "Brunch",
+      page: "/menu",
+    },
   ],
   inventory: [
-    { id: 'oysters-stock', name: 'Fresh Oysters', urgency: 'high', stock: 12, page: '/dashboard' },
-    { id: 'bourbon', name: 'Bourbon Selection', urgency: 'medium', stock: 45, page: '/dashboard' },
-    { id: 'eggs', name: 'Farm Fresh Eggs', urgency: 'low', stock: 78, page: '/dashboard' },
+    {
+      id: "oysters-stock",
+      name: "Fresh Oysters",
+      urgency: "high",
+      stock: 12,
+      page: "/dashboard",
+    },
+    {
+      id: "bourbon",
+      name: "Bourbon Selection",
+      urgency: "medium",
+      stock: 45,
+      page: "/dashboard",
+    },
+    {
+      id: "eggs",
+      name: "Farm Fresh Eggs",
+      urgency: "low",
+      stock: 78,
+      page: "/dashboard",
+    },
   ],
   employees: [
-    { id: 'john-doe', name: 'John Doe', role: 'Manager', store: 'Brother Fox', page: '/employees' },
-    { id: 'jane-smith', name: 'Jane Smith', role: 'Bartender', store: 'Sister Hen', page: '/employees' },
-    { id: 'mike-johnson', name: 'Mike Johnson', role: 'Chef', store: 'Cousin Wolf', page: '/employees' },
+    {
+      id: "john-doe",
+      name: "John Doe",
+      role: "Manager",
+      store: "Windrose Restaurant",
+      page: "/employees",
+    },
+    {
+      id: "jane-smith",
+      name: "Jane Smith",
+      role: "Bartender",
+      store: "Tiki Bar",
+      page: "/employees",
+    },
+    {
+      id: "mike-johnson",
+      name: "Mike Johnson",
+      role: "Chef",
+      store: "Salty Rose Beach Bar",
+      page: "/employees",
+    },
   ],
   promotions: [
-    { id: 'summer-deal', name: 'Summer Special', discount: '20%', status: 'Active', page: '/promotions' },
-    { id: 'happy-hour', name: 'Happy Hour', discount: '15%', status: 'Scheduled', page: '/promotions' },
+    {
+      id: "summer-deal",
+      name: "Summer Special",
+      discount: "20%",
+      status: "Active",
+      page: "/promotions",
+    },
+    {
+      id: "happy-hour",
+      name: "Happy Hour",
+      discount: "15%",
+      status: "Scheduled",
+      page: "/promotions",
+    },
   ],
   revenue: [
-    { id: 'daily', name: 'Daily Revenue', value: 2450, page: '/reports' },
-    { id: 'weekly', name: 'Weekly Revenue', value: 15680, page: '/reports' },
-    { id: 'monthly', name: 'Monthly Revenue', value: 68900, page: '/reports' },
+    { id: "daily", name: "Daily Revenue", value: 2450, page: "/reports" },
+    { id: "weekly", name: "Weekly Revenue", value: 15680, page: "/reports" },
+    { id: "monthly", name: "Monthly Revenue", value: 68900, page: "/reports" },
   ],
   settings: [
-    { id: 'profile', name: 'Profile Settings', description: 'Manage your account profile', page: '/settings?tab=profile' },
-    { id: 'security', name: 'Security Settings', description: 'Manage passwords and security', page: '/settings?tab=security' },
-    { id: 'notifications', name: 'Notification Settings', description: 'Configure notifications', page: '/notifications' },
+    {
+      id: "profile",
+      name: "Profile Settings",
+      description: "Manage your account profile",
+      page: "/settings?tab=profile",
+    },
+    {
+      id: "security",
+      name: "Security Settings",
+      description: "Manage passwords and security",
+      page: "/settings?tab=security",
+    },
+    {
+      id: "notifications",
+      name: "Notification Settings",
+      description: "Configure notifications",
+      page: "/notifications",
+    },
   ],
   reports: [
-    { id: 'sales-report', name: 'Sales Report', description: 'Daily sales analytics', page: '/reports' },
-    { id: 'inventory-report', name: 'Inventory Report', description: 'Stock levels and alerts', page: '/reports' },
-    { id: 'performance-report', name: 'Performance Report', description: 'Store and staff performance', page: '/reports' },
-  ]
+    {
+      id: "sales-report",
+      name: "Sales Report",
+      description: "Daily sales analytics",
+      page: "/reports",
+    },
+    {
+      id: "inventory-report",
+      name: "Inventory Report",
+      description: "Stock levels and alerts",
+      page: "/reports",
+    },
+    {
+      id: "performance-report",
+      name: "Performance Report",
+      description: "Store and staff performance",
+      page: "/reports",
+    },
+  ],
 };
 
 export const useGlobalSearch = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
 
   // Create search results from global data
@@ -97,14 +218,19 @@ export const useGlobalSearch = () => {
     const query = searchQuery.toLowerCase();
     const results: SearchResult[] = [];
 
-    console.log('Global search with query:', query, 'on page:', location.pathname);
+    console.log(
+      "Global search with query:",
+      query,
+      "on page:",
+      location.pathname,
+    );
 
     // Search stores
     globalSearchData.stores
-      .filter(store => store.name.toLowerCase().includes(query))
-      .forEach(store => {
+      .filter((store) => store.name.toLowerCase().includes(query))
+      .forEach((store) => {
         results.push({
-          type: 'store',
+          type: "store",
           title: store.name,
           description: `${store.orders} active orders`,
           id: store.id,
@@ -115,14 +241,15 @@ export const useGlobalSearch = () => {
 
     // Search orders
     globalSearchData.orders
-      .filter(order => 
-        order.id.toLowerCase().includes(query) ||
-        order.customer.toLowerCase().includes(query) ||
-        order.store.toLowerCase().includes(query)
+      .filter(
+        (order) =>
+          order.id.toLowerCase().includes(query) ||
+          order.customer.toLowerCase().includes(query) ||
+          order.store.toLowerCase().includes(query),
       )
-      .forEach(order => {
+      .forEach((order) => {
         results.push({
-          type: 'order',
+          type: "order",
           title: `Order ${order.id}`,
           description: `${order.customer} • ${order.store} • ${order.total}`,
           id: order.id,
@@ -133,13 +260,14 @@ export const useGlobalSearch = () => {
 
     // Search menu items
     globalSearchData.menuItems
-      .filter(item => 
-        item.name.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query)
+      .filter(
+        (item) =>
+          item.name.toLowerCase().includes(query) ||
+          item.category.toLowerCase().includes(query),
       )
-      .forEach(item => {
+      .forEach((item) => {
         results.push({
-          type: 'menu-item',
+          type: "menu-item",
           title: item.name,
           description: `${item.category} • ${item.orders} orders this month`,
           id: item.id,
@@ -150,10 +278,10 @@ export const useGlobalSearch = () => {
 
     // Search inventory
     globalSearchData.inventory
-      .filter(item => item.name.toLowerCase().includes(query))
-      .forEach(item => {
+      .filter((item) => item.name.toLowerCase().includes(query))
+      .forEach((item) => {
         results.push({
-          type: 'inventory',
+          type: "inventory",
           title: item.name,
           description: `${item.urgency} priority • ${item.stock} in stock`,
           id: item.id,
@@ -164,14 +292,15 @@ export const useGlobalSearch = () => {
 
     // Search employees
     globalSearchData.employees
-      .filter(employee => 
-        employee.name.toLowerCase().includes(query) ||
-        employee.role.toLowerCase().includes(query) ||
-        employee.store.toLowerCase().includes(query)
+      .filter(
+        (employee) =>
+          employee.name.toLowerCase().includes(query) ||
+          employee.role.toLowerCase().includes(query) ||
+          employee.store.toLowerCase().includes(query),
       )
-      .forEach(employee => {
+      .forEach((employee) => {
         results.push({
-          type: 'employee',
+          type: "employee",
           title: employee.name,
           description: `${employee.role} at ${employee.store}`,
           id: employee.id,
@@ -182,13 +311,14 @@ export const useGlobalSearch = () => {
 
     // Search promotions
     globalSearchData.promotions
-      .filter(promo => 
-        promo.name.toLowerCase().includes(query) ||
-        promo.status.toLowerCase().includes(query)
+      .filter(
+        (promo) =>
+          promo.name.toLowerCase().includes(query) ||
+          promo.status.toLowerCase().includes(query),
       )
-      .forEach(promo => {
+      .forEach((promo) => {
         results.push({
-          type: 'promotion',
+          type: "promotion",
           title: promo.name,
           description: `${promo.discount} discount • ${promo.status}`,
           id: promo.id,
@@ -199,10 +329,10 @@ export const useGlobalSearch = () => {
 
     // Search revenue/reports
     globalSearchData.revenue
-      .filter(revenue => revenue.name.toLowerCase().includes(query))
-      .forEach(revenue => {
+      .filter((revenue) => revenue.name.toLowerCase().includes(query))
+      .forEach((revenue) => {
         results.push({
-          type: 'revenue',
+          type: "revenue",
           title: revenue.name,
           description: `$${revenue.value.toLocaleString()}`,
           id: revenue.id,
@@ -213,13 +343,14 @@ export const useGlobalSearch = () => {
 
     // Search settings
     globalSearchData.settings
-      .filter(setting => 
-        setting.name.toLowerCase().includes(query) ||
-        setting.description.toLowerCase().includes(query)
+      .filter(
+        (setting) =>
+          setting.name.toLowerCase().includes(query) ||
+          setting.description.toLowerCase().includes(query),
       )
-      .forEach(setting => {
+      .forEach((setting) => {
         results.push({
-          type: 'setting',
+          type: "setting",
           title: setting.name,
           description: setting.description,
           id: setting.id,
@@ -230,13 +361,14 @@ export const useGlobalSearch = () => {
 
     // Search reports
     globalSearchData.reports
-      .filter(report => 
-        report.name.toLowerCase().includes(query) ||
-        report.description.toLowerCase().includes(query)
+      .filter(
+        (report) =>
+          report.name.toLowerCase().includes(query) ||
+          report.description.toLowerCase().includes(query),
       )
-      .forEach(report => {
+      .forEach((report) => {
         results.push({
-          type: 'report',
+          type: "report",
           title: report.name,
           description: report.description,
           id: report.id,
@@ -245,13 +377,17 @@ export const useGlobalSearch = () => {
         });
       });
 
-    console.log('Global search results:', results);
+    console.log("Global search results:", results);
     return results.slice(0, 8); // Limit to 8 results
   }, [searchQuery, location.pathname]);
 
   const hasResults = searchResults.length > 0;
 
-  console.log('useGlobalSearch hook state:', { searchQuery, hasResults, resultsCount: searchResults.length });
+  console.log("useGlobalSearch hook state:", {
+    searchQuery,
+    hasResults,
+    resultsCount: searchResults.length,
+  });
 
   return {
     searchQuery,

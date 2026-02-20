@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/DestinationContext';
-import { Store } from '@/types/store';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useStores } from "@/contexts/StoresContext";
+import { useResort } from "@/contexts/DestinationContext";
+import { Store } from "@/types/store";
 
 interface UserCreateFormProps {
   isOpen: boolean;
@@ -15,24 +26,28 @@ interface UserCreateFormProps {
   onSubmit: (userData: any) => Promise<void>;
 }
 
-export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProps) => {
+export const UserCreateForm = ({
+  isOpen,
+  onClose,
+  onSubmit,
+}: UserCreateFormProps) => {
   const { stores } = useStores();
   const { resorts } = useResort();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    role: 'Director', // Default to Director as it's the top role
-    store: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "Director", // Default to Director as it's the top role
+    store: "",
     assignedStores: [] as string[],
     assignedResorts: [] as string[],
-    resort: 'Hilton Pensacola Beach'
+    resort: "Hilton Pensacola Beach",
   });
 
   // Update default store when stores change
   useEffect(() => {
     if (stores.length > 0 && !formData.store) {
-      setFormData(prev => ({ ...prev, store: stores[0].name }));
+      setFormData((prev) => ({ ...prev, store: stores[0].name }));
     }
   }, [stores]);
 
@@ -45,39 +60,39 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
       store: formData.store,
       assigned_stores: formData.assignedStores,
       assigned_resorts: formData.assignedResorts,
-      status: 'Pending',
-      avatar: '/placeholder.svg'
+      status: "Pending",
+      avatar: "/placeholder.svg",
     };
-    
+
     await onSubmit(userData);
-    
+
     // Reset form
-    const defaultStore = stores.length > 0 ? stores[0].name : '';
+    const defaultStore = stores.length > 0 ? stores[0].name : "";
     setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      role: 'Director',
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "Director",
       store: defaultStore,
       assignedStores: [],
       assignedResorts: [],
-      resort: 'Hilton Pensacola Beach'
+      resort: "Hilton Pensacola Beach",
     });
     onClose();
   };
 
   const handleCancel = () => {
     // Reset form on cancel
-    const defaultStore = stores.length > 0 ? stores[0].name : '';
+    const defaultStore = stores.length > 0 ? stores[0].name : "";
     setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      role: 'Director',
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "Director",
       store: defaultStore,
       assignedStores: [],
       assignedResorts: [],
-      resort: 'Hilton Pensacola Beach'
+      resort: "Hilton Pensacola Beach",
     });
     onClose();
   };
@@ -88,7 +103,7 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
         <DialogHeader>
           <DialogTitle>Create new user</DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -96,7 +111,9 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 required
               />
             </div>
@@ -105,7 +122,9 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
                 required
               />
             </div>
@@ -117,14 +136,21 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
 
           <div>
             <Label htmlFor="role">Role</Label>
-            <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
+            <Select
+              value={formData.role}
+              onValueChange={(value) =>
+                setFormData({ ...formData, role: value })
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -152,19 +178,29 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
                     checked={formData.assignedStores.includes(store.name)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setFormData({ 
-                          ...formData, 
-                          assignedStores: [...formData.assignedStores, store.name] 
+                        setFormData({
+                          ...formData,
+                          assignedStores: [
+                            ...formData.assignedStores,
+                            store.name,
+                          ],
                         });
                       } else {
-                        setFormData({ 
-                          ...formData, 
-                          assignedStores: formData.assignedStores.filter(s => s !== store.name) 
+                        setFormData({
+                          ...formData,
+                          assignedStores: formData.assignedStores.filter(
+                            (s) => s !== store.name,
+                          ),
                         });
                       }
                     }}
                   />
-                  <Label htmlFor={`store-${store.id}`} className="text-sm font-normal">{store.name}</Label>
+                  <Label
+                    htmlFor={`store-${store.id}`}
+                    className="text-sm font-normal"
+                  >
+                    {store.name}
+                  </Label>
                 </div>
               ))}
             </div>
@@ -180,19 +216,29 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
                     checked={formData.assignedResorts.includes(resort.id)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setFormData({ 
-                          ...formData, 
-                          assignedResorts: [...formData.assignedResorts, resort.id] 
+                        setFormData({
+                          ...formData,
+                          assignedResorts: [
+                            ...formData.assignedResorts,
+                            resort.id,
+                          ],
                         });
                       } else {
-                        setFormData({ 
-                          ...formData, 
-                          assignedResorts: formData.assignedResorts.filter(r => r !== resort.id) 
+                        setFormData({
+                          ...formData,
+                          assignedResorts: formData.assignedResorts.filter(
+                            (r) => r !== resort.id,
+                          ),
                         });
                       }
                     }}
                   />
-                  <Label htmlFor={`resort-${resort.id}`} className="text-sm font-normal">{resort.name}</Label>
+                  <Label
+                    htmlFor={`resort-${resort.id}`}
+                    className="text-sm font-normal"
+                  >
+                    {resort.name}
+                  </Label>
                 </div>
               ))}
             </div>
@@ -202,9 +248,7 @@ export const UserCreateForm = ({ isOpen, onClose, onSubmit }: UserCreateFormProp
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button type="submit">
-              Create User
-            </Button>
+            <Button type="submit">Create User</Button>
           </div>
         </form>
       </DialogContent>
