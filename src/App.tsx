@@ -21,6 +21,7 @@ import { MenuManagement } from "./pages/MenuManagement";
 import { Reports } from "./pages/Reports";
 import { Payouts } from "./pages/Payouts";
 import { Employees } from "./pages/Employees";
+import { Users } from "./pages/Users";
 import { Ratings } from "./pages/Ratings";
 import { Promotions } from "./pages/Promotions";
 import { Settings } from "./pages/Settings";
@@ -104,6 +105,13 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <Layout>
             <Employees />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/users" element={
+        <ProtectedRoute>
+          <Layout>
+            <Users />
           </Layout>
         </ProtectedRoute>
       } />

@@ -216,17 +216,124 @@ export const resortDashboardData = {
         peakHourCapacity: 88
       }
     }
+  },
+  'pensacola-beach-resort': {
+    all: {
+      name: 'All Stores',
+      stats: {
+        revenue: 8450,
+        orders: 412,
+        customers: 298,
+        avgOrder: 20.50,
+        trends: { revenue: 11.4, orders: 9.1, customers: 7.3, avgOrder: 2.8 }
+      },
+      revenueData: [
+        { name: 'Mon', value: 980 },
+        { name: 'Tue', value: 1100 },
+        { name: 'Wed', value: 1250 },
+        { name: 'Thu', value: 1320 },
+        { name: 'Fri', value: 1440 },
+        { name: 'Sat', value: 1650 },
+        { name: 'Sun', value: 710 },
+      ],
+      orderData: [
+        { name: '10AM', orders: 34 },
+        { name: '12PM', orders: 79 },
+        { name: '2PM', orders: 88 },
+        { name: '4PM', orders: 72 },
+        { name: '6PM', orders: 91 },
+        { name: '8PM', orders: 48 },
+      ],
+      topItems: [
+        { name: 'Dolphin Punch', orders: 74, revenue: '$1,332', image: '🍹', change: '+16%' },
+        { name: 'Smash Burger', orders: 63, revenue: '$945', image: '🍔', change: '+11%' },
+        { name: 'Shrimp Cocktail', orders: 58, revenue: '$1,044', image: '🍤', change: '+14%' },
+        { name: 'Tipsy Mermaid', orders: 52, revenue: '$624', image: '🍸', change: '+13%' },
+        { name: 'Fried Gulf Platter', orders: 47, revenue: '$1,081', image: '🍽️', change: '+9%' }
+      ],
+      performanceAlerts: [
+        { metric: 'Beachside Service Time', currentValue: 14.8, targetValue: 12.0, urgency: 'medium' as const, impact: 'Lounger delivery experience' },
+        { metric: 'Bar Throughput', currentValue: 82.0, targetValue: 88.0, urgency: 'medium' as const, impact: 'Peak cocktail demand' }
+      ],
+      customerSatisfaction: {
+        overall: 4.4,
+        foodQuality: 4.5,
+        serviceSpeed: 4.2,
+        cleanliness: 4.4,
+        value: 4.3,
+        totalReviews: 412
+      },
+      operationalMetrics: {
+        avgOrderPrepTime: 10.8,
+        kitchenEfficiency: 89,
+        wastagePercentage: 3.9,
+        staffUtilization: 81,
+        peakHourCapacity: 90
+      }
+    },
+    '1': {
+      name: 'Salty Rose',
+      stats: {
+        revenue: 8450,
+        orders: 412,
+        customers: 298,
+        avgOrder: 20.50,
+        trends: { revenue: 11.4, orders: 9.1, customers: 7.3, avgOrder: 2.8 }
+      },
+      revenueData: [
+        { name: 'Mon', value: 980 },
+        { name: 'Tue', value: 1100 },
+        { name: 'Wed', value: 1250 },
+        { name: 'Thu', value: 1320 },
+        { name: 'Fri', value: 1440 },
+        { name: 'Sat', value: 1650 },
+        { name: 'Sun', value: 710 },
+      ],
+      orderData: [
+        { name: '10AM', orders: 34 },
+        { name: '12PM', orders: 79 },
+        { name: '2PM', orders: 88 },
+        { name: '4PM', orders: 72 },
+        { name: '6PM', orders: 91 },
+        { name: '8PM', orders: 48 },
+      ],
+      topItems: [
+        { name: 'Dolphin Punch', orders: 74, revenue: '$1,332', image: '🍹', change: '+16%' },
+        { name: 'Smash Burger', orders: 63, revenue: '$945', image: '🍔', change: '+11%' },
+        { name: 'Shrimp Cocktail', orders: 58, revenue: '$1,044', image: '🍤', change: '+14%' },
+        { name: 'Tipsy Mermaid', orders: 52, revenue: '$624', image: '🍸', change: '+13%' },
+        { name: 'Fried Gulf Platter', orders: 47, revenue: '$1,081', image: '🍽️', change: '+9%' }
+      ],
+      performanceAlerts: [
+        { metric: 'Beachside Service Time', currentValue: 14.8, targetValue: 12.0, urgency: 'medium' as const, impact: 'Lounger delivery experience' },
+        { metric: 'Bar Throughput', currentValue: 82.0, targetValue: 88.0, urgency: 'medium' as const, impact: 'Peak cocktail demand' }
+      ],
+      customerSatisfaction: {
+        overall: 4.4,
+        foodQuality: 4.5,
+        serviceSpeed: 4.2,
+        cleanliness: 4.4,
+        value: 4.3,
+        totalReviews: 412
+      },
+      operationalMetrics: {
+        avgOrderPrepTime: 10.8,
+        kitchenEfficiency: 89,
+        wastagePercentage: 3.9,
+        staffUtilization: 81,
+        peakHourCapacity: 90
+      }
+    }
   }
+
 };
 
 // Legacy export for backward compatibility
-export const storeData = resortDashboardData['lily-hall-pensacola'];
+export const storeData = resortDashboardData['pensacola-beach-resort'];
 
 export const stores = [
-  { id: 'all', name: 'All Stores', count: 3 },
-  { id: '1', name: 'Brother Fox', count: 8 },
-  { id: '2', name: 'Sister Hen', count: 12 },
-  { id: '3', name: 'Cousin Wolf', count: 5 },
+  { id: 'all', name: 'All Stores', count: 1 },
+  { id: '1', name: 'Salty Rose', count: 1 },
 ];
 
 export const employeeDeliveries = [

@@ -65,6 +65,12 @@ const menuItems = [
     iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
   },
   { 
+    name: 'Team', 
+    path: '/users', 
+    icon: Users,
+    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+  },
+  { 
     name: 'Ratings', 
     path: '/ratings', 
     icon: Star,

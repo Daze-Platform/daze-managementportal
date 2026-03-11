@@ -18,18 +18,10 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [showBanner, setShowBanner] = useState(true);
   const navigate = useNavigate();
   const { login, isAuthenticated, loading } = useAuth();
   const { toast } = useToast();
 
-  // Auto-hide banner after 3 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowBanner(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
@@ -69,31 +61,19 @@ const Login = () => {
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (email === 'admin@lilyhall.com' && password === 'lilyhall123') {
-        login(email);
-        toast({
-          variant: "success",
-          title: "Login Successful",
-          description: "Welcome back! You'll stay logged in for 30 days."
-        });
-        navigate('/dashboard');
-      } else {
-        const errorMessage = 'Invalid email or password. Please use the demo credentials.';
-        setError(errorMessage);
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: errorMessage
-        });
-      }
+      await login(email, password);
+      toast({
+        variant: "success",
+        title: "Login Successful",
+        description: "Welcome to Pensacola Beach Resort Management Hub."
+      });
+      navigate('/dashboard');
     } catch (err) {
-      const errorMessage = 'An error occurred. Please try again.';
+      const errorMessage = 'Invalid email or password.';
       setError(errorMessage);
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Login Failed",
         description: errorMessage
       });
     } finally {
@@ -102,22 +82,30 @@ const Login = () => {
   };
 
   const handleDemoLogin = async () => {
-    setEmail('admin@lilyhall.com');
-    setPassword('lilyhall123');
+    const demoEmail = 'jay@pbr-test.daze.com';
+    const demoPassword = 'PBR-Pilot-2026!';
+
+    setEmail(demoEmail);
+    setPassword(demoPassword);
     setError('');
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      login('admin@lilyhall.com');
+      await login(demoEmail, demoPassword);
       toast({
         variant: "success",
         title: "Demo Login",
-        description: "Welcome to the Lily Hall demo!"
+        description: "Welcome to Pensacola Beach Resort Management Hub."
       });
       navigate('/dashboard');
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      const errorMessage = 'Demo login failed. Please verify staging credentials.';
+      setError(errorMessage);
+      toast({
+        variant: "destructive",
+        title: "Demo Login Failed",
+        description: errorMessage
+      });
     } finally {
       setIsLoading(false);
     }
@@ -125,20 +113,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Demo Welcome Banner */}
-      {showBanner && (
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-primary via-accent to-primary py-3 px-4 text-center shadow-lg"
-        >
-          <p className="text-sm md:text-base font-medium text-white">
-            Welcome to Lily Hall Management Hub Demo
-          </p>
-        </motion.div>
-      )}
-
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
       <div className="absolute inset-0 overflow-hidden">
@@ -170,15 +144,15 @@ const Login = () => {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img 
-                  src="/lovable-uploads/0a4d33da-9760-4b33-86d2-db718dd0c98b.png" 
-                  alt="Lily Hall Logo"
+                  src="/daze-logo.png" 
+                  alt="Daze Logo"
                   className="h-full w-full object-contain drop-shadow-md"
                 />
               </motion.div>
             </ScaleIn>
             <CardTitle className="text-2xl font-bold text-foreground">Welcome Back</CardTitle>
             <CardDescription className="text-muted-foreground">
-              Sign in to access your management portal
+              Pensacola Beach Resort · Powered by Daze
             </CardDescription>
           </CardHeader>
 

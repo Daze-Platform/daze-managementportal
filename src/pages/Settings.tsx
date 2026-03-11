@@ -57,7 +57,7 @@ const plans = [
 
 export const Settings = () => {
   const { toast } = useToast();
-  const { userProfile, updateUserProfile } = useAuth();
+  const { userProfile } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'profile';
 
@@ -96,9 +96,6 @@ export const Settings = () => {
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Updating profile:', profileData);
-    
-    // Update the user profile in AuthContext
-    updateUserProfile(profileData);
     
     // Show success toast
     toast({
