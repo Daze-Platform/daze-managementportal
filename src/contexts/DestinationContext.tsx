@@ -40,8 +40,11 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(true);
 
   // Load destinations from Supabase on mount
+  // Note: DB resorts table uses map schema (lat/lng/zoom), not management schema.
+  // For now, use hardcoded defaults. Will wire to DB once schema is aligned.
   useEffect(() => {
-    loadDestinationsFromDatabase();
+    // loadDestinationsFromDatabase();
+    setLoading(false);
   }, []);
 
   const loadDestinationsFromDatabase = async () => {
