@@ -9,6 +9,8 @@ import { useOrderManagement } from '@/hooks/useOrderManagement';
 import { calculateTotalRevenue } from '@/utils/orderCalculations';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useFilters } from '@/contexts/FilterContext';
+import { useResort } from '@/contexts/DestinationContext';
+import { destinationStores } from '@/data/defaultStores';
 
 export const ActiveOrders = () => {
   const [showPauseModal, setShowPauseModal] = useState(false);
@@ -16,6 +18,7 @@ export const ActiveOrders = () => {
   const isMobile = useIsMobile();
 
   const { selectedDateRange, setSelectedDateRange } = useFilters();
+  const { currentResort } = useResort();
 
   const {
     activeTab,
@@ -40,11 +43,10 @@ export const ActiveOrders = () => {
     getOrderTypeCount
   } = useOrderManagement();
 
+  const tenantStores = currentResort?.id ? (destinationStores[currentResort.id] ?? []) : [];
   const stores = [
     { id: 'all', name: 'All Venues' },
-    { id: '1', name: 'Brother Fox' },
-    { id: '2', name: 'Sister Hen' },
-    { id: '3', name: 'Cousin Wolf' },
+    ...tenantStores.map(s => ({ id: String(s.id), name: s.name })),
   ];
 
   const filteredOrders = getFilteredOrders();
