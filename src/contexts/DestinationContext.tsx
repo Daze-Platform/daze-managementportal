@@ -31,6 +31,19 @@ const defaultDestinations: Destination[] = [
     storeCount: 1,
     createdAt: '2026-03-10',
     logo: ''
+  },
+  {
+    id: 'innisfree-piazza-pizza',
+    name: 'Innisfree Hotels — Piazza Pizza',
+    location: 'Pensacola Beach FL',
+    address: 'Hilton Pensacola Beach, 12 Via De Luna Dr, Pensacola Beach, FL 32561',
+    phone: '(850) 916-2999',
+    email: 'mrodriguez@innisfreehotels.com',
+    manager: 'Manuel Rodriguez',
+    status: 'active',
+    storeCount: 1,
+    createdAt: '2026-03-11',
+    logo: ''
   }
 ];
 

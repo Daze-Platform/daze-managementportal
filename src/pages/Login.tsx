@@ -65,7 +65,7 @@ const Login = () => {
       toast({
         variant: "success",
         title: "Login Successful",
-        description: "Welcome to Pensacola Beach Resort Management Hub."
+        description: "Welcome to Daze Management Hub."
       });
       navigate('/dashboard');
     } catch (err) {
@@ -81,10 +81,7 @@ const Login = () => {
     }
   };
 
-  const handleDemoLogin = async () => {
-    const demoEmail = 'jay@pbr-test.daze.com';
-    const demoPassword = 'PBR-Pilot-2026!';
-
+  const handleDemoLogin = async (demoEmail: string, demoPassword: string, label: string) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
     setError('');
@@ -95,7 +92,7 @@ const Login = () => {
       toast({
         variant: "success",
         title: "Demo Login",
-        description: "Welcome to Pensacola Beach Resort Management Hub."
+        description: `Welcome to Daze Management Hub — ${label}.`
       });
       navigate('/dashboard');
     } catch (err) {
@@ -152,7 +149,7 @@ const Login = () => {
             </ScaleIn>
             <CardTitle className="text-2xl font-bold text-foreground">Welcome Back</CardTitle>
             <CardDescription className="text-muted-foreground">
-              Pensacola Beach Resort · Powered by Daze
+              Management Hub · Powered by Daze
             </CardDescription>
           </CardHeader>
 
@@ -272,15 +269,26 @@ const Login = () => {
                 </div>
               </div>
               
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="w-full h-12 mt-5 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors"
-                onClick={handleDemoLogin}
-                disabled={isLoading}
-              >
-                Try Demo Login
-              </Button>
+              <div className="flex gap-2 mt-5">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 h-12 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors text-sm"
+                  onClick={() => handleDemoLogin('jay@pbr-test.daze.com', 'PBR-Pilot-2026!', 'Pensacola Beach Resort')}
+                  disabled={isLoading}
+                >
+                  PBR Demo
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 h-12 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors text-sm"
+                  onClick={() => handleDemoLogin('manuel@innisfree-test.daze.com', 'Innisfree-Pilot-2026', 'Innisfree Hotels')}
+                  disabled={isLoading}
+                >
+                  Innisfree Demo
+                </Button>
+              </div>
             </motion.div>
 
             <motion.p 

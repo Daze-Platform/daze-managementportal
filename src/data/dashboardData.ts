@@ -217,6 +217,116 @@ export const resortDashboardData = {
       }
     }
   },
+  'innisfree-piazza-pizza': {
+    all: {
+      name: 'All Stores',
+      stats: {
+        revenue: 6820,
+        orders: 318,
+        customers: 241,
+        avgOrder: 21.45,
+        trends: { revenue: 22.3, orders: 18.7, customers: 14.2, avgOrder: 3.8 }
+      },
+      revenueData: [
+        { name: 'Mon', value: 720 },
+        { name: 'Tue', value: 840 },
+        { name: 'Wed', value: 980 },
+        { name: 'Thu', value: 1050 },
+        { name: 'Fri', value: 1320 },
+        { name: 'Sat', value: 1480 },
+        { name: 'Sun', value: 430 },
+      ],
+      orderData: [
+        { name: '11AM', orders: 22 },
+        { name: '1PM', orders: 61 },
+        { name: '3PM', orders: 74 },
+        { name: '5PM', orders: 58 },
+        { name: '7PM', orders: 68 },
+        { name: '9PM', orders: 35 },
+      ],
+      topItems: [
+        { name: 'Pepperoni Pizza', orders: 89, revenue: '$1,780', image: '🍕', change: '+24%' },
+        { name: 'Margherita Pizza', orders: 71, revenue: '$1,278', image: '🍕', change: '+19%' },
+        { name: 'Italian Panino', orders: 54, revenue: '$810', image: '🥖', change: '+12%' },
+        { name: 'Supreme Pizza', orders: 48, revenue: '$960', image: '🍕', change: '+15%' },
+        { name: 'Caesar Salad', orders: 42, revenue: '$630', image: '🥗', change: '+8%' }
+      ],
+      performanceAlerts: [
+        { metric: 'Pickup Wait Time', currentValue: 16.4, targetValue: 12.0, urgency: 'medium' as const, impact: 'Beach chair guest experience' },
+        { metric: 'Pizza Throughput', currentValue: 78.0, targetValue: 85.0, urgency: 'medium' as const, impact: 'Peak lunch/dinner demand' },
+        { metric: 'Micros POS Sync', currentValue: 0, targetValue: 100, urgency: 'critical' as const, impact: 'Orders currently manual — POS integration pending' }
+      ],
+      customerSatisfaction: {
+        overall: 4.3,
+        foodQuality: 4.6,
+        serviceSpeed: 3.9,
+        cleanliness: 4.4,
+        value: 4.2,
+        totalReviews: 318
+      },
+      operationalMetrics: {
+        avgOrderPrepTime: 13.2,
+        kitchenEfficiency: 82,
+        wastagePercentage: 5.1,
+        staffUtilization: 74,
+        peakHourCapacity: 85
+      }
+    },
+    '5': {
+      name: 'Piazza Pizza',
+      stats: {
+        revenue: 6820,
+        orders: 318,
+        customers: 241,
+        avgOrder: 21.45,
+        trends: { revenue: 22.3, orders: 18.7, customers: 14.2, avgOrder: 3.8 }
+      },
+      revenueData: [
+        { name: 'Mon', value: 720 },
+        { name: 'Tue', value: 840 },
+        { name: 'Wed', value: 980 },
+        { name: 'Thu', value: 1050 },
+        { name: 'Fri', value: 1320 },
+        { name: 'Sat', value: 1480 },
+        { name: 'Sun', value: 430 },
+      ],
+      orderData: [
+        { name: '11AM', orders: 22 },
+        { name: '1PM', orders: 61 },
+        { name: '3PM', orders: 74 },
+        { name: '5PM', orders: 58 },
+        { name: '7PM', orders: 68 },
+        { name: '9PM', orders: 35 },
+      ],
+      topItems: [
+        { name: 'Pepperoni Pizza', orders: 89, revenue: '$1,780', image: '🍕', change: '+24%' },
+        { name: 'Margherita Pizza', orders: 71, revenue: '$1,278', image: '🍕', change: '+19%' },
+        { name: 'Italian Panino', orders: 54, revenue: '$810', image: '🥖', change: '+12%' },
+        { name: 'Supreme Pizza', orders: 48, revenue: '$960', image: '🍕', change: '+15%' },
+        { name: 'Caesar Salad', orders: 42, revenue: '$630', image: '🥗', change: '+8%' }
+      ],
+      performanceAlerts: [
+        { metric: 'Pickup Wait Time', currentValue: 16.4, targetValue: 12.0, urgency: 'medium' as const, impact: 'Beach chair guest experience' },
+        { metric: 'Pizza Throughput', currentValue: 78.0, targetValue: 85.0, urgency: 'medium' as const, impact: 'Peak lunch/dinner demand' },
+        { metric: 'Micros POS Sync', currentValue: 0, targetValue: 100, urgency: 'critical' as const, impact: 'Orders currently manual — POS integration pending' }
+      ],
+      customerSatisfaction: {
+        overall: 4.3,
+        foodQuality: 4.6,
+        serviceSpeed: 3.9,
+        cleanliness: 4.4,
+        value: 4.2,
+        totalReviews: 318
+      },
+      operationalMetrics: {
+        avgOrderPrepTime: 13.2,
+        kitchenEfficiency: 82,
+        wastagePercentage: 5.1,
+        staffUtilization: 74,
+        peakHourCapacity: 85
+      }
+    }
+  },
   'pensacola-beach-resort': {
     all: {
       name: 'All Stores',

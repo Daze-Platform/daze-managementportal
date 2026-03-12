@@ -50,7 +50,17 @@ const saltyRoseHours: StoreHours[] = [
   { day: 'Sunday', isOpen: true, open: '10:00', close: '20:00' },
 ];
 
-// Lily Hall Pensacola venues
+const piazzaHours: StoreHours[] = [
+  { day: 'Monday', isOpen: true, open: '11:00', close: '21:00' },
+  { day: 'Tuesday', isOpen: true, open: '11:00', close: '21:00' },
+  { day: 'Wednesday', isOpen: true, open: '11:00', close: '21:00' },
+  { day: 'Thursday', isOpen: true, open: '11:00', close: '21:00' },
+  { day: 'Friday', isOpen: true, open: '11:00', close: '22:00' },
+  { day: 'Saturday', isOpen: true, open: '10:00', close: '22:00' },
+  { day: 'Sunday', isOpen: true, open: '10:00', close: '21:00' },
+];
+
+// All destination stores
 const destinationStores: Record<string, Store[]> = {
   'pensacola-beach-resort': [
     {
@@ -64,6 +74,20 @@ const destinationStores: Record<string, Store[]> = {
       hours: saltyRoseHours,
       destinationId: 'pensacola-beach-resort',
       resortId: 'pensacola-beach-resort',
+    },
+  ],
+  'innisfree-piazza-pizza': [
+    {
+      id: 5,
+      name: 'Piazza Pizza',
+      address: '12 Via De Luna Dr, Pensacola Beach, FL 32561',
+      locationDescription: 'Beachside Italian pizza restaurant at Hilton Pensacola Beach — pickup orders from beach chairs',
+      logo: '/images/stores/piazza-pizza-logo.png',
+      bgColor: '#C8102E',
+      activeOrders: 7,
+      hours: piazzaHours,
+      destinationId: 'innisfree-piazza-pizza',
+      resortId: 'innisfree-piazza-pizza',
     },
   ],
   'lily-hall-pensacola': [
