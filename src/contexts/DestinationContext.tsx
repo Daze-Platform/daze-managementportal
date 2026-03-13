@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Destination } from '@/components/settings/DestinationManagement';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from './AuthContext';
 
 interface DestinationContextType {
   currentDestination: Destination | null;
@@ -48,23 +49,26 @@ const defaultDestinations: Destination[] = [
 ];
 
 export const DestinationProvider = ({ children }: { children: React.ReactNode }) => {
-  const [destinations, setDestinationsState] = useState<Destination[]>(defaultDestinations);
-  const [currentDestination, setCurrentDestination] = useState<Destination | null>(defaultDestinations[0]);
+  const { userProfile } = useAuth();
+  const [destinations, setDestinationsState] = useState<Destination[]>([]);
+  const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load destinations from Supabase on mount
-  // Note: DB resorts table uses map schema (lat/lng/zoom), not management schema.
-  // For now, use hardcoded defaults. Will wire to DB once schema is aligned.
+  // Load destinations scoped to the authenticated user's tenant
   useEffect(() => {
-    // loadDestinationsFromDatabase();
-    setLoading(false);
-  }, []);
+    if (userProfile?.tenantId) {
+      loadDestinationsFromDatabase(userProfile.tenantId);
+    } else {
+      setLoading(false);
+    }
+  }, [userProfile?.tenantId]);
 
-  const loadDestinationsFromDatabase = async () => {
+  const loadDestinationsFromDatabase = async (tenantId: string) => {
     try {
       const { data: destinationsData, error } = await supabase
         .from('resorts')
         .select('*')
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: true });
 
       if (error) {
@@ -100,12 +104,12 @@ export const DestinationProvider = ({ children }: { children: React.ReactNode })
         setCurrentDestination(currentDestinationToSet);
         localStorage.setItem('currentDestinationId', currentDestinationToSet.id);
       } else {
-        // Try to insert default destinations
-        insertDefaultDestinations();
+        // No destinations found for this tenant — show empty state
+        setDestinationsState([]);
+        setCurrentDestination(null);
       }
     } catch (error) {
       console.warn('Network error loading destinations:', error);
-      // Keep using defaults - already set in state
     } finally {
       setLoading(false);
     }

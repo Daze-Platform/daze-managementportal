@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Store } from '@/types/store';
-import { defaultStores } from '@/data/defaultStores';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from './AuthContext';
 
 interface StoresContextType {
   stores: Store[];
@@ -18,19 +18,20 @@ interface StoresContextType {
 const StoresContext = createContext<StoresContextType | undefined>(undefined);
 
 export const StoresProvider = ({ children }: { children: ReactNode }) => {
-  const [stores, setStores] = useState<Store[]>(defaultStores);
+  const { userProfile } = useAuth();
+  const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadStores = async () => {
+  const loadStores = async (tenantId: string) => {
     try {
       const { data: storesData, error } = await supabase
         .from('stores')
         .select('*')
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: true });
 
       if (error) {
         console.warn('Could not load stores from database:', error.message);
-        // Keep using defaults - already set in state
         return;
       }
 
@@ -52,45 +53,25 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
 
         setStores(convertedStores);
       } else {
-        // Try to seed default stores in background
-        seedDefaultStores();
+        setStores([]);
       }
     } catch (error) {
       console.warn('Network error loading stores:', error);
-      // Keep using defaults - already set in state
     } finally {
       setLoading(false);
     }
   };
 
-  const seedDefaultStores = async () => {
-    try {
-      for (const store of defaultStores) {
-        await supabase
-          .from('stores')
-          .insert({
-            name: store.name,
-            address: store.address,
-            location_description: store.locationDescription,
-            logo: store.logo,
-            custom_logo: store.customLogo,
-            bg_color: store.bgColor,
-            active_orders: store.activeOrders,
-            hours: store.hours as any,
-            resort_id: store.destinationId || store.resortId
-          });
-      }
-    } catch (error) {
-      console.warn('Could not seed default stores:', error);
-    }
-  };
-
   useEffect(() => {
-    loadStores();
-  }, []);
+    if (userProfile?.tenantId) {
+      loadStores(userProfile.tenantId);
+    } else {
+      setLoading(false);
+    }
+  }, [userProfile?.tenantId]);
 
   const refreshStores = () => {
-    loadStores();
+    if (userProfile?.tenantId) loadStores(userProfile.tenantId);
   };
 
   const getStoresByDestination = (destinationId: string): Store[] => {

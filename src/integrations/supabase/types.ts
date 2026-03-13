@@ -181,6 +181,7 @@ export type Database = {
           phone: string | null
           status: string | null
           store_count: number | null
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -195,6 +196,7 @@ export type Database = {
           phone?: string | null
           status?: string | null
           store_count?: number | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -209,9 +211,47 @@ export type Database = {
           phone?: string | null
           status?: string | null
           store_count?: number | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "resorts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      store_resort_links: {
+        Row: {
+          created_at: string | null
+          id: string
+          resort_id: string
+          store_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          resort_id: string
+          store_id: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          resort_id?: string
+          store_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_resort_links_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       stores: {
         Row: {
@@ -222,10 +262,12 @@ export type Database = {
           custom_logo: string | null
           hours: Json | null
           id: number
+          is_active: boolean | null
           location_description: string | null
           logo: string | null
           name: string
           resort_id: string | null
+          tenant_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -236,10 +278,12 @@ export type Database = {
           custom_logo?: string | null
           hours?: Json | null
           id?: number
+          is_active?: boolean | null
           location_description?: string | null
           logo?: string | null
           name: string
           resort_id?: string | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -250,18 +294,97 @@ export type Database = {
           custom_logo?: string | null
           hours?: Json | null
           id?: number
+          is_active?: boolean | null
           location_description?: string | null
           logo?: string | null
           name?: string
           resort_id?: string | null
+          tenant_id?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "stores_resort_id_fkey"
-            columns: ["resort_id"]
+            foreignKeyName: "stores_tenant_id_fkey"
+            columns: ["tenant_id"]
             isOneToOne: false
-            referencedRelation: "resorts"
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          brand_color: string | null
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          settings: Json
+          slug: string
+          subscription_tier: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          brand_color?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          settings?: Json
+          slug: string
+          subscription_tier?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          brand_color?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          settings?: Json
+          slug?: string
+          subscription_tier?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_tenants: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string | null
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: string | null
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string | null
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_tenants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
             referencedColumns: ["id"]
           },
         ]

@@ -49,19 +49,21 @@ const getDefaultProfile = (email: string): UserProfile => ({
 });
 
 const fetchProfile = async (userId: string, email: string): Promise<UserProfile> => {
+  let profile: UserProfile = getDefaultProfile(email);
+
   try {
-    const { data: profile } = await supabase
+    const { data: profileData } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
 
-    if (profile) {
-      const names = (profile.full_name || '').split(' ');
-      return {
+    if (profileData) {
+      const names = (profileData.full_name || '').split(' ');
+      profile = {
         firstName: names[0] || email.split('@')[0],
         lastName: names.slice(1).join(' ') || '',
-        email: profile.email || email,
+        email: profileData.email || email,
         phone: '',
         timezone: 'America/Chicago',
         language: 'English',
@@ -72,7 +74,24 @@ const fetchProfile = async (userId: string, email: string): Promise<UserProfile>
     console.warn('Could not fetch profile, using defaults:', err);
   }
 
-  return getDefaultProfile(email);
+  // Resolve tenant membership
+  try {
+    const { data: membership } = await supabase
+      .from('tenant_members')
+      .select('tenant_id, role')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .single();
+
+    if (membership) {
+      profile.tenantId = membership.tenant_id;
+      profile.role = membership.role;
+    }
+  } catch (err) {
+    console.warn('Could not fetch tenant membership:', err);
+  }
+
+  return profile;
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {

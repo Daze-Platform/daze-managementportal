@@ -438,6 +438,10 @@ export const resortDashboardData = {
 
 };
 
+// DB UUID aliases — map Supabase resort IDs to dashboard data keys
+(resortDashboardData as Record<string, unknown>)['b1c2d3e4-5678-90ab-cdef-aabbccddeeff'] = resortDashboardData['innisfree-piazza-pizza'];
+(resortDashboardData as Record<string, unknown>)['c6543244-a85d-4254-b7a6-9a3610ef5c16'] = resortDashboardData['pensacola-beach-resort'];
+
 // Legacy export for backward compatibility
 export const storeData = resortDashboardData['pensacola-beach-resort'];
 
