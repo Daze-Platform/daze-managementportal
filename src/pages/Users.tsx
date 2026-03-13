@@ -30,6 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Plus, Loader2, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useDestination } from '@/contexts/DestinationContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 type TeamUser = {
   id: string;
@@ -43,6 +44,7 @@ type TeamUser = {
 export const Users = () => {
   const { toast } = useToast();
   const { currentDestination } = useDestination();
+  const { userProfile } = useAuth();
   const [users, setUsers] = useState<TeamUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -55,6 +57,13 @@ export const Users = () => {
     setLoading(true);
     try {
       // Query user_tenants joined with profiles for the current tenant
+      const tenantId = userProfile?.tenantId;
+      if (!tenantId) {
+        setUsers([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('user_tenants')
         .select(`
@@ -68,6 +77,7 @@ export const Users = () => {
             full_name
           )
         `)
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: true });
 
       if (error) {
@@ -96,7 +106,7 @@ export const Users = () => {
 
   useEffect(() => {
     loadUsers();
-  }, [currentDestination]);
+  }, [currentDestination, userProfile?.tenantId]);
 
   const onInvite = async () => {
     if (!inviteEmail) {

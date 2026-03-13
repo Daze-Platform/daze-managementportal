@@ -10,7 +10,7 @@ import { calculateTotalRevenue } from '@/utils/orderCalculations';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useFilters } from '@/contexts/FilterContext';
 import { useResort } from '@/contexts/DestinationContext';
-import { destinationStores } from '@/data/defaultStores';
+import { useStores } from '@/contexts/StoresContext';
 
 export const ActiveOrders = () => {
   const [showPauseModal, setShowPauseModal] = useState(false);
@@ -43,7 +43,8 @@ export const ActiveOrders = () => {
     getOrderTypeCount
   } = useOrderManagement();
 
-  const tenantStores = currentResort?.id ? (destinationStores[currentResort.id] ?? []) : [];
+  const { stores: allStores, getStoresByDestination } = useStores();
+  const tenantStores = currentResort?.id ? getStoresByDestination(currentResort.id) : allStores;
   const stores = [
     { id: 'all', name: 'All Venues' },
     ...tenantStores.map(s => ({ id: String(s.id), name: s.name })),
