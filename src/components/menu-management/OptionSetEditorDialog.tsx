@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Slider } from '@/components/ui/slider';
-import { 
-  Settings2, 
-  ListChecks, 
-  Eye, 
-  Plus, 
-  Trash2, 
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
+import {
+  Settings2,
+  ListChecks,
+  Eye,
+  Plus,
+  Trash2,
   GripVertical,
   CircleDot,
   CheckSquare,
-  Star
-} from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { motion, AnimatePresence, Reorder } from 'framer-motion';
+  Star,
+} from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
 
 export interface ModifierOption {
   id: string;
@@ -47,99 +53,101 @@ interface OptionSetEditorDialogProps {
 }
 
 const defaultFormData: OptionSetFormData = {
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   required: false,
   multipleSelection: false,
   minSelections: 0,
   maxSelections: 5,
-  options: []
+  options: [],
 };
 
 export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
   open,
   onOpenChange,
   initialData,
-  onSave
+  onSave,
 }) => {
   const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState('basics');
+  const [activeTab, setActiveTab] = useState("basics");
   const [formData, setFormData] = useState<OptionSetFormData>(defaultFormData);
-  const [newOptionName, setNewOptionName] = useState('');
-  const [newOptionPrice, setNewOptionPrice] = useState('');
+  const [newOptionName, setNewOptionName] = useState("");
+  const [newOptionPrice, setNewOptionPrice] = useState("");
 
   useEffect(() => {
     if (open) {
       setFormData(initialData || defaultFormData);
-      setActiveTab('basics');
-      setNewOptionName('');
-      setNewOptionPrice('');
+      setActiveTab("basics");
+      setNewOptionName("");
+      setNewOptionPrice("");
     }
   }, [open, initialData]);
 
   const handleAddOption = () => {
     if (!newOptionName.trim()) return;
-    
+
     const newOption: ModifierOption = {
       id: `opt-${Date.now()}`,
       name: newOptionName.trim(),
       price: parseFloat(newOptionPrice) || 0,
-      isDefault: formData.options.length === 0
+      isDefault: formData.options.length === 0,
     };
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      options: [...prev.options, newOption]
+      options: [...prev.options, newOption],
     }));
-    setNewOptionName('');
-    setNewOptionPrice('');
+    setNewOptionName("");
+    setNewOptionPrice("");
   };
 
   const handleRemoveOption = (optionId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      options: prev.options.filter(opt => opt.id !== optionId)
+      options: prev.options.filter((opt) => opt.id !== optionId),
     }));
   };
 
   const handleToggleDefault = (optionId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      options: prev.options.map(opt => ({
+      options: prev.options.map((opt) => ({
         ...opt,
-        isDefault: formData.multipleSelection 
-          ? (opt.id === optionId ? !opt.isDefault : opt.isDefault)
-          : opt.id === optionId
-      }))
+        isDefault: formData.multipleSelection
+          ? opt.id === optionId
+            ? !opt.isDefault
+            : opt.isDefault
+          : opt.id === optionId,
+      })),
     }));
   };
 
   const handleUpdateOptionPrice = (optionId: string, price: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      options: prev.options.map(opt => 
-        opt.id === optionId ? { ...opt, price: parseFloat(price) || 0 } : opt
-      )
+      options: prev.options.map((opt) =>
+        opt.id === optionId ? { ...opt, price: parseFloat(price) || 0 } : opt,
+      ),
     }));
   };
 
   const handleUpdateOptionName = (optionId: string, name: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      options: prev.options.map(opt => 
-        opt.id === optionId ? { ...opt, name } : opt
-      )
+      options: prev.options.map((opt) =>
+        opt.id === optionId ? { ...opt, name } : opt,
+      ),
     }));
   };
 
   const handleReorder = (newOrder: ModifierOption[]) => {
-    setFormData(prev => ({ ...prev, options: newOrder }));
+    setFormData((prev) => ({ ...prev, options: newOrder }));
   };
 
   const handleSave = () => {
     onSave({
       ...formData,
-      id: formData.id || `group-${Date.now()}`
+      id: formData.id || `group-${Date.now()}`,
     });
   };
 
@@ -149,34 +157,42 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
     ? formData.minSelections > 0
       ? `Select ${formData.minSelections}–${formData.maxSelections} options`
       : `Select up to ${formData.maxSelections} options`
-    : 'Select one option';
+    : "Select one option";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`${
-        isMobile 
-          ? 'w-[98vw] max-w-none h-[95vh] max-h-none m-2 rounded-xl p-0' 
-          : 'sm:max-w-2xl w-[95vw] max-h-[90vh] p-0'
-      } bg-background border-border overflow-hidden flex flex-col`}>
+      <DialogContent
+        className={`${
+          isMobile
+            ? "w-[98vw] max-w-none h-[95vh] max-h-none m-2 rounded-xl p-0"
+            : "sm:max-w-2xl w-[95vw] max-h-[90vh] p-0"
+        } bg-background border-border overflow-hidden flex flex-col`}
+      >
         <DialogHeader className="flex-shrink-0 p-6 pb-0">
           <DialogTitle className="text-xl font-semibold flex items-center gap-2">
             <Settings2 className="w-5 h-5 text-primary" />
-            {initialData ? 'Edit Option Set' : 'Create Option Set'}
+            {initialData ? "Edit Option Set" : "Create Option Set"}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
             Configure how customers can customize their order
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-          <TabsList className={`mx-6 mt-4 ${isMobile ? 'grid grid-cols-3' : 'w-fit'}`}>
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="flex-1 flex flex-col overflow-hidden"
+        >
+          <TabsList
+            className={`mx-6 mt-4 ${isMobile ? "grid grid-cols-3" : "w-fit"}`}
+          >
             <TabsTrigger value="basics" className="gap-2">
               <Settings2 className="w-4 h-4" />
-              <span className={isMobile ? 'sr-only' : ''}>Basics</span>
+              <span className={isMobile ? "sr-only" : ""}>Basics</span>
             </TabsTrigger>
             <TabsTrigger value="options" className="gap-2">
               <ListChecks className="w-4 h-4" />
-              <span className={isMobile ? 'sr-only' : ''}>Options</span>
+              <span className={isMobile ? "sr-only" : ""}>Options</span>
               {formData.options.length > 0 && (
                 <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
                   {formData.options.length}
@@ -185,7 +201,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
             </TabsTrigger>
             <TabsTrigger value="preview" className="gap-2">
               <Eye className="w-4 h-4" />
-              <span className={isMobile ? 'sr-only' : ''}>Preview</span>
+              <span className={isMobile ? "sr-only" : ""}>Preview</span>
             </TabsTrigger>
           </TabsList>
 
@@ -197,7 +213,9 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   placeholder="e.g., Size, Toppings, Spice Level"
                   className="h-11"
                 />
@@ -211,7 +229,12 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                 <Input
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
                   placeholder="e.g., Choose your preferred size"
                   className="h-11"
                 />
@@ -221,35 +244,64 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
               </div>
 
               <div className="space-y-4 pt-2">
-                <div 
+                <div
                   className={`flex items-center justify-between p-4 rounded-xl border transition-colors cursor-pointer ${
-                    formData.required ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground/30'
+                    formData.required
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-muted-foreground/30"
                   }`}
-                  onClick={() => setFormData(prev => ({ ...prev, required: !prev.required }))}
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      required: !prev.required,
+                    }))
+                  }
                 >
                   <div className="space-y-0.5">
-                    <Label className="cursor-pointer font-medium">Required Selection</Label>
-                    <p className="text-sm text-muted-foreground">Customer must make a selection</p>
+                    <Label className="cursor-pointer font-medium">
+                      Required Selection
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Customer must make a selection
+                    </p>
                   </div>
                   <Switch
                     checked={formData.required}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, required: checked }))}
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => ({ ...prev, required: checked }))
+                    }
                   />
                 </div>
 
-                <div 
+                <div
                   className={`flex items-center justify-between p-4 rounded-xl border transition-colors cursor-pointer ${
-                    formData.multipleSelection ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground/30'
+                    formData.multipleSelection
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-muted-foreground/30"
                   }`}
-                  onClick={() => setFormData(prev => ({ ...prev, multipleSelection: !prev.multipleSelection }))}
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      multipleSelection: !prev.multipleSelection,
+                    }))
+                  }
                 >
                   <div className="space-y-0.5">
-                    <Label className="cursor-pointer font-medium">Allow Multiple</Label>
-                    <p className="text-sm text-muted-foreground">Customer can select multiple options</p>
+                    <Label className="cursor-pointer font-medium">
+                      Allow Multiple
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Customer can select multiple options
+                    </p>
                   </div>
                   <Switch
                     checked={formData.multipleSelection}
-                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, multipleSelection: checked }))}
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        multipleSelection: checked,
+                      }))
+                    }
                   />
                 </div>
 
@@ -257,7 +309,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                   {formData.multipleSelection && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
@@ -265,15 +317,22 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <Label>Minimum Selections</Label>
-                            <span className="text-sm font-medium text-primary">{formData.minSelections}</span>
+                            <span className="text-sm font-medium text-primary">
+                              {formData.minSelections}
+                            </span>
                           </div>
                           <Slider
                             value={[formData.minSelections]}
-                            onValueChange={([val]) => setFormData(prev => ({ 
-                              ...prev, 
-                              minSelections: val,
-                              maxSelections: Math.max(val, prev.maxSelections)
-                            }))}
+                            onValueChange={([val]) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                minSelections: val,
+                                maxSelections: Math.max(
+                                  val,
+                                  prev.maxSelections,
+                                ),
+                              }))
+                            }
                             max={10}
                             step={1}
                             className="w-full"
@@ -283,14 +342,21 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <Label>Maximum Selections</Label>
-                            <span className="text-sm font-medium text-primary">{formData.maxSelections}</span>
+                            <span className="text-sm font-medium text-primary">
+                              {formData.maxSelections}
+                            </span>
                           </div>
                           <Slider
                             value={[formData.maxSelections]}
-                            onValueChange={([val]) => setFormData(prev => ({ 
-                              ...prev, 
-                              maxSelections: Math.max(val, prev.minSelections)
-                            }))}
+                            onValueChange={([val]) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                maxSelections: Math.max(
+                                  val,
+                                  prev.minSelections,
+                                ),
+                              }))
+                            }
                             min={1}
                             max={10}
                             step={1}
@@ -320,7 +386,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                     onChange={(e) => setNewOptionName(e.target.value)}
                     placeholder="Option name"
                     className="flex-1 h-10"
-                    onKeyDown={(e) => e.key === 'Enter' && handleAddOption()}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddOption()}
                   />
                   <div className="flex gap-2">
                     <Input
@@ -330,9 +396,9 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                       className="flex-1 sm:w-24 h-10"
                       type="number"
                       step="0.01"
-                      onKeyDown={(e) => e.key === 'Enter' && handleAddOption()}
+                      onKeyDown={(e) => e.key === "Enter" && handleAddOption()}
                     />
-                    <Button 
+                    <Button
                       type="button"
                       onClick={handleAddOption}
                       disabled={!newOptionName.trim()}
@@ -356,9 +422,9 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                   <p className="text-sm">Add options above to get started</p>
                 </div>
               ) : (
-                <Reorder.Group 
-                  axis="y" 
-                  values={formData.options} 
+                <Reorder.Group
+                  axis="y"
+                  values={formData.options}
                   onReorder={handleReorder}
                   className="space-y-2"
                 >
@@ -369,18 +435,22 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                       className="flex items-center gap-2 p-3 rounded-xl border border-border bg-card cursor-grab active:cursor-grabbing"
                     >
                       <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
-                      
+
                       <Input
                         value={option.name}
-                        onChange={(e) => handleUpdateOptionName(option.id, e.target.value)}
+                        onChange={(e) =>
+                          handleUpdateOptionName(option.id, e.target.value)
+                        }
                         className="flex-1 h-9 border-0 bg-transparent px-2 focus-visible:ring-1"
                       />
-                      
+
                       <div className="flex items-center gap-1">
                         <span className="text-sm text-muted-foreground">$</span>
                         <Input
                           value={option.price}
-                          onChange={(e) => handleUpdateOptionPrice(option.id, e.target.value)}
+                          onChange={(e) =>
+                            handleUpdateOptionPrice(option.id, e.target.value)
+                          }
                           className="w-16 h-9 border-0 bg-transparent px-1 text-right focus-visible:ring-1"
                           type="number"
                           step="0.01"
@@ -389,13 +459,17 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
 
                       <Button
                         type="button"
-                        variant={option.isDefault ? 'default' : 'ghost'}
+                        variant={option.isDefault ? "default" : "ghost"}
                         size="icon"
                         className="h-8 w-8 shrink-0"
                         onClick={() => handleToggleDefault(option.id)}
-                        title={option.isDefault ? 'Default option' : 'Set as default'}
+                        title={
+                          option.isDefault ? "Default option" : "Set as default"
+                        }
                       >
-                        <Star className={`w-4 h-4 ${option.isDefault ? 'fill-current' : ''}`} />
+                        <Star
+                          className={`w-4 h-4 ${option.isDefault ? "fill-current" : ""}`}
+                        />
                       </Button>
 
                       <Button
@@ -421,7 +495,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="font-semibold text-foreground">
-                        {formData.name || 'Option Set Name'}
+                        {formData.name || "Option Set Name"}
                       </h3>
                       {formData.description && (
                         <p className="text-sm text-muted-foreground mt-0.5">
@@ -431,7 +505,10 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                     </div>
                     <div className="flex gap-1.5">
                       {formData.required && (
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="bg-amber-100 text-amber-700 text-xs"
+                        >
                           Required
                         </Badge>
                       )}
@@ -454,20 +531,29 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                         <div
                           key={option.id}
                           className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-                            option.isDefault 
-                              ? 'border-primary bg-primary/5' 
-                              : 'border-border hover:border-muted-foreground/30'
+                            option.isDefault
+                              ? "border-primary bg-primary/5"
+                              : "border-border hover:border-muted-foreground/30"
                           }`}
                         >
                           {formData.multipleSelection ? (
-                            <CheckSquare className={`w-5 h-5 ${option.isDefault ? 'text-primary' : 'text-muted-foreground'}`} />
+                            <CheckSquare
+                              className={`w-5 h-5 ${option.isDefault ? "text-primary" : "text-muted-foreground"}`}
+                            />
                           ) : (
-                            <CircleDot className={`w-5 h-5 ${option.isDefault ? 'text-primary' : 'text-muted-foreground'}`} />
+                            <CircleDot
+                              className={`w-5 h-5 ${option.isDefault ? "text-primary" : "text-muted-foreground"}`}
+                            />
                           )}
-                          <span className="flex-1 font-medium text-sm">{option.name}</span>
+                          <span className="flex-1 font-medium text-sm">
+                            {option.name}
+                          </span>
                           {option.price !== 0 && (
-                            <span className={`text-sm font-medium ${option.price > 0 ? 'text-success' : 'text-destructive'}`}>
-                              {option.price > 0 ? '+' : ''}${Math.abs(option.price).toFixed(2)}
+                            <span
+                              className={`text-sm font-medium ${option.price > 0 ? "text-success" : "text-destructive"}`}
+                            >
+                              {option.price > 0 ? "+" : ""}$
+                              {Math.abs(option.price).toFixed(2)}
                             </span>
                           )}
                         </div>
@@ -491,7 +577,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
               Cancel
             </Button>
             <Button onClick={handleSave} disabled={!isValid}>
-              {initialData ? 'Save Changes' : 'Create Option Set'}
+              {initialData ? "Save Changes" : "Create Option Set"}
             </Button>
           </div>
         </div>

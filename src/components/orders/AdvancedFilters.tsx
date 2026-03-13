@@ -1,17 +1,30 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Filter, X, Calendar, DollarSign, Users, Clock, MapPin } from 'lucide-react';
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Filter,
+  X,
+  Calendar,
+  DollarSign,
+  Users,
+  Clock,
+  MapPin,
+} from "lucide-react";
 
 interface AdvancedFiltersProps {
   onFiltersChange: (filters: FilterState) => void;
@@ -27,33 +40,40 @@ export interface FilterState {
   orderLocationType: string;
 }
 
-export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFiltersProps) => {
+export const AdvancedFilters = ({
+  onFiltersChange,
+  activeFilters,
+}: AdvancedFiltersProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const updateFilter = (key: keyof FilterState, value: any) => {
     onFiltersChange({
       ...activeFilters,
-      [key]: value
+      [key]: value,
     });
   };
 
-  const handleCheckboxChange = (category: 'priority', value: string, checked: boolean) => {
+  const handleCheckboxChange = (
+    category: "priority",
+    value: string,
+    checked: boolean,
+  ) => {
     const currentValues = activeFilters[category] || [];
-    const newValues = checked 
+    const newValues = checked
       ? [...currentValues, value]
-      : currentValues.filter(v => v !== value);
-    
+      : currentValues.filter((v) => v !== value);
+
     updateFilter(category, newValues);
   };
 
   const clearAllFilters = () => {
     onFiltersChange({
-      dateRange: '',
-      orderValue: '',
-      customerType: '',
+      dateRange: "",
+      orderValue: "",
+      customerType: "",
       priority: [],
-      timeRange: '',
-      orderLocationType: ''
+      timeRange: "",
+      orderLocationType: "",
     });
   };
 
@@ -73,17 +93,27 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="relative border-gray-300 hover:border-gray-400 hover:bg-gray-50">
+        <Button
+          variant="outline"
+          size="sm"
+          className="relative border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+        >
           <Filter className="w-4 h-4 mr-2 text-gray-600" />
           Filters
           {activeFilterCount > 0 && (
-            <Badge variant="secondary" className="ml-2 h-5 px-2 text-xs bg-gray-900 text-white">
+            <Badge
+              variant="secondary"
+              className="ml-2 h-5 px-2 text-xs bg-gray-900 text-white"
+            >
               {activeFilterCount}
             </Badge>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0 bg-white border-gray-300 shadow-xl z-50" align="end">
+      <PopoverContent
+        className="w-80 p-0 bg-white border-gray-300 shadow-xl z-50"
+        align="end"
+      >
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-gray-900">Advanced Filters</h3>
@@ -108,11 +138,13 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-gray-600" />
-                  <label className="text-sm font-medium text-gray-900">Date Range</label>
+                  <label className="text-sm font-medium text-gray-900">
+                    Date Range
+                  </label>
                 </div>
                 {activeFilters.dateRange && (
                   <button
-                    onClick={() => updateFilter('dateRange', '')}
+                    onClick={() => updateFilter("dateRange", "")}
                     className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                   >
                     <X className="w-3 h-3" />
@@ -120,7 +152,10 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                   </button>
                 )}
               </div>
-              <Select value={activeFilters.dateRange} onValueChange={(value) => updateFilter('dateRange', value)}>
+              <Select
+                value={activeFilters.dateRange}
+                onValueChange={(value) => updateFilter("dateRange", value)}
+              >
                 <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 focus:border-gray-500">
                   <SelectValue placeholder="Select date range" />
                 </SelectTrigger>
@@ -140,11 +175,13 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <DollarSign className="w-4 h-4 text-gray-600" />
-                  <label className="text-sm font-medium text-gray-900">Order Value</label>
+                  <label className="text-sm font-medium text-gray-900">
+                    Order Value
+                  </label>
                 </div>
                 {activeFilters.orderValue && (
                   <button
-                    onClick={() => updateFilter('orderValue', '')}
+                    onClick={() => updateFilter("orderValue", "")}
                     className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                   >
                     <X className="w-3 h-3" />
@@ -152,7 +189,10 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                   </button>
                 )}
               </div>
-              <Select value={activeFilters.orderValue} onValueChange={(value) => updateFilter('orderValue', value)}>
+              <Select
+                value={activeFilters.orderValue}
+                onValueChange={(value) => updateFilter("orderValue", value)}
+              >
                 <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 focus:border-gray-500">
                   <SelectValue placeholder="Select order value" />
                 </SelectTrigger>
@@ -170,11 +210,13 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-gray-600" />
-                  <label className="text-sm font-medium text-gray-900">Time Range</label>
+                  <label className="text-sm font-medium text-gray-900">
+                    Time Range
+                  </label>
                 </div>
                 {activeFilters.timeRange && (
                   <button
-                    onClick={() => updateFilter('timeRange', '')}
+                    onClick={() => updateFilter("timeRange", "")}
                     className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                   >
                     <X className="w-3 h-3" />
@@ -182,15 +224,26 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                   </button>
                 )}
               </div>
-              <Select value={activeFilters.timeRange} onValueChange={(value) => updateFilter('timeRange', value)}>
+              <Select
+                value={activeFilters.timeRange}
+                onValueChange={(value) => updateFilter("timeRange", value)}
+              >
                 <SelectTrigger className="w-full border-gray-300 hover:border-gray-400 focus:border-gray-500">
                   <SelectValue placeholder="Select time range" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-gray-300 shadow-lg">
-                  <SelectItem value="morning">Morning (6 AM - 12 PM)</SelectItem>
-                  <SelectItem value="afternoon">Afternoon (12 PM - 6 PM)</SelectItem>
-                  <SelectItem value="evening">Evening (6 PM - 12 AM)</SelectItem>
-                  <SelectItem value="latenight">Late Night (12 AM - 6 AM)</SelectItem>
+                  <SelectItem value="morning">
+                    Morning (6 AM - 12 PM)
+                  </SelectItem>
+                  <SelectItem value="afternoon">
+                    Afternoon (12 PM - 6 PM)
+                  </SelectItem>
+                  <SelectItem value="evening">
+                    Evening (6 PM - 12 AM)
+                  </SelectItem>
+                  <SelectItem value="latenight">
+                    Late Night (12 AM - 6 AM)
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -200,11 +253,13 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4 text-gray-600" />
-                  <label className="text-sm font-medium text-gray-900">Order Type</label>
+                  <label className="text-sm font-medium text-gray-900">
+                    Order Type
+                  </label>
                 </div>
                 {activeFilters.orderLocationType && (
                   <button
-                    onClick={() => updateFilter('orderLocationType', '')}
+                    onClick={() => updateFilter("orderLocationType", "")}
                     className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                   >
                     <X className="w-3 h-3" />
@@ -213,15 +268,20 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                 )}
               </div>
               <div className="bg-gray-50 border border-gray-300 rounded-xl p-3">
-                <RadioGroup 
-                  value={activeFilters.orderLocationType} 
-                  onValueChange={(value) => updateFilter('orderLocationType', value)}
+                <RadioGroup
+                  value={activeFilters.orderLocationType}
+                  onValueChange={(value) =>
+                    updateFilter("orderLocationType", value)
+                  }
                   className="space-y-2"
                 >
-                  {['Room', 'Beach', 'Pool', 'Table'].map((type) => (
+                  {["Room", "Beach", "Pool", "Table"].map((type) => (
                     <div key={type} className="flex items-center space-x-2">
                       <RadioGroupItem value={type} id={`location-${type}`} />
-                      <Label htmlFor={`location-${type}`} className="text-sm text-gray-700 cursor-pointer">
+                      <Label
+                        htmlFor={`location-${type}`}
+                        className="text-sm text-gray-700 cursor-pointer"
+                      >
                         {type}
                       </Label>
                     </div>
@@ -235,11 +295,13 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="w-4 h-4 text-gray-600" />
-                  <label className="text-sm font-medium text-gray-900">Customer Type</label>
+                  <label className="text-sm font-medium text-gray-900">
+                    Customer Type
+                  </label>
                 </div>
                 {activeFilters.customerType && (
                   <button
-                    onClick={() => updateFilter('customerType', '')}
+                    onClick={() => updateFilter("customerType", "")}
                     className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                   >
                     <X className="w-3 h-3" />
@@ -248,15 +310,23 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                 )}
               </div>
               <div className="bg-gray-50 border border-gray-300 rounded-xl p-3">
-                <RadioGroup 
-                  value={activeFilters.customerType} 
-                  onValueChange={(value) => updateFilter('customerType', value)}
+                <RadioGroup
+                  value={activeFilters.customerType}
+                  onValueChange={(value) => updateFilter("customerType", value)}
                   className="space-y-2"
                 >
-                  {['New Customer', 'Returning Customer', 'VIP Customer', 'Corporate'].map((type) => (
+                  {[
+                    "New Customer",
+                    "Returning Customer",
+                    "VIP Customer",
+                    "Corporate",
+                  ].map((type) => (
                     <div key={type} className="flex items-center space-x-2">
                       <RadioGroupItem value={type} id={type} />
-                      <Label htmlFor={type} className="text-sm text-gray-700 cursor-pointer">
+                      <Label
+                        htmlFor={type}
+                        className="text-sm text-gray-700 cursor-pointer"
+                      >
                         {type}
                       </Label>
                     </div>
@@ -268,10 +338,12 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
             {/* Priority Filter */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-gray-900">Priority Level</label>
+                <label className="text-sm font-medium text-gray-900">
+                  Priority Level
+                </label>
                 {activeFilters.priority?.length > 0 && (
                   <button
-                    onClick={() => updateFilter('priority', [])}
+                    onClick={() => updateFilter("priority", [])}
                     className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
                   >
                     <X className="w-3 h-3" />
@@ -280,13 +352,21 @@ export const AdvancedFilters = ({ onFiltersChange, activeFilters }: AdvancedFilt
                 )}
               </div>
               <div className="space-y-2">
-                {['Normal', 'High Priority', 'Urgent'].map((priority) => (
+                {["Normal", "High Priority", "Urgent"].map((priority) => (
                   <div key={priority} className="flex items-center space-x-2">
                     <input
                       type="checkbox"
                       id={priority}
-                      checked={activeFilters.priority?.includes(priority) || false}
-                      onChange={(e) => handleCheckboxChange('priority', priority, e.target.checked)}
+                      checked={
+                        activeFilters.priority?.includes(priority) || false
+                      }
+                      onChange={(e) =>
+                        handleCheckboxChange(
+                          "priority",
+                          priority,
+                          e.target.checked,
+                        )
+                      }
                       className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
                     />
                     <label htmlFor={priority} className="text-sm text-gray-700">

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useScrollDirection = (threshold: number = 10) => {
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up');
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
   const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
@@ -10,18 +10,21 @@ export const useScrollDirection = (threshold: number = 10) => {
 
     const updateScrollDirection = () => {
       const scrollY = window.pageYOffset;
-      
+
       if (scrollY < threshold) {
         setIsAtTop(true);
-        setScrollDirection('up');
+        setScrollDirection("up");
       } else {
         setIsAtTop(false);
-        const direction = scrollY > lastScrollY ? 'down' : 'up';
-        if (direction !== scrollDirection && Math.abs(scrollY - lastScrollY) > threshold) {
+        const direction = scrollY > lastScrollY ? "down" : "up";
+        if (
+          direction !== scrollDirection &&
+          Math.abs(scrollY - lastScrollY) > threshold
+        ) {
           setScrollDirection(direction);
         }
       }
-      
+
       lastScrollY = scrollY > 0 ? scrollY : 0;
       ticking = false;
     };
@@ -33,8 +36,8 @@ export const useScrollDirection = (threshold: number = 10) => {
       }
     };
 
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, [scrollDirection, threshold]);
 
   return { scrollDirection, isAtTop };

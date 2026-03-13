@@ -1,9 +1,9 @@
-import React from 'react';
-import { ModernTabNavigation } from './ModernTabNavigation';
-import { OrderFilters } from './OrderFilters';
-import { ModernOrdersList } from './ModernOrdersList';
-import { DesktopOrderDetailsPanel } from './DesktopOrderDetailsPanel';
-import { FilterState } from './AdvancedFilters';
+import React from "react";
+import { ModernTabNavigation } from "./ModernTabNavigation";
+import { OrderFilters } from "./OrderFilters";
+import { ModernOrdersList } from "./ModernOrdersList";
+import { DesktopOrderDetailsPanel } from "./DesktopOrderDetailsPanel";
+import { FilterState } from "./AdvancedFilters";
 
 interface Tab {
   id: string;
@@ -22,7 +22,7 @@ interface Order {
   status?: string;
   customer?: string;
   estimatedTime?: string;
-  priority?: 'normal' | 'high' | 'urgent';
+  priority?: "normal" | "high" | "urgent";
   platformFee?: string;
   storeId?: string;
   storeName?: string;
@@ -35,8 +35,8 @@ interface OrdersListLayoutProps {
   tabs: Tab[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
-  orderType: 'all' | 'pickup' | 'delivery';
-  onOrderTypeChange: (type: 'all' | 'pickup' | 'delivery') => void;
+  orderType: "all" | "pickup" | "delivery";
+  onOrderTypeChange: (type: "all" | "pickup" | "delivery") => void;
   pickupCount: number;
   deliveryCount: number;
   totalCount: number;
@@ -45,13 +45,23 @@ interface OrdersListLayoutProps {
   filteredOrders: Order[];
   selectedOrder: string | null;
   onOrderSelect: (orderId: string) => void;
-  onOrderUpdate?: (orderId: string, action: 'accept' | 'decline' | 'ready' | 'complete' | 'fulfill' | 'schedule' | 'activate') => void;
+  onOrderUpdate?: (
+    orderId: string,
+    action:
+      | "accept"
+      | "decline"
+      | "ready"
+      | "complete"
+      | "fulfill"
+      | "schedule"
+      | "activate",
+  ) => void;
   onViewDetails?: (orderId: string) => void;
   viewingOrderDetails?: string | null;
   isMobile: boolean;
   isWaitingForOrders?: boolean;
   selectedStore?: string;
-  orderStatus?: 'active' | 'paused';
+  orderStatus?: "active" | "paused";
   onResumeOrders?: () => void;
 }
 
@@ -74,9 +84,9 @@ export const OrdersListLayout = ({
   viewingOrderDetails,
   isMobile,
   isWaitingForOrders = false,
-  selectedStore = 'all',
-  orderStatus = 'active',
-  onResumeOrders
+  selectedStore = "all",
+  orderStatus = "active",
+  onResumeOrders,
 }: OrdersListLayoutProps) => {
   const showOrderDetails = !isMobile && (selectedOrder || viewingOrderDetails);
   const orderDetailsId = viewingOrderDetails || selectedOrder;
@@ -109,7 +119,9 @@ export const OrdersListLayout = ({
       <div className="flex-1 overflow-hidden bg-black">
         <div className="h-full flex bg-black">
           {/* Orders List */}
-          <div className={`${showOrderDetails ? 'w-1/2' : 'w-full'} h-full bg-black`}>
+          <div
+            className={`${showOrderDetails ? "w-1/2" : "w-full"} h-full bg-black`}
+          >
             <ModernOrdersList
               orders={filteredOrders}
               selectedOrder={selectedOrder}
@@ -132,9 +144,9 @@ export const OrdersListLayout = ({
               onOrderUpdate={onOrderUpdate}
               onClose={() => {
                 // Clear both selected order and viewing details
-                onOrderSelect('');
+                onOrderSelect("");
                 if (onViewDetails) {
-                  onViewDetails('');
+                  onViewDetails("");
                 }
               }}
             />

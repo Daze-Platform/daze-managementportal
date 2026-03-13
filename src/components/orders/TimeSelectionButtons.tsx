@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface TimeSelectionButtonsProps {
   selectedTime: number;
@@ -10,12 +9,12 @@ interface TimeSelectionButtonsProps {
   showActions?: boolean;
 }
 
-export const TimeSelectionButtons = ({ 
-  selectedTime, 
-  onTimeSelect, 
-  onAccept, 
-  onReject, 
-  showActions = false 
+export const TimeSelectionButtons = ({
+  selectedTime,
+  onTimeSelect,
+  onAccept,
+  onReject,
+  showActions = false,
 }: TimeSelectionButtonsProps) => {
   const timeOptions = [5, 10, 20];
 
@@ -29,8 +28,8 @@ export const TimeSelectionButtons = ({
             onClick={() => onTimeSelect(time)}
             className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg border-2 transition-all ${
               selectedTime === time
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                ? "border-blue-500 bg-blue-50 text-blue-700"
+                : "border-gray-200 hover:border-gray-300 text-gray-700"
             }`}
           >
             <span className="text-lg font-bold">{time}</span>

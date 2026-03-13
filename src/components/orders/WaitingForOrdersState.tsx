@@ -1,6 +1,6 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Clock, Smartphone, Zap } from 'lucide-react';
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Clock, Smartphone, Zap } from "lucide-react";
 
 export const WaitingForOrdersState = () => {
   return (
@@ -18,34 +18,40 @@ export const WaitingForOrdersState = () => {
                     <div className="text-2xl sm:text-3xl">📱</div>
                   </div>
                 </div>
-                
+
                 {/* Floating notification bubbles */}
                 <div className="absolute -top-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-red-500 rounded-full flex items-center justify-center animate-bounce shadow-lg">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full"></div>
                 </div>
-                
+
                 {/* Signal waves */}
                 <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2">
                   <div className="flex space-x-1">
                     <div className="w-1 h-2 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <div className="w-1 h-3 sm:h-4 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '75ms' }}></div>
-                    <div className="w-1 h-4 sm:h-5 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></div>
+                    <div
+                      className="w-1 h-3 sm:h-4 bg-green-500 rounded-full animate-pulse"
+                      style={{ animationDelay: "75ms" }}
+                    ></div>
+                    <div
+                      className="w-1 h-4 sm:h-5 bg-green-500 rounded-full animate-pulse"
+                      style={{ animationDelay: "150ms" }}
+                    ></div>
                   </div>
                 </div>
               </div>
 
               {/* Floating action icons */}
-              <div 
+              <div
                 className="absolute top-6 sm:top-8 left-6 sm:left-8 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg"
                 style={{
-                  animation: 'float 3s ease-in-out infinite'
+                  animation: "float 3s ease-in-out infinite",
                 }}
               >
                 <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div 
+              <div
                 className="absolute top-2 sm:top-4 right-6 sm:right-8 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center animate-bounce shadow-lg"
-                style={{ animationDelay: '300ms' }}
+                style={{ animationDelay: "300ms" }}
               >
                 <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
@@ -59,7 +65,7 @@ export const WaitingForOrdersState = () => {
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
                 Ready for orders
               </h2>
-              
+
               <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-sm mx-auto px-2">
                 Your restaurant is live and ready to receive customer orders
               </p>
@@ -73,7 +79,9 @@ export const WaitingForOrdersState = () => {
                     <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
                     <div className="absolute inset-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-ping opacity-40"></div>
                   </div>
-                  <span className="text-xs sm:text-sm font-semibold text-green-700">Online & Active</span>
+                  <span className="text-xs sm:text-sm font-semibold text-green-700">
+                    Online & Active
+                  </span>
                 </div>
               </div>
             </div>
@@ -82,8 +90,14 @@ export const WaitingForOrdersState = () => {
             <div className="flex justify-center items-center space-x-2 mb-4 sm:mb-6">
               <div className="flex space-x-1">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce" style={{ animationDelay: '100ms' }}></div>
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
+                <div
+                  className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "100ms" }}
+                ></div>
+                <div
+                  className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "200ms" }}
+                ></div>
               </div>
             </div>
 
@@ -96,14 +110,16 @@ export const WaitingForOrdersState = () => {
       </div>
 
       {/* Custom CSS for float animation */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
           }
-        `
-      }} />
+        `,
+        }}
+      />
     </div>
   );
 };

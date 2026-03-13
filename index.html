@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,30 +6,36 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#1B5E7B" />
     <meta name="apple-mobile-web-app-title" content="Daze Management Hub" />
-    <!-- Enhanced iOS Safari browser UI hiding -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="apple-touch-fullscreen" content="yes" />
-    <!-- Force iOS Safari minimal UI -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
     <title>Daze Management Hub</title>
-    <meta name="description" content="Daze Management Hub - Manage orders, menus, staff, and analytics for your venues">
+    <meta name="description" content="Real-time ordering, menus, and operations management for hospitality — powered by Daze Technologies." />
     <meta name="author" content="Daze Technologies" />
-    <link rel="icon" type="image/x-icon" href="/daze-logo.png">
 
-    
-    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/daze-logo.png">
+    <meta property="og:title" content="Daze Management Hub" />
+    <meta property="og:description" content="Real-time ordering, menus, and operations management for hospitality — powered by Daze Technologies." />
+    <meta property="og:image" content="https://daze-management-hub.vercel.app/og-image.png" />
+    <meta property="og:url" content="https://daze-management-hub.vercel.app" />
+    <meta property="og:site_name" content="Daze" />
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@dazetechnologies" />
-    <meta name="twitter:image" content="/daze-logo.png">
-    
+    <meta name="twitter:title" content="Daze Management Hub" />
+    <meta name="twitter:description" content="Real-time ordering, menus, and operations management for hospitality — powered by Daze Technologies." />
+    <meta name="twitter:image" content="https://daze-management-hub.vercel.app/og-image.png" />
+
     <style>
-      /* Enhanced iOS Safari browser UI hiding */
       html, body {
         height: 100%;
         height: 100dvh;
@@ -39,57 +44,26 @@
         overflow-x: hidden;
         touch-action: manipulation;
       }
-      
-      /* iOS Safari specific styles for aggressive browser UI hiding */
       @supports (-webkit-touch-callout: none) {
         html {
           height: 100dvh;
-          height: calc(var(--vh, 1vh) * 100);
           -webkit-text-size-adjust: none;
-          -webkit-touch-callout: none;
-          -webkit-user-select: none;
-          user-select: none;
         }
-        
         body {
           height: 100dvh;
-          height: calc(var(--vh, 1vh) * 100);
-          -webkit-fill-available: 100vh;
           position: relative;
-          -webkit-transform: translateZ(0);
-          transform: translateZ(0);
-          will-change: transform;
         }
       }
-
-      /* iPad and iPhone specific optimizations */
       @media screen and (max-width: 1024px) {
-        html {
+        html, body {
           height: 100dvh;
           width: 100vw;
           overflow-x: hidden;
           overscroll-behavior: none;
-          -webkit-text-size-adjust: none;
-          touch-action: manipulation;
-        }
-        
-        body {
-          height: 100dvh;
-          width: 100vw;
-          overflow-x: hidden;
-          -webkit-fill-available: 100vh;
-          overscroll-behavior: none;
-          position: relative;
-          min-height: 100dvh;
         }
       }
     </style>
-    <meta property="og:title" content="Daze Management Hub">
-  <meta name="twitter:title" content="Daze Management Hub">
-  <meta property="og:description" content="Daze Management Hub - Manage orders, menus, staff, and analytics for your venues">
-  <meta name="twitter:description" content="Daze Management Hub - Manage orders, menus, staff, and analytics for your venues">
-</head>
-
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { 
+import React from "react";
+import { useLocation } from "react-router-dom";
+import {
   LayoutDashboard,
   Settings,
   Bell,
@@ -11,83 +10,77 @@ import {
   DollarSign,
   Users,
   Star,
-  Gift
-} from 'lucide-react';
-import { useOrderManagement } from '@/hooks/useOrderManagement';
-import { SidebarMenuItem } from './SidebarMenuItem';
+  Gift,
+} from "lucide-react";
+import { useOrderManagement } from "@/hooks/useOrderManagement";
+import { SidebarMenuItem } from "./SidebarMenuItem";
 
 const menuItems = [
-  { 
-    name: 'Dashboard', 
-    path: '/dashboard', 
+  {
+    name: "Dashboard",
+    path: "/dashboard",
     icon: LayoutDashboard,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Venues', 
-    path: '/venues', 
+  {
+    name: "Venues",
+    path: "/venues",
     icon: Store,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Orders', 
-    path: '/orders', 
+  {
+    name: "Orders",
+    path: "/orders",
     icon: Bell,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5',
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
     hasSubmenu: true,
     submenu: [
-      { name: 'Active orders', path: '/orders/active' },
-      { name: 'Order history', path: '/orders/history' }
-    ]
+      { name: "Active orders", path: "/orders/active" },
+      { name: "Order history", path: "/orders/history" },
+    ],
   },
-  { 
-    name: 'Menus', 
-    path: '/menus', 
+  {
+    name: "Menus",
+    path: "/menus",
     icon: Utensils,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Reports', 
-    path: '/reports', 
+  {
+    name: "Reports",
+    path: "/reports",
     icon: FileText,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Payouts', 
-    path: '/financials', 
+  {
+    name: "Payouts",
+    path: "/financials",
     icon: DollarSign,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Employees', 
-    path: '/employees', 
+  {
+    name: "Employees",
+    path: "/employees",
     icon: Users,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Team', 
-    path: '/users', 
-    icon: Users,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
-  },
-  { 
-    name: 'Ratings', 
-    path: '/ratings', 
+  {
+    name: "Ratings",
+    path: "/ratings",
     icon: Star,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Promotions', 
-    path: '/promotions', 
+  {
+    name: "Promotions",
+    path: "/promotions",
     icon: Gift,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
-  { 
-    name: 'Settings', 
-    path: '/settings', 
+  {
+    name: "Settings",
+    path: "/settings",
     icon: Settings,
-    iconClass: 'w-4 h-4 sm:w-5 sm:h-5'
-  }
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
+  },
 ];
 
 interface SidebarNavigationProps {
@@ -98,33 +91,44 @@ interface SidebarNavigationProps {
   onToggleCollapse?: () => void;
 }
 
-export const SidebarNavigation = ({ expandedItems, onToggleSubmenu, onClose, isCollapsed = false, onToggleCollapse }: SidebarNavigationProps) => {
+export const SidebarNavigation = ({
+  expandedItems,
+  onToggleSubmenu,
+  onClose,
+  isCollapsed = false,
+  onToggleCollapse,
+}: SidebarNavigationProps) => {
   const location = useLocation();
   const { getOrderTypeCount, storeStatus, orderStatus } = useOrderManagement();
 
   // Calculate total active orders (new + progress + ready + fulfillment)
-  const totalActiveOrders = getOrderTypeCount('new') + getOrderTypeCount('progress') + getOrderTypeCount('ready') + getOrderTypeCount('fulfillment');
-  
+  const totalActiveOrders =
+    getOrderTypeCount("new") +
+    getOrderTypeCount("progress") +
+    getOrderTypeCount("ready") +
+    getOrderTypeCount("fulfillment");
+
   // Badges should only show when:
   // 1. Store is open (storeStatus === 'open')
-  // 2. Orders are active (orderStatus === 'active') 
+  // 2. Orders are active (orderStatus === 'active')
   // 3. There are actually orders to show (totalActiveOrders > 0)
-  const shouldShowBadges = storeStatus === 'open' && orderStatus === 'active' && totalActiveOrders > 0;
+  const shouldShowBadges =
+    storeStatus === "open" && orderStatus === "active" && totalActiveOrders > 0;
 
-  console.log('SidebarNavigation badge logic:', {
+  console.log("SidebarNavigation badge logic:", {
     totalActiveOrders,
     storeStatus,
     orderStatus,
     shouldShowBadges,
-    newOrders: getOrderTypeCount('new'),
-    progressOrders: getOrderTypeCount('progress'),
-    readyOrders: getOrderTypeCount('ready'),
-    fulfillmentOrders: getOrderTypeCount('fulfillment')
+    newOrders: getOrderTypeCount("new"),
+    progressOrders: getOrderTypeCount("progress"),
+    readyOrders: getOrderTypeCount("ready"),
+    fulfillmentOrders: getOrderTypeCount("fulfillment"),
   });
 
   return (
-    <nav className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-5 py-4 sm:py-5 md:py-6 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-      <ul className="space-y-1 sm:space-y-1.5">
+    <nav className="flex-1 overflow-y-auto px-3 sm:px-4 md:px-5 py-5 sm:py-6 md:py-7 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+      <ul className="space-y-2 sm:space-y-2.5">
         {menuItems.map((item) => (
           <SidebarMenuItem
             key={item.name}

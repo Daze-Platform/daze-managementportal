@@ -1,10 +1,15 @@
-
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 interface ReviewReplyDialogProps {
   isOpen: boolean;
@@ -14,14 +19,14 @@ interface ReviewReplyDialogProps {
   onReplySubmit: (reply: string) => void;
 }
 
-export const ReviewReplyDialog = ({ 
-  isOpen, 
-  onClose, 
-  customerName, 
-  reviewText, 
-  onReplySubmit 
+export const ReviewReplyDialog = ({
+  isOpen,
+  onClose,
+  customerName,
+  reviewText,
+  onReplySubmit,
 }: ReviewReplyDialogProps) => {
-  const [reply, setReply] = useState('');
+  const [reply, setReply] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -30,30 +35,30 @@ export const ReviewReplyDialog = ({
       toast({
         title: "Error",
         description: "Please enter a reply before submitting.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       onReplySubmit(reply);
-      
+
       toast({
         title: "Reply sent",
-        description: "Your reply has been sent to the customer."
+        description: "Your reply has been sent to the customer.",
       });
-      
-      setReply('');
+
+      setReply("");
       onClose();
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to send reply. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -66,17 +71,21 @@ export const ReviewReplyDialog = ({
         <DialogHeader>
           <DialogTitle>Reply to {customerName}</DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div>
-            <Label className="text-sm font-medium text-muted-foreground">Original Review:</Label>
+            <Label className="text-sm font-medium text-muted-foreground">
+              Original Review:
+            </Label>
             <div className="mt-1 p-3 bg-muted rounded-md text-sm">
               "{reviewText}"
             </div>
           </div>
-          
+
           <div>
-            <Label htmlFor="reply" className="text-sm font-medium">Your Reply</Label>
+            <Label htmlFor="reply" className="text-sm font-medium">
+              Your Reply
+            </Label>
             <Textarea
               id="reply"
               placeholder="Write your response to this review..."
@@ -96,7 +105,7 @@ export const ReviewReplyDialog = ({
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? 'Sending...' : 'Send Reply'}
+            {isSubmitting ? "Sending..." : "Send Reply"}
           </Button>
         </DialogFooter>
       </DialogContent>

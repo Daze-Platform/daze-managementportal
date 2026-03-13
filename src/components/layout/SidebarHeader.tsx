@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { X, PanelLeftClose, ChevronRight } from 'lucide-react';
+import React from "react";
+import { X, PanelLeftClose, ChevronRight } from "lucide-react";
 
 interface SidebarHeaderProps {
   isOpen: boolean;
@@ -9,43 +8,51 @@ interface SidebarHeaderProps {
   onToggleCollapse?: () => void;
 }
 
-export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCollapse }: SidebarHeaderProps) => {
+export const SidebarHeader = ({
+  isOpen,
+  isCollapsed = false,
+  onClose,
+  onToggleCollapse,
+}: SidebarHeaderProps) => {
   return (
     <>
       {/* Logo Section */}
-      <div className={`flex-shrink-0 ${isCollapsed ? 'p-1' : 'p-4 sm:p-5 md:p-6'}`}>
+      <div
+        className={`flex-shrink-0 ${isCollapsed ? "p-1.5" : "p-4 sm:p-5 md:p-7"}`}
+      >
         {isCollapsed ? (
           /* Collapsed State - Cloud Logo with Hover Chevron */
           <div className="flex items-center justify-center w-full h-16">
-            <button 
+            <button
               className="relative flex items-center justify-center hover:bg-white/10 active:bg-white/15 active:scale-95 transition-all duration-200 cursor-pointer rounded-xl p-2 group"
               onClick={onToggleCollapse}
               aria-label="Expand sidebar"
             >
               {/* Cloud Logo - visible by default, fades on hover */}
-              <img 
-                src="/lovable-uploads/db847939-b95d-4615-ab8d-a03ec8f81e50.png" 
-                alt="DAZE Logo" 
+              <img
+                src="/brand-assets/db847939-b95d-4615-ab8d-a03ec8f81e50.png"
+                alt="DAZE Logo"
                 className="h-5 w-auto object-contain transition-opacity duration-200 lg:group-hover:opacity-0"
               />
-              
+
               {/* Chevron - hidden by default, appears on hover (desktop only) */}
-              <ChevronRight 
-                className="absolute w-5 h-5 text-white/70 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200" 
-              />
+              <ChevronRight className="absolute w-5 h-5 text-white/70 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200" />
             </button>
           </div>
         ) : (
           /* Expanded State - DAZE Logo + Controls */
           <div className="flex items-center justify-between gap-2">
-            <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex-shrink-0">
-              <img 
-                src="/lovable-uploads/db847939-b95d-4615-ab8d-a03ec8f81e50.png" 
-                alt="DAZE Logo" 
-                className="h-4 sm:h-5 md:h-6 w-auto object-contain"
+            <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 flex-shrink-0">
+              <img
+                src="/brand-assets/db847939-b95d-4615-ab8d-a03ec8f81e50.png"
+                alt="DAZE Logo"
+                className="h-5 sm:h-6 md:h-7 w-auto object-contain"
               />
+              <span className="text-white text-sm sm:text-base font-semibold tracking-wide">
+                DAZE
+              </span>
             </div>
-            
+
             {/* Controls container */}
             <div className="flex items-center gap-1">
               {/* Desktop Collapse Button */}
@@ -56,10 +63,10 @@ export const SidebarHeader = ({ isOpen, isCollapsed = false, onClose, onToggleCo
               >
                 <PanelLeftClose className="w-5 h-5" strokeWidth={2} />
               </button>
-              
+
               {/* Mobile/Tablet Close Button */}
-              <button 
-                onClick={onClose} 
+              <button
+                onClick={onClose}
                 className="lg:hidden p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md transition-colors flex items-center justify-center"
                 aria-label="Close sidebar"
               >

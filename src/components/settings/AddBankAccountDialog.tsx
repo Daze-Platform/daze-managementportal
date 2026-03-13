@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,24 +7,33 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/components/ui/use-toast';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
 interface AddBankAccountDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 }
 
-export const AddBankAccountDialog: React.FC<AddBankAccountDialogProps> = ({ isOpen, onOpenChange }) => {
+export const AddBankAccountDialog: React.FC<AddBankAccountDialogProps> = ({
+  isOpen,
+  onOpenChange,
+}) => {
   const { toast } = useToast();
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [routingNumber, setRoutingNumber] = useState('');
-  const [accountType, setAccountType] = useState('checking');
+  const [accountHolderName, setAccountHolderName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [routingNumber, setRoutingNumber] = useState("");
+  const [accountType, setAccountType] = useState("checking");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,10 +50,10 @@ export const AddBankAccountDialog: React.FC<AddBankAccountDialogProps> = ({ isOp
     });
     onOpenChange(false);
     // Reset form
-    setAccountHolderName('');
-    setAccountNumber('');
-    setRoutingNumber('');
-    setAccountType('checking');
+    setAccountHolderName("");
+    setAccountNumber("");
+    setRoutingNumber("");
+    setAccountType("checking");
   };
 
   return (
@@ -54,24 +62,55 @@ export const AddBankAccountDialog: React.FC<AddBankAccountDialogProps> = ({ isOp
         <DialogHeader>
           <DialogTitle>Add Bank Account</DialogTitle>
           <DialogDescription>
-            Enter your bank account details. This information will be kept secure.
+            Enter your bank account details. This information will be kept
+            secure.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} id="add-bank-form" className="grid gap-4 py-4">
+        <form
+          onSubmit={handleSubmit}
+          id="add-bank-form"
+          className="grid gap-4 py-4"
+        >
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="account-holder-name" className="text-right">Account Holder</Label>
-            <Input id="account-holder-name" value={accountHolderName} onChange={(e) => setAccountHolderName(e.target.value)} required className="col-span-3" />
+            <Label htmlFor="account-holder-name" className="text-right">
+              Account Holder
+            </Label>
+            <Input
+              id="account-holder-name"
+              value={accountHolderName}
+              onChange={(e) => setAccountHolderName(e.target.value)}
+              required
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="account-number" className="text-right">Account Number</Label>
-            <Input id="account-number" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} required className="col-span-3" />
+            <Label htmlFor="account-number" className="text-right">
+              Account Number
+            </Label>
+            <Input
+              id="account-number"
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
+              required
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="routing-number" className="text-right">Routing Number</Label>
-            <Input id="routing-number" value={routingNumber} onChange={(e) => setRoutingNumber(e.target.value)} required className="col-span-3" />
+            <Label htmlFor="routing-number" className="text-right">
+              Routing Number
+            </Label>
+            <Input
+              id="routing-number"
+              value={routingNumber}
+              onChange={(e) => setRoutingNumber(e.target.value)}
+              required
+              className="col-span-3"
+            />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="account-type" className="text-right">Account Type</Label>
+            <Label htmlFor="account-type" className="text-right">
+              Account Type
+            </Label>
             <Select value={accountType} onValueChange={setAccountType}>
               <SelectTrigger id="account-type" className="col-span-3">
                 <SelectValue placeholder="Select account type" />

@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { FadeIn, ScaleIn } from '@/components/ui/animated-container';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { FadeIn, ScaleIn } from "@/components/ui/animated-container";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -25,14 +31,14 @@ const Login = () => {
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [isAuthenticated, loading, navigate]);
 
   if (loading || isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
@@ -46,63 +52,71 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     if (!email || !password) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       setIsLoading(false);
       toast({
         variant: "destructive",
         title: "Validation Error",
-        description: "Please fill in all fields"
+        description: "Please fill in all fields",
       });
       return;
     }
 
     try {
-      await login(email, password);
-      toast({
-        variant: "success",
-        title: "Login Successful",
-        description: "Welcome to Daze Management Hub."
-      });
-      navigate('/dashboard');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (email === "admin@dazeapp.com" && password === "daze123") {
+        login(email);
+        toast({
+          variant: "success",
+          title: "Login Successful",
+          description: "Welcome back! You'll stay logged in for 30 days.",
+        });
+        navigate("/dashboard");
+      } else {
+        const errorMessage =
+          "Invalid email or password. Please use the demo credentials.";
+        setError(errorMessage);
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: errorMessage,
+        });
+      }
     } catch (err) {
-      const errorMessage = 'Invalid email or password.';
+      const errorMessage = "An error occurred. Please try again.";
       setError(errorMessage);
       toast({
         variant: "destructive",
-        title: "Login Failed",
-        description: errorMessage
+        title: "Error",
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDemoLogin = async (demoEmail: string, demoPassword: string, label: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setError('');
+  const handleDemoLogin = async () => {
+    setEmail("admin@dazeapp.com");
+    setPassword("daze123");
+    setError("");
     setIsLoading(true);
 
     try {
-      await login(demoEmail, demoPassword);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      login("admin@dazeapp.com");
       toast({
         variant: "success",
         title: "Demo Login",
-        description: `Welcome to Daze Management Hub — ${label}.`
+        description: "Welcome to the Pensacola Beach Resort demo!",
       });
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err) {
-      const errorMessage = 'Demo login failed. Please verify staging credentials.';
-      setError(errorMessage);
-      toast({
-        variant: "destructive",
-        title: "Demo Login Failed",
-        description: errorMessage
-      });
+      setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -110,20 +124,34 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Demo Welcome Banner */}
+      {showBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-primary via-accent to-primary py-3 px-4 text-center shadow-lg"
+        >
+          <p className="text-sm md:text-base font-medium text-white">
+            Welcome to Pensacola Beach Resort Management Hub Demo
+          </p>
+        </motion.div>
+      )}
+
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div 
+        <motion.div
           className="absolute -top-1/2 -right-1/2 w-full h-full rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-3xl"
-          animate={{ 
+          animate={{
             scale: [1, 1.1, 1],
             rotate: [0, 5, 0],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute -bottom-1/2 -left-1/2 w-full h-full rounded-full bg-gradient-to-tr from-accent/20 to-transparent blur-3xl"
-          animate={{ 
+          animate={{
             scale: [1, 1.15, 1],
             rotate: [0, -5, 0],
           }}
@@ -135,19 +163,21 @@ const Login = () => {
         <Card className="glass shadow-glass-lg border-border/50">
           <CardHeader className="text-center pb-4">
             <ScaleIn delay={0.1}>
-              <motion.div 
+              <motion.div
                 className="mx-auto mb-4 flex h-24 w-24 items-center justify-center"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img 
-                  src="/daze-logo.png" 
-                  alt="Daze Logo"
+                <img
+                  src="/brand-assets/0a4d33da-9760-4b33-86d2-db718dd0c98b.png"
+                  alt="Pensacola Beach Resort Logo"
                   className="h-full w-full object-contain drop-shadow-md"
                 />
               </motion.div>
             </ScaleIn>
-            <CardTitle className="text-2xl font-bold text-foreground">Welcome Back</CardTitle>
+            <CardTitle className="text-2xl font-bold text-foreground">
+              Welcome Back
+            </CardTitle>
             <CardDescription className="text-muted-foreground">
               Management Hub · Powered by Daze
             </CardDescription>
@@ -155,16 +185,18 @@ const Login = () => {
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-5">
-              <motion.div 
+              <motion.div
                 className="space-y-2"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <Label 
-                  htmlFor="email" 
+                <Label
+                  htmlFor="email"
                   className={`text-sm font-medium transition-colors duration-200 ${
-                    focusedField === 'email' ? 'text-primary' : 'text-foreground'
+                    focusedField === "email"
+                      ? "text-primary"
+                      : "text-foreground"
                   }`}
                 >
                   Email
@@ -175,23 +207,25 @@ const Login = () => {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setFocusedField('email')}
+                  onFocus={() => setFocusedField("email")}
                   onBlur={() => setFocusedField(null)}
                   className="h-12 bg-background/50 border-input focus:border-primary focus:ring-primary/20 transition-all duration-200"
                   required
                 />
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="space-y-2"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <Label 
+                <Label
                   htmlFor="password"
                   className={`text-sm font-medium transition-colors duration-200 ${
-                    focusedField === 'password' ? 'text-primary' : 'text-foreground'
+                    focusedField === "password"
+                      ? "text-primary"
+                      : "text-foreground"
                   }`}
                 >
                   Password
@@ -199,11 +233,11 @@ const Login = () => {
                 <div className="relative">
                   <Input
                     id="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onFocus={() => setFocusedField('password')}
+                    onFocus={() => setFocusedField("password")}
                     onBlur={() => setFocusedField(null)}
                     className="h-12 pr-12 bg-background/50 border-input focus:border-primary focus:ring-primary/20 transition-all duration-200"
                     required
@@ -215,7 +249,11 @@ const Login = () => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </motion.button>
                 </div>
               </motion.div>
@@ -223,10 +261,13 @@ const Login = () => {
               {error && (
                 <motion.div
                   initial={{ opacity: 0, y: -10, height: 0 }}
-                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
                   exit={{ opacity: 0, y: -10, height: 0 }}
                 >
-                  <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
+                  <Alert
+                    variant="destructive"
+                    className="bg-destructive/10 border-destructive/30"
+                  >
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 </motion.div>
@@ -237,8 +278,8 @@ const Login = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full h-12 text-base font-medium gradient-primary hover:opacity-90 transition-opacity shadow-md"
                   disabled={isLoading}
                 >
@@ -248,13 +289,13 @@ const Login = () => {
                       Signing in...
                     </>
                   ) : (
-                    'Sign In'
+                    "Sign In"
                   )}
                 </Button>
               </motion.div>
             </form>
 
-            <motion.div 
+            <motion.div
               className="mt-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -268,30 +309,19 @@ const Login = () => {
                   <span className="bg-card px-2 text-muted-foreground">Or</span>
                 </div>
               </div>
-              
-              <div className="flex gap-2 mt-5">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1 h-12 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors text-sm"
-                  onClick={() => handleDemoLogin('jay@pbr-test.daze.com', 'PBR-Pilot-2026!', 'Pensacola Beach Resort')}
-                  disabled={isLoading}
-                >
-                  PBR Demo
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1 h-12 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors text-sm"
-                  onClick={() => handleDemoLogin('manuel@innisfree-test.daze.com', 'Innisfree-Pilot-2026', 'Innisfree Hotels')}
-                  disabled={isLoading}
-                >
-                  Innisfree Demo
-                </Button>
-              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-12 mt-5 border-dashed border-2 hover:bg-accent/5 hover:border-accent transition-colors"
+                onClick={handleDemoLogin}
+                disabled={isLoading}
+              >
+                Try Demo Login
+              </Button>
             </motion.div>
 
-            <motion.p 
+            <motion.p
               className="mt-5 text-center text-xs text-muted-foreground"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

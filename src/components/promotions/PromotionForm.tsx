@@ -1,21 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { useToast } from '@/hooks/use-toast';
-import { useStores } from '@/contexts/StoresContext';
-import { useResort } from '@/contexts/DestinationContext';
-import { Upload, X, Calendar as CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import React, { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/hooks/use-toast";
+import { useStores } from "@/contexts/StoresContext";
+import { useResort } from "@/contexts/DestinationContext";
+import { Upload, X, Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface PromotionFormData {
   name: string;
@@ -32,35 +42,38 @@ interface PromotionFormData {
 }
 
 interface PromotionFormProps {
-  onSave: (data: Omit<PromotionFormData, 'acceptTerms'>) => void;
+  onSave: (data: Omit<PromotionFormData, "acceptTerms">) => void;
   initialData?: any; // For editing existing promotions
 }
 
-export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialData }) => {
+export const PromotionForm: React.FC<PromotionFormProps> = ({
+  onSave,
+  initialData,
+}) => {
   const { toast } = useToast();
   const { stores: allStores } = useStores();
   const { currentResort } = useResort();
 
   // Get all stores regardless of resort assignment and remove duplicates
   // This ensures all stores are available in dropdowns without duplicates
-  const availableStores = allStores.filter((store, index, self) => 
-    index === self.findIndex(s => s.id === store.id)
+  const availableStores = allStores.filter(
+    (store, index, self) => index === self.findIndex((s) => s.id === store.id),
   );
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<PromotionFormData>({
-    name: initialData?.name || '',
-    description: initialData?.description || '',
-    promoCode: initialData?.promoCode || '',
+    name: initialData?.name || "",
+    description: initialData?.description || "",
+    promoCode: initialData?.promoCode || "",
     startDate: initialData?.startDate || undefined,
     endDate: initialData?.endDate || undefined,
-    discount: initialData?.discount || '',
-    minimumOrder: initialData?.minimumOrder || '',
-    targetType: initialData?.targetType || 'everyone',
-    store: initialData?.store || '',
+    discount: initialData?.discount || "",
+    minimumOrder: initialData?.minimumOrder || "",
+    targetType: initialData?.targetType || "everyone",
+    store: initialData?.store || "",
     acceptTerms: false,
-    image: initialData?.image || undefined
+    image: initialData?.image || undefined,
   });
 
   // Set image preview if editing existing promotion with image
@@ -71,80 +84,86 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
   }, [initialData]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleImageUpload called');
+    console.log("handleImageUpload called");
     const file = event.target.files?.[0];
-    console.log('Selected file:', file);
-    
+    console.log("Selected file:", file);
+
     if (file) {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        console.log('Invalid file type:', file.type);
+      if (!file.type.startsWith("image/")) {
+        console.log("Invalid file type:", file.type);
         toast({
           title: "Invalid File Type",
           description: "Please select an image file (JPEG, PNG, or GIF).",
-          variant: "destructive"
+          variant: "destructive",
         });
         // Reset input
         if (fileInputRef.current) {
-          fileInputRef.current.value = '';
+          fileInputRef.current.value = "";
         }
         return;
       }
 
       // Validate file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
-        console.log('File too large:', file.size);
+        console.log("File too large:", file.size);
         toast({
           title: "File Too Large",
           description: "Image cannot exceed 10MB.",
-          variant: "destructive"
+          variant: "destructive",
         });
         // Reset input
         if (fileInputRef.current) {
-          fileInputRef.current.value = '';
+          fileInputRef.current.value = "";
         }
         return;
       }
 
-      console.log('Setting selected image:', file.name);
+      console.log("Setting selected image:", file.name);
       setSelectedImage(file);
-      
+
       // Create preview with proper compression for better performance
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        console.log('FileReader result received, length:', result ? result.length : 0);
-        
+        console.log(
+          "FileReader result received, length:",
+          result ? result.length : 0,
+        );
+
         // Create an image element to check dimensions and compress if needed
         const img = new Image();
         img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
           // Set optimal dimensions (2:1 ratio, max 800x400)
           const maxWidth = 800;
           const maxHeight = 400;
           let { width, height } = img;
-          
+
           // Maintain aspect ratio while fitting within bounds
           if (width > maxWidth || height > maxHeight) {
             const ratio = Math.min(maxWidth / width, maxHeight / height);
             width = width * ratio;
             height = height * ratio;
           }
-          
+
           canvas.width = width;
           canvas.height = height;
-          
+
           // Draw and compress the image
           ctx?.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-          
-          console.log('Image compressed, new length:', compressedDataUrl.length);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+
+          console.log(
+            "Image compressed, new length:",
+            compressedDataUrl.length,
+          );
           setImagePreview(compressedDataUrl);
           // Update form data with compressed image
-          setFormData(prev => ({ ...prev, image: compressedDataUrl }));
-          
+          setFormData((prev) => ({ ...prev, image: compressedDataUrl }));
+
           toast({
             title: "Image Uploaded",
             description: `${file.name} has been optimized and uploaded successfully.`,
@@ -153,16 +172,16 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
         img.src = result;
       };
       reader.onerror = (e) => {
-        console.error('FileReader error:', e);
+        console.error("FileReader error:", e);
         toast({
           title: "Upload Error",
           description: "Failed to read the image file.",
-          variant: "destructive"
+          variant: "destructive",
         });
       };
       reader.readAsDataURL(file);
     } else {
-      console.log('No file selected');
+      console.log("No file selected");
     }
   };
 
@@ -171,30 +190,30 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
     setSelectedImage(null);
     setImagePreview(null);
     // Update form data to remove image
-    setFormData(prev => ({ ...prev, image: undefined }));
+    setFormData((prev) => ({ ...prev, image: undefined }));
     // Reset file input
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.store) {
       toast({
         title: "Venue Required",
         description: "Please select a venue for this promotion.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
-    
+
     if (!formData.promoCode.trim()) {
       toast({
         title: "Promo Code Required",
         description: "Please enter a promo code for this promotion.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -202,8 +221,9 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
     if (!formData.startDate || !formData.endDate) {
       toast({
         title: "Date Range Required",
-        description: "Please select both start and end dates for this promotion.",
-        variant: "destructive"
+        description:
+          "Please select both start and end dates for this promotion.",
+        variant: "destructive",
       });
       return;
     }
@@ -212,16 +232,16 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
       toast({
         title: "Invalid Date Range",
         description: "End date must be after start date.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
-    
+
     if (!formData.acceptTerms) {
       toast({
         title: "Terms Required",
         description: "Please accept the Terms & Conditions to continue.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -235,7 +255,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
   };
 
   const handleUploadAreaClick = () => {
-    console.log('Upload area clicked');
+    console.log("Upload area clicked");
     fileInputRef.current?.click();
   };
 
@@ -245,7 +265,12 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
         {/* Venue Selection */}
         <div>
           <Label htmlFor="store">Venue *</Label>
-          <Select value={formData.store} onValueChange={(value) => setFormData({ ...formData, store: value })}>
+          <Select
+            value={formData.store}
+            onValueChange={(value) =>
+              setFormData({ ...formData, store: value })
+            }
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select a venue" />
             </SelectTrigger>
@@ -271,7 +296,9 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
               <Input
                 id="promotionName"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 required
               />
             </div>
@@ -281,7 +308,9 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 required
               />
             </div>
@@ -291,7 +320,12 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
               <Input
                 id="promoCode"
                 value={formData.promoCode}
-                onChange={(e) => setFormData({ ...formData, promoCode: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    promoCode: e.target.value.toUpperCase(),
+                  })
+                }
                 required
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -310,18 +344,25 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                         variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-medium bg-white border-gray-300 hover:border-gray-400 focus:border-gray-500 hover:bg-gray-50 shadow-sm transition-all duration-200",
-                          !formData.startDate && "text-gray-500"
+                          !formData.startDate && "text-gray-500",
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4 text-gray-600" />
-                        {formData.startDate ? format(formData.startDate, "MMM dd, yyyy") : "Select date"}
+                        {formData.startDate
+                          ? format(formData.startDate, "MMM dd, yyyy")
+                          : "Select date"}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-white border-gray-300 shadow-xl" align="start">
+                    <PopoverContent
+                      className="w-auto p-0 bg-white border-gray-300 shadow-xl"
+                      align="start"
+                    >
                       <Calendar
                         mode="single"
                         selected={formData.startDate}
-                        onSelect={(date) => setFormData({ ...formData, startDate: date })}
+                        onSelect={(date) =>
+                          setFormData({ ...formData, startDate: date })
+                        }
                         disabled={(date) => date < new Date()}
                         initialFocus
                         className="p-4 pointer-events-auto"
@@ -337,22 +378,31 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                         variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-medium bg-white border-gray-300 hover:border-gray-400 focus:border-gray-500 hover:bg-gray-50 shadow-sm transition-all duration-200",
-                          !formData.endDate && "text-gray-500"
+                          !formData.endDate && "text-gray-500",
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4 text-gray-600" />
-                        {formData.endDate ? format(formData.endDate, "MMM dd, yyyy") : "Select date"}
+                        {formData.endDate
+                          ? format(formData.endDate, "MMM dd, yyyy")
+                          : "Select date"}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-white border-gray-300 shadow-xl" align="start">
+                    <PopoverContent
+                      className="w-auto p-0 bg-white border-gray-300 shadow-xl"
+                      align="start"
+                    >
                       <Calendar
                         mode="single"
                         selected={formData.endDate}
-                        onSelect={(date) => setFormData({ ...formData, endDate: date })}
+                        onSelect={(date) =>
+                          setFormData({ ...formData, endDate: date })
+                        }
                         disabled={(date) => {
                           const today = new Date();
                           const startDate = formData.startDate;
-                          return date < today || (startDate && date <= startDate);
+                          return (
+                            date < today || (startDate && date <= startDate)
+                          );
                         }}
                         initialFocus
                         className="p-4 pointer-events-auto"
@@ -376,7 +426,9 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                     min="0"
                     max="100"
                     value={formData.discount}
-                    onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, discount: e.target.value })
+                    }
                     className="rounded-r-none"
                     required
                   />
@@ -397,7 +449,9 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                     min="0"
                     step="0.01"
                     value={formData.minimumOrder}
-                    onChange={(e) => setFormData({ ...formData, minimumOrder: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, minimumOrder: e.target.value })
+                    }
                     className="rounded-l-none"
                     required
                   />
@@ -408,9 +462,11 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
 
           <div>
             <Label>Upload image</Label>
-            <p className="text-xs text-gray-500 mb-2">Recommended: 2:1 ratio (e.g., 800x400px) for best results</p>
+            <p className="text-xs text-gray-500 mb-2">
+              Recommended: 2:1 ratio (e.g., 800x400px) for best results
+            </p>
             {!imagePreview ? (
-              <Card 
+              <Card
                 className="border-2 border-dashed border-gray-300 h-40 hover:border-gray-400 transition-colors cursor-pointer relative"
                 onClick={handleUploadAreaClick}
               >
@@ -424,8 +480,12 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                   />
                   <div className="text-center pointer-events-none">
                     <Upload className="h-8 w-8 text-gray-600 mb-2 mx-auto" />
-                    <p className="text-sm font-medium">Click to upload your promotion image</p>
-                    <p className="text-xs text-gray-500">JPEG, PNG or GIF • Max 10MB • Auto-optimized</p>
+                    <p className="text-sm font-medium">
+                      Click to upload your promotion image
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      JPEG, PNG or GIF • Max 10MB • Auto-optimized
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -436,12 +496,15 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                     src={imagePreview}
                     alt="Promotion Preview"
                     className="w-full h-full object-cover"
-                    style={{ imageRendering: 'auto' }}
-                    onLoad={() => console.log('Image preview loaded successfully')}
+                    style={{ imageRendering: "auto" }}
+                    onLoad={() =>
+                      console.log("Image preview loaded successfully")
+                    }
                     onError={(e) => {
-                      console.error('Image preview failed to load');
+                      console.error("Image preview failed to load");
                       const target = e.target as HTMLImageElement;
-                      target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDgwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zNzUgMTc1SDQyNVYyMjVIMzc1VjE3NVoiIGZpbGw9IiM5QjlDQTEiLz4KPHBhdGggZD0iTTM4NSAxOTVMMzk1IDIwNUw0MTUgMTg1VjIxNUgzOTVWMjA1TDM4NSAxOTVaIiBmaWxsPSIjRjlGQUZCIi8+Cjx0ZXh0IHg9IjQwMCIgeT0iMjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM2MzYzIiBmb250LXNpemU9IjE0cHgiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPgo=';
+                      target.src =
+                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDgwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zNzUgMTc1SDQyNVYyMjVIMzc1VjE3NVoiIGZpbGw9IiM5QjlDQTEiLz4KPHBhdGggZD0iTTM4NSAxOTVMMzk1IDIwNUw0MTUgMTg1VjIxNUgzOTVWMjA1TDM4NSAxOTVaIiBmaWxsPSIjRjlGQUZCIi8+Cjx0ZXh0IHg9IjQwMCIgeT0iMjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM2MzYzIiBmb250LXNpemU9IjE0cHgiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPgo=";
                     }}
                   />
                   <Button
@@ -459,7 +522,8 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
             <div className="mt-2 text-xs text-gray-500">
               {selectedImage ? (
                 <p className="text-green-600 font-medium">
-                  ✓ {selectedImage.name} ({(selectedImage.size / 1024 / 1024).toFixed(2)} MB)
+                  ✓ {selectedImage.name} (
+                  {(selectedImage.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
               ) : (
                 <p>Upload a custom image for your promotion</p>
@@ -471,9 +535,10 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
         <div>
           <Label className="text-base font-medium">Target</Label>
           <p className="text-sm text-gray-500 mb-4">
-            Allow all customers to receive this promotion or target specific groups.
+            Allow all customers to receive this promotion or target specific
+            groups.
           </p>
-          
+
           <RadioGroup
             value={formData.targetType}
             onValueChange={handleTargetTypeChange}
@@ -486,13 +551,20 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                     <RadioGroupItem value="everyone" id="everyone" />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor="everyone" className="font-medium cursor-pointer">Available to everyone</Label>
-                    <p className="text-sm text-gray-500 mt-1">All customers can receive this promotion</p>
+                    <Label
+                      htmlFor="everyone"
+                      className="font-medium cursor-pointer"
+                    >
+                      Available to everyone
+                    </Label>
+                    <p className="text-sm text-gray-500 mt-1">
+                      All customers can receive this promotion
+                    </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="border relative hover:border-gray-400 transition-colors cursor-pointer">
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
@@ -500,8 +572,15 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
                     <RadioGroupItem value="exclusive" id="exclusive" />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor="exclusive" className="font-medium cursor-pointer">Exclusive to some</Label>
-                    <p className="text-sm text-gray-500 mt-1">Available only for returning clients</p>
+                    <Label
+                      htmlFor="exclusive"
+                      className="font-medium cursor-pointer"
+                    >
+                      Exclusive to some
+                    </Label>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Available only for returning clients
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -513,11 +592,13 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
           <Checkbox
             id="terms"
             checked={formData.acceptTerms}
-            onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
+            onCheckedChange={(checked) =>
+              setFormData({ ...formData, acceptTerms: checked as boolean })
+            }
             className="h-4 w-4"
           />
           <Label htmlFor="terms" className="text-sm">
-            I accept the{' '}
+            I accept the{" "}
             <a href="#" className="text-gray-700 underline hover:text-gray-900">
               Terms & Conditions
             </a>
@@ -528,7 +609,10 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({ onSave, initialDat
           <Button type="button" variant="outline">
             Cancel
           </Button>
-          <Button type="submit" className="bg-gray-900 hover:bg-gray-800 text-white">
+          <Button
+            type="submit"
+            className="bg-gray-900 hover:bg-gray-800 text-white"
+          >
             Save
           </Button>
         </div>
