@@ -137,3 +137,8 @@ const resortStores = destinationStores;
 export const defaultStores: Store[] = destinationStores['pensacola-beach-resort'] || [];
 
 export { defaultHours, brotherFoxHours, sisterHenHours, cousinWolfHours, resortStores, destinationStores };
+
+// UUID aliases — when a user is authenticated from the DB, currentResort.id is a UUID
+// These aliases ensure static fallback lookups still resolve correctly
+(destinationStores as Record<string, typeof destinationStores[keyof typeof destinationStores]>)['b1c2d3e4-5678-90ab-cdef-aabbccddeeff'] = destinationStores['innisfree-piazza-pizza'];
+(destinationStores as Record<string, typeof destinationStores[keyof typeof destinationStores]>)['c6543244-a85d-4254-b7a6-9a3610ef5c16'] = destinationStores['pensacola-beach-resort'];
