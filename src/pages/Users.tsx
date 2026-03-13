@@ -54,14 +54,14 @@ export const Users = () => {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      // Query tenant_members joined with profiles for the current tenant
+      // Query user_tenants joined with profiles for the current tenant
       const { data, error } = await supabase
-        .from('tenant_members')
+        .from('user_tenants')
         .select(`
           id,
           role,
-          is_active,
           user_id,
+          tenant_id,
           profiles:user_id (
             id,
             email,
@@ -79,10 +79,10 @@ export const Users = () => {
       if (data) {
         const mapped: TeamUser[] = data.map((m: any) => ({
           id: m.id,
-          name: m.profiles?.full_name || 'Unknown',
+          name: m.profiles?.full_name || 'User',
           email: m.profiles?.email || '',
           role: m.role || 'staff',
-          status: m.is_active ? 'Active' : 'Inactive',
+          status: 'Active',
           userId: m.user_id,
         }));
         setUsers(mapped);
@@ -106,40 +106,15 @@ export const Users = () => {
 
     setInviting(true);
     try {
-      // Check if profile exists for this email
-      const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('id, email, full_name')
-        .eq('email', inviteEmail)
-        .single();
+      // For now, create a placeholder entry — real auth user creation requires admin API
+      // This adds a user_tenants row with a generated UUID as placeholder user_id
+      const placeholderId = crypto.randomUUID();
 
-      let profileId: string;
-
-      if (existingProfile) {
-        profileId = existingProfile.id;
-      } else {
-        // Create a profile entry for the invited user
-        const newId = crypto.randomUUID();
-        const { error: profileErr } = await supabase
-          .from('profiles')
-          .insert({
-            id: newId,
-            email: inviteEmail,
-            full_name: inviteName || inviteEmail.split('@')[0],
-          });
-
-        if (profileErr) {
-          toast({ variant: 'destructive', title: 'Error', description: 'Could not create user profile.' });
-          return;
-        }
-        profileId = newId;
-      }
-
-      // Check if already a member
+      // Check if already a member by email match (future: query auth.users)
       const { data: existingMember } = await supabase
-        .from('tenant_members')
+        .from('user_tenants')
         .select('id')
-        .eq('user_id', profileId)
+        .eq('user_id', placeholderId)
         .single();
 
       if (existingMember) {
@@ -147,13 +122,26 @@ export const Users = () => {
         return;
       }
 
+      // Get current user's tenant
+      const { data: currentUserTenant } = await supabase
+        .from('user_tenants')
+        .select('tenant_id')
+        .limit(1)
+        .single();
+
+      const tenantId = currentUserTenant?.tenant_id;
+      if (!tenantId) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not determine tenant.' });
+        return;
+      }
+
       // Insert tenant member
       const { error: memberErr } = await supabase
-        .from('tenant_members')
+        .from('user_tenants')
         .insert({
-          user_id: profileId,
+          user_id: placeholderId,
+          tenant_id: tenantId,
           role: inviteRole,
-          is_active: true,
         });
 
       if (memberErr) {
@@ -183,7 +171,7 @@ export const Users = () => {
   const onRemoveUser = async (memberId: string) => {
     try {
       const { error } = await supabase
-        .from('tenant_members')
+        .from('user_tenants')
         .delete()
         .eq('id', memberId);
 

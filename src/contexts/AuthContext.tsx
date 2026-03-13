@@ -77,10 +77,9 @@ const fetchProfile = async (userId: string, email: string): Promise<UserProfile>
   // Resolve tenant membership
   try {
     const { data: membership } = await supabase
-      .from('tenant_members')
+      .from('user_tenants')
       .select('tenant_id, role')
       .eq('user_id', userId)
-      .eq('is_active', true)
       .single();
 
     if (membership) {
