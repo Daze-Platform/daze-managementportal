@@ -48,9 +48,14 @@ export const SidebarHeader = ({
                 alt="DAZE Logo"
                 className="h-5 sm:h-6 md:h-7 w-auto object-contain"
               />
-              <span className="text-white text-sm sm:text-base font-semibold tracking-wide">
-                DAZE
-              </span>
+              <div className="flex flex-col leading-none gap-0.5">
+                <span className="font-extrabold tracking-widest text-sm sm:text-[15px] bg-gradient-to-r from-white via-blue-100 to-white/80 bg-clip-text text-transparent">
+                  DAZE
+                </span>
+                <span className="text-white/40 text-[8px] tracking-[0.18em] font-medium uppercase">
+                  Management Hub
+                </span>
+              </div>
             </div>
 
             {/* Controls container */}
