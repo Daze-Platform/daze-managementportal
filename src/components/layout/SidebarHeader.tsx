@@ -30,7 +30,7 @@ export const SidebarHeader = ({
             >
               {/* Cloud Logo - visible by default, fades on hover */}
               <img
-                src="/brand-assets/db847939-b95d-4615-ab8d-a03ec8f81e50.png"
+                src="/daze-logo.png"
                 alt="DAZE Logo"
                 className="h-5 w-auto object-contain transition-opacity duration-200 lg:group-hover:opacity-0"
               />
@@ -44,7 +44,7 @@ export const SidebarHeader = ({
           <div className="flex items-center justify-between gap-2">
             <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 flex-shrink-0">
               <img
-                src="/brand-assets/db847939-b95d-4615-ab8d-a03ec8f81e50.png"
+                src="/daze-logo.png"
                 alt="DAZE Logo"
                 className="h-5 sm:h-6 md:h-7 w-auto object-contain"
               />

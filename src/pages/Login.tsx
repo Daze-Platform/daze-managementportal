@@ -164,14 +164,14 @@ const Login = () => {
           <CardHeader className="text-center pb-4">
             <ScaleIn delay={0.1}>
               <motion.div
-                className="mx-auto mb-4 flex h-24 w-24 items-center justify-center"
+                className="mx-auto mb-4 flex items-center justify-center"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img
-                  src="/brand-assets/0a4d33da-9760-4b33-86d2-db718dd0c98b.png"
-                  alt="Pensacola Beach Resort Logo"
-                  className="h-full w-full object-contain drop-shadow-md"
+                  src="/daze-logo.png"
+                  alt="Daze Logo"
+                  className="h-16 w-auto object-contain drop-shadow-md"
                 />
               </motion.div>
             </ScaleIn>
