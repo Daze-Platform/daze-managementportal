@@ -112,6 +112,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     let mounted = true;
 
+    // Hard fallback: if loading hasn't resolved in 5s, unblock the UI
+    const loadingTimeout = setTimeout(() => {
+      if (mounted) setLoading(false);
+    }, 5000);
+
     const resolveAuthFromSession = async (session: import("@supabase/supabase-js").Session | null) => {
       if (!mounted) return;
 
@@ -153,7 +158,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }
 
-      if (mounted) setLoading(false);
+      if (mounted) {
+        setLoading(false);
+        clearTimeout(loadingTimeout);
+      }
     };
 
     // FIX: Explicitly call getSession() so we don't rely solely on onAuthStateChange
@@ -162,13 +170,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!initialResolved.current) {
         initialResolved.current = true;
-        resolveAuthFromSession(session);
+        resolveAuthFromSession(session).catch(() => {
+          // resolveAuthFromSession threw — still unblock
+          if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
+        });
       }
     }).catch(() => {
       // If getSession fails, still unblock the UI
       if (!initialResolved.current) {
         initialResolved.current = true;
-        if (mounted) setLoading(false);
+        if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
       }
     });
 
@@ -213,6 +224,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     return () => {
       mounted = false;
+      clearTimeout(loadingTimeout);
       subscription.unsubscribe();
     };
   }, []);
