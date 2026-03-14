@@ -55,7 +55,7 @@ export const Sidebar = ({
       <motion.div
         className={`
           fixed lg:static top-0 left-0 z-50 lg:z-auto
-          text-sidebar-foreground h-screen flex flex-col
+          text-sidebar-foreground h-[100dvh] flex flex-col min-h-0
           border-r border-sidebar-border/30 shadow-xl lg:shadow-none
         `}
         initial={false}
