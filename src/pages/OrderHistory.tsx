@@ -408,10 +408,11 @@ export const OrderHistory = () => {
       <CardContent className="p-0">
         {/* Header Section */}
         <div className="p-3 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+          {/* Top row: store info + total */}
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center space-x-3 min-w-0">
               <button
-                className="w-8 h-8 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
+                className="w-8 h-8 flex-shrink-0 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
                 onClick={() => handleOrderClick(order)}
               >
                 {expandedOrder === order.id ? (
@@ -421,7 +422,7 @@ export const OrderHistory = () => {
                 )}
               </button>
               <div
-                className={`w-10 h-10 ${order.store.customLogo ? "bg-white" : order.store.bgColor} rounded-xl flex items-center justify-center shadow-sm overflow-hidden border border-gray-200`}
+                className={`w-10 h-10 flex-shrink-0 ${order.store.customLogo ? "bg-white" : order.store.bgColor} rounded-xl flex items-center justify-center shadow-sm overflow-hidden border border-gray-200`}
               >
                 {order.store.customLogo ? (
                   <img
@@ -433,21 +434,22 @@ export const OrderHistory = () => {
                   <span className="text-white text-sm">{order.store.logo}</span>
                 )}
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 text-sm">
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-900 text-sm truncate">
                   {order.store.name}
                 </h3>
-                <p className="text-xs text-gray-500">{order.id}</p>
+                <p className="text-xs text-gray-400 font-mono">{order.id}</p>
               </div>
             </div>
-            <div className="text-right">
-              <div className="font-bold text-lg text-gray-900 mb-2">
+            <div className="flex-shrink-0 ml-3 text-right">
+              <div className="font-bold text-lg text-gray-900">
                 {order.total}
               </div>
-              <div className="flex justify-end">
-                {getOrderMetaBadges(order)}
-              </div>
             </div>
+          </div>
+          {/* Bottom row: badges — full width, clearly separated from order number */}
+          <div className="pl-[4.25rem]">
+            {getOrderMetaBadges(order)}
           </div>
         </div>
 
