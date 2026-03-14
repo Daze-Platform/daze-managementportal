@@ -24,8 +24,9 @@ interface AuthContextType {
   userEmail: string | null;
   userProfile: UserProfile | null;
   userId: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (email: string) => void;
+  logout: () => void;
+  updateUserProfile: (profileUpdates: Partial<UserProfile>) => void;
   loading: boolean;
 }
 

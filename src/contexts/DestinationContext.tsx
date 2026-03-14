@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Destination } from "@/components/settings/DestinationManagement";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 interface DestinationContextType {
@@ -46,6 +47,7 @@ export const DestinationProvider = ({
   const [currentDestination, setCurrentDestination] =
     useState<Destination | null>(defaultDestinations[0]);
   const [loading, setLoading] = useState(true);
+  const { userProfile } = useAuth();
 
   // Load destinations scoped to the authenticated user's tenant
   useEffect(() => {

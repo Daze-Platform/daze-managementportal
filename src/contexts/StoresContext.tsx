@@ -8,6 +8,7 @@ import React, {
 import { Store } from "@/types/store";
 import { defaultStores } from "@/data/defaultStores";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 interface StoresContextType {
