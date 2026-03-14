@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Destination } from "@/components/settings/DestinationManagement";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "./AuthContext";
 
 interface DestinationContextType {
   currentDestination: Destination | null;
@@ -41,10 +42,11 @@ export const DestinationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { userProfile } = useAuth();
   const [destinations, setDestinationsState] =
-    useState<Destination[]>(defaultDestinations);
+    useState<Destination[]>([]);
   const [currentDestination, setCurrentDestination] =
-    useState<Destination | null>(defaultDestinations[0]);
+    useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Load destinations scoped to the authenticated user's tenant
@@ -61,6 +63,7 @@ export const DestinationProvider = ({
       const { data: destinationsData, error } = await supabase
         .from("resorts")
         .select("*")
+        .eq("tenant_id", tenantId)
         .order("created_at", { ascending: true });
 
       if (error) {
