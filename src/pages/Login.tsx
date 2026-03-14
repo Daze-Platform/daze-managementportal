@@ -24,6 +24,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showBanner, setShowBanner] = useState(false);
   const navigate = useNavigate();
   const { login, isAuthenticated, loading } = useAuth();
   const { toast } = useToast();
