@@ -21,21 +21,7 @@ const DestinationContext = createContext<DestinationContextType | undefined>(
   undefined,
 );
 
-const defaultDestinations: Destination[] = [
-  {
-    id: "pensacola-beach-resort",
-    name: "Pensacola Beach Resort",
-    location: "Pensacola Beach, FL",
-    address: "165 Fort Pickens Rd, Pensacola Beach, FL 32561",
-    phone: "(850) 916-9755",
-    email: "info@dazeapp.com",
-    manager: "Kari Thomas",
-    status: "active",
-    storeCount: 3,
-    createdAt: "2024-01-15",
-    logo: "",
-  },
-];
+const defaultDestinations: Destination[] = [];
 
 export const DestinationProvider = ({
   children,
@@ -43,9 +29,9 @@ export const DestinationProvider = ({
   children: React.ReactNode;
 }) => {
   const [destinations, setDestinationsState] =
-    useState<Destination[]>(defaultDestinations);
+    useState<Destination[]>([]);
   const [currentDestination, setCurrentDestination] =
-    useState<Destination | null>(defaultDestinations[0]);
+    useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);
   const { userProfile } = useAuth();
 

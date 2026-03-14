@@ -83,7 +83,7 @@ type ProfileData = {
 
 export const Settings = () => {
   const { toast } = useToast();
-  const { userProfile } = useAuth();
+  const { userProfile, updateUserProfile } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "profile";
 

@@ -87,13 +87,12 @@ const Login = () => {
         return;
       }
 
-      login(email);
+      // onAuthStateChange handles the rest: sets isAuthenticated, fetches profile with tenantId
       toast({
         variant: "success",
         title: "Login Successful",
         description: "Welcome back!",
       });
-      navigate("/dashboard");
     } catch (err) {
       const errorMessage = "An error occurred. Please try again.";
       setError(errorMessage);

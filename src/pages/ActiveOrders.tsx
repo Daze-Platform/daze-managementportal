@@ -9,6 +9,8 @@ import { useOrderManagement } from "@/hooks/useOrderManagement";
 import { calculateTotalRevenue } from "@/utils/orderCalculations";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useFilters } from "@/contexts/FilterContext";
+import { useResort } from "@/contexts/DestinationContext";
+import { useStores } from "@/contexts/StoresContext";
 
 export const ActiveOrders = () => {
   const [showPauseModal, setShowPauseModal] = useState(false);
@@ -47,9 +49,7 @@ export const ActiveOrders = () => {
   const tenantStores = currentResort?.id ? getStoresByDestination(currentResort.id) : allStores;
   const stores = [
     { id: "all", name: "All Venues" },
-    { id: "1", name: "Windrose Restaurant" },
-    { id: "2", name: "Tiki Bar" },
-    { id: "3", name: "Salty Rose Beach Bar" },
+    ...tenantStores.map((s) => ({ id: s.id.toString(), name: s.name })),
   ];
 
   const filteredOrders = getFilteredOrders();

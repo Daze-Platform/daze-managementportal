@@ -107,56 +107,49 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already authenticated on app load
-    const authStatus = localStorage.getItem("isAuthenticated");
-    const email = localStorage.getItem("userEmail");
-    const storedProfile = localStorage.getItem("userProfile");
-    const loginTimestamp = localStorage.getItem("loginTimestamp");
-
-    // Check if authentication is still valid (e.g., within 30 days)
-    const isValidAuth = authStatus === "true" && email && loginTimestamp;
-    const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
-    const isNotExpired =
-      loginTimestamp && Date.now() - parseInt(loginTimestamp) < thirtyDaysInMs;
-
-    if (isValidAuth && isNotExpired) {
-      setIsAuthenticated(true);
-      setUserEmail(email);
-
-      // Load user profile or set default
-      if (storedProfile) {
-        try {
-          setUserProfile(JSON.parse(storedProfile));
-        } catch (error) {
-          console.error("Error parsing stored user profile:", error);
-          setUserProfile(getDefaultProfile(email));
-        }
+    // Listen for Supabase auth state changes (handles session restore + login/logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setUserEmail(session.user.email ?? null);
+        setUserId(session.user.id);
+        // Fetch profile + tenant membership from DB
+        const profile = await fetchProfile(session.user.id, session.user.email ?? '');
+        setUserProfile(profile);
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userEmail", session.user.email ?? '');
       } else {
-        setUserProfile(getDefaultProfile(email));
+        // No active session — check legacy localStorage auth
+        const authStatus = localStorage.getItem("isAuthenticated");
+        const email = localStorage.getItem("userEmail");
+        const storedProfile = localStorage.getItem("userProfile");
+        const loginTimestamp = localStorage.getItem("loginTimestamp");
+        const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+        const isNotExpired = loginTimestamp && Date.now() - parseInt(loginTimestamp) < thirtyDaysInMs;
+
+        if (authStatus === "true" && email && isNotExpired) {
+          setIsAuthenticated(true);
+          setUserEmail(email);
+          if (storedProfile) {
+            try { setUserProfile(JSON.parse(storedProfile)); } catch { setUserProfile(getDefaultProfile(email)); }
+          } else {
+            setUserProfile(getDefaultProfile(email));
+          }
+        } else {
+          // Clear expired/missing auth
+          if (authStatus === "true") {
+            localStorage.removeItem("isAuthenticated");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userProfile");
+            localStorage.removeItem("loginTimestamp");
+          }
+        }
       }
+      setLoading(false);
+    });
 
-      console.log("User auto-logged in:", email);
-    } else if (authStatus === "true") {
-      // Clear expired authentication
-      localStorage.removeItem("isAuthenticated");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userProfile");
-      localStorage.removeItem("loginTimestamp");
-      console.log("Expired authentication cleared");
-    }
-
-    setLoading(false);
+    return () => subscription.unsubscribe();
   }, []);
-
-  const getDefaultProfile = (email: string): UserProfile => ({
-    firstName: "Kari",
-    lastName: "Thomas",
-    email: email,
-    phone: "+1 850 208 6913",
-    timezone: "America/Chicago",
-    language: "English",
-    avatar: "",
-  });
 
   const login = (email: string) => {
     setIsAuthenticated(true);
@@ -170,8 +163,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log("User logged in and session saved:", email);
   };
 
-  const logout = () => {
+  const logout = async () => {
     console.log("Starting logout process...");
+    await supabase.auth.signOut().catch(() => {});
 
     // Clear all auth state
     setIsAuthenticated(false);
