@@ -3,6 +3,7 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useRef,
   ReactNode,
 } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -105,21 +106,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  // Guard against double-resolution (initial getSession + onAuthStateChange both firing)
+  const initialResolved = useRef(false);
 
   useEffect(() => {
-    // Listen for Supabase auth state changes (handles session restore + login/logout)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    let mounted = true;
+
+    const resolveAuthFromSession = async (session: import("@supabase/supabase-js").Session | null) => {
+      if (!mounted) return;
+
       if (session?.user) {
         setIsAuthenticated(true);
         setUserEmail(session.user.email ?? null);
         setUserId(session.user.id);
-        // Fetch profile + tenant membership from DB
-        const profile = await fetchProfile(session.user.id, session.user.email ?? '');
-        setUserProfile(profile);
+        try {
+          const profile = await fetchProfile(session.user.id, session.user.email ?? '');
+          if (mounted) setUserProfile(profile);
+        } catch {
+          if (mounted) setUserProfile(getDefaultProfile(session.user.email ?? ''));
+        }
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userEmail", session.user.email ?? '');
       } else {
-        // No active session — check legacy localStorage auth
+        // No Supabase session — fall back to legacy localStorage auth
         const authStatus = localStorage.getItem("isAuthenticated");
         const email = localStorage.getItem("userEmail");
         const storedProfile = localStorage.getItem("userProfile");
@@ -127,7 +136,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
         const isNotExpired = loginTimestamp && Date.now() - parseInt(loginTimestamp) < thirtyDaysInMs;
 
-        if (authStatus === "true" && email && isNotExpired) {
+        if (mounted && authStatus === "true" && email && isNotExpired) {
           setIsAuthenticated(true);
           setUserEmail(email);
           if (storedProfile) {
@@ -135,20 +144,77 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           } else {
             setUserProfile(getDefaultProfile(email));
           }
-        } else {
-          // Clear expired/missing auth
-          if (authStatus === "true") {
-            localStorage.removeItem("isAuthenticated");
-            localStorage.removeItem("userEmail");
-            localStorage.removeItem("userProfile");
-            localStorage.removeItem("loginTimestamp");
-          }
+        } else if (authStatus === "true") {
+          // Expired — clean up
+          localStorage.removeItem("isAuthenticated");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userProfile");
+          localStorage.removeItem("loginTimestamp");
         }
       }
-      setLoading(false);
+
+      if (mounted) setLoading(false);
+    };
+
+    // FIX: Explicitly call getSession() so we don't rely solely on onAuthStateChange
+    // firing on mount. onAuthStateChange may not fire synchronously for the initial
+    // session, causing loading to stay true indefinitely.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!initialResolved.current) {
+        initialResolved.current = true;
+        resolveAuthFromSession(session);
+      }
+    }).catch(() => {
+      // If getSession fails, still unblock the UI
+      if (!initialResolved.current) {
+        initialResolved.current = true;
+        if (mounted) setLoading(false);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    // onAuthStateChange handles subsequent login/logout events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // On INITIAL_SESSION event the getSession() call above already handled it — skip
+      if (event === 'INITIAL_SESSION') {
+        if (!initialResolved.current) {
+          initialResolved.current = true;
+          resolveAuthFromSession(session);
+        }
+        return;
+      }
+
+      // For all other events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.) — handle normally
+      if (!mounted) return;
+
+      if (event === 'SIGNED_OUT') {
+        setIsAuthenticated(false);
+        setUserEmail(null);
+        setUserId(null);
+        setUserProfile(null);
+        setLoading(false);
+        return;
+      }
+
+      if (session?.user) {
+        setIsAuthenticated(true);
+        setUserEmail(session.user.email ?? null);
+        setUserId(session.user.id);
+        try {
+          const profile = await fetchProfile(session.user.id, session.user.email ?? '');
+          if (mounted) setUserProfile(profile);
+        } catch {
+          if (mounted) setUserProfile(getDefaultProfile(session.user.email ?? ''));
+        }
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userEmail", session.user.email ?? '');
+        if (mounted) setLoading(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = (email: string) => {
@@ -167,12 +233,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log("Starting logout process...");
     await supabase.auth.signOut().catch(() => {});
 
-    // Clear all auth state
     setIsAuthenticated(false);
     setUserEmail(null);
     setUserProfile(null);
+    setUserId(null);
 
-    // Comprehensive localStorage cleanup
     const authKeys = [
       "isAuthenticated",
       "userEmail",
@@ -181,14 +246,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     ];
     authKeys.forEach((key) => {
       localStorage.removeItem(key);
-      console.log(`Removed ${key} from localStorage`);
     });
 
-    // Remove any potential Supabase auth keys (if any exist)
     Object.keys(localStorage).forEach((key) => {
       if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
         localStorage.removeItem(key);
-        console.log(`Removed Supabase key: ${key}`);
       }
     });
 
@@ -199,10 +261,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUserProfile((prevProfile) => {
       if (!prevProfile) return null;
       const updatedProfile = { ...prevProfile, ...profileUpdates };
-
-      // Store in localStorage for persistence
       localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
-
       return updatedProfile;
     });
   };

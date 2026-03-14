@@ -269,7 +269,15 @@ export default {
 					'20%, 60%': { transform: 'translateX(-4px)' },
 					'40%, 80%': { transform: 'translateX(4px)' }
 				},
-				'spin-slow': {
+				'daze-float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-8px)' },
+				},
+				'daze-dot': {
+					'0%, 80%, 100%': { transform: 'translateY(0)', opacity: '0.4' },
+					'40%': { transform: 'translateY(-6px)', opacity: '1' },
+				},
+								'spin-slow': {
 					from: { transform: 'rotate(0deg)' },
 					to: { transform: 'rotate(360deg)' }
 				},
@@ -310,7 +318,9 @@ export default {
 				'ripple': 'ripple 0.5s ease-out',
 				'check-bounce': 'check-bounce 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
 				'shake': 'shake 0.3s ease-in-out',
-				'spin-slow': 'spin-slow 3s linear infinite',
+				'daze-float': 'daze-float 3s ease-in-out infinite',
+				'daze-dot': 'daze-dot 1.2s ease-in-out infinite',
+								'spin-slow': 'spin-slow 3s linear infinite',
 				'count-up': 'count-up 0.4s ease-out forwards',
 			},
 			transitionTimingFunction: {
