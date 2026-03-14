@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { PromotionCard } from "./PromotionCard";
-import { useFullScreenScroll } from "@/hooks/useFullScreenScroll";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,7 +14,6 @@ export const Layout = ({ children }: LayoutProps) => {
   const isDashboard = location.pathname === "/dashboard";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const { isScrollingDown } = useFullScreenScroll();
   const [isMobile, setIsMobile] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -64,7 +62,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-muted/30">
+    <div className="flex h-[100dvh] w-full overflow-hidden bg-muted/30">
       <Sidebar
         isOpen={sidebarOpen}
         isCollapsed={sidebarCollapsed}
@@ -74,17 +72,9 @@ export const Layout = ({ children }: LayoutProps) => {
 
       <div className="flex flex-col flex-1 min-w-0 h-full relative">
         {/* Header with smooth hide on scroll */}
-        <motion.div
-          className="flex-shrink-0 relative z-40 bg-card border-b border-border shadow-sm"
-          initial={false}
-          animate={{
-            y: isScrollingDown && isMobile ? -100 : 0,
-            opacity: isScrollingDown && isMobile ? 0 : 1,
-          }}
-          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        >
+        <div className="flex-shrink-0 relative z-40 bg-card border-b border-border shadow-sm">
           <Header onToggleSidebar={toggleSidebar} isHidden={false} />
-        </motion.div>
+        </div>
 
         {/* Main content with page transitions */}
         <main className="flex-1 overflow-hidden relative">
@@ -105,7 +95,10 @@ export const Layout = ({ children }: LayoutProps) => {
         </main>
 
         {isDashboard && (
-          <div className="flex-shrink-0 bg-muted/30 border-t border-border w-full">
+          <div
+            className="flex-shrink-0 bg-muted/30 border-t border-border w-full"
+            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+          >
             <PromotionCard />
           </div>
         )}
