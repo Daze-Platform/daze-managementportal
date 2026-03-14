@@ -1,21 +1,48 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { PriceInput } from '@/components/ui/price-input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { PriceInput } from "@/components/ui/price-input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
-import { Switch } from '@/components/ui/switch';
-import { Plus, Trash2, ArrowLeft, ArrowRight, Utensils, Upload, Sparkles, X, Building2, Pencil, Check } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from '@/hooks/use-toast';
-import { useStores } from '@/contexts/StoresContext';
-import { useDestination } from '@/contexts/DestinationContext';
-import { findBestMatchingImage, simulateImageGeneration } from '@/utils/menuImageMatcher';
+import { Switch } from "@/components/ui/switch";
+import {
+  Plus,
+  Trash2,
+  ArrowLeft,
+  ArrowRight,
+  Utensils,
+  Upload,
+  Sparkles,
+  X,
+  Building2,
+  Pencil,
+  Check,
+} from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
+import { useStores } from "@/contexts/StoresContext";
+import { useDestination } from "@/contexts/DestinationContext";
+import {
+  findBestMatchingImage,
+  simulateImageGeneration,
+} from "@/utils/menuImageMatcher";
 
 interface MenuItem {
   name: string;
@@ -40,7 +67,7 @@ interface MenuBuilderDialogProps {
   onOpenChange: (open: boolean) => void;
   onSave: (menuData: MenuFormData) => void;
   initialData?: Partial<MenuFormData>;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
 }
 
 export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
@@ -48,7 +75,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   onOpenChange,
   onSave,
   initialData,
-  mode = 'create',
+  mode = "create",
 }) => {
   const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -59,20 +86,20 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   const { currentDestination } = useDestination();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<MenuFormData>({
-    name: '',
-    description: '',
-    category: 'restaurant',
+    name: "",
+    description: "",
+    category: "restaurant",
     isActive: true,
     items: [],
-    venueId: ''
+    venueId: "",
   });
 
   // Get venues for current destination
-  const availableVenues = currentDestination 
+  const availableVenues = currentDestination
     ? getStoresByDestination(currentDestination.id)
     : stores;
 
-  const [imagePreview, setImagePreview] = useState<string>('');
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
 
@@ -80,25 +107,25 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     if (!open) return;
 
     setFormData({
-      name: initialData?.name ?? '',
-      description: initialData?.description ?? '',
-      category: initialData?.category ?? 'restaurant',
+      name: initialData?.name ?? "",
+      description: initialData?.description ?? "",
+      category: initialData?.category ?? "restaurant",
       isActive: initialData?.isActive ?? true,
       items: initialData?.items ?? [],
-      venueId: ''
+      venueId: "",
     });
     setCurrentStep(1);
-    setImagePreview('');
+    setImagePreview("");
     setIsGenerating(false);
     setGenerationProgress(0);
   }, [open, initialData]);
 
   const [currentItem, setCurrentItem] = useState<MenuItem>({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     price: 0,
-    category: 'Main Course',
-    available: true
+    category: "Main Course",
+    available: true,
   });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,9 +140,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   };
 
   const handleRemoveImage = () => {
-    setImagePreview('');
+    setImagePreview("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -124,7 +151,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
       toast({
         title: "Name required",
         description: "Please enter an item name first",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -138,7 +165,10 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     });
 
     // Smart keyword-based image matching
-    const matchedImage = findBestMatchingImage(currentItem.name, currentItem.description);
+    const matchedImage = findBestMatchingImage(
+      currentItem.name,
+      currentItem.description,
+    );
     setImagePreview(matchedImage);
     setIsGenerating(false);
     setGenerationProgress(0);
@@ -149,33 +179,55 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
     });
   };
 
-  const categories = ['restaurant', 'breakfast', 'lunch', 'dinner', 'drinks', 'desserts', 'specials'];
-  const itemCategories = ['Appetizers', 'Main Course', 'Desserts', 'Beverages', 'Sides', 'Salads', 'Soups', 'Pizza', 'Burgers', 'Sandwiches'];
+  const categories = [
+    "restaurant",
+    "breakfast",
+    "lunch",
+    "dinner",
+    "drinks",
+    "desserts",
+    "specials",
+  ];
+  const itemCategories = [
+    "Appetizers",
+    "Main Course",
+    "Desserts",
+    "Beverages",
+    "Sides",
+    "Salads",
+    "Soups",
+    "Pizza",
+    "Burgers",
+    "Sandwiches",
+  ];
 
   const handleAddItem = () => {
     if (currentItem.name && currentItem.price > 0) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        items: [...prev.items, { ...currentItem, image: imagePreview || undefined }]
+        items: [
+          ...prev.items,
+          { ...currentItem, image: imagePreview || undefined },
+        ],
       }));
       setCurrentItem({
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         price: 0,
-        category: 'Main Course',
-        available: true
+        category: "Main Course",
+        available: true,
       });
-      setImagePreview('');
+      setImagePreview("");
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
 
   const handleRemoveItem = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      items: prev.items.filter((_, i) => i !== index)
+      items: prev.items.filter((_, i) => i !== index),
     }));
     // If we're editing this item, cancel edit mode
     if (editingItemIndex === index) {
@@ -193,25 +245,29 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
       description: item.description,
       price: item.price,
       category: item.category,
-      available: item.available
+      available: item.available,
     });
-    setImagePreview(item.image || '');
+    setImagePreview(item.image || "");
     setEditingItemIndex(index);
     // Scroll to form
     setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   };
 
   const handleUpdateItem = () => {
-    if (editingItemIndex !== null && currentItem.name && currentItem.price > 0) {
-      setFormData(prev => ({
+    if (
+      editingItemIndex !== null &&
+      currentItem.name &&
+      currentItem.price > 0
+    ) {
+      setFormData((prev) => ({
         ...prev,
         items: prev.items.map((item, i) =>
           i === editingItemIndex
             ? { ...currentItem, image: imagePreview || undefined }
-            : item
-        )
+            : item,
+        ),
       }));
       handleCancelEdit();
     }
@@ -219,16 +275,16 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
 
   const handleCancelEdit = () => {
     setCurrentItem({
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       price: 0,
-      category: 'Main Course',
-      available: true
+      category: "Main Course",
+      available: true,
     });
-    setImagePreview('');
+    setImagePreview("");
     setEditingItemIndex(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -246,7 +302,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
   const isStepValid = (step: number) => {
     switch (step) {
       case 1:
-        return formData.name.trim() !== '' && formData.category.trim() !== '';
+        return formData.name.trim() !== "" && formData.category.trim() !== "";
       case 2:
         return true;
       default:
@@ -256,35 +312,44 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className={`${
-        isMobile 
-          ? 'fixed inset-0 w-full max-w-none h-[100dvh] max-h-none m-0 rounded-none translate-x-0 translate-y-0 left-0 top-0' 
-          : 'sm:max-w-xl max-h-[85vh]'
-      } p-0 gap-0 flex flex-col overflow-hidden`}>
-        
+      <DialogContent
+        className={`${
+          isMobile
+            ? "fixed inset-0 w-full max-w-none h-[100dvh] max-h-none m-0 rounded-none translate-x-0 translate-y-0 left-0 top-0"
+            : "sm:max-w-xl max-h-[85vh]"
+        } p-0 gap-0 flex flex-col overflow-hidden`}
+      >
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-border flex-shrink-0">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">
-              {mode === 'create' ? 'Create Menu' : 'Edit Menu'}
+              {mode === "create" ? "Create Menu" : "Edit Menu"}
             </DialogTitle>
             <DialogDescription className="text-sm text-muted-foreground">
-              {currentStep === 1 ? 'Set up the basic details' : 'Add items to your menu'}
+              {currentStep === 1
+                ? "Set up the basic details"
+                : "Add items to your menu"}
             </DialogDescription>
           </DialogHeader>
-          
+
           {/* Steps */}
           <div className="flex items-center gap-4 mt-4">
             <button
               type="button"
               onClick={() => setCurrentStep(1)}
               className={`text-sm font-medium transition-colors ${
-                currentStep === 1 ? 'text-foreground' : 'text-muted-foreground'
+                currentStep === 1 ? "text-foreground" : "text-muted-foreground"
               }`}
             >
-              <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs mr-2 ${
-                currentStep === 1 ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'
-              }`}>1</span>
+              <span
+                className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs mr-2 ${
+                  currentStep === 1
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                1
+              </span>
               Details
             </button>
             <div className="w-8 h-px bg-border" />
@@ -293,21 +358,27 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
               onClick={() => isStepValid(1) && setCurrentStep(2)}
               disabled={!isStepValid(1)}
               className={`text-sm font-medium transition-colors disabled:opacity-50 ${
-                currentStep === 2 ? 'text-foreground' : 'text-muted-foreground'
+                currentStep === 2 ? "text-foreground" : "text-muted-foreground"
               }`}
             >
-              <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs mr-2 ${
-                currentStep === 2 ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'
-              }`}>2</span>
+              <span
+                className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs mr-2 ${
+                  currentStep === 2
+                    ? "bg-foreground text-background"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                2
+              </span>
               Items
             </button>
           </div>
         </div>
 
         {/* Content - Single Scroll Container */}
-        <div 
+        <div
           className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y dialog-scroll-container"
-          style={{ WebkitOverflowScrolling: 'touch' }}
+          style={{ WebkitOverflowScrolling: "touch" }}
         >
           <div className="p-6">
             <AnimatePresence mode="wait">
@@ -320,24 +391,36 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="menuName">Menu Name <span className="text-destructive">*</span></Label>
+                    <Label htmlFor="menuName">
+                      Menu Name <span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="menuName"
                       value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       placeholder="e.g., Summer Menu 2024"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Category</Label>
-                      <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+                      <Select
+                        value={formData.category}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({ ...prev, category: value }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
-                          {categories.map(cat => (
+                          {categories.map((cat) => (
                             <SelectItem key={cat} value={cat}>
                               {cat.charAt(0).toUpperCase() + cat.slice(1)}
                             </SelectItem>
@@ -349,10 +432,17 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                     <div className="space-y-2">
                       <Label>Status</Label>
                       <div className="flex items-center justify-between h-10 px-3 rounded-md border border-input bg-background">
-                        <span className="text-sm">{formData.isActive ? 'Active' : 'Draft'}</span>
+                        <span className="text-sm">
+                          {formData.isActive ? "Active" : "Draft"}
+                        </span>
                         <Switch
                           checked={formData.isActive}
-                          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
+                          onCheckedChange={(checked) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              isActive: checked,
+                            }))
+                          }
                         />
                       </div>
                     </div>
@@ -363,7 +453,12 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                     <Textarea
                       id="menuDescription"
                       value={formData.description}
-                      onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
                       placeholder="Describe your menu..."
                       className="min-h-[80px] resize-none"
                       onPointerDown={(e) => e.stopPropagation()}
@@ -373,17 +468,22 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                   {/* Venue Assignment */}
                   <div className="space-y-2">
                     <Label>Assign to Venue</Label>
-                    <Select 
-                      value={formData.venueId} 
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, venueId: value }))}
+                    <Select
+                      value={formData.venueId}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, venueId: value }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a venue" />
                       </SelectTrigger>
                       <SelectContent>
                         {availableVenues.length > 0 ? (
-                          availableVenues.map(venue => (
-                            <SelectItem key={venue.id} value={venue.id.toString()}>
+                          availableVenues.map((venue) => (
+                            <SelectItem
+                              key={venue.id}
+                              value={venue.id.toString()}
+                            >
                               <div className="flex items-center gap-2">
                                 <Building2 className="w-4 h-4 text-muted-foreground" />
                                 {venue.name}
@@ -391,7 +491,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                             </SelectItem>
                           ))
                         ) : (
-                          <SelectItem value="none" disabled>No venues available</SelectItem>
+                          <SelectItem value="none" disabled>
+                            No venues available
+                          </SelectItem>
                         )}
                       </SelectContent>
                     </Select>
@@ -411,44 +513,70 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                   className="space-y-5"
                 >
                   {/* Add/Edit Item Form */}
-                  <div ref={formRef} className={`p-4 rounded-lg border bg-muted/30 ${isEditMode ? 'border-primary ring-1 ring-primary/20' : 'border-border'}`}>
+                  <div
+                    ref={formRef}
+                    className={`p-4 rounded-lg border bg-muted/30 ${isEditMode ? "border-primary ring-1 ring-primary/20" : "border-border"}`}
+                  >
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-sm font-medium">{isEditMode ? 'Edit Item' : 'Add Item'}</h4>
+                      <h4 className="text-sm font-medium">
+                        {isEditMode ? "Edit Item" : "Add Item"}
+                      </h4>
                       {isEditMode && (
-                        <Button variant="ghost" size="sm" onClick={handleCancelEdit} className="h-6 w-6 p-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleCancelEdit}
+                          className="h-6 w-6 p-0"
+                        >
                           <X className="w-4 h-4" />
                         </Button>
                       )}
                     </div>
-                    
+
                     {/* Name & Price - FIRST (most important fields) */}
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div className="space-y-1">
-                        <Label className="text-xs">Name <span className="text-destructive">*</span></Label>
+                        <Label className="text-xs">
+                          Name <span className="text-destructive">*</span>
+                        </Label>
                         <Input
                           value={currentItem.name}
-                          onChange={(e) => setCurrentItem(prev => ({ ...prev, name: e.target.value }))}
+                          onChange={(e) =>
+                            setCurrentItem((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
                           placeholder="Item name"
                           className="h-9"
                         />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-xs">Price <span className="text-destructive">*</span></Label>
+                        <Label className="text-xs">
+                          Price <span className="text-destructive">*</span>
+                        </Label>
                         <PriceInput
                           value={currentItem.price}
-                          onChange={(price) => setCurrentItem(prev => ({ ...prev, price }))}
+                          onChange={(price) =>
+                            setCurrentItem((prev) => ({ ...prev, price }))
+                          }
                           placeholder="0.00"
                           className="h-9"
                         />
                       </div>
                     </div>
-                    
+
                     {/* Description */}
                     <div className="space-y-1 mb-3">
                       <Label className="text-xs">Description</Label>
                       <Input
                         value={currentItem.description}
-                        onChange={(e) => setCurrentItem(prev => ({ ...prev, description: e.target.value }))}
+                        onChange={(e) =>
+                          setCurrentItem((prev) => ({
+                            ...prev,
+                            description: e.target.value,
+                          }))
+                        }
                         placeholder="Brief description (optional)"
                         className="h-9"
                       />
@@ -458,13 +586,23 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="space-y-1">
                         <Label className="text-xs">Category</Label>
-                        <Select value={currentItem.category} onValueChange={(value) => setCurrentItem(prev => ({ ...prev, category: value }))}>
+                        <Select
+                          value={currentItem.category}
+                          onValueChange={(value) =>
+                            setCurrentItem((prev) => ({
+                              ...prev,
+                              category: value,
+                            }))
+                          }
+                        >
                           <SelectTrigger className="h-9">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {itemCategories.map(cat => (
-                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                            {itemCategories.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -472,10 +610,19 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       <div className="space-y-1">
                         <Label className="text-xs">Availability</Label>
                         <div className="flex items-center justify-between h-9 px-3 rounded-md border border-input bg-background">
-                          <span className="text-xs">{currentItem.available ? 'Available' : 'Unavailable'}</span>
+                          <span className="text-xs">
+                            {currentItem.available
+                              ? "Available"
+                              : "Unavailable"}
+                          </span>
                           <Switch
                             checked={currentItem.available}
-                            onCheckedChange={(checked) => setCurrentItem(prev => ({ ...prev, available: checked }))}
+                            onCheckedChange={(checked) =>
+                              setCurrentItem((prev) => ({
+                                ...prev,
+                                available: checked,
+                              }))
+                            }
                           />
                         </div>
                       </div>
@@ -483,7 +630,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
 
                     {/* Image Section - LAST (compact, optional) */}
                     <div className="mb-4">
-                      <Label className="text-xs mb-2 block">Image (optional)</Label>
+                      <Label className="text-xs mb-2 block">
+                        Image (optional)
+                      </Label>
                       <div className="flex items-start gap-3">
                         {/* Compact square preview */}
                         <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-border bg-muted/50 flex-shrink-0">
@@ -497,8 +646,14 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                                 className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-purple-500/20"
                               >
                                 <motion.div
-                                  animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                                  transition={{ duration: 1.5, repeat: Infinity }}
+                                  animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.5, 1, 0.5],
+                                  }}
+                                  transition={{
+                                    duration: 1.5,
+                                    repeat: Infinity,
+                                  }}
                                 >
                                   <Sparkles className="w-5 h-5 text-purple-500" />
                                 </motion.div>
@@ -537,7 +692,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                             )}
                           </AnimatePresence>
                         </div>
-                        
+
                         {/* Action buttons - stacked vertically */}
                         <div className="flex flex-col gap-2 flex-1">
                           <input
@@ -569,7 +724,12 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                           >
                             <Sparkles className="w-3.5 h-3.5 mr-2" />
                             Generate with AI
-                            <Badge variant="secondary" className="ml-auto text-[9px] px-1 py-0">BETA</Badge>
+                            <Badge
+                              variant="secondary"
+                              className="ml-auto text-[9px] px-1 py-0"
+                            >
+                              BETA
+                            </Badge>
                           </Button>
                           {isGenerating && (
                             <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
@@ -582,7 +742,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                             </div>
                           )}
                           {!currentItem.name && !isGenerating && (
-                            <p className="text-[10px] text-muted-foreground">Enter item name to enable AI generation</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              Enter item name to enable AI generation
+                            </p>
                           )}
                         </div>
                       </div>
@@ -591,16 +753,16 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                     {/* Add/Update Item Button */}
                     {isEditMode ? (
                       <div className="flex gap-2">
-                        <Button 
+                        <Button
                           variant="outline"
-                          onClick={handleCancelEdit} 
+                          onClick={handleCancelEdit}
                           className="flex-1 h-9"
                         >
                           Cancel
                         </Button>
-                        <Button 
-                          onClick={handleUpdateItem} 
-                          className="flex-1 h-9" 
+                        <Button
+                          onClick={handleUpdateItem}
+                          className="flex-1 h-9"
                           disabled={!currentItem.name || currentItem.price <= 0}
                         >
                           <Check className="w-4 h-4 mr-2" />
@@ -608,9 +770,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                         </Button>
                       </div>
                     ) : (
-                      <Button 
-                        onClick={handleAddItem} 
-                        className="w-full h-9" 
+                      <Button
+                        onClick={handleAddItem}
+                        className="w-full h-9"
                         disabled={!currentItem.name || currentItem.price <= 0}
                       >
                         <Plus className="w-4 h-4 mr-2" />
@@ -623,16 +785,19 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                   {formData.items.length > 0 ? (
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">
-                        Items <span className="text-muted-foreground">({formData.items.length})</span>
+                        Items{" "}
+                        <span className="text-muted-foreground">
+                          ({formData.items.length})
+                        </span>
                       </h4>
                       <div className="space-y-2">
                         {formData.items.map((item, index) => (
-                          <div 
+                          <div
                             key={index}
                             className={`p-3 rounded-lg border bg-card transition-colors ${
-                              editingItemIndex === index 
-                                ? 'border-primary ring-1 ring-primary/20' 
-                                : 'border-border'
+                              editingItemIndex === index
+                                ? "border-primary ring-1 ring-primary/20"
+                                : "border-border"
                             }`}
                           >
                             {/* Mobile: stacked layout, Desktop: horizontal */}
@@ -649,12 +814,14 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                                   <Utensils className="w-5 h-5 text-muted-foreground" />
                                 </div>
                               )}
-                              
+
                               {/* Content */}
                               <div className="flex-1 min-w-0">
                                 {/* Name and actions row */}
                                 <div className="flex items-start justify-between gap-2">
-                                  <span className="font-medium text-sm leading-tight">{item.name}</span>
+                                  <span className="font-medium text-sm leading-tight">
+                                    {item.name}
+                                  </span>
                                   <div className="flex items-center gap-0.5 flex-shrink-0">
                                     <Button
                                       variant="ghost"
@@ -674,14 +841,23 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                                     </Button>
                                   </div>
                                 </div>
-                                
+
                                 {/* Description */}
-                                <p className="text-xs text-muted-foreground truncate mt-0.5">{item.description || 'No description'}</p>
-                                
+                                <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                  {item.description || "No description"}
+                                </p>
+
                                 {/* Category and price row */}
                                 <div className="flex items-center justify-between gap-2 mt-1.5">
-                                  <Badge variant="secondary" className="text-[10px] max-w-[120px] truncate">{item.category}</Badge>
-                                  <span className="text-sm font-semibold text-success">${item.price.toFixed(2)}</span>
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-[10px] max-w-[120px] truncate"
+                                  >
+                                    {item.category}
+                                  </Badge>
+                                  <span className="text-sm font-semibold text-success">
+                                    ${item.price.toFixed(2)}
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -694,7 +870,9 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                       <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mx-auto mb-2">
                         <Utensils className="w-4 h-4 text-muted-foreground" />
                       </div>
-                      <p className="text-sm text-muted-foreground">No items yet</p>
+                      <p className="text-sm text-muted-foreground">
+                        No items yet
+                      </p>
                     </div>
                   )}
                 </motion.div>
@@ -707,7 +885,11 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
         <div className="px-6 py-4 border-t border-border flex items-center justify-between flex-shrink-0 bg-muted/30">
           <div>
             {currentStep > 1 && (
-              <Button variant="ghost" size="sm" onClick={() => setCurrentStep(currentStep - 1)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setCurrentStep(currentStep - 1)}
+              >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 Back
               </Button>
@@ -718,7 +900,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
               Cancel
             </Button>
             {currentStep < 2 ? (
-              <Button 
+              <Button
                 size="sm"
                 onClick={() => setCurrentStep(currentStep + 1)}
                 disabled={!isStepValid(currentStep)}
@@ -728,7 +910,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
               </Button>
             ) : (
               <Button size="sm" onClick={handleSave} disabled={!isStepValid(1)}>
-                {mode === 'create' ? 'Create Menu' : 'Save Changes'}
+                {mode === "create" ? "Create Menu" : "Save Changes"}
               </Button>
             )}
           </div>

@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface Promotion {
   id: string;
   title: string;
   description?: string;
-  discount_type: 'percentage' | 'fixed';
+  discount_type: "percentage" | "fixed";
   discount_value: number;
   start_date: string;
   end_date: string;
@@ -23,7 +23,12 @@ export interface Promotion {
 interface PromotionsContextType {
   promotions: Promotion[];
   loading: boolean;
-  addPromotion: (promotion: Omit<Promotion, 'id' | 'created_at' | 'updated_at' | 'usage_count'>) => Promise<void>;
+  addPromotion: (
+    promotion: Omit<
+      Promotion,
+      "id" | "created_at" | "updated_at" | "usage_count"
+    >,
+  ) => Promise<void>;
   updatePromotion: (promotion: Promotion) => Promise<void>;
   deletePromotion: (promotionId: string) => Promise<void>;
   refreshPromotions: () => Promise<void>;
@@ -31,9 +36,13 @@ interface PromotionsContextType {
   getActivePromotions: () => Promotion[];
 }
 
-const PromotionsContext = createContext<PromotionsContextType | undefined>(undefined);
+const PromotionsContext = createContext<PromotionsContextType | undefined>(
+  undefined,
+);
 
-export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,23 +50,23 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('promotions')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .from("promotions")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.warn('Could not load promotions:', error.message);
+        console.warn("Could not load promotions:", error.message);
         if (showErrors) {
-          toast.error('Failed to load promotions');
+          toast.error("Failed to load promotions");
         }
         return;
       }
 
       setPromotions((data || []) as Promotion[]);
     } catch (error) {
-      console.warn('Network error loading promotions:', error);
+      console.warn("Network error loading promotions:", error);
       if (showErrors) {
-        toast.error('Failed to load promotions');
+        toast.error("Failed to load promotions");
       }
     } finally {
       setLoading(false);
@@ -68,7 +77,12 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     await loadPromotions(true);
   };
 
-  const addPromotion = async (promotionData: Omit<Promotion, 'id' | 'created_at' | 'updated_at' | 'usage_count'>) => {
+  const addPromotion = async (
+    promotionData: Omit<
+      Promotion,
+      "id" | "created_at" | "updated_at" | "usage_count"
+    >,
+  ) => {
     // Create optimistic promotion with temporary ID
     const tempId = `temp-${Date.now()}`;
     const optimisticPromotion: Promotion = {
@@ -80,42 +94,44 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
 
     // Add to local state immediately (optimistic update)
-    setPromotions(prev => [optimisticPromotion, ...prev]);
-    toast.success('Promotion added successfully');
+    setPromotions((prev) => [optimisticPromotion, ...prev]);
+    toast.success("Promotion added successfully");
 
     try {
       const { data, error } = await supabase
-        .from('promotions')
+        .from("promotions")
         .insert([{ ...promotionData, usage_count: 0 }])
         .select()
         .single();
 
       if (error) {
-        console.warn('Could not sync promotion to database:', error.message);
+        console.warn("Could not sync promotion to database:", error.message);
         // Keep the local version - it's still usable
         return;
       }
 
       // Replace temp ID with real ID from database
-      setPromotions(prev => 
-        prev.map(p => p.id === tempId ? (data as Promotion) : p)
+      setPromotions((prev) =>
+        prev.map((p) => (p.id === tempId ? (data as Promotion) : p)),
       );
     } catch (error) {
-      console.warn('Network error syncing promotion:', error);
+      console.warn("Network error syncing promotion:", error);
       // Keep the local version
     }
   };
 
   const updatePromotion = async (updatedPromotion: Promotion) => {
     // Optimistic update
-    setPromotions(prev => 
-      prev.map(promotion => promotion.id === updatedPromotion.id ? updatedPromotion : promotion)
+    setPromotions((prev) =>
+      prev.map((promotion) =>
+        promotion.id === updatedPromotion.id ? updatedPromotion : promotion,
+      ),
     );
-    toast.success('Promotion updated successfully');
+    toast.success("Promotion updated successfully");
 
     try {
       const { error } = await supabase
-        .from('promotions')
+        .from("promotions")
         .update({
           title: updatedPromotion.title,
           description: updatedPromotion.description,
@@ -130,45 +146,48 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           usage_limit: updatedPromotion.usage_limit,
           usage_count: updatedPromotion.usage_count,
         })
-        .eq('id', updatedPromotion.id);
+        .eq("id", updatedPromotion.id);
 
       if (error) {
-        console.warn('Could not sync promotion update:', error.message);
+        console.warn("Could not sync promotion update:", error.message);
       }
     } catch (error) {
-      console.warn('Network error syncing promotion update:', error);
+      console.warn("Network error syncing promotion update:", error);
     }
   };
 
   const deletePromotion = async (promotionId: string) => {
     // Optimistic delete
-    setPromotions(prev => prev.filter(promotion => promotion.id !== promotionId));
-    toast.success('Promotion deleted successfully');
+    setPromotions((prev) =>
+      prev.filter((promotion) => promotion.id !== promotionId),
+    );
+    toast.success("Promotion deleted successfully");
 
     try {
       const { error } = await supabase
-        .from('promotions')
+        .from("promotions")
         .delete()
-        .eq('id', promotionId);
+        .eq("id", promotionId);
 
       if (error) {
-        console.warn('Could not sync promotion deletion:', error.message);
+        console.warn("Could not sync promotion deletion:", error.message);
       }
     } catch (error) {
-      console.warn('Network error syncing promotion deletion:', error);
+      console.warn("Network error syncing promotion deletion:", error);
     }
   };
 
   const getPromotionsByStore = (storeId: number): Promotion[] => {
-    return promotions.filter(promotion => promotion.store_id === storeId);
+    return promotions.filter((promotion) => promotion.store_id === storeId);
   };
 
   const getActivePromotions = (): Promotion[] => {
     const now = new Date();
-    return promotions.filter(promotion => 
-      promotion.is_active && 
-      new Date(promotion.start_date) <= now && 
-      new Date(promotion.end_date) >= now
+    return promotions.filter(
+      (promotion) =>
+        promotion.is_active &&
+        new Date(promotion.start_date) <= now &&
+        new Date(promotion.end_date) >= now,
     );
   };
 
@@ -197,7 +216,7 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 export const usePromotions = (): PromotionsContextType => {
   const context = useContext(PromotionsContext);
   if (!context) {
-    throw new Error('usePromotions must be used within a PromotionsProvider');
+    throw new Error("usePromotions must be used within a PromotionsProvider");
   }
   return context;
 };

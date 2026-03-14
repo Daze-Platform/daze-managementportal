@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { MenusView } from '@/components/menu-management/MenusView';
-import { ModifiersView } from '@/components/menu-management/ModifiersView';
-import { CreateMenuDialog } from '@/components/menu-management/CreateMenuDialog';
-import { MenuBuilderDialog } from '@/components/menu-management/MenuBuilderDialog';
-import { StoreAssignmentDialog } from '@/components/menu-management/StoreAssignmentDialog';
-import { useMenus, Menu as SupabaseMenu } from '@/contexts/MenusContext';
-import { useStores } from '@/contexts/StoresContext';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { MenusView } from "@/components/menu-management/MenusView";
+import { ModifiersView } from "@/components/menu-management/ModifiersView";
+import { CreateMenuDialog } from "@/components/menu-management/CreateMenuDialog";
+import { MenuBuilderDialog } from "@/components/menu-management/MenuBuilderDialog";
+import { StoreAssignmentDialog } from "@/components/menu-management/StoreAssignmentDialog";
+import { useMenus, Menu as SupabaseMenu } from "@/contexts/MenusContext";
+import { useStores } from "@/contexts/StoresContext";
+import { motion } from "framer-motion";
 
 // Re-export Menu type for backwards compatibility
 export interface Menu {
@@ -49,7 +49,7 @@ interface MenuItem {
 }
 
 export const MenuManagement = () => {
-  const [activeTab, setActiveTab] = useState('menus');
+  const [activeTab, setActiveTab] = useState("menus");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showMenuBuilder, setShowMenuBuilder] = useState(false);
   const [showStoreAssignment, setShowStoreAssignment] = useState(false);
@@ -57,12 +57,15 @@ export const MenuManagement = () => {
   const [assigningMenu, setAssigningMenu] = useState<Menu | null>(null);
   const { menus, loading, addMenu, updateMenu, deleteMenu } = useMenus();
   const { stores } = useStores();
-  
-  const [selectedStore] = useState(() => stores[0] || {
-    id: 1,
-    name: 'Default Store',
-    address: 'No address'
-  });
+
+  const [selectedStore] = useState(
+    () =>
+      stores[0] || {
+        id: 1,
+        name: "Default Store",
+        address: "No address",
+      },
+  );
 
   const legacyMenus = menus;
 
@@ -72,59 +75,64 @@ export const MenuManagement = () => {
 
   const handleCreateMenu = async (option: string) => {
     setShowCreateDialog(false);
-    
-    if (option === 'scratch') {
+
+    if (option === "scratch") {
       setEditingMenu(null);
       setShowMenuBuilder(true);
-    } else if (option === 'sample') {
+    } else if (option === "sample") {
       await addMenu({
-        name: 'Sample Restaurant Menu',
-        description: 'Professional menu template with sample items',
-        category: 'restaurant',
+        name: "Sample Restaurant Menu",
+        description: "Professional menu template with sample items",
+        category: "restaurant",
         is_active: true,
         store_id: selectedStore.id,
         items: [
           {
-            id: 'sample-1',
-            name: 'Grilled Chicken Caesar Salad',
-            description: 'Fresh romaine lettuce, grilled chicken breast, parmesan cheese, croutons, and Caesar dressing',
+            id: "sample-1",
+            name: "Grilled Chicken Caesar Salad",
+            description:
+              "Fresh romaine lettuce, grilled chicken breast, parmesan cheese, croutons, and Caesar dressing",
             price: 14.99,
-            category: 'Salads',
-            modifiers: []
+            category: "Salads",
+            modifiers: [],
           },
           {
-            id: 'sample-2',
-            name: 'Classic Cheeseburger',
-            description: 'Angus beef patty, cheddar cheese, lettuce, tomato, onion, pickle, served with fries',
+            id: "sample-2",
+            name: "Classic Cheeseburger",
+            description:
+              "Angus beef patty, cheddar cheese, lettuce, tomato, onion, pickle, served with fries",
             price: 16.99,
-            category: 'Burgers',
-            modifiers: []
+            category: "Burgers",
+            modifiers: [],
           },
           {
-            id: 'sample-3',
-            name: 'Margherita Pizza',
-            description: 'Fresh mozzarella, tomato sauce, basil, olive oil on wood-fired crust',
+            id: "sample-3",
+            name: "Margherita Pizza",
+            description:
+              "Fresh mozzarella, tomato sauce, basil, olive oil on wood-fired crust",
             price: 18.99,
-            category: 'Pizza',
-            modifiers: []
+            category: "Pizza",
+            modifiers: [],
           },
           {
-            id: 'sample-4',
-            name: 'Fish & Chips',
-            description: 'Beer-battered cod, hand-cut fries, coleslaw, tartar sauce',
+            id: "sample-4",
+            name: "Fish & Chips",
+            description:
+              "Beer-battered cod, hand-cut fries, coleslaw, tartar sauce",
             price: 19.99,
-            category: 'Main Courses',
-            modifiers: []
+            category: "Main Courses",
+            modifiers: [],
           },
           {
-            id: 'sample-5',
-            name: 'Chocolate Lava Cake',
-            description: 'Warm chocolate cake with molten center, served with vanilla ice cream',
+            id: "sample-5",
+            name: "Chocolate Lava Cake",
+            description:
+              "Warm chocolate cake with molten center, served with vanilla ice cream",
             price: 8.99,
-            category: 'Desserts',
-            modifiers: []
-          }
-        ]
+            category: "Desserts",
+            modifiers: [],
+          },
+        ],
       });
     }
   };
@@ -137,7 +145,7 @@ export const MenuManagement = () => {
         description: menuData.description,
         category: menuData.category,
         is_active: menuData.isActive,
-        items: menuData.items
+        items: menuData.items,
       });
     } else {
       await addMenu({
@@ -146,7 +154,7 @@ export const MenuManagement = () => {
         category: menuData.category,
         is_active: menuData.isActive,
         store_id: selectedStore.id,
-        items: menuData.items
+        items: menuData.items,
       });
     }
     setShowMenuBuilder(false);
@@ -159,21 +167,21 @@ export const MenuManagement = () => {
   };
 
   const handleEditMenu = (menu: Menu) => {
-    const originalMenu = menus.find(m => m.id === menu.id);
+    const originalMenu = menus.find((m) => m.id === menu.id);
     if (originalMenu) {
       updateMenu({
         ...originalMenu,
-        is_active: !originalMenu.is_active
+        is_active: !originalMenu.is_active,
       });
     }
   };
 
   const handleToggleMenuStatus = (menuId: string) => {
-    const menu = menus.find(m => m.id === menuId);
+    const menu = menus.find((m) => m.id === menuId);
     if (menu) {
       updateMenu({
         ...menu,
-        is_active: !menu.is_active
+        is_active: !menu.is_active,
       });
     }
   };
@@ -187,12 +195,15 @@ export const MenuManagement = () => {
     setShowStoreAssignment(true);
   };
 
-  const handleStoreAssignment = async (menuId: string, storeId: number | null) => {
-    const menu = menus.find(m => m.id === menuId);
+  const handleStoreAssignment = async (
+    menuId: string,
+    storeId: number | null,
+  ) => {
+    const menu = menus.find((m) => m.id === menuId);
     if (menu) {
       await updateMenu({
         ...menu,
-        store_id: storeId
+        store_id: storeId,
       });
     }
     setShowStoreAssignment(false);
@@ -211,7 +222,7 @@ export const MenuManagement = () => {
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {/* Header */}
-        <motion.header 
+        <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
@@ -227,7 +238,7 @@ export const MenuManagement = () => {
         </motion.header>
 
         {/* Tab Navigation */}
-        <motion.nav 
+        <motion.nav
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
@@ -235,11 +246,11 @@ export const MenuManagement = () => {
         >
           <div className="flex gap-8">
             <button
-              onClick={() => setActiveTab('menus')}
+              onClick={() => setActiveTab("menus")}
               className={`relative pb-3 text-sm font-medium transition-colors ${
-                activeTab === 'menus'
-                  ? 'text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeTab === "menus"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Menus
@@ -248,24 +259,24 @@ export const MenuManagement = () => {
                   {legacyMenus.length}
                 </span>
               )}
-              {activeTab === 'menus' && (
-                <motion.div 
+              {activeTab === "menus" && (
+                <motion.div
                   layoutId="activeTab"
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground"
                 />
               )}
             </button>
             <button
-              onClick={() => setActiveTab('modifiers')}
+              onClick={() => setActiveTab("modifiers")}
               className={`relative pb-3 text-sm font-medium transition-colors ${
-                activeTab === 'modifiers'
-                  ? 'text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeTab === "modifiers"
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Option Sets
-              {activeTab === 'modifiers' && (
-                <motion.div 
+              {activeTab === "modifiers" && (
+                <motion.div
                   layoutId="activeTab"
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground"
                 />
@@ -281,9 +292,9 @@ export const MenuManagement = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15 }}
         >
-          {activeTab === 'menus' ? (
+          {activeTab === "menus" ? (
             <>
-              <MenusView 
+              <MenusView
                 menus={legacyMenus}
                 selectedStoreName={selectedStore.name}
                 onShowCreateDialog={handleShowCreateDialog}
@@ -292,7 +303,7 @@ export const MenuManagement = () => {
                 onDeleteMenu={handleDeleteMenu}
                 onAssignStore={handleAssignStore}
               />
-              <CreateMenuDialog 
+              <CreateMenuDialog
                 open={showCreateDialog}
                 onOpenChange={setShowCreateDialog}
                 onContinue={handleCreateMenu}
@@ -301,14 +312,18 @@ export const MenuManagement = () => {
                 open={showMenuBuilder}
                 onOpenChange={setShowMenuBuilder}
                 onSave={handleMenuBuilderSave}
-                initialData={editingMenu ? {
-                  name: editingMenu.name,
-                  description: editingMenu.description || '',
-                  category: editingMenu.category,
-                  isActive: editingMenu.is_active,
-                  items: editingMenu.items || []
-                } : undefined}
-                mode={editingMenu ? 'edit' : 'create'}
+                initialData={
+                  editingMenu
+                    ? {
+                        name: editingMenu.name,
+                        description: editingMenu.description || "",
+                        category: editingMenu.category,
+                        isActive: editingMenu.is_active,
+                        items: editingMenu.items || [],
+                      }
+                    : undefined
+                }
+                mode={editingMenu ? "edit" : "create"}
               />
               <StoreAssignmentDialog
                 open={showStoreAssignment}
@@ -318,7 +333,7 @@ export const MenuManagement = () => {
               />
             </>
           ) : (
-            <ModifiersView 
+            <ModifiersView
               storeId={selectedStore.id.toString()}
               storeName={selectedStore.name}
             />

@@ -1,27 +1,33 @@
-import React, { useState, useMemo } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { 
-  Plus, 
-  Settings, 
+import React, { useState, useMemo } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Plus,
+  Settings,
   Search,
   LayoutGrid,
   List,
-  SlidersHorizontal
-} from 'lucide-react';
-import { getModifierGroupsForStore, ModifierGroup } from '@/data/modifierGroups';
-import { useToast } from '@/hooks/use-toast';
-import { motion, AnimatePresence } from 'framer-motion';
-import { OptionSetEditorDialog, OptionSetFormData } from './OptionSetEditorDialog';
-import { OptionSetCard } from './OptionSetCard';
+  SlidersHorizontal,
+} from "lucide-react";
+import {
+  getModifierGroupsForStore,
+  ModifierGroup,
+} from "@/data/modifierGroups";
+import { useToast } from "@/hooks/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  OptionSetEditorDialog,
+  OptionSetFormData,
+} from "./OptionSetEditorDialog";
+import { OptionSetCard } from "./OptionSetCard";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 interface ModifiersViewProps {
   storeId: string;
@@ -32,45 +38,54 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.04 }
-  }
+    transition: { staggerChildren: 0.04 },
+  },
 };
 
 const item = {
   hidden: { opacity: 0, y: 8 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.2 } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.2 } },
 };
 
-type SortOption = 'name' | 'options' | 'type';
+type SortOption = "name" | "options" | "type";
 
-export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName }) => {
+export const ModifiersView: React.FC<ModifiersViewProps> = ({
+  storeId,
+  storeName,
+}) => {
   const baseModifierGroups = getModifierGroupsForStore(storeId);
-  const [modifierGroups, setModifierGroups] = useState<ModifierGroup[]>(baseModifierGroups);
+  const [modifierGroups, setModifierGroups] =
+    useState<ModifierGroup[]>(baseModifierGroups);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<ModifierGroup | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('name');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("name");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { toast } = useToast();
 
   // Filter and sort modifier groups
   const filteredGroups = useMemo(() => {
-    let filtered = modifierGroups.filter(group =>
-      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      group.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    let filtered = modifierGroups.filter(
+      (group) =>
+        group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        group.description?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     switch (sortBy) {
-      case 'name':
+      case "name":
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case 'options':
+      case "options":
         filtered.sort((a, b) => b.options.length - a.options.length);
         break;
-      case 'type':
+      case "type":
         filtered.sort((a, b) => {
           if (a.required !== b.required) return a.required ? -1 : 1;
-          return a.multipleSelection === b.multipleSelection ? 0 : a.multipleSelection ? 1 : -1;
+          return a.multipleSelection === b.multipleSelection
+            ? 0
+            : a.multipleSelection
+              ? 1
+              : -1;
         });
         break;
     }
@@ -81,11 +96,11 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
   const handleSaveModifierGroup = (data: OptionSetFormData) => {
     if (editingGroup) {
       // Update existing
-      setModifierGroups(prev => prev.map(g => 
-        g.id === editingGroup.id 
-          ? { ...g, ...data, id: g.id }
-          : g
-      ));
+      setModifierGroups((prev) =>
+        prev.map((g) =>
+          g.id === editingGroup.id ? { ...g, ...data, id: g.id } : g,
+        ),
+      );
       toast({
         title: "Option Set Updated",
         description: `${data.name} has been updated successfully.`,
@@ -100,9 +115,9 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
         multipleSelection: data.multipleSelection,
         minSelections: data.minSelections,
         maxSelections: data.maxSelections,
-        options: data.options
+        options: data.options,
       };
-      setModifierGroups(prev => [...prev, newGroup]);
+      setModifierGroups((prev) => [...prev, newGroup]);
       toast({
         title: "Option Set Created",
         description: `${data.name} has been created successfully.`,
@@ -118,7 +133,7 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
   };
 
   const handleDeleteGroup = (group: ModifierGroup) => {
-    setModifierGroups(prev => prev.filter(g => g.id !== group.id));
+    setModifierGroups((prev) => prev.filter((g) => g.id !== group.id));
     toast({
       title: "Option Set Deleted",
       description: `${group.name} has been deleted.`,
@@ -130,12 +145,12 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
       ...group,
       id: `group-${Date.now()}`,
       name: `${group.name} (Copy)`,
-      options: group.options.map(opt => ({
+      options: group.options.map((opt) => ({
         ...opt,
-        id: `opt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-      }))
+        id: `opt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      })),
     };
-    setModifierGroups(prev => [...prev, duplicated]);
+    setModifierGroups((prev) => [...prev, duplicated]);
     toast({
       title: "Option Set Duplicated",
       description: `${duplicated.name} has been created.`,
@@ -150,12 +165,12 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
   const convertToFormData = (group: ModifierGroup): OptionSetFormData => ({
     id: group.id,
     name: group.name,
-    description: group.description || '',
+    description: group.description || "",
     required: group.required,
     multipleSelection: group.multipleSelection,
     minSelections: group.minSelections || 0,
     maxSelections: group.maxSelections || 5,
-    options: group.options
+    options: group.options,
   });
 
   return (
@@ -166,16 +181,21 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="secondary" className="h-7 px-3 shrink-0">
-              {modifierGroups.length} option set{modifierGroups.length !== 1 ? 's' : ''}
+              {modifierGroups.length} option set
+              {modifierGroups.length !== 1 ? "s" : ""}
             </Badge>
             {searchQuery && (
               <span className="text-sm text-muted-foreground">
-                {filteredGroups.length} result{filteredGroups.length !== 1 ? 's' : ''}
+                {filteredGroups.length} result
+                {filteredGroups.length !== 1 ? "s" : ""}
               </span>
             )}
           </div>
-          
-          <Button onClick={() => setIsDialogOpen(true)} className="h-10 shrink-0">
+
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="h-10 shrink-0"
+          >
             <Plus className="w-4 h-4 xs:mr-2" />
             <span className="hidden xs:inline">New Option Set</span>
           </Button>
@@ -194,7 +214,10 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
           </div>
 
           <div className="flex items-center gap-2 justify-between sm:justify-start">
-            <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+            <Select
+              value={sortBy}
+              onValueChange={(v) => setSortBy(v as SortOption)}
+            >
               <SelectTrigger className="flex-1 sm:flex-none sm:w-[140px] h-10">
                 <SlidersHorizontal className="w-4 h-4 mr-2 shrink-0" />
                 <SelectValue placeholder="Sort by" />
@@ -208,18 +231,18 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
 
             <div className="flex items-center rounded-lg border border-border p-1 shrink-0">
               <Button
-                variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
+                variant={viewMode === "grid" ? "secondary" : "ghost"}
                 size="icon"
                 className="h-8 w-8"
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
               >
                 <LayoutGrid className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                variant={viewMode === "list" ? "secondary" : "ghost"}
                 size="icon"
                 className="h-8 w-8"
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode("list")}
               >
                 <List className="w-4 h-4" />
               </Button>
@@ -231,14 +254,15 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
       {/* Option Sets Grid/List */}
       <AnimatePresence mode="wait">
         {filteredGroups.length > 0 ? (
-          <motion.div 
+          <motion.div
             key="grid"
             variants={container}
             initial="hidden"
             animate="show"
-            className={viewMode === 'grid' 
-              ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4' 
-              : 'flex flex-col gap-3'
+            className={
+              viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+                : "flex flex-col gap-3"
             }
           >
             {filteredGroups.map((group) => (
@@ -267,7 +291,11 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
             <p className="text-sm text-muted-foreground max-w-xs mb-4">
               No option sets match "{searchQuery}". Try a different search term.
             </p>
-            <Button variant="outline" size="sm" onClick={() => setSearchQuery('')}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSearchQuery("")}
+            >
               Clear Search
             </Button>
           </motion.div>
@@ -286,7 +314,8 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
               No option sets yet
             </h3>
             <p className="text-sm text-muted-foreground max-w-sm mb-6">
-              Option sets let customers customize their orders with choices like size, toppings, or preparation styles.
+              Option sets let customers customize their orders with choices like
+              size, toppings, or preparation styles.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button onClick={() => setIsDialogOpen(true)}>
@@ -301,20 +330,22 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({ storeId, storeName
                 Quick Start Templates
               </p>
               <div className="flex flex-wrap justify-center gap-2">
-                {['Size (S/M/L)', 'Spice Level', 'Add-ons', 'Cooking Temp'].map((template) => (
-                  <Button 
-                    key={template} 
-                    variant="outline" 
-                    size="sm"
-                    className="text-xs"
-                    onClick={() => {
-                      // Pre-populate based on template
-                      setIsDialogOpen(true);
-                    }}
-                  >
-                    {template}
-                  </Button>
-                ))}
+                {["Size (S/M/L)", "Spice Level", "Add-ons", "Cooking Temp"].map(
+                  (template) => (
+                    <Button
+                      key={template}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => {
+                        // Pre-populate based on template
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      {template}
+                    </Button>
+                  ),
+                )}
               </div>
             </div>
           </motion.div>

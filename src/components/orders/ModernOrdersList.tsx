@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ModernOrderCard } from './ModernOrderCard';
-import { EmptyOrdersState } from './EmptyOrdersState';
-import { WaitingForOrdersState } from './WaitingForOrdersState';
-import { OrderDetailsOverlay } from './OrderDetailsOverlay';
-import { ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { ModernOrderCard } from "./ModernOrderCard";
+import { EmptyOrdersState } from "./EmptyOrdersState";
+import { WaitingForOrdersState } from "./WaitingForOrdersState";
+import { OrderDetailsOverlay } from "./OrderDetailsOverlay";
+import { ChevronDown } from "lucide-react";
 
 interface Order {
   id: string;
@@ -16,7 +16,7 @@ interface Order {
   status?: string;
   customer?: string;
   estimatedTime?: string;
-  priority?: 'normal' | 'high' | 'urgent';
+  priority?: "normal" | "high" | "urgent";
   platformFee?: string;
   storeId?: string;
   storeName?: string;
@@ -31,10 +31,20 @@ interface ModernOrdersListProps {
   onOrderSelect: (orderId: string) => void;
   activeTab: string;
   isWaitingForOrders?: boolean;
-  onOrderUpdate?: (orderId: string, action: 'accept' | 'decline' | 'ready' | 'complete' | 'fulfill' | 'schedule' | 'activate') => void;
+  onOrderUpdate?: (
+    orderId: string,
+    action:
+      | "accept"
+      | "decline"
+      | "ready"
+      | "complete"
+      | "fulfill"
+      | "schedule"
+      | "activate",
+  ) => void;
   onViewDetails?: (orderId: string) => void;
   selectedStore?: string;
-  orderStatus?: 'active' | 'paused';
+  orderStatus?: "active" | "paused";
   onResumeOrders?: () => void;
 }
 
@@ -46,50 +56,59 @@ export const ModernOrdersList = ({
   isWaitingForOrders = false,
   onOrderUpdate,
   onViewDetails,
-  selectedStore = 'all',
-  orderStatus = 'active',
-  onResumeOrders
+  selectedStore = "all",
+  orderStatus = "active",
+  onResumeOrders,
 }: ModernOrdersListProps) => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const [overlayOrder, setOverlayOrder] = useState<string | null>(null);
-  const [cardPosition, setCardPosition] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+  const [cardPosition, setCardPosition] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  console.log('ModernOrdersList: Rendering with props:', {
+  console.log("ModernOrdersList: Rendering with props:", {
     ordersCount: orders.length,
     isWaitingForOrders,
     activeTab,
-    visibleOrdersCount: orders.filter(order => order.isVisible !== false).length,
-    selectedStore
+    visibleOrdersCount: orders.filter((order) => order.isVisible !== false)
+      .length,
+    selectedStore,
   });
 
   // Filter orders to only show visible ones
-  const visibleOrders = orders.filter(order => order.isVisible !== false);
+  const visibleOrders = orders.filter((order) => order.isVisible !== false);
 
   // Determine if we should show store badges
-  const showStoreBadges = selectedStore === 'all';
+  const showStoreBadges = selectedStore === "all";
 
   const calculateTotal = (orders: Order[]): number => {
     return orders.reduce((sum: number, order: Order) => {
-      const amount = parseFloat(order.items.split('$')[1] || '0');
+      const amount = parseFloat(order.items.split("$")[1] || "0");
       return sum + amount;
     }, 0);
   };
 
-  const handleViewDetails = (orderId: string, cardRef: React.RefObject<HTMLDivElement>) => {
-    console.log('ModernOrdersList: View details called for order:', orderId);
-    
+  const handleViewDetails = (
+    orderId: string,
+    cardRef: React.RefObject<HTMLDivElement>,
+  ) => {
+    console.log("ModernOrdersList: View details called for order:", orderId);
+
     if (cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
       setCardPosition({
         top: rect.top,
         left: rect.left,
         width: rect.width,
-        height: rect.height
+        height: rect.height,
       });
       setOverlayOrder(orderId);
     }
-    
+
     // Don't call onViewDetails to avoid showing desktop panel
     // The overlay popup is sufficient for viewing details
   };
@@ -101,7 +120,8 @@ export const ModernOrdersList = ({
 
   const checkScrollIndicator = () => {
     if (scrollContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+      const { scrollTop, scrollHeight, clientHeight } =
+        scrollContainerRef.current;
       const hasMoreContent = scrollHeight > clientHeight;
       const isNearBottom = scrollTop + clientHeight >= scrollHeight - 50;
       setShowScrollIndicator(hasMoreContent && !isNearBottom);
@@ -112,8 +132,9 @@ export const ModernOrdersList = ({
     checkScrollIndicator();
     const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
-      scrollContainer.addEventListener('scroll', checkScrollIndicator);
-      return () => scrollContainer.removeEventListener('scroll', checkScrollIndicator);
+      scrollContainer.addEventListener("scroll", checkScrollIndicator);
+      return () =>
+        scrollContainer.removeEventListener("scroll", checkScrollIndicator);
     }
   }, [visibleOrders]);
 
@@ -122,9 +143,9 @@ export const ModernOrdersList = ({
     if (scrollContainerRef.current && visibleOrders.length > 0) {
       // Force a layout recalculation
       const container = scrollContainerRef.current;
-      container.style.overflowY = 'auto';
-      container.style.height = '100%';
-      
+      container.style.overflowY = "auto";
+      container.style.height = "100%";
+
       // Check scroll after a brief delay to ensure DOM is updated
       setTimeout(() => {
         checkScrollIndicator();
@@ -136,32 +157,45 @@ export const ModernOrdersList = ({
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
         top: 300,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
 
   // Show waiting state ONLY when explicitly waiting AND no orders exist globally
   // AND we're on the new tab AND store is 'all' (not filtering by specific store)
-  if (isWaitingForOrders && activeTab === 'new' && orders.length === 0 && selectedStore === 'all') {
-    console.log('ModernOrdersList: Showing waiting state - no orders exist yet');
+  if (
+    isWaitingForOrders &&
+    activeTab === "new" &&
+    orders.length === 0 &&
+    selectedStore === "all"
+  ) {
+    console.log(
+      "ModernOrdersList: Showing waiting state - no orders exist yet",
+    );
     return <WaitingForOrdersState />;
   }
 
   // Show empty state ONLY when store is paused (not when filtering by specific store)
-  if (orderStatus === 'paused') {
-    console.log('ModernOrdersList: Showing empty state - orders paused');
-    return <EmptyOrdersState onResumeOrders={() => {
-      console.log('Resume orders clicked in EmptyOrdersState');
-      if (onResumeOrders) {
-        onResumeOrders();
-      }
-    }} />;
+  if (orderStatus === "paused") {
+    console.log("ModernOrdersList: Showing empty state - orders paused");
+    return (
+      <EmptyOrdersState
+        onResumeOrders={() => {
+          console.log("Resume orders clicked in EmptyOrdersState");
+          if (onResumeOrders) {
+            onResumeOrders();
+          }
+        }}
+      />
+    );
   }
 
   // When filtering by specific store and no orders match, just show empty list (no special state)
-  if (visibleOrders.length === 0 && selectedStore !== 'all') {
-    console.log('ModernOrdersList: No orders for selected store - showing empty list');
+  if (visibleOrders.length === 0 && selectedStore !== "all") {
+    console.log(
+      "ModernOrdersList: No orders for selected store - showing empty list",
+    );
     return (
       <div className="h-full flex flex-col bg-black">
         <div className="flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200">
@@ -185,7 +219,9 @@ export const ModernOrdersList = ({
 
   // When no orders for any tab (except the ones already handled above), show empty state with black background
   if (visibleOrders.length === 0) {
-    console.log('ModernOrdersList: No orders for current tab - showing empty list');
+    console.log(
+      "ModernOrdersList: No orders for current tab - showing empty list",
+    );
     return (
       <div className="h-full flex flex-col bg-black">
         <div className="flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200">
@@ -210,7 +246,11 @@ export const ModernOrdersList = ({
     );
   }
 
-  console.log('ModernOrdersList: Showing orders list with', visibleOrders.length, 'visible orders');
+  console.log(
+    "ModernOrdersList: Showing orders list with",
+    visibleOrders.length,
+    "visible orders",
+  );
 
   return (
     <div className="h-full flex flex-col bg-black relative">
@@ -219,41 +259,47 @@ export const ModernOrdersList = ({
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-sm sm:text-base font-bold text-gray-900">
-              {visibleOrders.length} {visibleOrders.length === 1 ? 'Order' : 'Orders'}
-              {isWaitingForOrders && <span className="text-blue-600 ml-2">(Loading more...)</span>}
+              {visibleOrders.length}{" "}
+              {visibleOrders.length === 1 ? "Order" : "Orders"}
+              {isWaitingForOrders && (
+                <span className="text-blue-600 ml-2">(Loading more...)</span>
+              )}
             </h2>
             <p className="text-gray-600 text-xs mt-1">
-              Total: <span className="font-semibold text-green-600">${calculateTotal(visibleOrders).toFixed(2)}</span>
+              Total:{" "}
+              <span className="font-semibold text-green-600">
+                ${calculateTotal(visibleOrders).toFixed(2)}
+              </span>
             </p>
           </div>
         </div>
       </div>
 
       {/* Scrollable Orders Grid */}
-      <div 
+      <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto overflow-x-hidden bg-black"
         style={{
-          WebkitOverflowScrolling: 'touch',
-          scrollBehavior: 'smooth',
-          overscrollBehavior: 'contain'
+          WebkitOverflowScrolling: "touch",
+          scrollBehavior: "smooth",
+          overscrollBehavior: "contain",
         }}
       >
         <div className="p-4 bg-black min-h-full">
-          <div 
+          <div
             className="grid gap-4 bg-black"
             style={{
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              minHeight: '100%'
+              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              minHeight: "100%",
             }}
           >
             {visibleOrders.map((order, index) => (
-              <div 
-                key={order.id} 
+              <div
+                key={order.id}
                 className="animate-scale-in opacity-0"
-                style={{ 
+                style={{
                   animationDelay: `${index * 2000}ms`,
-                  animationFillMode: 'forwards'
+                  animationFillMode: "forwards",
                 }}
               >
                 <ModernOrderCard

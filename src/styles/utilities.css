@@ -1,4 +1,3 @@
-
 @tailwind utilities;
 
 /* Utility classes and animations */
@@ -77,7 +76,7 @@
   @apply relative;
 }
 .hover-underline::after {
-  content: '';
+  content: "";
   @apply absolute bottom-0 left-0 w-full h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300 ease-out;
 }
 .hover-underline:hover::after {
@@ -92,16 +91,36 @@
   @apply opacity-0;
   animation: slide-up-fade 0.4s ease-out forwards;
 }
-.stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-fade-in > *:nth-child(2) { animation-delay: 50ms; }
-.stagger-fade-in > *:nth-child(3) { animation-delay: 100ms; }
-.stagger-fade-in > *:nth-child(4) { animation-delay: 150ms; }
-.stagger-fade-in > *:nth-child(5) { animation-delay: 200ms; }
-.stagger-fade-in > *:nth-child(6) { animation-delay: 250ms; }
-.stagger-fade-in > *:nth-child(7) { animation-delay: 300ms; }
-.stagger-fade-in > *:nth-child(8) { animation-delay: 350ms; }
-.stagger-fade-in > *:nth-child(9) { animation-delay: 400ms; }
-.stagger-fade-in > *:nth-child(10) { animation-delay: 450ms; }
+.stagger-fade-in > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-fade-in > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.stagger-fade-in > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.stagger-fade-in > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+.stagger-fade-in > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+.stagger-fade-in > *:nth-child(6) {
+  animation-delay: 250ms;
+}
+.stagger-fade-in > *:nth-child(7) {
+  animation-delay: 300ms;
+}
+.stagger-fade-in > *:nth-child(8) {
+  animation-delay: 350ms;
+}
+.stagger-fade-in > *:nth-child(9) {
+  animation-delay: 400ms;
+}
+.stagger-fade-in > *:nth-child(10) {
+  animation-delay: 450ms;
+}
 
 @keyframes slide-up-fade {
   from {
@@ -133,7 +152,7 @@
   @apply relative overflow-hidden;
 }
 .btn-loading::after {
-  content: '';
+  content: "";
   @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
   animation: shimmer 1.5s infinite;
 }
@@ -185,7 +204,7 @@
   @apply relative;
 }
 .badge-pulse::before {
-  content: '';
+  content: "";
   @apply absolute inset-0 rounded-full bg-current opacity-30;
   animation: ripple 1.5s ease-out infinite;
 }
@@ -226,7 +245,7 @@
   @apply relative overflow-hidden;
 }
 .progress-bar-animated::after {
-  content: '';
+  content: "";
   @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent;
   animation: shimmer 2s infinite;
 }
@@ -259,10 +278,24 @@
 }
 
 /* Delay utilities for staggered animations */
-.delay-75 { animation-delay: 75ms; }
-.delay-100 { animation-delay: 100ms; }
-.delay-150 { animation-delay: 150ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
+.delay-75 {
+  animation-delay: 75ms;
+}
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-150 {
+  animation-delay: 150ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
+}

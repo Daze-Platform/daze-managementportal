@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { DateRange } from 'react-day-picker';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { DateRange } from "react-day-picker";
 
 interface FilterContextType {
   selectedStore: string;
@@ -16,17 +16,19 @@ interface FilterProviderProps {
 }
 
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
-  const [selectedStore, setSelectedStore] = useState('all');
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>({
+  const [selectedStore, setSelectedStore] = useState("all");
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    DateRange | undefined
+  >({
     from: new Date(),
-    to: new Date()
+    to: new Date(),
   });
 
   const resetFilters = () => {
-    setSelectedStore('all');
+    setSelectedStore("all");
     setSelectedDateRange({
       from: new Date(),
-      to: new Date()
+      to: new Date(),
     });
   };
 
@@ -48,7 +50,7 @@ export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
 export const useFilters = () => {
   const context = useContext(FilterContext);
   if (context === undefined) {
-    throw new Error('useFilters must be used within a FilterProvider');
+    throw new Error("useFilters must be used within a FilterProvider");
   }
   return context;
 };

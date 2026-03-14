@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Truck } from 'lucide-react';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Truck } from "lucide-react";
 
 interface Employee {
   id: number;
@@ -23,12 +22,24 @@ interface EmployeeDeliveriesProps {
 export const EmployeeDeliveries = ({ employees }: EmployeeDeliveriesProps) => {
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs">🟢 Active</Badge>;
-      case 'break':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 text-xs">⏸️ Break</Badge>;
-      case 'offline':
-        return <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100 text-xs">⚫ Offline</Badge>;
+      case "active":
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs">
+            🟢 Active
+          </Badge>
+        );
+      case "break":
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 text-xs">
+            ⏸️ Break
+          </Badge>
+        );
+      case "offline":
+        return (
+          <Badge className="bg-gray-100 text-gray-600 hover:bg-gray-100 text-xs">
+            ⚫ Offline
+          </Badge>
+        );
       default:
         return <Badge className="text-xs">{status}</Badge>;
     }
@@ -49,9 +60,14 @@ export const EmployeeDeliveries = ({ employees }: EmployeeDeliveriesProps) => {
       <CardContent className="pb-6">
         <div className="grid grid-cols-1 gap-3">
           {employees.map((employee) => (
-            <div key={employee.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+            <div
+              key={employee.id}
+              className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+            >
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className={`w-10 h-10 ${employee.color} rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md ring-1 ring-black/5`}>
+                <div
+                  className={`w-10 h-10 ${employee.color} rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md ring-1 ring-black/5`}
+                >
                   {employee.avatar}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -65,9 +81,7 @@ export const EmployeeDeliveries = ({ employees }: EmployeeDeliveriesProps) => {
                     <p className="text-xs text-gray-500">
                       {employee.deliveries} deliveries
                     </p>
-                    <p className="text-xs text-gray-500">
-                      ★ {employee.rating}
-                    </p>
+                    <p className="text-xs text-gray-500">★ {employee.rating}</p>
                   </div>
                 </div>
               </div>
@@ -76,7 +90,8 @@ export const EmployeeDeliveries = ({ employees }: EmployeeDeliveriesProps) => {
                   {employee.earnings}
                 </p>
                 <p className="text-xs text-green-600 font-medium">
-                  {getOnTimePercentage(employee.onTime, employee.deliveries)}% on-time
+                  {getOnTimePercentage(employee.onTime, employee.deliveries)}%
+                  on-time
                 </p>
               </div>
             </div>

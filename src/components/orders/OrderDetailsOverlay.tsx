@@ -1,19 +1,30 @@
-
-import React, { useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import { OrderDetails } from './OrderDetails';
+import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { OrderDetails } from "./OrderDetails";
 
 interface OrderDetailsOverlayProps {
   selectedOrder: string;
   activeTab: string;
   onOrderUpdate: (
     orderId: string,
-    action: 'accept' | 'decline' | 'ready' | 'complete' | 'fulfill' | 'schedule' | 'activate'
+    action:
+      | "accept"
+      | "decline"
+      | "ready"
+      | "complete"
+      | "fulfill"
+      | "schedule"
+      | "activate",
   ) => void;
   onClose: () => void;
-  cardPosition: { top: number; left: number; width: number; height: number } | null;
+  cardPosition: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null;
 }
 
 export const OrderDetailsOverlay = ({
@@ -21,22 +32,22 @@ export const OrderDetailsOverlay = ({
   activeTab,
   onOrderUpdate,
   onClose,
-  cardPosition
+  cardPosition,
 }: OrderDetailsOverlayProps) => {
   // Handle Escape key to close
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
   // Prevent body scroll when overlay is open
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, []);
 
@@ -54,11 +65,11 @@ export const OrderDetailsOverlay = ({
       <div
         className="fixed z-[9999] animate-slide-in-right flex flex-col bg-background border border-border shadow-2xl rounded-xl overflow-hidden"
         style={{
-          top: 'calc(var(--header-height, 64px) + 10px)',
-          right: '10px',
-          bottom: 'calc(10px + env(safe-area-inset-bottom, 0px))',
-          width: '480px',
-          maxWidth: 'calc(100vw - 20px)'
+          top: "calc(var(--header-height, 64px) + 10px)",
+          right: "10px",
+          bottom: "calc(10px + env(safe-area-inset-bottom, 0px))",
+          width: "480px",
+          maxWidth: "calc(100vw - 20px)",
         }}
       >
         {/* Close button */}
@@ -73,10 +84,14 @@ export const OrderDetailsOverlay = ({
 
         {/* Content */}
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <OrderDetails selectedOrder={selectedOrder} activeTab={activeTab} onOrderUpdate={onOrderUpdate} />
+          <OrderDetails
+            selectedOrder={selectedOrder}
+            activeTab={activeTab}
+            onOrderUpdate={onOrderUpdate}
+          />
         </div>
       </div>
     </>,
-    document.body
+    document.body,
   );
 };

@@ -1,13 +1,12 @@
-
-import React from 'react';
-import { Clock } from 'lucide-react';
-import { OrderCardBadges } from './OrderCardBadges';
+import React from "react";
+import { Clock } from "lucide-react";
+import { OrderCardBadges } from "./OrderCardBadges";
 
 interface Order {
   id: string;
   type: string;
   time: string;
-  priority?: 'normal' | 'high' | 'urgent';
+  priority?: "normal" | "high" | "urgent";
   status?: string;
 }
 
@@ -16,7 +15,10 @@ interface OrderCardHeaderProps {
   showStatus: boolean;
 }
 
-export const OrderCardHeader = ({ order, showStatus }: OrderCardHeaderProps) => {
+export const OrderCardHeader = ({
+  order,
+  showStatus,
+}: OrderCardHeaderProps) => {
   return (
     <div className="flex items-start justify-between mb-3">
       <div className="flex items-center gap-3 flex-1 min-w-0">

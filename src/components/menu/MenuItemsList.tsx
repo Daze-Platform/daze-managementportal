@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { MenuItemCard } from './MenuItemCard';
-import { Plus } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { MenuItemCard } from "./MenuItemCard";
+import { Plus } from "lucide-react";
 
 interface MenuItem {
   id: string;
@@ -26,7 +25,7 @@ export const MenuItemsList: React.FC<MenuItemsListProps> = ({
   categoryId,
   onAddItem,
   onEditItem,
-  onDeleteItem
+  onDeleteItem,
 }) => {
   const handleAddItemClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -40,8 +39,10 @@ export const MenuItemsList: React.FC<MenuItemsListProps> = ({
         <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
           <Plus className="w-5 h-5 text-gray-400" />
         </div>
-        <p className="text-gray-500 mb-4 text-sm text-center">No items in this category yet</p>
-        <Button 
+        <p className="text-gray-500 mb-4 text-sm text-center">
+          No items in this category yet
+        </p>
+        <Button
           size="sm"
           onClick={handleAddItemClick}
           className="bg-blue-500 hover:bg-blue-600 text-white h-9 sm:h-10 text-xs sm:text-sm px-3 sm:px-4"
