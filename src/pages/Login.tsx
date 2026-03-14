@@ -15,6 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { FadeIn, ScaleIn } from "@/components/ui/animated-container";
 
 const Login = () => {
@@ -51,6 +52,11 @@ const Login = () => {
     );
   }
 
+  const handleDemoLogin = () => {
+    setEmail("manuel@innisfree-test.daze.com");
+    setPassword("DazeDemo2026!");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -68,26 +74,26 @@ const Login = () => {
     }
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (email === "admin@dazeapp.com" && password === "daze123") {
-        login(email);
-        toast({
-          variant: "success",
-          title: "Login Successful",
-          description: "Welcome back! You'll stay logged in for 30 days.",
-        });
-        navigate("/dashboard");
-      } else {
-        const errorMessage =
-          "Invalid email or password. Please use the demo credentials.";
+      if (authError || !data.session) {
+        const errorMessage = authError?.message || "Invalid email or password.";
         setError(errorMessage);
         toast({
           variant: "destructive",
           title: "Login Failed",
           description: errorMessage,
         });
+        return;
       }
+
+      login(email);
+      toast({
+        variant: "success",
+        title: "Login Successful",
+        description: "Welcome back!",
+      });
+      navigate("/dashboard");
     } catch (err) {
       const errorMessage = "An error occurred. Please try again.";
       setError(errorMessage);
@@ -101,27 +107,6 @@ const Login = () => {
     }
   };
 
-  const handleDemoLogin = async () => {
-    setEmail("admin@dazeapp.com");
-    setPassword("daze123");
-    setError("");
-    setIsLoading(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      login("admin@dazeapp.com");
-      toast({
-        variant: "success",
-        title: "Demo Login",
-        description: "Welcome to the Pensacola Beach Resort demo!",
-      });
-      navigate("/dashboard");
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -134,7 +119,7 @@ const Login = () => {
           className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-primary via-accent to-primary py-3 px-4 text-center shadow-lg"
         >
           <p className="text-sm md:text-base font-medium text-white">
-            Welcome to Pensacola Beach Resort Management Hub Demo
+            Welcome to Daze Management Hub
           </p>
         </motion.div>
       )}
