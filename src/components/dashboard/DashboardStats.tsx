@@ -105,12 +105,12 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
 
               <CardContent className="p-4 lg:p-6">
                 <div className="flex items-start justify-between">
-                  <div className="min-w-0 flex-1 space-y-3">
-                    <p className="text-xs font-medium text-foreground/70 uppercase tracking-wide">
+                  <div className="min-w-0 flex-1 space-y-2 sm:space-y-3">
+                    <p className="text-xs font-medium text-foreground/70 uppercase tracking-wide truncate">
                       {card.label}
                     </p>
                     <motion.p
-                      className="text-2xl lg:text-3xl font-bold text-foreground"
+                      className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.1 + 0.2 }}
@@ -118,9 +118,9 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
                       {card.format(value)}
                     </motion.p>
                     <div
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-current/10 ${trend.bgColor}`}
+                      className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full border border-current/10 ${trend.bgColor}`}
                     >
-                      <TrendIcon className={`w-3.5 h-3.5 ${trend.color}`} />
+                      <TrendIcon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${trend.color}`} />
                       <span className={`text-xs font-bold ${trend.color}`}>
                         {trend.value}
                       </span>
@@ -128,12 +128,12 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
                   </div>
 
                   <motion.div
-                    className={`w-14 h-14 lg:w-16 lg:h-16 ${card.bgLight} rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm ring-1 ring-black/5`}
+                    className={`hidden sm:flex w-12 h-12 lg:w-16 lg:h-16 ${card.bgLight} rounded-xl items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm ring-1 ring-black/5 ml-3`}
                     whileHover={{ rotate: [0, -8, 8, 0] }}
                     transition={{ duration: 0.5 }}
                   >
                     <Icon
-                      className={`w-7 h-7 lg:w-8 lg:h-8 ${card.iconColor}`}
+                      className={`w-6 h-6 lg:w-8 lg:h-8 ${card.iconColor}`}
                     />
                   </motion.div>
                 </div>
