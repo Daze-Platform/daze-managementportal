@@ -63,6 +63,7 @@ export const DestinationProvider = ({
       const { data: destinationsData, error } = await supabase
         .from("resorts")
         .select("*")
+        .eq("tenant_id", tenantId)
         .order("created_at", { ascending: true });
 
       if (error) {

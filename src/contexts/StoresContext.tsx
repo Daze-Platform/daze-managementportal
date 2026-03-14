@@ -31,10 +31,20 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
 
   const loadStores = async (tenantId: string) => {
     try {
-      const { data: storesData, error } = await supabase
+      // Scope stores to this tenant's resorts only
+      const { data: resortRows } = await supabase
+        .from("resorts")
+        .select("id")
+        .eq("tenant_id", tenantId);
+      const resortIds = resortRows?.map((r) => r.id) ?? [];
+
+      const query = supabase
         .from("stores")
         .select("*")
         .order("created_at", { ascending: true });
+      const { data: storesData, error } = resortIds.length > 0
+        ? await query.in("resort_id", resortIds)
+        : await query.eq("resort_id", "no-match"); // no resorts → no stores
 
       if (error) {
         console.warn("Could not load stores from database:", error.message);
