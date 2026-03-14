@@ -325,47 +325,51 @@ export const OrderHistory = () => {
   };
 
   const getOrderMetaBadges = (order: Order) => {
-    const refundLabel = order.refundStatus
-      ? order.refundStatus === "partial"
-        ? `Partial refund ${order.refundAmount}`
-        : `Full refund ${order.refundAmount}`
-      : undefined;
+    const isPartialRefund = order.refundStatus === "partial";
+    const isFullRefund = order.refundStatus === "full";
+    const hasRefund = isPartialRefund || isFullRefund;
 
     return (
-      <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
-        <span className="inline-flex items-center gap-1" title={order.type}>
-          {order.type === "Delivery" ? (
-            <Truck className="w-3.5 h-3.5 text-blue-600" />
-          ) : (
-            <Store className="w-3.5 h-3.5 text-amber-600" />
-          )}
-          <span>{order.type}</span>
-        </span>
-        <span className="h-3 w-px bg-gray-300" aria-hidden="true" />
-        <span
-          className={`inline-flex items-center gap-1 ${
-            order.status === "Completed" ? "text-emerald-700" : "text-red-700"
-          }`}
-          title={order.status}
-        >
-          {order.status === "Completed" ? (
-            <CheckCircle className="w-3.5 h-3.5" />
-          ) : (
-            <XCircle className="w-3.5 h-3.5" />
-          )}
-          <span>{order.status}</span>
-        </span>
-        {refundLabel && (
-          <>
-            <span className="h-3 w-px bg-gray-300" aria-hidden="true" />
-            <span
-              className="inline-flex items-center gap-1 text-orange-700"
-              title={refundLabel}
-            >
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>Refunded</span>
-            </span>
-          </>
+      <div className="inline-flex flex-wrap items-center gap-1.5">
+        {/* Type badge */}
+        {order.type === "Delivery" ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 tracking-wide">
+            <Truck className="w-3 h-3" />
+            Delivery
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 tracking-wide">
+            <Store className="w-3 h-3" />
+            Pickup
+          </span>
+        )}
+
+        {/* Status badge */}
+        {order.status === "Completed" ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 tracking-wide">
+            <CheckCircle className="w-3 h-3" />
+            Completed
+          </span>
+        ) : order.status === "Canceled" ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-[11px] font-semibold text-red-700 tracking-wide">
+            <XCircle className="w-3 h-3" />
+            Canceled
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-[11px] font-semibold text-gray-600 tracking-wide">
+            {order.status}
+          </span>
+        )}
+
+        {/* Refund badge */}
+        {hasRefund && (
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-orange-50 border border-orange-200 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700 tracking-wide"
+            title={isPartialRefund ? `Partial refund ${order.refundAmount}` : `Full refund ${order.refundAmount}`}
+          >
+            <DollarSign className="w-3 h-3" />
+            {isPartialRefund ? "Partial Refund" : "Refunded"}
+          </span>
         )}
       </div>
     );
@@ -453,9 +457,6 @@ export const OrderHistory = () => {
             <div className="flex items-center space-x-2">
               <User className="w-4 h-4 text-gray-400" />
               <span className="text-gray-600">{order.customer}</span>
-            </div>
-            <div className="flex items-center justify-start">
-              {getOrderMetaBadges(order)}
             </div>
             <div className="flex items-center space-x-2 col-span-2">
               <Clock className="w-4 h-4 text-gray-400" />
