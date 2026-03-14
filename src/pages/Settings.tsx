@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DestinationManagement } from "@/components/settings/DestinationManagement";
+import { ResortVenueMapping } from "@/components/settings/ResortVenueMapping";
 import { AddBankAccountDialog } from "@/components/settings/AddBankAccountDialog";
 import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 import { useAuth } from "@/contexts/AuthContext";
@@ -369,6 +370,10 @@ export const Settings = () => {
 
           <TabsContent value="destinations" className="space-y-6">
             <DestinationManagement />
+            <div>
+              <h3 className="text-sm font-semibold mb-3">Venue Availability by Resort</h3>
+              <ResortVenueMapping />
+            </div>
           </TabsContent>
 
           <TabsContent value="notifications">
