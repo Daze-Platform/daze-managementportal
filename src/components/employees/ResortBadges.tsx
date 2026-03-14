@@ -18,7 +18,9 @@ export const ResortBadges: React.FC<ResortBadgesProps> = ({
   className,
 }) => {
   if (!resorts || resorts.length === 0) {
-    return <span className="text-muted-foreground text-sm">No resorts assigned</span>;
+    return (
+      <span className="text-muted-foreground text-sm">No resorts assigned</span>
+    );
   }
 
   const visible = resorts.slice(0, maxVisible);
@@ -27,7 +29,11 @@ export const ResortBadges: React.FC<ResortBadgesProps> = ({
   return (
     <div className={`flex flex-wrap items-center gap-1 ${className ?? ""}`}>
       {visible.map((name, idx) => (
-        <Badge key={`${name}-${idx}`} variant="secondary" className="max-w-[140px] truncate">
+        <Badge
+          key={`${name}-${idx}`}
+          variant="secondary"
+          className="max-w-[140px] truncate"
+        >
           <span title={name} className="truncate inline-block align-middle">
             {name}
           </span>
@@ -37,13 +43,23 @@ export const ResortBadges: React.FC<ResortBadgesProps> = ({
       {remaining.length > 0 && (
         <HoverCard openDelay={150} closeDelay={100}>
           <HoverCardTrigger asChild>
-            <Badge variant="outline" className="cursor-default">+{remaining.length} more</Badge>
+            <Badge variant="outline" className="cursor-default">
+              +{remaining.length} more
+            </Badge>
           </HoverCardTrigger>
-          <HoverCardContent align="start" sideOffset={8} className="z-50 w-64 p-3 bg-popover text-popover-foreground border shadow-md">
+          <HoverCardContent
+            align="start"
+            sideOffset={8}
+            className="z-50 w-64 p-3 bg-popover text-popover-foreground border shadow-md"
+          >
             <div className="text-xs font-medium mb-2">Additional resorts</div>
             <div className="grid grid-cols-1 gap-1">
               {remaining.map((name, idx) => (
-                <div key={`${name}-rem-${idx}`} className="text-sm truncate" title={name}>
+                <div
+                  key={`${name}-rem-${idx}`}
+                  className="text-sm truncate"
+                  title={name}
+                >
                   {name}
                 </div>
               ))}

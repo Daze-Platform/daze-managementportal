@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sidebar } from './Sidebar';
-import { Header } from './Header';
-import { PromotionCard } from './PromotionCard';
-import { useFullScreenScroll } from '@/hooks/useFullScreenScroll';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sidebar } from "./Sidebar";
+import { Header } from "./Header";
+import { PromotionCard } from "./PromotionCard";
+import { useFullScreenScroll } from "@/hooks/useFullScreenScroll";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
-  const isDashboard = location.pathname === '/dashboard';
+  const isDashboard = location.pathname === "/dashboard";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { isScrollingDown } = useFullScreenScroll();
@@ -25,34 +25,37 @@ export const Layout = ({ children }: LayoutProps) => {
       const desktop = window.innerWidth >= 1024;
       setIsMobile(mobile);
       setIsDesktop(desktop);
-      
+
       // Auto-open sidebar on desktop
       if (desktop) {
         setSidebarOpen(true);
       }
-      
+
       const updateViewportHeight = () => {
         const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
+
         if (mobile && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
-          document.documentElement.style.setProperty('--ios-vh', `${window.innerHeight}px`);
+          document.documentElement.style.setProperty(
+            "--ios-vh",
+            `${window.innerHeight}px`,
+          );
         }
       };
-      
+
       updateViewportHeight();
       setTimeout(updateViewportHeight, 100);
     };
-    
+
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    window.addEventListener('orientationchange', () => {
+    window.addEventListener("resize", checkScreenSize);
+    window.addEventListener("orientationchange", () => {
       setTimeout(checkScreenSize, 100);
     });
-    
+
     return () => {
-      window.removeEventListener('resize', checkScreenSize);
-      window.removeEventListener('orientationchange', checkScreenSize);
+      window.removeEventListener("resize", checkScreenSize);
+      window.removeEventListener("orientationchange", checkScreenSize);
     };
   }, []);
 
@@ -62,27 +65,27 @@ export const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-muted/30">
-      <Sidebar 
-        isOpen={sidebarOpen} 
+      <Sidebar
+        isOpen={sidebarOpen}
         isCollapsed={sidebarCollapsed}
-        onClose={closeSidebar} 
+        onClose={closeSidebar}
         onToggleCollapse={toggleSidebarCollapse}
       />
-      
+
       <div className="flex flex-col flex-1 min-w-0 h-full relative">
         {/* Header with smooth hide on scroll */}
-        <motion.div 
+        <motion.div
           className="flex-shrink-0 relative z-40 bg-card border-b border-border shadow-sm"
           initial={false}
-          animate={{ 
+          animate={{
             y: isScrollingDown && isMobile ? -100 : 0,
-            opacity: isScrollingDown && isMobile ? 0 : 1
+            opacity: isScrollingDown && isMobile ? 0 : 1,
           }}
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
         >
           <Header onToggleSidebar={toggleSidebar} isHidden={false} />
         </motion.div>
-        
+
         {/* Main content with page transitions */}
         <main className="flex-1 overflow-hidden relative">
           <div className="h-full overflow-y-auto scroll-container bg-muted/30">
@@ -100,7 +103,7 @@ export const Layout = ({ children }: LayoutProps) => {
             </AnimatePresence>
           </div>
         </main>
-        
+
         {isDashboard && (
           <div className="flex-shrink-0 bg-muted/30 border-t border-border w-full">
             <PromotionCard />

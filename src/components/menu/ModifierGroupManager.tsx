@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useForm } from 'react-hook-form';
-import { Plus, Edit2, Trash2, Settings } from 'lucide-react';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useForm } from "react-hook-form";
+import { Plus, Edit2, Trash2, Settings } from "lucide-react";
 
 interface ModifierOption {
   id: string;
@@ -17,7 +29,7 @@ interface ModifierOption {
 interface ModifierGroup {
   id: string;
   name: string;
-  type: 'single' | 'multiple';
+  type: "single" | "multiple";
   required: boolean;
   options: ModifierOption[];
 }
@@ -25,38 +37,38 @@ interface ModifierGroup {
 export const ModifierGroupManager: React.FC = () => {
   const [modifierGroups, setModifierGroups] = useState<ModifierGroup[]>([
     {
-      id: 'sizes',
-      name: 'Sizes',
-      type: 'single',
+      id: "sizes",
+      name: "Sizes",
+      type: "single",
       required: true,
       options: [
-        { id: '1', name: 'Small', price: 0 },
-        { id: '2', name: 'Medium', price: 2.00 },
-        { id: '3', name: 'Large', price: 4.00 }
-      ]
+        { id: "1", name: "Small", price: 0 },
+        { id: "2", name: "Medium", price: 2.0 },
+        { id: "3", name: "Large", price: 4.0 },
+      ],
     },
     {
-      id: 'sauces',
-      name: 'Sauces',
-      type: 'multiple',
+      id: "sauces",
+      name: "Sauces",
+      type: "multiple",
       required: false,
       options: [
-        { id: '1', name: 'BBQ', price: 0.50 },
-        { id: '2', name: 'Ranch', price: 0.50 },
-        { id: '3', name: 'Hot Sauce', price: 0.50 }
-      ]
-    }
+        { id: "1", name: "BBQ", price: 0.5 },
+        { id: "2", name: "Ranch", price: 0.5 },
+        { id: "3", name: "Hot Sauce", price: 0.5 },
+      ],
+    },
   ]);
-  
+
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingGroup, setEditingGroup] = useState<ModifierGroup | null>(null);
 
   const form = useForm({
     defaultValues: {
-      name: '',
-      type: 'single' as 'single' | 'multiple',
-      required: false
-    }
+      name: "",
+      type: "single" as "single" | "multiple",
+      required: false,
+    },
   });
 
   const handleSubmit = (data: any) => {
@@ -65,13 +77,15 @@ export const ModifierGroupManager: React.FC = () => {
       name: data.name,
       type: data.type,
       required: data.required,
-      options: editingGroup?.options || []
+      options: editingGroup?.options || [],
     };
 
     if (editingGroup) {
-      setModifierGroups(prev => prev.map(g => g.id === editingGroup.id ? newGroup : g));
+      setModifierGroups((prev) =>
+        prev.map((g) => (g.id === editingGroup.id ? newGroup : g)),
+      );
     } else {
-      setModifierGroups(prev => [...prev, newGroup]);
+      setModifierGroups((prev) => [...prev, newGroup]);
     }
 
     setShowCreateDialog(false);
@@ -80,23 +94,25 @@ export const ModifierGroupManager: React.FC = () => {
   };
 
   const deleteGroup = (groupId: string) => {
-    setModifierGroups(prev => prev.filter(g => g.id !== groupId));
+    setModifierGroups((prev) => prev.filter((g) => g.id !== groupId));
   };
 
   const addOption = (groupId: string, option: ModifierOption) => {
-    setModifierGroups(prev => prev.map(g => 
-      g.id === groupId 
-        ? { ...g, options: [...g.options, option] }
-        : g
-    ));
+    setModifierGroups((prev) =>
+      prev.map((g) =>
+        g.id === groupId ? { ...g, options: [...g.options, option] } : g,
+      ),
+    );
   };
 
   const deleteOption = (groupId: string, optionId: string) => {
-    setModifierGroups(prev => prev.map(g => 
-      g.id === groupId 
-        ? { ...g, options: g.options.filter(o => o.id !== optionId) }
-        : g
-    ));
+    setModifierGroups((prev) =>
+      prev.map((g) =>
+        g.id === groupId
+          ? { ...g, options: g.options.filter((o) => o.id !== optionId) }
+          : g,
+      ),
+    );
   };
 
   return (
@@ -107,9 +123,11 @@ export const ModifierGroupManager: React.FC = () => {
             <Settings className="w-5 h-5 text-blue-500" />
             <span>Modifier Groups</span>
           </h3>
-          <p className="text-sm text-gray-600 mt-1">Manage options and add-ons for your items</p>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage options and add-ons for your items
+          </p>
         </div>
-        <Button 
+        <Button
           size="sm"
           onClick={() => {
             setEditingGroup(null);
@@ -128,11 +146,14 @@ export const ModifierGroupManager: React.FC = () => {
             <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mb-4 shadow-md">
               <Settings className="w-8 h-8 text-green-500" />
             </div>
-            <h4 className="text-lg font-semibold mb-2 text-gray-900">No modifier groups yet</h4>
+            <h4 className="text-lg font-semibold mb-2 text-gray-900">
+              No modifier groups yet
+            </h4>
             <p className="text-gray-600 mb-4 text-center text-sm max-w-xs">
-              Create modifier groups like "Sizes", "Toppings", or "Extras" for your menu items.
+              Create modifier groups like "Sizes", "Toppings", or "Extras" for
+              your menu items.
             </p>
-            <Button 
+            <Button
               onClick={() => {
                 setEditingGroup(null);
                 setShowCreateDialog(true);
@@ -148,13 +169,16 @@ export const ModifierGroupManager: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {modifierGroups.map((group) => (
-            <Card key={group.id} className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 bg-white/90 backdrop-blur-sm">
+            <Card
+              key={group.id}
+              className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 bg-white/90 backdrop-blur-sm"
+            >
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-semibold text-gray-900">{group.name}</h4>
                   <div className="flex space-x-1">
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
                       className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
                       onClick={() => {
@@ -162,15 +186,15 @@ export const ModifierGroupManager: React.FC = () => {
                         form.reset({
                           name: group.name,
                           type: group.type,
-                          required: group.required
+                          required: group.required,
                         });
                         setShowCreateDialog(true);
                       }}
                     >
                       <Edit2 className="w-3 h-3" />
                     </Button>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
                       className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
                       onClick={() => deleteGroup(group.id)}
@@ -180,31 +204,42 @@ export const ModifierGroupManager: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-4 text-xs text-gray-500 mb-3">
-                  <span className={`px-2 py-1 rounded-full ${
-                    group.type === 'single' 
-                      ? 'bg-blue-100 text-blue-700' 
-                      : 'bg-purple-100 text-purple-700'
-                  }`}>
-                    {group.type === 'single' ? 'Single choice' : 'Multiple choice'}
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      group.type === "single"
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-purple-100 text-purple-700"
+                    }`}
+                  >
+                    {group.type === "single"
+                      ? "Single choice"
+                      : "Multiple choice"}
                   </span>
-                  <span className={`px-2 py-1 rounded-full ${
-                    group.required 
-                      ? 'bg-orange-100 text-orange-700' 
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
-                    {group.required ? 'Required' : 'Optional'}
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      group.required
+                        ? "bg-orange-100 text-orange-700"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {group.required ? "Required" : "Optional"}
                   </span>
                 </div>
                 <div className="space-y-2">
                   {group.options.map((option) => (
-                    <div key={option.id} className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-2">
+                    <div
+                      key={option.id}
+                      className="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-2"
+                    >
                       <span className="font-medium">{option.name}</span>
                       <div className="flex items-center space-x-2">
                         <span className="text-green-600 font-semibold">
-                          {option.price > 0 ? `+$${option.price.toFixed(2)}` : 'Free'}
+                          {option.price > 0
+                            ? `+$${option.price.toFixed(2)}`
+                            : "Free"}
                         </span>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="ghost"
                           className="h-6 w-6 p-0 hover:bg-red-50 hover:text-red-600"
                           onClick={() => deleteOption(group.id, option.id)}
@@ -214,18 +249,20 @@ export const ModifierGroupManager: React.FC = () => {
                       </div>
                     </div>
                   ))}
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     className="w-full text-xs border-dashed border border-gray-300 hover:border-gray-400 hover:bg-gray-50"
                     onClick={() => {
-                      const optionName = prompt('Option name:');
-                      const optionPrice = prompt('Additional price (0 for free):');
+                      const optionName = prompt("Option name:");
+                      const optionPrice = prompt(
+                        "Additional price (0 for free):",
+                      );
                       if (optionName && optionPrice !== null) {
                         addOption(group.id, {
                           id: Date.now().toString(),
                           name: optionName,
-                          price: parseFloat(optionPrice) || 0
+                          price: parseFloat(optionPrice) || 0,
                         });
                       }
                     }}
@@ -245,12 +282,15 @@ export const ModifierGroupManager: React.FC = () => {
         <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-lg border border-gray-200/50">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              {editingGroup ? 'Edit Modifier Group' : 'Create Modifier Group'}
+              {editingGroup ? "Edit Modifier Group" : "Create Modifier Group"}
             </DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
               <FormField
                 control={form.control}
                 name="name"
@@ -316,19 +356,19 @@ export const ModifierGroupManager: React.FC = () => {
               />
 
               <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setShowCreateDialog(false)}
                   className="border-gray-200 hover:bg-gray-50"
                 >
                   Cancel
                 </Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                 >
-                  {editingGroup ? 'Update Group' : 'Create Group'}
+                  {editingGroup ? "Update Group" : "Create Group"}
                 </Button>
               </div>
             </form>

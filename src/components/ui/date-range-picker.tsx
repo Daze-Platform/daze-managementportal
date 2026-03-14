@@ -6,7 +6,11 @@ import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export interface DateRangePickerProps {
   value?: DateRange;
@@ -15,10 +19,16 @@ export interface DateRangePickerProps {
   numberOfMonths?: number;
 }
 
-export function DateRangePicker({ value, onChange, className, numberOfMonths = 2 }: DateRangePickerProps) {
+export function DateRangePicker({
+  value,
+  onChange,
+  className,
+  numberOfMonths = 2,
+}: DateRangePickerProps) {
   const formatRange = (range?: DateRange) => {
     if (!range?.from && !range?.to) return "Pick a date";
-    if (range?.from && range?.to) return `${format(range.from, "MMM dd")} - ${format(range.to, "MMM dd, yyyy")}`;
+    if (range?.from && range?.to)
+      return `${format(range.from, "MMM dd")} - ${format(range.to, "MMM dd, yyyy")}`;
     if (range?.from) return format(range.from, "MMM dd, yyyy");
     return "Pick a date";
   };
@@ -31,7 +41,7 @@ export function DateRangePicker({ value, onChange, className, numberOfMonths = 2
           className={cn(
             "h-9 justify-start text-left font-normal bg-white border-gray-300 hover:border-gray-400 focus:border-gray-500 shadow-sm hover:bg-gray-50",
             !value && "text-muted-foreground",
-            className
+            className,
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4 text-gray-600" />
@@ -42,7 +52,10 @@ export function DateRangePicker({ value, onChange, className, numberOfMonths = 2
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 bg-white border-gray-300 shadow-xl z-50" align="start">
+      <PopoverContent
+        className="w-auto p-0 bg-white border-gray-300 shadow-xl z-50"
+        align="start"
+      >
         <Calendar
           mode="range"
           selected={value}

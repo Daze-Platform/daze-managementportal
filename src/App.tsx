@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import { MenuManagement } from "./pages/MenuManagement";
 import { Reports } from "./pages/Reports";
 import { Payouts } from "./pages/Payouts";
 import { Employees } from "./pages/Employees";
+import { Users } from "./pages/Users";
 import { Ratings } from "./pages/Ratings";
 import { Promotions } from "./pages/Promotions";
 import { Settings } from "./pages/Settings";
@@ -50,91 +50,127 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <Layout>
-            <Dashboard />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/venues" element={
-        <ProtectedRoute>
-          <Layout>
-            <Stores />
-          </Layout>
-        </ProtectedRoute>
-      } />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Dashboard />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/venues"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Stores />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
       <Route path="/stores" element={<Navigate to="/venues" replace />} />
-      <Route path="/orders/active" element={
-        <ProtectedRoute>
-          <Layout>
-            <ActiveOrders />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/orders/history" element={
-        <ProtectedRoute>
-          <Layout>
-            <OrderHistory />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/menus" element={
-        <ProtectedRoute>
-          <Layout>
-            <MenuManagement />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/reports" element={
-        <ProtectedRoute>
-          <Layout>
-            <Reports />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/financials" element={
-        <ProtectedRoute>
-          <Layout>
-            <Payouts />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/employees" element={
-        <ProtectedRoute>
-          <Layout>
-            <Employees />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/ratings" element={
-        <ProtectedRoute>
-          <Layout>
-            <Ratings />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/promotions" element={
-        <ProtectedRoute>
-          <Layout>
-            <Promotions />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/settings" element={
-        <ProtectedRoute>
-          <Layout>
-            <Settings />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/notifications" element={
-        <ProtectedRoute>
-          <Layout>
-            <Notifications />
-          </Layout>
-        </ProtectedRoute>
-      } />
+      <Route
+        path="/orders/active"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ActiveOrders />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orders/history"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <OrderHistory />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/menus"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <MenuManagement />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Reports />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/financials"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Payouts />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employees"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Employees />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ratings"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Ratings />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/promotions"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Promotions />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Settings />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Notifications />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
       <Route path="/index" element={<Index />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

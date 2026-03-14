@@ -1,14 +1,13 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { 
+import React from "react";
+import { Button } from "@/components/ui/button";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 
 interface PauseOrdersModalProps {
   isOpen: boolean;
@@ -17,14 +16,20 @@ interface PauseOrdersModalProps {
   storeName: string;
 }
 
-export const PauseOrdersModal = ({ isOpen, onClose, onConfirm, storeName }: PauseOrdersModalProps) => {
+export const PauseOrdersModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  storeName,
+}: PauseOrdersModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Pause Orders</DialogTitle>
           <DialogDescription>
-            Are you sure you want to pause orders for {storeName}? New orders will not be accepted while the store is paused.
+            Are you sure you want to pause orders for {storeName}? New orders
+            will not be accepted while the store is paused.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

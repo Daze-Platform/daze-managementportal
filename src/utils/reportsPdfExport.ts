@@ -1,7 +1,7 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { format } from 'date-fns';
-import { DateRange } from 'react-day-picker';
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
 
 interface ReportData {
   name: string;
@@ -41,33 +41,46 @@ export const exportReportsToPdf = ({
   visibleSections,
   data,
 }: ExportOptions) => {
-  console.log('PDF Export - Starting export with:', { storeName, visibleSections: Array.from(visibleSections), data });
-  
+  console.log("PDF Export - Starting export with:", {
+    storeName,
+    visibleSections: Array.from(visibleSections),
+    data,
+  });
+
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
 
   // Format date range
   const formatDateRange = () => {
-    if (!dateRange?.from) return 'All time';
+    if (!dateRange?.from) return "All time";
     if (dateRange.from && dateRange.to) {
-      return `${format(dateRange.from, 'MMM dd, yyyy')} - ${format(dateRange.to, 'MMM dd, yyyy')}`;
+      return `${format(dateRange.from, "MMM dd, yyyy")} - ${format(dateRange.to, "MMM dd, yyyy")}`;
     }
-    return format(dateRange.from, 'MMM dd, yyyy');
+    return format(dateRange.from, "MMM dd, yyyy");
   };
 
   // Header
   doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Lily Hall Reports', pageWidth / 2, yPosition, { align: 'center' });
+  doc.setFont("helvetica", "bold");
+  doc.text("Pensacola Beach Resort Reports", pageWidth / 2, yPosition, {
+    align: "center",
+  });
   yPosition += 10;
 
   doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont("helvetica", "normal");
   doc.setTextColor(100);
-  doc.text(`${storeName} • ${formatDateRange()}`, pageWidth / 2, yPosition, { align: 'center' });
+  doc.text(`${storeName} • ${formatDateRange()}`, pageWidth / 2, yPosition, {
+    align: "center",
+  });
   yPosition += 5;
-  doc.text(`Generated: ${format(new Date(), 'MMM dd, yyyy HH:mm')}`, pageWidth / 2, yPosition, { align: 'center' });
+  doc.text(
+    `Generated: ${format(new Date(), "MMM dd, yyyy HH:mm")}`,
+    pageWidth / 2,
+    yPosition,
+    { align: "center" },
+  );
   doc.setTextColor(0);
   yPosition += 15;
 
@@ -78,7 +91,7 @@ export const exportReportsToPdf = ({
       yPosition = 20;
     }
     doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setTextColor(50);
     doc.text(title, 14, yPosition);
     doc.setTextColor(0);
@@ -91,109 +104,126 @@ export const exportReportsToPdf = ({
   };
 
   // Customer Analytics Section
-  if (isSectionVisible('customerAnalytics') && data.customerAnalytics) {
-    console.log('PDF Export - Adding Customer Analytics');
-    addSectionHeader('Customer Analytics');
-    
+  if (isSectionVisible("customerAnalytics") && data.customerAnalytics) {
+    console.log("PDF Export - Adding Customer Analytics");
+    addSectionHeader("Customer Analytics");
+
     autoTable(doc, {
       startY: yPosition,
-      head: [['Metric', 'Value', 'Change']],
+      head: [["Metric", "Value", "Change"]],
       body: [
-        ['Total Customers', data.customerAnalytics.totalCustomers.toLocaleString(), `+${data.customerAnalytics.customerGrowth}%`],
-        ['Customer Lifetime Value', `$${data.customerAnalytics.lifetimeValue}`, `+${data.customerAnalytics.lifetimeValueGrowth}%`],
-        ['Retention Rate', `${data.customerAnalytics.retentionRate}%`, `+${data.customerAnalytics.retentionGrowth}%`],
-        ['Satisfaction Score', `${data.customerAnalytics.satisfaction}/5`, `${data.customerAnalytics.totalReviews} reviews`],
+        [
+          "Total Customers",
+          data.customerAnalytics.totalCustomers.toLocaleString(),
+          `+${data.customerAnalytics.customerGrowth}%`,
+        ],
+        [
+          "Customer Lifetime Value",
+          `$${data.customerAnalytics.lifetimeValue}`,
+          `+${data.customerAnalytics.lifetimeValueGrowth}%`,
+        ],
+        [
+          "Retention Rate",
+          `${data.customerAnalytics.retentionRate}%`,
+          `+${data.customerAnalytics.retentionGrowth}%`,
+        ],
+        [
+          "Satisfaction Score",
+          `${data.customerAnalytics.satisfaction}/5`,
+          `${data.customerAnalytics.totalReviews} reviews`,
+        ],
       ],
-      theme: 'striped',
+      theme: "striped",
       headStyles: { fillColor: [59, 130, 246], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
-    
+
     yPosition = (doc as any).lastAutoTable.finalY + 15;
   }
 
   // Revenue Section
-  if (isSectionVisible('revenue') && data.revenue) {
-    console.log('PDF Export - Adding Revenue');
-    addSectionHeader('Revenue');
-    
+  if (isSectionVisible("revenue") && data.revenue) {
+    console.log("PDF Export - Adding Revenue");
+    addSectionHeader("Revenue");
+
     autoTable(doc, {
       startY: yPosition,
-      head: [['Category', 'Amount', 'Percentage']],
+      head: [["Category", "Amount", "Percentage"]],
       body: [
-        ['Total Revenue', `$${data.revenue.total.toLocaleString()}`, `+${data.revenue.growth}% growth`],
-        ...data.revenue.breakdown.map(item => [
+        [
+          "Total Revenue",
+          `$${data.revenue.total.toLocaleString()}`,
+          `+${data.revenue.growth}% growth`,
+        ],
+        ...data.revenue.breakdown.map((item) => [
           item.label,
           `$${item.amount.toLocaleString()}`,
           `${item.percentage}%`,
         ]),
       ],
-      theme: 'striped',
+      theme: "striped",
       headStyles: { fillColor: [16, 185, 129], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
-    
+
     yPosition = (doc as any).lastAutoTable.finalY + 15;
   }
 
   // Payment Types Section
-  if (isSectionVisible('paymentTypes') && data.paymentTypes) {
-    console.log('PDF Export - Adding Payment Types');
-    addSectionHeader('Payment Types');
-    
+  if (isSectionVisible("paymentTypes") && data.paymentTypes) {
+    console.log("PDF Export - Adding Payment Types");
+    addSectionHeader("Payment Types");
+
     autoTable(doc, {
       startY: yPosition,
-      head: [['Payment Method', 'Percentage']],
-      body: data.paymentTypes.map(item => [
-        item.name,
-        `${item.value}%`,
-      ]),
-      theme: 'striped',
+      head: [["Payment Method", "Percentage"]],
+      body: data.paymentTypes.map((item) => [item.name, `${item.value}%`]),
+      theme: "striped",
       headStyles: { fillColor: [245, 158, 11], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
-    
+
     yPosition = (doc as any).lastAutoTable.finalY + 15;
   }
 
   // Cancellations Section
-  if (isSectionVisible('cancellations') && data.cancellations) {
-    console.log('PDF Export - Adding Cancellations');
-    addSectionHeader('Cancellations');
-    
+  if (isSectionVisible("cancellations") && data.cancellations) {
+    console.log("PDF Export - Adding Cancellations");
+    addSectionHeader("Cancellations");
+
     autoTable(doc, {
       startY: yPosition,
-      head: [['Metric', 'Value']],
+      head: [["Metric", "Value"]],
       body: [
-        ['Cancellation Rate', `${data.cancellations.rate}%`],
-        ['Total Cancelled', data.cancellations.totalCancelled.toString()],
+        ["Cancellation Rate", `${data.cancellations.rate}%`],
+        ["Total Cancelled", data.cancellations.totalCancelled.toString()],
       ],
-      theme: 'striped',
+      theme: "striped",
       headStyles: { fillColor: [239, 68, 68], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
-    
+
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
     if (data.cancellations.reasons && data.cancellations.reasons.length > 0) {
       autoTable(doc, {
         startY: yPosition,
-        head: [['Reason', 'Count', 'Percentage']],
-        body: data.cancellations.reasons.map(item => [
+        head: [["Reason", "Count", "Percentage"]],
+        body: data.cancellations.reasons.map((item) => [
           item.reason,
           item.count.toString(),
           `${item.percentage}%`,
         ]),
-        theme: 'striped',
+        theme: "striped",
         headStyles: { fillColor: [239, 68, 68], textColor: 255 },
         margin: { left: 14, right: 14 },
       });
-      
+
       yPosition = (doc as any).lastAutoTable.finalY + 15;
     }
   }
 
-  console.log('PDF Export - Finished adding sections, saving document');
+  console.log("PDF Export - Finished adding sections, saving document");
 
   // Add footer on each page
   const pageCount = (doc as any).internal.getNumberOfPages();
@@ -205,18 +235,18 @@ export const exportReportsToPdf = ({
       `Page ${i} of ${pageCount}`,
       pageWidth / 2,
       doc.internal.pageSize.getHeight() - 10,
-      { align: 'center' }
+      { align: "center" },
     );
     doc.text(
-      'Lily Hall Pensacola',
+      "Pensacola Beach Resort",
       14,
-      doc.internal.pageSize.getHeight() - 10
+      doc.internal.pageSize.getHeight() - 10,
     );
   }
 
   // Generate filename
-  const dateStr = format(new Date(), 'yyyy-MM-dd');
-  const storeSlug = storeName.toLowerCase().replace(/\s+/g, '-');
+  const dateStr = format(new Date(), "yyyy-MM-dd");
+  const storeSlug = storeName.toLowerCase().replace(/\s+/g, "-");
   const filename = `lily-hall-report-${storeSlug}-${dateStr}.pdf`;
 
   doc.save(filename);

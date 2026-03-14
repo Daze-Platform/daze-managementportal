@@ -1,44 +1,98 @@
-// Resort-specific dashboard data for Lily Hall Pensacola
+// Resort-specific dashboard data for Pensacola Beach Resort
 export const resortDashboardData = {
-  'lily-hall-pensacola': {
+  "pensacola-beach-resort": {
     all: {
-      name: 'All Stores',
+      name: "All Stores",
       stats: {
         revenue: 32450,
         orders: 3847,
         customers: 2341,
-        avgOrder: 42.30,
-        trends: { revenue: 15.2, orders: 12.8, customers: 8.7, avgOrder: 3.5 }
+        avgOrder: 42.3,
+        trends: { revenue: 15.2, orders: 12.8, customers: 8.7, avgOrder: 3.5 },
       },
       revenueData: [
-        { name: 'Mon', value: 8200 },
-        { name: 'Tue', value: 7100 },
-        { name: 'Wed', value: 9800 },
-        { name: 'Thu', value: 8500 },
-        { name: 'Fri', value: 11200 },
-        { name: 'Sat', value: 13800 },
-        { name: 'Sun', value: 10200 },
+        { name: "Mon", value: 8200 },
+        { name: "Tue", value: 7100 },
+        { name: "Wed", value: 9800 },
+        { name: "Thu", value: 8500 },
+        { name: "Fri", value: 11200 },
+        { name: "Sat", value: 13800 },
+        { name: "Sun", value: 10200 },
       ],
       orderData: [
-        { name: '6AM', orders: 32 },
-        { name: '9AM', orders: 89 },
-        { name: '12PM', orders: 156 },
-        { name: '3PM', orders: 134 },
-        { name: '6PM', orders: 187 },
-        { name: '9PM', orders: 98 },
+        { name: "6AM", orders: 32 },
+        { name: "9AM", orders: 89 },
+        { name: "12PM", orders: 156 },
+        { name: "3PM", orders: 134 },
+        { name: "6PM", orders: 187 },
+        { name: "9PM", orders: 98 },
       ],
       topItems: [
-        { name: "Wood-Fired Oysters", orders: 423, revenue: "$5,922", image: "🦪", change: "+15%" },
-        { name: "Old Fashioned", orders: 387, revenue: "$5,418", image: "🥃", change: "+12%" },
-        { name: "Charbroiled Salmon", orders: 298, revenue: "$3,872", image: "🐟", change: "+8%" },
-        { name: "Southern Breakfast", orders: 267, revenue: "$3,471", image: "🍳", change: "+18%" },
-        { name: "Craft Cocktails", orders: 234, revenue: "$3,042", image: "🍸", change: "+6%" }
+        {
+          name: "Wood-Fired Oysters",
+          orders: 423,
+          revenue: "$5,922",
+          image: "🦪",
+          change: "+15%",
+        },
+        {
+          name: "Old Fashioned",
+          orders: 387,
+          revenue: "$5,418",
+          image: "🥃",
+          change: "+12%",
+        },
+        {
+          name: "Charbroiled Salmon",
+          orders: 298,
+          revenue: "$3,872",
+          image: "🐟",
+          change: "+8%",
+        },
+        {
+          name: "Southern Breakfast",
+          orders: 267,
+          revenue: "$3,471",
+          image: "🍳",
+          change: "+18%",
+        },
+        {
+          name: "Craft Cocktails",
+          orders: 234,
+          revenue: "$3,042",
+          image: "🍸",
+          change: "+6%",
+        },
       ],
       performanceAlerts: [
-        { metric: "Kitchen Service Time", currentValue: 18.5, targetValue: 15.0, urgency: "medium" as const, impact: "Guest dining experience" },
-        { metric: "Food Cost Percentage", currentValue: 31.2, targetValue: 28.0, urgency: "high" as const, impact: "Venue profit margins" },
-        { metric: "Guest Satisfaction Score", currentValue: 4.3, targetValue: 4.6, urgency: "medium" as const, impact: "Reviews & reputation" },
-        { metric: "Peak Hour Coverage", currentValue: 78.0, targetValue: 85.0, urgency: "critical" as const, impact: "Service delays during rush" }
+        {
+          metric: "Kitchen Service Time",
+          currentValue: 18.5,
+          targetValue: 15.0,
+          urgency: "medium" as const,
+          impact: "Guest dining experience",
+        },
+        {
+          metric: "Food Cost Percentage",
+          currentValue: 31.2,
+          targetValue: 28.0,
+          urgency: "high" as const,
+          impact: "Venue profit margins",
+        },
+        {
+          metric: "Guest Satisfaction Score",
+          currentValue: 4.3,
+          targetValue: 4.6,
+          urgency: "medium" as const,
+          impact: "Reviews & reputation",
+        },
+        {
+          metric: "Peak Hour Coverage",
+          currentValue: 78.0,
+          targetValue: 85.0,
+          urgency: "critical" as const,
+          impact: "Service delays during rush",
+        },
       ],
       customerSatisfaction: {
         overall: 4.2,
@@ -46,53 +100,102 @@ export const resortDashboardData = {
         serviceSpeed: 3.8,
         cleanliness: 4.1,
         value: 4.0,
-        totalReviews: 1847
+        totalReviews: 1847,
       },
       operationalMetrics: {
         avgOrderPrepTime: 12.5,
         kitchenEfficiency: 87,
         wastagePercentage: 4.2,
         staffUtilization: 78,
-        peakHourCapacity: 92
-      }
+        peakHourCapacity: 92,
+      },
     },
-    '1': { // Brother Fox
-      name: 'Brother Fox',
+    "1": {
+      // Windrose Restaurant
+      name: "Windrose Restaurant",
       stats: {
         revenue: 18750,
         orders: 2156,
         customers: 1234,
-        avgOrder: 52.80,
-        trends: { revenue: 18.7, orders: 14.3, customers: 11.2, avgOrder: 7.8 }
+        avgOrder: 52.8,
+        trends: { revenue: 18.7, orders: 14.3, customers: 11.2, avgOrder: 7.8 },
       },
       revenueData: [
-        { name: 'Mon', value: 3200 },
-        { name: 'Tue', value: 2800 },
-        { name: 'Wed', value: 3600 },
-        { name: 'Thu', value: 4100 },
-        { name: 'Fri', value: 4800 },
-        { name: 'Sat', value: 5200 },
-        { name: 'Sun', value: 4400 },
+        { name: "Mon", value: 3200 },
+        { name: "Tue", value: 2800 },
+        { name: "Wed", value: 3600 },
+        { name: "Thu", value: 4100 },
+        { name: "Fri", value: 4800 },
+        { name: "Sat", value: 5200 },
+        { name: "Sun", value: 4400 },
       ],
       orderData: [
-        { name: '6AM', orders: 0 },
-        { name: '9AM', orders: 0 },
-        { name: '12PM', orders: 0 },
-        { name: '3PM', orders: 12 },
-        { name: '6PM', orders: 145 },
-        { name: '9PM', orders: 89 },
+        { name: "6AM", orders: 0 },
+        { name: "9AM", orders: 0 },
+        { name: "12PM", orders: 0 },
+        { name: "3PM", orders: 12 },
+        { name: "6PM", orders: 145 },
+        { name: "9PM", orders: 89 },
       ],
       topItems: [
-        { name: "Wood-Fired Oysters", orders: 198, revenue: "$3,564", image: "🦪", change: "+22%" },
-        { name: "Charbroiled Octopus", orders: 156, revenue: "$2,808", image: "🐙", change: "+18%" },
-        { name: "Grilled Salmon", orders: 134, revenue: "$4,020", image: "🐟", change: "+14%" },
-        { name: "Seasonal Vegetable Platter", orders: 89, revenue: "$1,335", image: "🥬", change: "+25%" },
-        { name: "Herb-Crusted Lamb", orders: 76, revenue: "$2,280", image: "🍖", change: "+9%" }
+        {
+          name: "Wood-Fired Oysters",
+          orders: 198,
+          revenue: "$3,564",
+          image: "🦪",
+          change: "+22%",
+        },
+        {
+          name: "Charbroiled Octopus",
+          orders: 156,
+          revenue: "$2,808",
+          image: "🐙",
+          change: "+18%",
+        },
+        {
+          name: "Grilled Salmon",
+          orders: 134,
+          revenue: "$4,020",
+          image: "🐟",
+          change: "+14%",
+        },
+        {
+          name: "Seasonal Vegetable Platter",
+          orders: 89,
+          revenue: "$1,335",
+          image: "🥬",
+          change: "+25%",
+        },
+        {
+          name: "Herb-Crusted Lamb",
+          orders: 76,
+          revenue: "$2,280",
+          image: "🍖",
+          change: "+9%",
+        },
       ],
       performanceAlerts: [
-        { metric: "Guest Satisfaction Score", currentValue: 4.6, targetValue: 4.6, urgency: "low" as const, impact: "Excellent hearth dining" },
-        { metric: "Seafood Freshness Score", currentValue: 96.2, targetValue: 95.0, urgency: "low" as const, impact: "Premium dining standards" },
-        { metric: "Dinner Service Coverage", currentValue: 88.0, targetValue: 90.0, urgency: "medium" as const, impact: "Evening order capacity" }
+        {
+          metric: "Guest Satisfaction Score",
+          currentValue: 4.6,
+          targetValue: 4.6,
+          urgency: "low" as const,
+          impact: "Excellent hearth dining",
+        },
+        {
+          metric: "Seafood Freshness Score",
+          currentValue: 96.2,
+          targetValue: 95.0,
+          urgency: "low" as const,
+          impact: "Premium dining standards",
+        },
+        {
+          metric: "Dinner Service Coverage",
+          currentValue: 88.0,
+          targetValue: 90.0,
+          urgency: "medium" as const,
+          impact: "Evening order capacity",
+        },
       ],
       customerSatisfaction: {
         overall: 4.4,
@@ -100,52 +203,95 @@ export const resortDashboardData = {
         serviceSpeed: 4.0,
         cleanliness: 4.3,
         value: 4.2,
-        totalReviews: 892
+        totalReviews: 892,
       },
       operationalMetrics: {
         avgOrderPrepTime: 11.8,
         kitchenEfficiency: 91,
         wastagePercentage: 3.5,
         staffUtilization: 83,
-        peakHourCapacity: 95
-      }
+        peakHourCapacity: 95,
+      },
     },
-    '2': { // Sister Hen
-      name: 'Sister Hen',
+    "2": {
+      // Tiki Bar
+      name: "Tiki Bar",
       stats: {
         revenue: 12426,
         orders: 1429,
         customers: 892,
-        avgOrder: 38.50,
-        trends: { revenue: 12.5, orders: 8.2, customers: -2.1, avgOrder: 5.7 }
+        avgOrder: 38.5,
+        trends: { revenue: 12.5, orders: 8.2, customers: -2.1, avgOrder: 5.7 },
       },
       revenueData: [
-        { name: 'Mon', value: 0 },
-        { name: 'Tue', value: 1800 },
-        { name: 'Wed', value: 2100 },
-        { name: 'Thu', value: 2400 },
-        { name: 'Fri', value: 3200 },
-        { name: 'Sat', value: 3500 },
-        { name: 'Sun', value: 2200 },
+        { name: "Mon", value: 0 },
+        { name: "Tue", value: 1800 },
+        { name: "Wed", value: 2100 },
+        { name: "Thu", value: 2400 },
+        { name: "Fri", value: 3200 },
+        { name: "Sat", value: 3500 },
+        { name: "Sun", value: 2200 },
       ],
       orderData: [
-        { name: '6AM', orders: 0 },
-        { name: '9AM', orders: 0 },
-        { name: '12PM', orders: 0 },
-        { name: '3PM', orders: 0 },
-        { name: '6PM', orders: 78 },
-        { name: '9PM', orders: 112 },
+        { name: "6AM", orders: 0 },
+        { name: "9AM", orders: 0 },
+        { name: "12PM", orders: 0 },
+        { name: "3PM", orders: 0 },
+        { name: "6PM", orders: 78 },
+        { name: "9PM", orders: 112 },
       ],
       topItems: [
-        { name: "Old Fashioned", orders: 156, revenue: "$2,184", image: "🥃", change: "+12%" },
-        { name: "Signature Martini", orders: 134, revenue: "$1,876", image: "🍸", change: "+8%" },
-        { name: "Deviled Eggs", orders: 98, revenue: "$882", image: "🥚", change: "+15%" },
-        { name: "Bourbon Flight", orders: 87, revenue: "$1,305", image: "🥃", change: "+5%" },
-        { name: "Charcuterie Board", orders: 76, revenue: "$1,140", image: "🧀", change: "+10%" }
+        {
+          name: "Old Fashioned",
+          orders: 156,
+          revenue: "$2,184",
+          image: "🥃",
+          change: "+12%",
+        },
+        {
+          name: "Signature Martini",
+          orders: 134,
+          revenue: "$1,876",
+          image: "🍸",
+          change: "+8%",
+        },
+        {
+          name: "Deviled Eggs",
+          orders: 98,
+          revenue: "$882",
+          image: "🥚",
+          change: "+15%",
+        },
+        {
+          name: "Bourbon Flight",
+          orders: 87,
+          revenue: "$1,305",
+          image: "🥃",
+          change: "+5%",
+        },
+        {
+          name: "Charcuterie Board",
+          orders: 76,
+          revenue: "$1,140",
+          image: "🧀",
+          change: "+10%",
+        },
       ],
       performanceAlerts: [
-        { metric: "Cocktail Service Time", currentValue: 6.5, targetValue: 5.0, urgency: "low" as const, impact: "Speakeasy ambiance" },
-        { metric: "Bar Cost Percentage", currentValue: 22.8, targetValue: 22.0, urgency: "medium" as const, impact: "Bar profitability" }
+        {
+          metric: "Cocktail Service Time",
+          currentValue: 6.5,
+          targetValue: 5.0,
+          urgency: "low" as const,
+          impact: "Speakeasy ambiance",
+        },
+        {
+          metric: "Bar Cost Percentage",
+          currentValue: 22.8,
+          targetValue: 22.0,
+          urgency: "medium" as const,
+          impact: "Bar profitability",
+        },
       ],
       customerSatisfaction: {
         overall: 4.5,
@@ -153,52 +299,95 @@ export const resortDashboardData = {
         serviceSpeed: 4.2,
         cleanliness: 4.4,
         value: 4.1,
-        totalReviews: 567
+        totalReviews: 567,
       },
       operationalMetrics: {
         avgOrderPrepTime: 5.2,
         kitchenEfficiency: 89,
         wastagePercentage: 2.8,
         staffUtilization: 82,
-        peakHourCapacity: 94
-      }
+        peakHourCapacity: 94,
+      },
     },
-    '3': { // Cousin Wolf
-      name: 'Cousin Wolf',
+    "3": {
+      // Salty Rose Beach Bar
+      name: "Salty Rose Beach Bar",
       stats: {
         revenue: 9875,
         orders: 987,
         customers: 645,
-        avgOrder: 18.20,
-        trends: { revenue: 9.3, orders: 6.7, customers: 4.8, avgOrder: 4.2 }
+        avgOrder: 18.2,
+        trends: { revenue: 9.3, orders: 6.7, customers: 4.8, avgOrder: 4.2 },
       },
       revenueData: [
-        { name: 'Mon', value: 1200 },
-        { name: 'Tue', value: 1400 },
-        { name: 'Wed', value: 1500 },
-        { name: 'Thu', value: 1350 },
-        { name: 'Fri', value: 1600 },
-        { name: 'Sat', value: 1800 },
-        { name: 'Sun', value: 1650 },
+        { name: "Mon", value: 1200 },
+        { name: "Tue", value: 1400 },
+        { name: "Wed", value: 1500 },
+        { name: "Thu", value: 1350 },
+        { name: "Fri", value: 1600 },
+        { name: "Sat", value: 1800 },
+        { name: "Sun", value: 1650 },
       ],
       orderData: [
-        { name: '6AM', orders: 32 },
-        { name: '9AM', orders: 89 },
-        { name: '12PM', orders: 78 },
-        { name: '3PM', orders: 12 },
-        { name: '6PM', orders: 0 },
-        { name: '9PM', orders: 0 },
+        { name: "6AM", orders: 32 },
+        { name: "9AM", orders: 89 },
+        { name: "12PM", orders: 78 },
+        { name: "3PM", orders: 12 },
+        { name: "6PM", orders: 0 },
+        { name: "9PM", orders: 0 },
       ],
       topItems: [
-        { name: "Southern Breakfast Plate", orders: 189, revenue: "$2,457", image: "🍳", change: "+16%" },
-        { name: "Avocado Toast", orders: 145, revenue: "$1,595", image: "🥑", change: "+12%" },
-        { name: "Breakfast Burrito", orders: 112, revenue: "$1,232", image: "🌯", change: "+19%" },
-        { name: "Beignets", orders: 89, revenue: "$712", image: "🍩", change: "+8%" },
-        { name: "Fresh Squeezed OJ", orders: 156, revenue: "$624", image: "🍊", change: "+14%" }
+        {
+          name: "Southern Breakfast Plate",
+          orders: 189,
+          revenue: "$2,457",
+          image: "🍳",
+          change: "+16%",
+        },
+        {
+          name: "Avocado Toast",
+          orders: 145,
+          revenue: "$1,595",
+          image: "🥑",
+          change: "+12%",
+        },
+        {
+          name: "Breakfast Burrito",
+          orders: 112,
+          revenue: "$1,232",
+          image: "🌯",
+          change: "+19%",
+        },
+        {
+          name: "Beignets",
+          orders: 89,
+          revenue: "$712",
+          image: "🍩",
+          change: "+8%",
+        },
+        {
+          name: "Fresh Squeezed OJ",
+          orders: 156,
+          revenue: "$624",
+          image: "🍊",
+          change: "+14%",
+        },
       ],
       performanceAlerts: [
-        { metric: "Breakfast Service Speed", currentValue: 8.5, targetValue: 8.0, urgency: "low" as const, impact: "Morning guest experience" },
-        { metric: "Food Truck Efficiency", currentValue: 85.0, targetValue: 88.0, urgency: "medium" as const, impact: "Courtyard service" }
+        {
+          metric: "Breakfast Service Speed",
+          currentValue: 8.5,
+          targetValue: 8.0,
+          urgency: "low" as const,
+          impact: "Morning guest experience",
+        },
+        {
+          metric: "Food Truck Efficiency",
+          currentValue: 85.0,
+          targetValue: 88.0,
+          urgency: "medium" as const,
+          impact: "Courtyard service",
+        },
       ],
       customerSatisfaction: {
         overall: 4.3,
@@ -206,159 +395,163 @@ export const resortDashboardData = {
         serviceSpeed: 4.1,
         cleanliness: 4.2,
         value: 4.5,
-        totalReviews: 388
+        totalReviews: 388,
       },
       operationalMetrics: {
         avgOrderPrepTime: 7.5,
         kitchenEfficiency: 86,
         wastagePercentage: 4.8,
         staffUtilization: 79,
-        peakHourCapacity: 88
-      }
-    }
-  }
+        peakHourCapacity: 88,
+      },
+    },
+  },
 };
 
+// DB UUID aliases — map Supabase resort IDs to dashboard data keys
+(resortDashboardData as Record<string, unknown>)['b1c2d3e4-5678-90ab-cdef-aabbccddeeff'] = resortDashboardData['innisfree-piazza-pizza'];
+(resortDashboardData as Record<string, unknown>)['c6543244-a85d-4254-b7a6-9a3610ef5c16'] = resortDashboardData['pensacola-beach-resort'];
+
 // Legacy export for backward compatibility
-export const storeData = resortDashboardData['lily-hall-pensacola'];
+export const storeData = resortDashboardData["pensacola-beach-resort"];
 
 export const stores = [
-  { id: 'all', name: 'All Stores', count: 3 },
-  { id: '1', name: 'Brother Fox', count: 8 },
-  { id: '2', name: 'Sister Hen', count: 12 },
-  { id: '3', name: 'Cousin Wolf', count: 5 },
+  { id: "all", name: "All Stores", count: 3 },
+  { id: "1", name: "Windrose Restaurant", count: 8 },
+  { id: "2", name: "Tiki Bar", count: 12 },
+  { id: "3", name: "Salty Rose Beach Bar", count: 5 },
 ];
 
 export const employeeDeliveries = [
   {
     id: 1,
-    name: 'Sarah M.',
-    avatar: 'SM',
+    name: "Sarah M.",
+    avatar: "SM",
     deliveries: 23,
     onTime: 21,
     rating: 4.8,
-    earnings: '$184',
-    status: 'active',
-    color: 'bg-blue-500'
+    earnings: "$184",
+    status: "active",
+    color: "bg-blue-500",
   },
   {
     id: 2,
-    name: 'Mike R.',
-    avatar: 'MR',
+    name: "Mike R.",
+    avatar: "MR",
     deliveries: 18,
     onTime: 17,
     rating: 4.6,
-    earnings: '$144',
-    status: 'active',
-    color: 'bg-green-500'
+    earnings: "$144",
+    status: "active",
+    color: "bg-green-500",
   },
   {
     id: 3,
-    name: 'Emma K.',
-    avatar: 'EK',
+    name: "Emma K.",
+    avatar: "EK",
     deliveries: 15,
     onTime: 14,
     rating: 4.9,
-    earnings: '$120',
-    status: 'break',
-    color: 'bg-purple-500'
+    earnings: "$120",
+    status: "break",
+    color: "bg-purple-500",
   },
   {
     id: 4,
-    name: 'James L.',
-    avatar: 'JL',
+    name: "James L.",
+    avatar: "JL",
     deliveries: 12,
     onTime: 11,
     rating: 4.5,
-    earnings: '$96',
-    status: 'active',
-    color: 'bg-orange-500'
+    earnings: "$96",
+    status: "active",
+    color: "bg-orange-500",
   },
   {
     id: 5,
-    name: 'Lisa P.',
-    avatar: 'LP',
+    name: "Lisa P.",
+    avatar: "LP",
     deliveries: 9,
     onTime: 8,
     rating: 4.7,
-    earnings: '$72',
-    status: 'offline',
-    color: 'bg-pink-500'
+    earnings: "$72",
+    status: "offline",
+    color: "bg-pink-500",
   },
   {
     id: 6,
-    name: 'Alex T.',
-    avatar: 'AT',
+    name: "Alex T.",
+    avatar: "AT",
     deliveries: 16,
     onTime: 15,
     rating: 4.4,
-    earnings: '$128',
-    status: 'active',
-    color: 'bg-indigo-500'
+    earnings: "$128",
+    status: "active",
+    color: "bg-indigo-500",
   },
   {
     id: 7,
-    name: 'Sofia H.',
-    avatar: 'SH',
+    name: "Sofia H.",
+    avatar: "SH",
     deliveries: 11,
     onTime: 10,
     rating: 4.6,
-    earnings: '$88',
-    status: 'break',
-    color: 'bg-teal-500'
-  }
+    earnings: "$88",
+    status: "break",
+    color: "bg-teal-500",
+  },
 ];
 
 export const staffPerformance = [
   {
     id: 1,
-    name: 'Carlos M.',
-    role: 'Head Chef',
-    shift: 'Evening',
+    name: "Carlos M.",
+    role: "Head Chef",
+    shift: "Evening",
     efficiency: 94,
     ordersCompleted: 127,
     avgPrepTime: 8.5,
     rating: 4.9,
-    store: 'Brother Fox'
+    store: "Windrose Restaurant",
   },
   {
     id: 2,
-    name: 'Maria G.',
-    role: 'Bartender',
-    shift: 'Evening',
+    name: "Maria G.",
+    role: "Bartender",
+    shift: "Evening",
     efficiency: 87,
     ordersCompleted: 98,
     avgPrepTime: 4.2,
     rating: 4.6,
-    store: 'Sister Hen'
+    store: "Tiki Bar",
   },
   {
     id: 3,
-    name: 'Ahmed K.',
-    role: 'Breakfast Cook',
-    shift: 'Morning',
+    name: "Ahmed K.",
+    role: "Breakfast Cook",
+    shift: "Morning",
     efficiency: 91,
     ordersCompleted: 156,
     avgPrepTime: 6.8,
     rating: 4.7,
-    store: 'Cousin Wolf'
-  }
+    store: "Salty Rose Beach Bar",
+  },
 ];
 
 export const costAnalysis = {
   foodCost: {
     current: 28.5,
     target: 30.0,
-    trend: -1.2
+    trend: -1.2,
   },
   laborCost: {
     current: 32.8,
     target: 30.0,
-    trend: +2.1
+    trend: +2.1,
   },
   overheadCost: {
     current: 15.7,
     target: 18.0,
-    trend: -0.8
-  }
+    trend: -0.8,
+  },
 };

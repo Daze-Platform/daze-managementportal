@@ -1,8 +1,8 @@
-import React from 'react';
-import { MenuCard } from './MenuCard';
-import { Menu } from '@/pages/MenuManagement';
-import { motion } from 'framer-motion';
-import { UtensilsCrossed } from 'lucide-react';
+import React from "react";
+import { MenuCard } from "./MenuCard";
+import { Menu } from "@/pages/MenuManagement";
+import { motion } from "framer-motion";
+import { UtensilsCrossed } from "lucide-react";
 
 interface MenuListProps {
   menus: Menu[];
@@ -16,21 +16,21 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.05 }
-  }
+    transition: { staggerChildren: 0.05 },
+  },
 };
 
 const item = {
   hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.2 } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.2 } },
 };
 
-export const MenuList: React.FC<MenuListProps> = ({ 
-  menus, 
-  onEditMenu, 
-  onToggleMenuStatus, 
-  onDeleteMenu, 
-  onAssignStore 
+export const MenuList: React.FC<MenuListProps> = ({
+  menus,
+  onEditMenu,
+  onToggleMenuStatus,
+  onDeleteMenu,
+  onAssignStore,
 }) => {
   if (menus.length === 0) {
     return (
@@ -49,7 +49,7 @@ export const MenuList: React.FC<MenuListProps> = ({
   }
 
   return (
-    <motion.div 
+    <motion.div
       variants={container}
       initial="hidden"
       animate="show"

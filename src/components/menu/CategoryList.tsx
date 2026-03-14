@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { CategoryCard } from './CategoryCard';
+import React from "react";
+import { CategoryCard } from "./CategoryCard";
 
 interface MenuCategory {
   id: string;
@@ -32,7 +31,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
   onDeleteCategory,
   onAddItem,
   onEditItem,
-  onDeleteItem
+  onDeleteItem,
 }) => {
   return (
     <div className="space-y-8">

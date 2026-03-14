@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
-import { StoreForm } from '@/components/stores/StoreForm';
-import { StoreDetails } from '@/components/stores/StoreDetails';
-import { StoresList } from '@/components/stores/StoresList';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { useStoreManagement } from '@/hooks/useStoreManagement';
+import React, { useState } from "react";
+import { StoreForm } from "@/components/stores/StoreForm";
+import { StoreDetails } from "@/components/stores/StoreDetails";
+import { StoresList } from "@/components/stores/StoresList";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { useStoreManagement } from "@/hooks/useStoreManagement";
 
 export const Stores = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,7 +22,7 @@ export const Stores = () => {
   } = useStoreManagement();
 
   // Show store details view
-  if (view === 'details' && selectedStore) {
+  if (view === "details" && selectedStore) {
     return (
       <div className="relative">
         <div className="lg:hidden">
@@ -40,7 +39,7 @@ export const Stores = () => {
   }
 
   // Show form view
-  if (view === 'form') {
+  if (view === "form") {
     return (
       <div className="relative">
         <div className="lg:hidden">
