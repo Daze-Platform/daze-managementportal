@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { RightNowPanel } from "@/components/dashboard/RightNowPanel";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
@@ -87,6 +88,9 @@ export const Dashboard = () => {
             setSelectedDateRange={setSelectedDateRange}
           />
         </div>
+
+        {/* Right Now Panel */}
+        <RightNowPanel />
 
         {/* Stats Cards */}
         <div className="bg-white rounded-xl border border-border/50 p-4 sm:p-6">

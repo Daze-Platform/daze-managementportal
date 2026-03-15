@@ -19,6 +19,7 @@ export interface Order {
   scheduledFor?: string;
   isVisible?: boolean;
   locationType?: "Room" | "Beach" | "Pool" | "Table";
+  createdAt?: string;
 }
 
 export interface OrderData {
