@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,7 +43,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { DateRange } from "react-day-picker";
 import { format, subDays, formatDistanceToNow } from "date-fns";
-import { reportsData } from "@/data/reportsData";
+import { useReportsData } from "@/hooks/useReportsData";
 import {
   BarChart3,
   TrendingUp,
@@ -118,10 +119,7 @@ export const Reports = () => {
     new Set(REPORT_SECTIONS.map((s) => s.id)),
   );
 
-  // Get store-specific data
-  const currentStoreData =
-    reportsData[selectedStore as keyof typeof reportsData] ||
-    reportsData["all"];
+  const { data: reportsData, loading, error } = useReportsData();
 
   // Get all stores regardless of resort assignment and remove duplicates
   const availableStores = allStores.filter(
@@ -149,7 +147,10 @@ export const Reports = () => {
   const formatDateRangeForReports = () => {
     if (!selectedDateRange?.from) return "No date selected";
     if (selectedDateRange.from && selectedDateRange.to) {
-      return `${format(selectedDateRange.from, "MMM dd, yyyy")} - ${format(selectedDateRange.to, "MMM dd, yyyy")}`;
+      return `${format(selectedDateRange.from, "MMM dd, yyyy")} - ${format(
+        selectedDateRange.to,
+        "MMM dd, yyyy",
+      )}`;
     }
     return format(selectedDateRange.from, "MMM dd, yyyy");
   };
@@ -351,7 +352,7 @@ export const Reports = () => {
                   storeName,
                   dateRange: selectedDateRange,
                   visibleSections,
-                  data: currentStoreData,
+                  data: reportsData,
                 });
               }}
             >
@@ -437,6 +438,15 @@ export const Reports = () => {
       </motion.div>
 
       {/* Content */}
+      {loading ? (
+        <div className='flex items-center justify-center h-64'>
+            <p>Loading reports...</p>
+        </div>
+      ) : error ? (
+        <div className='flex items-center justify-center h-64'>
+            <p>Error loading reports.</p>
+        </div>
+      ) : reportsData ? (
       <div>
         <motion.div
           variants={containerVariants}
@@ -465,7 +475,7 @@ export const Reports = () => {
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
                     <CustomerAnalyticsSection
-                      data={currentStoreData.customerAnalytics}
+                      data={reportsData.customerAnalytics}
                     />
                   </div>
                 </AccordionContent>
@@ -510,7 +520,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <RevenueSection data={currentStoreData.revenue} />
+                    <RevenueSection data={reportsData.revenue} />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -530,7 +540,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <PaymentTypesSection data={currentStoreData.paymentTypes} />
+                    <PaymentTypesSection data={reportsData.paymentTypes} />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -550,7 +560,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <CancellationSection data={currentStoreData.cancellations} />
+                    <CancellationSection data={[]} />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -638,6 +648,7 @@ export const Reports = () => {
           )}
         </motion.div>
       </div>
+      ) : null}
     </div>
   );
 };

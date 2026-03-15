@@ -97,14 +97,20 @@ export const TeamSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
         <CardHeader className="pb-3 relative z-10">
-          <div className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: -10 }}
-              className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5"
-            >
-              <Users className="w-5 h-5 text-blue-600" />
-            </motion.div>
-            <CardTitle className="text-lg">Team Performance</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: -10 }}
+                className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5"
+              >
+                <Users className="w-5 h-5 text-blue-600" />
+              </motion.div>
+              <CardTitle className="text-lg">Team Performance</CardTitle>
+            </div>
+            <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
+              Sample data
+            </div>
           </div>
           <p className="text-sm text-gray-600">
             Staff productivity and management insights

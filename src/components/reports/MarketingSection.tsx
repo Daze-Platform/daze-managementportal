@@ -76,14 +76,20 @@ export const MarketingSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
         <CardHeader className="pb-3 relative z-10">
-          <div className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 15 }}
-              className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
-            >
-              <Target className="w-4 h-4 text-green-600" />
-            </motion.div>
-            <CardTitle className="text-lg">Marketing Performance</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 15 }}
+                className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
+              >
+                <Target className="w-4 h-4 text-green-600" />
+              </motion.div>
+              <CardTitle className="text-lg">Marketing Performance</CardTitle>
+            </div>
+            <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
+              Sample data
+            </div>
           </div>
           <p className="text-sm text-gray-600">
             Customer engagement and campaign effectiveness

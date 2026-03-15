@@ -36,15 +36,21 @@ export const DowntimeSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
         <CardHeader className="pb-3 relative z-10">
-          <div className="flex items-center gap-2">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center"
-            >
-              <Clock className="w-4 h-4 text-gray-600" />
-            </motion.div>
-            <CardTitle className="text-lg">Store Downtime</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center"
+              >
+                <Clock className="w-4 h-4 text-gray-600" />
+              </motion.div>
+              <CardTitle className="text-lg">Store Downtime</CardTitle>
+            </div>
+            <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
+              Sample data
+            </div>
           </div>
           <p className="text-sm text-gray-600">
             Time when stores were temporarily closed
