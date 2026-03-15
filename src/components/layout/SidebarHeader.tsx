@@ -31,7 +31,7 @@ export const SidebarHeader = ({
               {/* D Logo - wrapped in white rounded container for visibility on dark bg */}
               <div className="bg-white rounded-lg p-1 transition-opacity duration-200 lg:group-hover:opacity-0">
                 <img
-                  src="/daze-logo-d2.png"
+                  src="/daze-logo.png"
                   alt="DAZE Logo"
                   className="h-5 w-auto object-contain"
                 />
@@ -47,7 +47,7 @@ export const SidebarHeader = ({
             <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 flex-shrink-0">
               <div className="bg-white rounded-lg p-1">
                 <img
-                  src="/daze-logo-d2.png"
+                  src="/daze-logo.png"
                   alt="DAZE Logo"
                   className="h-5 sm:h-6 md:h-7 w-auto object-contain"
                 />

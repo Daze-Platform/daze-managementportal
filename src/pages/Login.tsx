@@ -154,9 +154,9 @@ const Login = () => {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img
-                  src="/daze-logo-d2.png"
+                  src="/daze-logo.png"
                   alt="Daze Logo"
-                  className="h-20 w-auto object-contain drop-shadow-md"
+                  className="h-16 w-auto object-contain drop-shadow-md"
                 />
               </motion.div>
             </ScaleIn>
