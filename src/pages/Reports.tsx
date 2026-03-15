@@ -463,7 +463,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <CustomerAnalyticsSection
                       data={currentStoreData.customerAnalytics}
                     />
@@ -486,7 +486,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <ProductMixSection
                       selectedStore={selectedStore}
                       selectedDateRange={selectedDateRange}
@@ -509,7 +509,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <RevenueSection data={currentStoreData.revenue} />
                   </div>
                 </AccordionContent>
@@ -529,7 +529,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <PaymentTypesSection data={currentStoreData.paymentTypes} />
                   </div>
                 </AccordionContent>
@@ -549,7 +549,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <CancellationSection data={currentStoreData.cancellations} />
                   </div>
                 </AccordionContent>
@@ -569,7 +569,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <DowntimeSection />
                   </div>
                 </AccordionContent>
@@ -589,7 +589,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <MarketingSection />
                   </div>
                 </AccordionContent>
@@ -609,7 +609,7 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto w-full">
                     <TeamSection />
                   </div>
                 </AccordionContent>
