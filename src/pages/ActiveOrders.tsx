@@ -9,6 +9,7 @@ import { useOrderManagement } from "@/hooks/useOrderManagement";
 import { calculateTotalRevenue } from "@/utils/orderCalculations";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useFilters } from "@/contexts/FilterContext";
+import { useEightySixCount } from "@/components/orders/EightysSixBoard";
 import { useResort } from "@/contexts/DestinationContext";
 import { useStores } from "@/contexts/StoresContext";
 
@@ -45,6 +46,8 @@ export const ActiveOrders = () => {
     getOrderTypeCount,
   } = useOrderManagement();
 
+  const eightySixCount = useEightySixCount();
+
   const { stores: allStores, getStoresByDestination } = useStores();
   const tenantStores = currentResort?.id ? getStoresByDestination(currentResort.id) : allStores;
   const stores = [
@@ -76,6 +79,11 @@ export const ActiveOrders = () => {
       id: "scheduled",
       label: "Scheduled",
       count: getOrderTypeCount("scheduled") || 0,
+    },
+    {
+      id: "eighty-six",
+      label: "86 Board",
+      count: eightySixCount,
     },
   ];
 
