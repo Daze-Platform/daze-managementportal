@@ -299,9 +299,12 @@ export const StoreForm = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-full h-screen sm:w-[90vw] sm:h-[90vh] sm:max-w-[600px] sm:max-h-[800px] m-0 sm:m-auto p-0 rounded-none sm:rounded-lg border-0 sm:border [&>button]:hidden">
-        <div className="flex flex-col h-screen sm:h-full bg-background">
+        <div className="flex flex-col h-[100dvh] sm:h-full bg-background">
           {/* Fixed Header */}
-          <div className="flex-shrink-0 px-4 py-4 border-b bg-background relative z-20">
+          <div
+            className="flex-shrink-0 px-4 py-4 border-b bg-background relative z-20"
+            style={{ paddingTop: "calc(1rem + env(safe-area-inset-top))" }}
+          >
             <DialogHeader>
               <DialogTitle className="text-lg font-semibold pr-8">
                 {store ? "Edit Venue" : "Add New Venue"}
@@ -309,7 +312,8 @@ export const StoreForm = ({
             </DialogHeader>
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 p-1 rounded-full hover:bg-muted transition-colors z-10"
+              className="absolute right-4 p-1 rounded-full hover:bg-muted transition-colors z-10"
+              style={{ top: "calc(1rem + env(safe-area-inset-top))" }}
               aria-label="Close"
             >
               <X className="h-5 w-5" />
