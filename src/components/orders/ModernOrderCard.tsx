@@ -157,7 +157,7 @@ export const ModernOrderCard = ({
                 <OrderCardAvatar customer={order.customer} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-foreground">
+                    <h3 className="font-bold text-base text-foreground truncate max-w-[120px]">
                       #{order.id}
                     </h3>
                     {order.priority === "urgent" && (
