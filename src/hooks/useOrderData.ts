@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Order {
   id: string;
@@ -31,585 +32,354 @@ export interface OrderData {
   scheduled: Order[];
 }
 
-const staticOrderData: OrderData = {
-  new: [], // Start with empty new orders
-  progress: [
-    {
-      id: "6789988",
-      items: "3 items, $78.00",
-      type: "Delivery",
-      time: "1m ago",
-      deliverTime: "Deliver today, at 6:50PM",
-      icon: "🚚",
-      iconBg: "bg-purple-500",
-      customer: "John Doe",
-      estimatedTime: "15 min",
-      priority: "high",
-      platformFee: "$2.50",
-      storeId: "1",
-      storeName: "Windrose Restaurant",
-    },
-    {
-      id: "9210943",
-      items: "4 items, $56.00",
-      type: "Pick Up",
-      time: "1m ago",
-      deliverTime: "Pickup today, at 7:30PM",
-      icon: "🏪",
-      iconBg: "bg-green-600",
-      customer: "Jane Smith",
-      estimatedTime: "10 min",
-      priority: "normal",
-      platformFee: "$1.25",
-      storeId: "2",
-      storeName: "Tiki Bar",
-    },
-    {
-      id: "3456789",
-      items: "2 items, $18.50",
-      type: "Pick Up",
-      time: "5m ago",
-      deliverTime: "Pickup today, at 8:30AM",
-      icon: "🏪",
-      iconBg: "bg-green-600",
-      customer: "Emma Wilson",
-      estimatedTime: "8 min",
-      priority: "normal",
-      platformFee: "$1.75",
-      storeId: "3",
-      storeName: "Salty Rose Beach Bar",
-    },
-  ],
-  ready: [
-    {
-      id: "6789989",
-      items: "2 items, $64.00",
-      type: "Delivery",
-      time: "1m ago",
-      deliverTime: "Deliver today, at 7:15PM",
-      icon: "🚚",
-      iconBg: "bg-purple-500",
-      customer: "Marcus Chen",
-      estimatedTime: "5 min",
-      priority: "urgent",
-      platformFee: "$2.50",
-      storeId: "1",
-      storeName: "Windrose Restaurant",
-      courier: "Antonio T.",
-    },
-    {
-      id: "9210944",
-      items: "5 items, $72.00",
-      type: "Pick Up",
-      time: "1m ago",
-      deliverTime: "Pickup today, at 8:45PM",
-      icon: "🏪",
-      iconBg: "bg-green-600",
-      customer: "Rachel Green",
-      estimatedTime: "Ready",
-      priority: "normal",
-      platformFee: "$1.25",
-      storeId: "2",
-      storeName: "Tiki Bar",
-    },
-    {
-      id: "4567890",
-      items: "3 items, $24.50",
-      type: "Pick Up",
-      time: "8m ago",
-      deliverTime: "Pickup today, at 9:00AM",
-      icon: "🏪",
-      iconBg: "bg-green-600",
-      customer: "David Brown",
-      estimatedTime: "Ready",
-      priority: "normal",
-      platformFee: "$0.75",
-      storeId: "3",
-      storeName: "Salty Rose Beach Bar",
-    },
-  ],
-  fulfillment: [
-    {
-      id: "8765432",
-      items: "4 items, $92.00",
-      type: "Delivery",
-      time: "15m ago",
-      deliverTime: "Delivered today, at 6:30PM",
-      icon: "✅",
-      iconBg: "bg-green-500",
-      status: "Delivered",
-      customer: "Mike Johnson",
-      estimatedTime: "Completed",
-      priority: "normal",
-      platformFee: "$1.75",
-      storeId: "1",
-      storeName: "Windrose Restaurant",
-      courier: "Maria S.",
-    },
-    {
-      id: "5432109",
-      items: "3 items, $48.00",
-      type: "Pick Up",
-      time: "22m ago",
-      deliverTime: "Picked up today, at 9:15PM",
-      icon: "✅",
-      iconBg: "bg-blue-500",
-      status: "Picked Up",
-      customer: "Sarah Wilson",
-      estimatedTime: "Completed",
-      priority: "normal",
-      platformFee: "$2.00",
-      storeId: "2",
-      storeName: "Tiki Bar",
-    },
-  ],
-  fulfilled: [
-    {
-      id: "1111111",
-      items: "5 items, $118.00",
-      type: "Delivery",
-      time: "45m ago",
-      deliverTime: "Delivered today, at 5:45PM",
-      icon: "✅",
-      iconBg: "bg-green-500",
-      status: "Delivered",
-      customer: "Jennifer Lee",
-      estimatedTime: "Completed",
-      priority: "normal",
-      platformFee: "$2.25",
-      storeId: "1",
-      storeName: "Windrose Restaurant",
-      courier: "Carlos R.",
-    },
-    {
-      id: "2222222",
-      items: "4 items, $52.00",
-      type: "Pick Up",
-      time: "1h ago",
-      deliverTime: "Picked up today, at 10:30PM",
-      icon: "✅",
-      iconBg: "bg-blue-500",
-      status: "Picked Up",
-      customer: "Michael Brown",
-      estimatedTime: "Completed",
-      priority: "normal",
-      platformFee: "$1.50",
-      storeId: "2",
-      storeName: "Tiki Bar",
-    },
-    {
-      id: "3333333",
-      items: "2 items, $19.50",
-      type: "Pick Up",
-      time: "1h 15m ago",
-      deliverTime: "Picked up today, at 10:15AM",
-      icon: "✅",
-      iconBg: "bg-blue-500",
-      status: "Picked Up",
-      customer: "Amanda Davis",
-      estimatedTime: "Completed",
-      priority: "normal",
-      platformFee: "$1.00",
-      storeId: "3",
-      storeName: "Salty Rose Beach Bar",
-    },
-  ],
-  scheduled: [
-    {
-      id: "7777777",
-      items: "3 items, $86.00",
-      type: "Delivery",
-      time: "30m ago",
-      deliverTime: "Scheduled for tomorrow, at 7:00PM",
-      icon: "📅",
-      iconBg: "bg-purple-600",
-      customer: "Rachel Green",
-      estimatedTime: "Tomorrow 7:00PM",
-      priority: "normal",
-      platformFee: "$2.25",
-      storeId: "1",
-      storeName: "Windrose Restaurant",
-      scheduledFor: "Tomorrow, 7:00PM",
-    },
-    {
-      id: "8888888",
-      items: "6 items, $84.00",
-      type: "Pick Up",
-      time: "1h ago",
-      deliverTime: "Scheduled for today, at 9:30PM",
-      icon: "📅",
-      iconBg: "bg-purple-600",
-      customer: "Kevin Martinez",
-      estimatedTime: "Today 9:30PM",
-      priority: "normal",
-      platformFee: "$1.75",
-      storeId: "2",
-      storeName: "Tiki Bar",
-      scheduledFor: "Today, 9:30PM",
-    },
-    {
-      id: "9999999",
-      items: "2 items, $22.00",
-      type: "Pick Up",
-      time: "2h ago",
-      deliverTime: "Scheduled for Saturday, at 9:00AM",
-      icon: "📅",
-      iconBg: "bg-purple-600",
-      customer: "Lisa Thompson",
-      estimatedTime: "Saturday 9:00AM",
-      priority: "high",
-      platformFee: "$1.25",
-      storeId: "3",
-      storeName: "Salty Rose Beach Bar",
-      scheduledFor: "Saturday, 9:00AM",
-    },
-  ],
+// Map DB status → UI tab
+const STATUS_TO_TAB: Record<string, keyof OrderData> = {
+  pending: "new",
+  confirmed: "new",
+  preparing: "progress",
+  ready: "ready",
+  delivering: "fulfillment",
+  delivered: "fulfilled",
 };
 
-// Available couriers for assignment
-const availableCouriers = [
-  "Antonio T.",
-  "Maria S.",
-  "Carlos R.",
-  "Diego M.",
-  "Sofia L.",
-  "Miguel P.",
-  "Ana R.",
-  "Luis F.",
-];
-
-// Function to generate random order IDs
-const generateRandomOrderId = () => {
-  return Math.floor(Math.random() * 9000000) + 1000000; // 7-digit random number
+// Map UI tab → DB status (for updates)
+const TAB_TO_STATUS: Record<string, string> = {
+  new: "pending",
+  progress: "preparing",
+  ready: "ready",
+  fulfillment: "delivering",
+  fulfilled: "delivered",
 };
 
-// Orders to add with randomized IDs - Added more orders per store
-const initialNewOrders: Order[] = [
-  // Windrose Restaurant orders (dinner restaurant)
-  {
-    id: generateRandomOrderId().toString(),
-    items: "2 items, $68.00",
-    type: "Delivery",
-    time: "Just now",
-    deliverTime: "Deliver today, at 7:15PM",
-    icon: "🚚",
-    iconBg: "bg-purple-500",
-    customer: "Alice Johnson",
-    estimatedTime: "25 min",
-    priority: "normal",
-    platformFee: "$2.00",
-    storeId: "1",
-    storeName: "Windrose Restaurant",
-    isVisible: false,
-    locationType: "Room",
-  },
-  {
-    id: generateRandomOrderId().toString(),
-    items: "4 items, $124.00",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 7:30PM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "David Wilson",
-    estimatedTime: "12 min",
-    priority: "normal",
-    platformFee: "$1.50",
-    storeId: "1",
-    storeName: "Windrose Restaurant",
-    isVisible: false,
-    locationType: "Table",
-  },
-  {
-    id: generateRandomOrderId().toString(),
-    items: "3 items, $86.00",
-    type: "Delivery",
-    time: "Just now",
-    deliverTime: "Deliver today, at 7:45PM",
-    icon: "🚚",
-    iconBg: "bg-purple-500",
-    customer: "Sarah Connor",
-    estimatedTime: "20 min",
-    priority: "high",
-    platformFee: "$1.25",
-    storeId: "1",
-    storeName: "Windrose Restaurant",
-    isVisible: false,
-    locationType: "Pool",
-  },
+function mapOrderType(orderType: string): string {
+  switch (orderType) {
+    case "beach":
+    case "pool":
+    case "room_service":
+      return "Delivery";
+    default:
+      return "Pick Up";
+  }
+}
 
-  // Tiki Bar orders (speakeasy bar)
-  {
-    id: generateRandomOrderId().toString(),
-    items: "3 items, $42.00",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 8:20PM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "Bob Smith",
-    estimatedTime: "15 min",
-    priority: "normal",
-    platformFee: "$1.00",
-    storeId: "2",
-    storeName: "Tiki Bar",
-    isVisible: false,
-    locationType: "Beach",
-  },
-  {
-    id: generateRandomOrderId().toString(),
-    items: "5 items, $68.00",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 9:35PM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "Eva Martinez",
-    estimatedTime: "22 min",
-    priority: "urgent",
-    platformFee: "$1.90",
-    storeId: "2",
-    storeName: "Tiki Bar",
-    isVisible: false,
-    locationType: "Room",
-  },
-  {
-    id: generateRandomOrderId().toString(),
-    items: "4 items, $56.00",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 10:00PM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "Mike Johnson",
-    estimatedTime: "18 min",
-    priority: "normal",
-    platformFee: "$2.25",
-    storeId: "2",
-    storeName: "Tiki Bar",
-    isVisible: false,
-    locationType: "Table",
-  },
+function mapLocationType(
+  orderType: string,
+): "Room" | "Beach" | "Pool" | "Table" {
+  switch (orderType) {
+    case "beach":
+      return "Beach";
+    case "pool":
+      return "Pool";
+    case "room_service":
+      return "Room";
+    default:
+      return "Table";
+  }
+}
 
-  // Salty Rose Beach Bar orders (breakfast food truck)
-  {
-    id: generateRandomOrderId().toString(),
-    items: "2 items, $15.00",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 8:25AM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "Carol Davis",
-    estimatedTime: "8 min",
+function mapIcon(orderType: string): { icon: string; iconBg: string } {
+  return mapOrderType(orderType) === "Delivery"
+    ? { icon: "\u{1F69A}", iconBg: "bg-purple-500" }
+    : { icon: "\u{1F3EA}", iconBg: "bg-green-600" };
+}
+
+function formatTimeAgo(dateStr: string): string {
+  const diffMin = Math.floor(
+    (Date.now() - new Date(dateStr).getTime()) / 60000,
+  );
+  if (diffMin < 1) return "Just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHrs = Math.floor(diffMin / 60);
+  if (diffHrs < 24) return `${diffHrs}h ago`;
+  return `${Math.floor(diffHrs / 24)}d ago`;
+}
+
+function formatDeliverTime(orderType: string, createdAt: string): string {
+  const uiType = mapOrderType(orderType);
+  const date = new Date(createdAt);
+  const timeStr = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const isToday = date.toDateString() === new Date().toDateString();
+  const dayLabel = isToday
+    ? "today"
+    : date.toLocaleDateString([], { weekday: "short" });
+  return uiType === "Delivery"
+    ? `Deliver ${dayLabel}, at ${timeStr}`
+    : `Pickup ${dayLabel}, at ${timeStr}`;
+}
+
+function formatCents(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+interface DbOrder {
+  id: string;
+  order_number: number;
+  status: string;
+  order_type: string;
+  total_cents: number;
+  subtotal_cents: number;
+  guest_id: string | null;
+  guest_location: unknown;
+  created_at: string;
+  updated_at: string;
+  estimated_ready_at: string | null;
+  tenant_id: string;
+  guests?: { name: string | null } | null;
+  order_items?: Array<{ name: string; quantity: number }>;
+}
+
+function transformDbOrder(dbOrder: DbOrder): Order {
+  const uiType = mapOrderType(dbOrder.order_type);
+  let { icon, iconBg } = mapIcon(dbOrder.order_type);
+
+  // Build items string
+  const itemCount = dbOrder.order_items?.length ?? 0;
+  const itemsStr =
+    itemCount > 0
+      ? `${itemCount} item${itemCount > 1 ? "s" : ""}, ${formatCents(dbOrder.total_cents)}`
+      : `Order #${dbOrder.order_number}, ${formatCents(dbOrder.total_cents)}`;
+
+  const customer =
+    dbOrder.guests?.name || `Guest #${dbOrder.order_number}`;
+
+  // Estimated time
+  let estimatedTime = "15 min";
+  if (dbOrder.status === "ready") estimatedTime = "Ready";
+  if (dbOrder.status === "delivered" || dbOrder.status === "delivering")
+    estimatedTime = "Completed";
+  if (dbOrder.estimated_ready_at) {
+    const diffMin = Math.max(
+      0,
+      Math.round(
+        (new Date(dbOrder.estimated_ready_at).getTime() - Date.now()) / 60000,
+      ),
+    );
+    estimatedTime = diffMin > 0 ? `${diffMin} min` : "Ready";
+  }
+
+  // Completed orders get check icon
+  if (dbOrder.status === "delivered") {
+    icon = "\u2705";
+    iconBg = uiType === "Delivery" ? "bg-green-500" : "bg-blue-500";
+  }
+
+  return {
+    id: dbOrder.id,
+    items: itemsStr,
+    type: uiType,
+    time: formatTimeAgo(dbOrder.created_at),
+    deliverTime: formatDeliverTime(dbOrder.order_type, dbOrder.created_at),
+    icon,
+    iconBg,
+    status:
+      dbOrder.status === "delivered"
+        ? uiType === "Delivery"
+          ? "Delivered"
+          : "Picked Up"
+        : undefined,
+    customer,
+    estimatedTime,
     priority: "normal",
-    platformFee: "$0.75",
-    storeId: "3",
-    storeName: "Salty Rose Beach Bar",
-    isVisible: false,
-    locationType: "Pool",
-  },
-  {
-    id: generateRandomOrderId().toString(),
-    items: "3 items, $22.50",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 9:50AM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "James Rodriguez",
-    estimatedTime: "10 min",
-    priority: "normal",
-    platformFee: "$1.00",
-    storeId: "3",
-    storeName: "Salty Rose Beach Bar",
-    isVisible: false,
-    locationType: "Beach",
-  },
-  {
-    id: generateRandomOrderId().toString(),
-    items: "4 items, $28.00",
-    type: "Pick Up",
-    time: "Just now",
-    deliverTime: "Pickup today, at 10:30AM",
-    icon: "🏪",
-    iconBg: "bg-green-600",
-    customer: "Lisa Thompson",
-    estimatedTime: "12 min",
-    priority: "high",
-    platformFee: "$1.25",
-    storeId: "3",
-    storeName: "Salty Rose Beach Bar",
-    isVisible: false,
-    locationType: "Room",
-  },
-];
+    platformFee: formatCents(Math.round(dbOrder.total_cents * 0.03)),
+    isVisible: true,
+    locationType: mapLocationType(dbOrder.order_type),
+    createdAt: dbOrder.created_at,
+  };
+}
+
+function groupOrdersByTab(orders: DbOrder[]): OrderData {
+  const result: OrderData = {
+    new: [],
+    progress: [],
+    ready: [],
+    fulfillment: [],
+    fulfilled: [],
+    scheduled: [],
+  };
+
+  for (const dbOrder of orders) {
+    if (dbOrder.status === "cancelled") continue;
+    const tab = STATUS_TO_TAB[dbOrder.status] || "new";
+    result[tab].push(transformDbOrder(dbOrder));
+  }
+
+  // Sort each tab: newest first
+  for (const tab of Object.keys(result) as Array<keyof OrderData>) {
+    result[tab].sort((a, b) => {
+      const aT = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bT = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bT - aT;
+    });
+  }
+
+  return result;
+}
 
 export const useOrderData = () => {
-  const [orderData, setOrderData] = useState<OrderData>(staticOrderData);
+  const [orderData, setOrderData] = useState<OrderData>({
+    new: [],
+    progress: [],
+    ready: [],
+    fulfillment: [],
+    fulfilled: [],
+    scheduled: [],
+  });
 
-  const generateInitialOrders = useCallback(() => {
-    console.log(
-      "Generating initial orders for ALL stores - immediately visible",
-    );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sb = supabase as any;
 
-    // Generate orders for ALL stores and make them immediately visible
-    const ordersWithFreshIds = initialNewOrders.map((order) => ({
-      ...order,
-      id: generateRandomOrderId().toString(),
-      isVisible: true, // All orders immediately visible for filtering
-    }));
+  const fetchOrders = useCallback(async () => {
+    try {
+      const { data, error } = await sb
+        .from("orders")
+        .select("*, guests(name), order_items(name, quantity)")
+        .neq("status", "cancelled")
+        .order("created_at", { ascending: false });
 
-    console.log(
-      "Generated orders:",
-      ordersWithFreshIds.map((o) => ({
-        id: o.id,
-        storeId: o.storeId,
-        storeName: o.storeName,
-        customer: o.customer,
-      })),
-    );
+      if (error) {
+        console.error("Failed to fetch orders:", error);
+        return;
+      }
 
-    setOrderData((prevData) => ({
-      ...prevData,
-      new: [...ordersWithFreshIds, ...prevData.new],
-    }));
+      if (data) {
+        setOrderData(groupOrdersByTab(data as DbOrder[]));
+      }
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+    }
+  }, [sb]);
 
-    console.log(
-      `Successfully generated ${ordersWithFreshIds.length} orders for all stores`,
-    );
-  }, []);
+  // Initial fetch + realtime subscription
+  useEffect(() => {
+    fetchOrders();
 
-  const moveOrder = (
-    orderId: string,
-    fromTab: keyof OrderData,
-    toTab: keyof OrderData,
-  ) => {
-    console.log(`Moving order ${orderId} from ${fromTab} to ${toTab}`);
+    const channel = sb
+      .channel("orders-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders" },
+        () => {
+          fetchOrders();
+        },
+      )
+      .subscribe();
 
-    setOrderData((prevData) => {
-      const newData = { ...prevData };
-      const orderIndex = newData[fromTab].findIndex(
-        (order) => order.id === orderId,
-      );
+    return () => {
+      sb.removeChannel(channel);
+    };
+  }, [fetchOrders, sb]);
 
-      if (orderIndex !== -1) {
-        const order = { ...newData[fromTab][orderIndex] };
+  // No-op — orders load from DB automatically
+  const generateInitialOrders = useCallback(() => {}, []);
 
-        console.log(`Found order to move:`, order);
-        console.log(
-          `Order storeId: ${order.storeId}, storeName: ${order.storeName}`,
-        );
+  const moveOrder = useCallback(
+    async (
+      orderId: string,
+      fromTab: keyof OrderData,
+      toTab: keyof OrderData,
+    ) => {
+      const newStatus = TAB_TO_STATUS[toTab];
+      if (!newStatus) return;
 
-        // Assign courier for delivery orders when moving to ready or fulfillment
-        if (
-          (toTab === "ready" ||
-            toTab === "fulfillment" ||
-            toTab === "fulfilled") &&
-          order.type === "Delivery" &&
-          !order.courier
-        ) {
-          const randomCourier =
-            availableCouriers[
-              Math.floor(Math.random() * availableCouriers.length)
-            ];
-          order.courier = randomCourier;
-        }
+      // Optimistic local update
+      setOrderData((prev) => {
+        const updated = { ...prev };
+        const idx = updated[fromTab].findIndex((o) => o.id === orderId);
+        if (idx === -1) return prev;
 
-        // Update order status when moving to fulfillment or fulfilled
-        if (toTab === "fulfillment" || toTab === "fulfilled") {
-          order.status = order.type === "Delivery" ? "Delivered" : "Picked Up";
-          order.icon = "✅";
+        const order = { ...updated[fromTab][idx] };
+        if (toTab === "fulfilled" || toTab === "fulfillment") {
+          order.status =
+            order.type === "Delivery" ? "Delivered" : "Picked Up";
+          order.icon = "\u2705";
           order.iconBg =
             order.type === "Delivery" ? "bg-green-500" : "bg-blue-500";
           order.estimatedTime = "Completed";
         }
 
-        // Handle scheduling - move from scheduled to new orders
-        if (toTab === "new" && fromTab === "scheduled") {
-          order.icon = order.type === "Delivery" ? "🚚" : "🏪";
-          order.iconBg =
-            order.type === "Delivery" ? "bg-purple-500" : "bg-green-600";
-          order.estimatedTime = order.type === "Delivery" ? "25 min" : "15 min";
-          order.deliverTime =
-            order.type === "Delivery"
-              ? `Deliver today, at ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
-              : `Pickup today, at ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-          delete order.scheduledFor;
-        }
+        updated[fromTab] = updated[fromTab].filter((o) => o.id !== orderId);
+        updated[toTab] = [order, ...updated[toTab]];
+        return updated;
+      });
 
-        // Handle moving to scheduled
-        if (toTab === "scheduled") {
-          order.icon = "📅";
-          order.iconBg = "bg-purple-600";
-          order.scheduledFor = "Tomorrow, 2:00PM"; // Default scheduling
-          order.estimatedTime = "Tomorrow 2:00PM";
-          order.deliverTime = "Scheduled for tomorrow, at 2:00PM";
-        }
-
-        // Remove from source tab
-        newData[fromTab].splice(orderIndex, 1);
-
-        // Add to destination tab
-        newData[toTab].unshift(order);
-
-        console.log(
-          `Order moved successfully. New ${toTab} count: ${newData[toTab].length}`,
-        );
-      } else {
-        console.log(`Order ${orderId} not found in ${fromTab} tab`);
+      // Persist to DB
+      const updatePayload: Record<string, unknown> = {
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+      };
+      if (newStatus === "delivered") {
+        updatePayload.completed_at = new Date().toISOString();
       }
 
-      return newData;
-    });
-  };
+      const { error } = await sb
+        .from("orders")
+        .update(updatePayload)
+        .eq("id", orderId);
 
-  const removeOrder = (orderId: string, fromTab: keyof OrderData) => {
-    setOrderData((prevData) => {
-      const newData = { ...prevData };
-      const orderIndex = newData[fromTab].findIndex(
-        (order) => order.id === orderId,
-      );
-
-      if (orderIndex !== -1) {
-        newData[fromTab].splice(orderIndex, 1);
+      if (error) {
+        console.error("Failed to update order status:", error);
+        fetchOrders(); // re-sync on failure
       }
+    },
+    [sb, fetchOrders],
+  );
 
-      return newData;
-    });
-  };
+  const removeOrder = useCallback(
+    async (orderId: string, fromTab: keyof OrderData) => {
+      // Optimistic remove
+      setOrderData((prev) => {
+        const updated = { ...prev };
+        updated[fromTab] = updated[fromTab].filter((o) => o.id !== orderId);
+        return updated;
+      });
 
-  const scheduleOrder = (
-    orderId: string,
-    fromTab: keyof OrderData,
-    scheduledTime: string,
-  ) => {
-    setOrderData((prevData) => {
-      const newData = { ...prevData };
-      const orderIndex = newData[fromTab].findIndex(
-        (order) => order.id === orderId,
-      );
+      // Cancel in DB
+      const { error } = await sb
+        .from("orders")
+        .update({
+          status: "cancelled",
+          cancelled_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", orderId);
 
-      if (orderIndex !== -1) {
-        const order = { ...newData[fromTab][orderIndex] };
+      if (error) {
+        console.error("Failed to cancel order:", error);
+        fetchOrders();
+      }
+    },
+    [sb, fetchOrders],
+  );
 
-        // Update order for scheduling
-        order.icon = "📅";
+  const scheduleOrder = useCallback(
+    (
+      orderId: string,
+      fromTab: keyof OrderData,
+      scheduledTime: string,
+    ) => {
+      // Schedule is local-only (no DB column yet)
+      setOrderData((prev) => {
+        const updated = { ...prev };
+        const idx = updated[fromTab].findIndex((o) => o.id === orderId);
+        if (idx === -1) return prev;
+
+        const order = { ...updated[fromTab][idx] };
+        order.icon = "\u{1F4C5}";
         order.iconBg = "bg-purple-600";
         order.scheduledFor = scheduledTime;
         order.estimatedTime = scheduledTime;
         order.deliverTime = `Scheduled for ${scheduledTime}`;
 
-        // Remove from source tab
-        newData[fromTab].splice(orderIndex, 1);
-
-        // Add to scheduled tab
-        newData.scheduled.unshift(order);
-      }
-
-      return newData;
-    });
-  };
+        updated[fromTab] = updated[fromTab].filter((o) => o.id !== orderId);
+        updated.scheduled = [order, ...updated.scheduled];
+        return updated;
+      });
+    },
+    [],
+  );
 
   return {
     orderData,
