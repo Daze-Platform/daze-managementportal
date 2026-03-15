@@ -28,6 +28,7 @@ interface Order {
   storeName?: string;
   courier?: string;
   scheduledFor?: string;
+  createdAt?: string;
 }
 
 interface ModernOrderCardProps {
@@ -217,6 +218,7 @@ export const ModernOrderCard = ({
                     <OrderCardStatusInfo
                       activeTab={activeTab}
                       time={order.time}
+                      createdAt={order.createdAt}
                     />
                     <OrderCardContent order={order} />
                     <OrderCardActions
@@ -299,7 +301,7 @@ export const ModernOrderCard = ({
                   {order.customer || "Guest Order"}
                 </p>
 
-                <OrderCardStatusInfo activeTab={activeTab} time={order.time} />
+                <OrderCardStatusInfo activeTab={activeTab} time={order.time} createdAt={order.createdAt} />
               </div>
             </div>
 
