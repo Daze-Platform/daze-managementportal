@@ -63,6 +63,17 @@ const statusConfig = {
   scheduled: { color: "bg-indigo-500", pulse: false },
   default: { color: "bg-muted-foreground", pulse: false },
 };
+const statusBorderAccent: Record<string, string> = {
+  new: "border-l-4 border-l-blue-500",
+  progress: "border-l-4 border-l-amber-500",
+  ready: "border-l-4 border-l-green-500",
+  fulfilled: "border-l-4 border-l-gray-400",
+  fulfillment: "border-l-4 border-l-violet-500",
+  scheduled: "border-l-4 border-l-indigo-500",
+  default: "border-l-4 border-l-border",
+};
+
+
 
 export const ModernOrderCard = ({
   order,
@@ -121,6 +132,8 @@ export const ModernOrderCard = ({
   const status =
     statusConfig[activeTab as keyof typeof statusConfig] ||
     statusConfig.default;
+  const borderAccent =
+    statusBorderAccent[activeTab] ?? statusBorderAccent.default;
 
   // Mobile compact card
   if (isMobile) {
@@ -133,7 +146,7 @@ export const ModernOrderCard = ({
       >
         <Card
           ref={cardRef}
-          className={`relative overflow-hidden bg-card border transition-all duration-200 ${
+          className={`relative overflow-hidden bg-card border transition-all duration-200 hover:shadow-md transition-shadow ${borderAccent} ${
             isSelected
               ? "ring-2 ring-primary shadow-lg border-primary/30"
               : "border-border/50 hover:border-border"
@@ -176,7 +189,7 @@ export const ModernOrderCard = ({
 
               <div className="flex items-center gap-2">
                 <div className="text-right">
-                  <div className="text-lg font-bold text-foreground">
+                  <div className="text-xl font-extrabold text-foreground tracking-tight">
                     ${price}
                   </div>
                   <Badge
@@ -255,7 +268,7 @@ export const ModernOrderCard = ({
     >
       <Card
         ref={cardRef}
-        className={`relative overflow-hidden bg-card border transition-all duration-300 ${
+        className={`relative overflow-hidden bg-card border transition-all duration-300 hover:shadow-md transition-shadow ${borderAccent} ${
           isSelected
             ? "ring-2 ring-primary shadow-elevated-lg border-primary/30"
             : "border-border/50 hover:border-border hover:shadow-elevated"
