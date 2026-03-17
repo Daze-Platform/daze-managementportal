@@ -108,7 +108,7 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
       // Send invite email if tenantId provided
       if (tenantId) {
         try {
-          await supabase.functions.invoke("invite-employee", {
+          const { data: inviteData, error: inviteError } = await supabase.functions.invoke("invite-employee", {
             body: {
               email: employeeData.email,
               name: employeeData.name,
@@ -116,9 +116,18 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
               tenantId,
             },
           });
-          toast.success("Invite sent to " + employeeData.email);
-        } catch (inviteErr) {
-          console.warn("Could not send invite email:", inviteErr);
+          if (inviteError || inviteData?.error) {
+            const msg = inviteData?.error || inviteError?.message || "Unknown error";
+            if (msg.includes("already been registered")) {
+              toast.info(employeeData.email + " already has an account — no invite needed.");
+            } else {
+              toast.error("Invite failed: " + msg);
+            }
+          } else {
+            toast.success("Invite sent to " + employeeData.email);
+          }
+        } catch (inviteErr: any) {
+          toast.error("Could not send invite: " + (inviteErr?.message || "Unknown error"));
         }
       }
     } catch (error) {
