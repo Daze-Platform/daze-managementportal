@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,19 +9,18 @@ import {
   AlertTriangle,
   XCircle,
   Tag,
+  Settings2,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-// Ordering app API base — menu sync runs against the Piazza Pizza Vercel project
-const ORDERING_API_BASE = "https://daze-piazza-pizza.vercel.app/api";
-
-// Credentials needed by the menu-sync endpoint (safe to pass — these are the anon/publishable keys)
-const SYNC_CONFIG = {
-  locationId: "cgX7Lndi", // sandbox; swap for real Micros location once Pam activates
-  apiKey: "8a4ff5cff50a4afba41c2b1b4e7cd78a",
-  tenantSlug: "piazza-pizza",
-  supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-  supabaseKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-};
+interface PosConfig {
+  location_id: string | null;
+  api_key: string | null;
+  account_id: string | null;
+  ordering_api_base: string | null;
+  env: string;
+  provider: string;
+}
 
 interface SyncSummary {
   totalDazeItems: number;
@@ -47,24 +46,110 @@ interface SyncResult {
 interface MenuSyncPanelProps {
   /** Optional callback after a successful sync with persist=true */
   onSyncComplete?: (result: SyncResult) => void;
+  /** Store slug to look up POS config (e.g. "piazza-pizza") */
+  storeSlug?: string;
+  /** Tenant ID (UUID) to scope the POS config lookup */
+  tenantId?: string;
 }
 
-export const MenuSyncPanel = ({ onSyncComplete }: MenuSyncPanelProps) => {
+export const MenuSyncPanel = ({
+  onSyncComplete,
+  storeSlug,
+  tenantId,
+}: MenuSyncPanelProps) => {
   const [status, setStatus] = useState<"idle" | "syncing" | "done" | "error">("idle");
   const [result, setResult] = useState<SyncResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [persisting, setPersisting] = useState(false);
+
+  // POS config loaded from DB
+  const [posConfig, setPosConfig] = useState<PosConfig | null>(null);
+  const [configLoading, setConfigLoading] = useState(false);
+  const [configNotFound, setConfigNotFound] = useState(false);
+
+  // Fallback hardcoded config (used when no storeSlug/tenantId props provided)
+  const FALLBACK_CONFIG = {
+    locationId: "cgX7Lndi",
+    apiKey: "8a4ff5cff50a4afba41c2b1b4e7cd78a",
+    accountId: "AixdjR9i",
+    orderingApiBase: "https://daze-piazza-pizza.vercel.app/api",
+    tenantSlug: "piazza-pizza",
+    env: "sandbox",
+  };
+
+  useEffect(() => {
+    if (!storeSlug || !tenantId) {
+      // No props — use fallback; no config fetch needed
+      setConfigNotFound(false);
+      return;
+    }
+
+    const fetchPosConfig = async () => {
+      setConfigLoading(true);
+      setConfigNotFound(false);
+      try {
+        const { data, error: fetchError } = await (supabase as any)
+          .from("pos_configs")
+          .select("location_id, api_key, account_id, ordering_api_base, env, provider")
+          .eq("store_slug", storeSlug)
+          .eq("tenant_id", tenantId)
+          .maybeSingle();
+
+        if (fetchError) {
+          console.warn("POS config fetch error:", fetchError.message);
+          setConfigNotFound(true);
+        } else if (!data) {
+          setConfigNotFound(true);
+        } else {
+          setPosConfig(data as PosConfig);
+          setConfigNotFound(false);
+        }
+      } catch (err) {
+        console.warn("Unexpected error fetching POS config:", err);
+        setConfigNotFound(true);
+      } finally {
+        setConfigLoading(false);
+      }
+    };
+
+    fetchPosConfig();
+  }, [storeSlug, tenantId]);
+
+  const getActiveConfig = () => {
+    if (storeSlug && tenantId && posConfig) {
+      return {
+        locationId: posConfig.location_id ?? "",
+        apiKey: posConfig.api_key ?? "",
+        accountId: posConfig.account_id ?? "",
+        orderingApiBase: posConfig.ordering_api_base
+          ? `${posConfig.ordering_api_base.replace(/\/$/, "")}/api`
+          : "https://daze-piazza-pizza.vercel.app/api",
+        tenantSlug: storeSlug,
+        env: posConfig.env,
+      };
+    }
+    return FALLBACK_CONFIG;
+  };
 
   const runSync = async (persist = false) => {
     setStatus("syncing");
     setError(null);
     setResult(null);
 
+    const cfg = getActiveConfig();
+
     try {
-      const res = await fetch(`${ORDERING_API_BASE}/omnivore-menu-sync`, {
+      const res = await fetch(`${cfg.orderingApiBase}/omnivore-menu-sync`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...SYNC_CONFIG, persist }),
+        body: JSON.stringify({
+          locationId: cfg.locationId,
+          apiKey: cfg.apiKey,
+          tenantSlug: cfg.tenantSlug,
+          supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
+          supabaseKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          persist,
+        }),
       });
 
       if (!res.ok) {
@@ -89,50 +174,84 @@ export const MenuSyncPanel = ({ onSyncComplete }: MenuSyncPanelProps) => {
     runSync(true);
   };
 
+  const activeEnv = storeSlug && tenantId && posConfig ? posConfig.env : FALLBACK_CONFIG.env;
+
   return (
     <Card className="border border-border/60 bg-white/90 shadow-sm">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-semibold">
           <RefreshCw className="w-4 h-4 text-primary" />
           POS Menu Sync
+          {/* Env badge */}
+          {!configLoading && !configNotFound && (
+            <span className="ml-auto">
+              {activeEnv === "production" ? (
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs font-medium">
+                  Live
+                </Badge>
+              ) : (
+                <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 text-xs font-medium">
+                  Sandbox
+                </Badge>
+              )}
+            </span>
+          )}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
           Pull the live menu from Omnivore and match item IDs to your Daze catalog.
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Action buttons */}
-        <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => runSync(false)}
-            disabled={status === "syncing"}
-            className="gap-2"
-          >
-            {status === "syncing" && !persisting ? (
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <RefreshCw className="w-3.5 h-3.5" />
-            )}
-            Preview Sync
-          </Button>
-          {result && result.summary.matched > 0 && (
+        {/* Config loading */}
+        {configLoading && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            Loading POS configuration…
+          </div>
+        )}
+
+        {/* No config found */}
+        {!configLoading && configNotFound && (
+          <div className="flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+            <Settings2 className="w-4 h-4 shrink-0" />
+            No POS config found. Set up in Settings &rarr; POS Integration.
+          </div>
+        )}
+
+        {/* Action buttons — only show when config is available or using fallback */}
+        {!configLoading && !configNotFound && (
+          <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
-              onClick={handlePersist}
+              variant="outline"
+              onClick={() => runSync(false)}
               disabled={status === "syncing"}
               className="gap-2"
             >
-              {persisting ? (
+              {status === "syncing" && !persisting ? (
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
               ) : (
-                <CheckCircle className="w-3.5 h-3.5" />
+                <RefreshCw className="w-3.5 h-3.5" />
               )}
-              Save {result.summary.matched} Mappings
+              Preview Sync
             </Button>
-          )}
-        </div>
+            {result && result.summary.matched > 0 && (
+              <Button
+                size="sm"
+                onClick={handlePersist}
+                disabled={status === "syncing"}
+                className="gap-2"
+              >
+                {persisting ? (
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <CheckCircle className="w-3.5 h-3.5" />
+                )}
+                Save {result.summary.matched} Mappings
+              </Button>
+            )}
+          </div>
+        )}
 
         {/* Error */}
         {status === "error" && error && (

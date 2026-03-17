@@ -27,6 +27,7 @@ import {
   Landmark,
   Check,
   Building2,
+  Plug,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DestinationManagement } from "@/components/settings/DestinationManagement";
@@ -34,6 +35,7 @@ import { ResortVenueMapping } from "@/components/settings/ResortVenueMapping";
 import { AddBankAccountDialog } from "@/components/settings/AddBankAccountDialog";
 import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 import { useAuth } from "@/contexts/AuthContext";
+import { POSIntegration } from "@/components/settings/POSIntegration";
 
 const plans = [
   {
@@ -192,7 +194,7 @@ export const Settings = () => {
             >
               <TabsList
                 variant="underlined"
-                className="inline-flex w-full sm:grid sm:grid-cols-5 bg-transparent border-b border-gray-200 p-0"
+                className="inline-flex w-full sm:grid sm:grid-cols-6 bg-transparent border-b border-gray-200 p-0"
               >
                 <TabsTrigger
                   value="profile"
@@ -229,6 +231,15 @@ export const Settings = () => {
                   <Shield className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">Security</span>
                   <span className="sm:hidden">Sec</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="pos"
+                  variant="underlined"
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:border-b-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+                >
+                  <Plug className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="hidden sm:inline">POS Integration</span>
+                  <span className="sm:hidden">POS</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="billing"
@@ -522,6 +533,10 @@ export const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="pos">
+            <POSIntegration />
           </TabsContent>
 
           <TabsContent value="billing">

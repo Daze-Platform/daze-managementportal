@@ -18,4 +18,5 @@ export interface Store {
   destinationId: string; // Associate store with destination
   // Legacy alias for backwards compatibility
   resortId?: string;
+  slug?: string;
 }
