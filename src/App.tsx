@@ -26,6 +26,7 @@ import { Promotions } from "./pages/Promotions";
 import { Settings } from "./pages/Settings";
 import { Notifications } from "./pages/Notifications";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route
         path="/dashboard"
