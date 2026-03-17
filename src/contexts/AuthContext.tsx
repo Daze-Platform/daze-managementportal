@@ -82,11 +82,12 @@ const fetchProfile = async (userId: string, email: string): Promise<UserProfile>
 
   // Resolve tenant membership
   try {
-    const { data: membership } = await supabase
+    const { data: memberships } = await supabase
       .from('user_tenants')
       .select('tenant_id, role')
       .eq('user_id', userId)
-      .single();
+      .limit(1);
+    const membership = memberships?.[0] ?? null;
 
     if (membership) {
       profile.tenantId = membership.tenant_id;
