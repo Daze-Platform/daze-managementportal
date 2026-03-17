@@ -26,6 +26,10 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSent, setForgotSent] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
   const navigate = useNavigate();
   const { login, isAuthenticated, loading } = useAuth();
   const { toast } = useToast();
@@ -55,6 +59,20 @@ const Login = () => {
   const handleDemoLogin = () => {
     setEmail("manuel@innisfree-test.daze.com");
     setPassword("DazeDemo2026!");
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: "https://daze-management-hub.vercel.app/reset-password",
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast({ variant: "destructive", title: "Error", description: error.message });
+    } else {
+      setForgotSent(true);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -243,6 +261,16 @@ const Login = () => {
                 </div>
               </motion.div>
 
+              <div className="flex justify-end -mt-1">
+                <button
+                  type="button"
+                  onClick={() => { setShowForgotPassword(true); setForgotEmail(email); setForgotSent(false); }}
+                  className="text-xs text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
+
               {error && (
                 <motion.div
                   initial={{ opacity: 0, y: -10, height: 0 }}
@@ -317,6 +345,86 @@ const Login = () => {
           </CardContent>
         </Card>
       </FadeIn>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowForgotPassword(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm"
+          >
+            <Card className="glass shadow-glass-lg border-border/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Reset Password</CardTitle>
+                <CardDescription>
+                  Enter your email and we'll send a reset link.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {forgotSent ? (
+                  <div className="text-center py-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Check your inbox at <span className="font-medium text-foreground">{forgotEmail}</span> for the reset link.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => setShowForgotPassword(false)}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleForgotPassword} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="forgot-email">Email</Label>
+                      <Input
+                        id="forgot-email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={forgotEmail}
+                        onChange={(e) => setForgotEmail(e.target.value)}
+                        className="h-11 bg-background/50"
+                        required
+                        autoFocus
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => setShowForgotPassword(false)}
+                        disabled={forgotLoading}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="flex-1 gradient-primary"
+                        disabled={forgotLoading}
+                      >
+                        {forgotLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Send Link"
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };
