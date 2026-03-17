@@ -4,6 +4,7 @@ import { OrderFilters } from "./OrderFilters";
 import { ModernOrdersList } from "./ModernOrdersList";
 import { DesktopOrderDetailsPanel } from "./DesktopOrderDetailsPanel";
 import { FilterState } from "./AdvancedFilters";
+import { EightySixBoard } from "./EightysSixBoard";
 
 interface Tab {
   id: string;
@@ -29,6 +30,7 @@ interface Order {
   courier?: string;
   scheduledFor?: string;
   isVisible?: boolean;
+  createdAt?: string;
 }
 
 interface OrdersListLayoutProps {
@@ -117,6 +119,11 @@ export const OrdersListLayout = ({
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden bg-black">
+        {activeTab === "eighty-six" ? (
+          <div className="h-full overflow-auto">
+            <EightySixBoard />
+          </div>
+        ) : (
         <div className="h-full flex bg-black">
           {/* Orders List */}
           <div
@@ -152,6 +159,7 @@ export const OrdersListLayout = ({
             />
           )}
         </div>
+        )}
       </div>
     </div>
   );

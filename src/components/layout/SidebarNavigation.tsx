@@ -101,7 +101,10 @@ export const SidebarNavigation = ({
   const location = useLocation();
   const { getOrderTypeCount, storeStatus, orderStatus } = useOrderManagement();
 
-  // Calculate total active orders (new + progress + ready + fulfillment)
+  /**
+   * Total active orders powering the nav badge.
+   * Live — driven by the postgres_changes real-time subscription in useOrderData.
+   */
   const totalActiveOrders =
     getOrderTypeCount("new") +
     getOrderTypeCount("progress") +

@@ -31,7 +31,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  getProductMixData,
   groupByCategory,
   ProductMixItem,
   SalesChannel,
@@ -40,8 +39,7 @@ import {
 import { Download, Filter, ListFilter } from "lucide-react";
 
 interface ProductMixSectionProps {
-  selectedStore: string;
-  selectedDateRange?: DateRange;
+    data: any[];
 }
 
 type GroupBy = "item" | "category";
@@ -55,10 +53,7 @@ type SortKey =
   | "%"
   | "avgPrice";
 
-export const ProductMixSection: React.FC<ProductMixSectionProps> = ({
-  selectedStore,
-  selectedDateRange,
-}) => {
+export const ProductMixSection: React.FC<ProductMixSectionProps> = ({ data }) => {
   const [search, setSearch] = useState("");
   const [groupBy, setGroupBy] = useState<GroupBy>("item");
   const [topN, setTopN] = useState<string>("25");
@@ -76,16 +71,6 @@ export const ProductMixSection: React.FC<ProductMixSectionProps> = ({
   const [includeModifiers, setIncludeModifiers] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>("quantity");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-
-  const data = useMemo(
-    () =>
-      getProductMixData(
-        selectedStore || "all",
-        selectedDateRange,
-        includeModifiers,
-      ),
-    [selectedStore, selectedDateRange, includeModifiers],
-  );
 
   const filtered = useMemo(() => {
     const activeChannels = (Object.keys(channels) as SalesChannel[]).filter(

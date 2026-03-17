@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { MenusView } from "@/components/menu-management/MenusView";
 import { ModifiersView } from "@/components/menu-management/ModifiersView";
 import { CreateMenuDialog } from "@/components/menu-management/CreateMenuDialog";
 import { MenuBuilderDialog } from "@/components/menu-management/MenuBuilderDialog";
 import { StoreAssignmentDialog } from "@/components/menu-management/StoreAssignmentDialog";
+import { MenuSyncPanel } from "@/components/menu/MenuSyncPanel";
 import { useMenus, Menu as SupabaseMenu } from "@/contexts/MenusContext";
 import { useStores } from "@/contexts/StoresContext";
 import { motion } from "framer-motion";
@@ -57,6 +59,7 @@ export const MenuManagement = () => {
   const [assigningMenu, setAssigningMenu] = useState<Menu | null>(null);
   const { menus, loading, addMenu, updateMenu, deleteMenu } = useMenus();
   const { stores } = useStores();
+  const { userProfile } = useAuth();
 
   const [selectedStore] = useState(
     () =>
@@ -292,6 +295,14 @@ export const MenuManagement = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.15 }}
         >
+          {/* POS Sync Panel — always visible above the menu list */}
+          <div className="mb-6">
+            <MenuSyncPanel
+              storeSlug={selectedStore.slug || undefined}
+              tenantId={userProfile?.tenantId || undefined}
+            />
+          </div>
+
           {activeTab === "menus" ? (
             <>
               <MenusView

@@ -23,6 +23,7 @@ interface Order {
   courier?: string;
   scheduledFor?: string;
   isVisible?: boolean;
+  createdAt?: string;
 }
 
 interface ModernOrdersListProps {

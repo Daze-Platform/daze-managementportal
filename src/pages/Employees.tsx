@@ -22,12 +22,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEmployees, Employee } from "@/contexts/EmployeesContext";
+import { useAuth } from "@/contexts/AuthContext";
 import ResortBadges from "@/components/employees/ResortBadges";
 import StoreBadges from "@/components/employees/StoreBadges";
 
 export const Employees = () => {
   const { employees, loading, addEmployee, updateEmployee, deleteEmployee } =
     useEmployees();
+  const { userProfile } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStore, setSelectedStore] = useState("all");
@@ -62,16 +64,19 @@ export const Employees = () => {
   });
 
   const handleCreateUser = async (userData: any) => {
-    await addEmployee({
-      name: userData.name,
-      email: userData.email,
-      role: userData.role,
-      store: userData.store,
-      assigned_stores: userData.assigned_stores || [],
-      assigned_resorts: userData.assigned_resorts || [],
-      status: userData.status || "Active",
-      avatar: userData.avatar || "/placeholder.svg",
-    });
+    await addEmployee(
+      {
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        store: userData.store,
+        assigned_stores: userData.assigned_stores || [],
+        assigned_resorts: userData.assigned_resorts || [],
+        status: userData.status || "Active",
+        avatar: userData.avatar || "/placeholder.svg",
+      },
+      userProfile?.tenantId,
+    );
   };
 
   const handleSaveUser = async (updatedUser: Employee) => {

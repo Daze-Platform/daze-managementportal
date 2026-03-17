@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { RightNowPanel } from "@/components/dashboard/RightNowPanel";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
@@ -9,10 +10,9 @@ import { CustomerSatisfaction } from "@/components/dashboard/CustomerSatisfactio
 import { OperationalMetrics } from "@/components/dashboard/OperationalMetrics";
 import {
   resortDashboardData,
-  stores,
   employeeDeliveries,
 } from "@/data/dashboardData";
-import { useToast } from "@/hooks/use-toast";
+import { useDashboardLiveData } from "@/hooks/useDashboardLiveData";
 import { useFilters } from "@/contexts/FilterContext";
 import { useResort } from "@/contexts/DestinationContext";
 
@@ -24,10 +24,12 @@ export const Dashboard = () => {
     setSelectedDateRange,
   } = useFilters();
 
-  const { toast } = useToast();
   const { currentResort } = useResort();
 
-  // Get resort-specific data or fallback to Pensacola Beach Resort
+  // Live data from Supabase orders table (auto-refreshes every 60s)
+  const liveData = useDashboardLiveData();
+
+  // Get resort-specific static data for sections we can't compute live yet
   const resortData =
     currentResort?.id &&
     resortDashboardData[currentResort.id as keyof typeof resortDashboardData]
@@ -38,33 +40,12 @@ export const Dashboard = () => {
 
   let currentStoreData = resortData[selectedStore as keyof typeof resortData];
 
-  // If no specific store data found, fall back to 'all' data
   if (!currentStoreData && selectedStore !== "all") {
-    console.warn(
-      `Dashboard: No data found for store '${selectedStore}' in resort '${currentResort?.id}', falling back to 'all' stores data`,
-    );
     currentStoreData = resortData["all"];
   }
 
-  // Final fallback if still no data
   if (!currentStoreData) {
-    console.error(
-      "Dashboard: No data available for resort:",
-      currentResort?.id,
-    );
-    return (
-      <div className="flex items-center justify-center h-full p-8">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            No Data Available
-          </h2>
-          <p className="text-gray-600">
-            Unable to load dashboard data for the selected resort and store
-            combination.
-          </p>
-        </div>
-      </div>
-    );
+    currentStoreData = resortData["all"];
   }
 
   // Log filter changes for debugging
@@ -88,18 +69,21 @@ export const Dashboard = () => {
           />
         </div>
 
-        {/* Stats Cards */}
-        <div className="bg-white rounded-xl border border-border/50 p-4 sm:p-6">
-          <DashboardStats stats={currentStoreData.stats} />
+        {/* Right Now Panel */}
+        <RightNowPanel />
+
+        {/* Stats Cards — LIVE from Supabase */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 bg-white rounded-xl border border-border/50 p-4 sm:p-6">
+          <DashboardStats stats={liveData.stats} />
         </div>
 
-        {/* Charts and Most Ordered Items Section */}
+        {/* Charts and Most Ordered Items — LIVE from Supabase */}
         <div className="bg-white rounded-xl border border-border/50 p-4 sm:p-6">
           <DashboardCharts
-            storeName={currentStoreData.name}
-            revenueData={currentStoreData.revenueData}
-            orderData={currentStoreData.orderData}
-            topItems={currentStoreData.topItems}
+            storeName={liveData.storeName}
+            revenueData={liveData.revenueData}
+            orderData={liveData.orderData}
+            topItems={liveData.topItems.length > 0 ? liveData.topItems : currentStoreData.topItems}
           />
         </div>
 

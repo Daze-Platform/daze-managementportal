@@ -28,6 +28,7 @@ interface Order {
   storeName?: string;
   courier?: string;
   scheduledFor?: string;
+  createdAt?: string;
 }
 
 interface ModernOrderCardProps {
@@ -62,6 +63,17 @@ const statusConfig = {
   scheduled: { color: "bg-indigo-500", pulse: false },
   default: { color: "bg-muted-foreground", pulse: false },
 };
+const statusBorderAccent: Record<string, string> = {
+  new: "border-l-4 border-l-blue-500",
+  progress: "border-l-4 border-l-amber-500",
+  ready: "border-l-4 border-l-green-500",
+  fulfilled: "border-l-4 border-l-gray-400",
+  fulfillment: "border-l-4 border-l-violet-500",
+  scheduled: "border-l-4 border-l-indigo-500",
+  default: "border-l-4 border-l-border",
+};
+
+
 
 export const ModernOrderCard = ({
   order,
@@ -120,6 +132,8 @@ export const ModernOrderCard = ({
   const status =
     statusConfig[activeTab as keyof typeof statusConfig] ||
     statusConfig.default;
+  const borderAccent =
+    statusBorderAccent[activeTab] ?? statusBorderAccent.default;
 
   // Mobile compact card
   if (isMobile) {
@@ -132,7 +146,7 @@ export const ModernOrderCard = ({
       >
         <Card
           ref={cardRef}
-          className={`relative overflow-hidden bg-card border transition-all duration-200 ${
+          className={`relative overflow-hidden bg-card border transition-all duration-200 hover:shadow-md transition-shadow ${borderAccent} ${
             isSelected
               ? "ring-2 ring-primary shadow-lg border-primary/30"
               : "border-border/50 hover:border-border"
@@ -156,7 +170,7 @@ export const ModernOrderCard = ({
                 <OrderCardAvatar customer={order.customer} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-foreground">
+                    <h3 className="font-bold text-base text-foreground truncate max-w-[120px]">
                       #{order.id}
                     </h3>
                     {order.priority === "urgent" && (
@@ -175,7 +189,7 @@ export const ModernOrderCard = ({
 
               <div className="flex items-center gap-2">
                 <div className="text-right">
-                  <div className="text-lg font-bold text-foreground">
+                  <div className="text-xl font-extrabold text-foreground tracking-tight">
                     ${price}
                   </div>
                   <Badge
@@ -217,6 +231,7 @@ export const ModernOrderCard = ({
                     <OrderCardStatusInfo
                       activeTab={activeTab}
                       time={order.time}
+                      createdAt={order.createdAt}
                     />
                     <OrderCardContent order={order} />
                     <OrderCardActions
@@ -253,7 +268,7 @@ export const ModernOrderCard = ({
     >
       <Card
         ref={cardRef}
-        className={`relative overflow-hidden bg-card border transition-all duration-300 ${
+        className={`relative overflow-hidden bg-card border transition-all duration-300 hover:shadow-md transition-shadow ${borderAccent} ${
           isSelected
             ? "ring-2 ring-primary shadow-elevated-lg border-primary/30"
             : "border-border/50 hover:border-border hover:shadow-elevated"
@@ -299,7 +314,7 @@ export const ModernOrderCard = ({
                   {order.customer || "Guest Order"}
                 </p>
 
-                <OrderCardStatusInfo activeTab={activeTab} time={order.time} />
+                <OrderCardStatusInfo activeTab={activeTab} time={order.time} createdAt={order.createdAt} />
               </div>
             </div>
 

@@ -1,15 +1,17 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
+import { OrderAgeTimer } from "./OrderAgeTimer";
 
 interface OrderCardStatusInfoProps {
   activeTab: string;
   time: string;
+  createdAt?: string | null;
 }
 
 export const OrderCardStatusInfo = ({
   activeTab,
   time,
+  createdAt,
 }: OrderCardStatusInfoProps) => {
   const getStatusInfo = () => {
     switch (activeTab) {
@@ -74,6 +76,11 @@ export const OrderCardStatusInfo = ({
 
   const statusInfo = getStatusInfo();
 
+  // Show live age timer for active (non-completed) order tabs
+  const showAgeTimer = ["new", "progress", "ready", "fulfillment"].includes(
+    activeTab,
+  );
+
   return (
     <div className="space-y-2">
       <Badge
@@ -82,10 +89,14 @@ export const OrderCardStatusInfo = ({
       >
         {statusInfo.label}
       </Badge>
-      <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1.5 rounded-full w-fit">
-        <Clock className="w-3.5 h-3.5 text-gray-500" />
-        <span className="text-xs font-medium text-gray-700">{time}</span>
-      </div>
+
+      {showAgeTimer ? (
+        <OrderAgeTimer createdAt={createdAt} timeFallback={time} />
+      ) : (
+        <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1.5 rounded-full w-fit">
+          <span className="text-xs font-medium text-gray-700">{time}</span>
+        </div>
+      )}
     </div>
   );
 };

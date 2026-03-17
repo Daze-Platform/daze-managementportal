@@ -22,6 +22,7 @@ interface EmployeesContextType {
   loading: boolean;
   addEmployee: (
     employee: Omit<Employee, "id" | "created_at" | "updated_at">,
+    tenantId?: string,
   ) => Promise<void>;
   updateEmployee: (employee: Employee) => Promise<void>;
   deleteEmployee: (employeeId: string) => Promise<void>;
@@ -71,6 +72,7 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addEmployee = async (
     employeeData: Omit<Employee, "id" | "created_at" | "updated_at">,
+    tenantId?: string,
   ) => {
     // Create optimistic employee with temporary ID
     const tempId = `temp-${Date.now()}`;
@@ -102,6 +104,32 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
       setEmployees((prev) =>
         prev.map((emp) => (emp.id === tempId ? data : emp)),
       );
+
+      // Send invite email if tenantId provided
+      if (tenantId) {
+        try {
+          const { data: inviteData, error: inviteError } = await supabase.functions.invoke("invite-employee", {
+            body: {
+              email: employeeData.email,
+              name: employeeData.name,
+              role: employeeData.role,
+              tenantId,
+            },
+          });
+          if (inviteError || inviteData?.error) {
+            const msg = inviteData?.error || inviteError?.message || "Unknown error";
+            if (msg.includes("already been registered")) {
+              toast.info(employeeData.email + " already has an account — no invite needed.");
+            } else {
+              toast.error("Invite failed: " + msg);
+            }
+          } else {
+            toast.success("Invite sent to " + employeeData.email);
+          }
+        } catch (inviteErr: any) {
+          toast.error("Could not send invite: " + (inviteErr?.message || "Unknown error"));
+        }
+      }
     } catch (error) {
       console.warn("Network error syncing employee:", error);
       // Keep the local version

@@ -67,6 +67,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           hours: (store.hours as any) || [],
           destinationId: store.resort_id || "",
           resortId: store.resort_id || "",
+          slug: store.slug || "",
         }));
 
         setStores(convertedStores);

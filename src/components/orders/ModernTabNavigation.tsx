@@ -39,6 +39,9 @@ export const ModernTabNavigation = ({
       scheduled: isActive
         ? "bg-indigo-500 text-white border-indigo-500"
         : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-200",
+      "eighty-six": isActive
+        ? "bg-red-600 text-white border-red-600"
+        : "bg-red-50 text-red-700 hover:bg-red-100 border-red-200",
     };
     return (
       colors[tabId as keyof typeof colors] ||

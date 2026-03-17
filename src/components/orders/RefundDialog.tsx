@@ -14,8 +14,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { AlertCircle, DollarSign } from "lucide-react";
+import { AlertCircle, DollarSign, CheckCircle } from "lucide-react";
 import { StoreLogo } from "@/components/stores/StoreLogo";
+
+// Base URL of the ordering app's serverless functions
+const ORDERING_API_BASE = "https://daze-piazza-pizza.vercel.app/api";
 
 interface OrderItem {
   id: string;
@@ -33,6 +36,10 @@ interface Order {
   date: string;
   status: string;
   items: OrderItem[];
+  /** Omnivore ticket ID — present for Piazza Pizza / Micros POS orders */
+  omnivore_ticket_id?: string | null;
+  /** Internal Supabase UUID */
+  supabase_id?: string;
 }
 
 interface RefundDialogProps {
@@ -54,6 +61,8 @@ export const RefundDialog = ({
   const [partialAmount, setPartialAmount] = useState("");
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
+  const [voidResult, setVoidResult] = useState<"success" | "error" | null>(null);
+  const [voidError, setVoidError] = useState<string | null>(null);
 
   if (!order) return null;
 
@@ -90,6 +99,8 @@ export const RefundDialog = ({
 
   const handleRefund = async () => {
     setIsProcessing(true);
+    setVoidResult(null);
+    setVoidError(null);
 
     const refundData = {
       orderId: order.id,
@@ -100,8 +111,36 @@ export const RefundDialog = ({
     };
 
     try {
+      // 1. Call parent handler (Supabase status update etc.)
       await onRefund(refundData);
-      onClose();
+
+      // 2. Void the Omnivore ticket if one exists (Piazza/Micros orders)
+      if (order.omnivore_ticket_id) {
+        try {
+          const voidRes = await fetch(`${ORDERING_API_BASE}/omnivore-void`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ticketId: order.omnivore_ticket_id,
+              locationId: "cgX7Lndi", // sandbox; production will use tenant config
+              reason: `Refund ${refundType} — $${getRefundAmount().toFixed(2)} by manager`,
+            }),
+          });
+          if (!voidRes.ok) {
+            const body = await voidRes.json().catch(() => ({}));
+            throw new Error(body.error || `Omnivore void failed (${voidRes.status})`);
+          }
+          setVoidResult("success");
+        } catch (voidErr: any) {
+          // Omnivore void failed — log but don't block the refund flow
+          console.error("[RefundDialog] Omnivore void error:", voidErr);
+          setVoidError(voidErr?.message || "Omnivore ticket void failed");
+          setVoidResult("error");
+        }
+      }
+
+      // Only close if there's no void error to display
+      if (!voidError) onClose();
     } catch (error) {
       console.error("Refund failed:", error);
     } finally {
@@ -291,19 +330,35 @@ export const RefundDialog = ({
           </Card>
         </div>
 
+        {/* Omnivore void feedback */}
+        {voidResult === "success" && (
+          <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+            <CheckCircle className="w-4 h-4 shrink-0" />
+            <span>POS ticket voided successfully in Omnivore.</span>
+          </div>
+        )}
+        {voidResult === "error" && (
+          <div className="flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>Refund recorded, but Omnivore ticket void failed: {voidError}. Void manually in the POS.</span>
+          </div>
+        )}
+
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={isProcessing}>
-            Cancel
+            {voidResult ? "Close" : "Cancel"}
           </Button>
-          <Button
-            onClick={handleRefund}
-            disabled={!isValidRefund() || isProcessing}
-            className="bg-red-600 hover:bg-red-700"
-          >
-            {isProcessing
-              ? "Processing..."
-              : `Refund $${getRefundAmount().toFixed(2)}`}
-          </Button>
+          {!voidResult && (
+            <Button
+              onClick={handleRefund}
+              disabled={!isValidRefund() || isProcessing}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isProcessing
+                ? "Processing..."
+                : `Refund $${getRefundAmount().toFixed(2)}`}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

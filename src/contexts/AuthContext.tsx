@@ -71,9 +71,9 @@ const fetchProfile = async (userId: string, email: string): Promise<UserProfile>
         firstName: names[0] || email.split('@')[0],
         lastName: names.slice(1).join(' ') || '',
         email: profileData.email || email,
-        phone: '',
-        timezone: 'America/Chicago',
-        language: 'English',
+        phone: (profileData as any).phone || '',
+        timezone: (profileData as any).timezone || 'America/Chicago',
+        language: (profileData as any).language || 'English',
         avatar: '',
       };
     }
@@ -83,11 +83,12 @@ const fetchProfile = async (userId: string, email: string): Promise<UserProfile>
 
   // Resolve tenant membership
   try {
-    const { data: membership } = await supabase
+    const { data: memberships } = await supabase
       .from('user_tenants')
       .select('tenant_id, role')
       .eq('user_id', userId)
-      .single();
+      .limit(1);
+    const membership = memberships?.[0] ?? null;
 
     if (membership) {
       profile.tenantId = membership.tenant_id;
@@ -269,13 +270,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log("User logged out and all auth data cleared");
   };
 
-  const updateUserProfile = (profileUpdates: Partial<UserProfile>) => {
+  const updateUserProfile = async (profileUpdates: Partial<UserProfile>) => {
     setUserProfile((prevProfile) => {
       if (!prevProfile) return null;
       const updatedProfile = { ...prevProfile, ...profileUpdates };
       localStorage.setItem("userProfile", JSON.stringify(updatedProfile));
       return updatedProfile;
     });
+
+    // Persist to Supabase profiles table
+    if (userId) {
+      const fullName = [profileUpdates.firstName, profileUpdates.lastName]
+        .filter(Boolean)
+        .join(" ");
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: fullName || undefined,
+          phone: profileUpdates.phone,
+          timezone: profileUpdates.timezone,
+          language: profileUpdates.language,
+        })
+        .eq("id", userId);
+
+      if (error) {
+        console.error("Failed to persist profile to Supabase:", error);
+      }
+    }
   };
 
   const value = {
