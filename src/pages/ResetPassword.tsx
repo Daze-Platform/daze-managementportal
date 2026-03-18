@@ -26,31 +26,52 @@ export default function ResetPassword() {
     const hashType = hashParams.get("type");
 
     if (!code && !(accessToken && hashType === "recovery")) {
-      // No recovery params — not a valid reset link
       setLinkExpired(true);
       return;
     }
 
-    // Show the form immediately based on URL params.
-    // The PASSWORD_RECOVERY event often fires during Supabase client init (before React renders),
-    // so onAuthStateChange alone would miss it. Show the form now, handle errors at submit time.
-    setSessionReady(true);
+    let settled = false;
+    const settle = (ready: boolean) => {
+      if (settled) return;
+      settled = true;
+      if (ready) setSessionReady(true);
+      else setLinkExpired(true);
+    };
 
-    // For PKCE flow: exchange the code. The client may have already done this via
-    // detectSessionInUrl, in which case this is a no-op and we ignore the error.
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).catch(() => {/* already exchanged — ok */});
+    // Implicit flow (hash): session already established by Supabase client init
+    if (accessToken && hashType === "recovery") {
+      settle(true);
+      return;
     }
 
-    // Also subscribe in case we catch the event (timing-dependent)
+    // PKCE flow (code): MUST await the exchange before showing the form
+    // If we show the form before the session is ready, updateUser has no session and hangs
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code)
+        .then(({ error: exchangeErr }) => {
+          if (exchangeErr) {
+            // Code may already be exchanged — check for an existing session
+            return supabase.auth.getSession().then(({ data: { session } }) => {
+              settle(!!session);
+            });
+          }
+          settle(true);
+        })
+        .catch(() => settle(false));
+    }
+
+    // PASSWORD_RECOVERY event as a backup (fires when Supabase detects recovery from URL hash)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
-        setSessionReady(true);
-        setLinkExpired(false);
-      }
+      if (event === "PASSWORD_RECOVERY") settle(true);
     });
 
-    return () => subscription.unsubscribe();
+    // 15-second hard timeout — link is invalid or network is down
+    const timeout = setTimeout(() => settle(false), 15000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
