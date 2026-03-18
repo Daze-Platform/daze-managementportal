@@ -174,7 +174,7 @@ const Login = () => {
                 <img
                   src="/daze-logo.png"
                   alt="Daze Logo"
-                  className="h-16 w-auto object-contain drop-shadow-md"
+                  className="h-20 w-auto object-contain drop-shadow-md"
                 />
               </motion.div>
             </ScaleIn>
@@ -261,11 +261,11 @@ const Login = () => {
                 </div>
               </motion.div>
 
-              <div className="flex justify-end -mt-1">
+              <div className="flex justify-end">
                 <button
                   type="button"
                   onClick={() => { setShowForgotPassword(true); setForgotEmail(email); setForgotSent(false); }}
-                  className="text-xs text-primary hover:underline"
+                  className="text-sm font-medium text-primary/80 hover:text-primary hover:underline transition-colors py-0.5"
                 >
                   Forgot password?
                 </button>
