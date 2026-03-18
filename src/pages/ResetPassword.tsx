@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -17,59 +17,68 @@ export default function ResetPassword() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const settled = useRef(false);
 
   useEffect(() => {
+    // Check if URL has any recovery params at all
     const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
+    const hasCode = url.searchParams.has("code");
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get("access_token");
-    const hashType = hashParams.get("type");
+    const hasRecoveryHash =
+      hashParams.get("type") === "recovery" && hashParams.has("access_token");
 
-    if (!code && !(accessToken && hashType === "recovery")) {
+    if (!hasCode && !hasRecoveryHash) {
       setLinkExpired(true);
       return;
     }
 
-    let settled = false;
     const settle = (ready: boolean) => {
-      if (settled) return;
-      settled = true;
+      if (settled.current) return;
+      settled.current = true;
       if (ready) setSessionReady(true);
       else setLinkExpired(true);
     };
 
-    // Implicit flow (hash): session already established by Supabase client init
-    if (accessToken && hashType === "recovery") {
+    // For implicit hash flow — session is already baked into the hash
+    if (hasRecoveryHash) {
       settle(true);
       return;
     }
 
-    // PKCE flow (code): MUST await the exchange before showing the form
-    // If we show the form before the session is ready, updateUser has no session and hangs
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code)
-        .then(({ error: exchangeErr }) => {
-          if (exchangeErr) {
-            // Code may already be exchanged — check for an existing session
-            return supabase.auth.getSession().then(({ data: { session } }) => {
-              settle(!!session);
-            });
-          }
+    // For PKCE code flow — the Supabase client auto-exchanges the code on init.
+    // We must NOT call exchangeCodeForSession ourselves (double-exchange corrupts the session).
+    // Strategy: listen for PASSWORD_RECOVERY event, plus poll getSession() to catch the
+    // case where the event fired before our listener was registered.
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "PASSWORD_RECOVERY" && session) {
           settle(true);
-        })
-        .catch(() => settle(false));
-    }
+        }
+      }
+    );
 
-    // PASSWORD_RECOVERY event as a backup (fires when Supabase detects recovery from URL hash)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") settle(true);
-    });
+    // Poll getSession() — catches when the client already processed the code
+    // before our onAuthStateChange listener was registered.
+    const pollSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) settle(true);
+    };
 
-    // 15-second hard timeout — link is invalid or network is down
-    const timeout = setTimeout(() => settle(false), 15000);
+    // Check immediately, then at 500ms and 2s intervals to handle race conditions
+    pollSession();
+    const t1 = setTimeout(pollSession, 500);
+    const t2 = setTimeout(pollSession, 2000);
+    const t3 = setTimeout(pollSession, 4000);
+
+    // Hard timeout — if nothing worked in 20s, the link is truly expired
+    const timeout = setTimeout(() => settle(false), 20000);
 
     return () => {
       subscription.unsubscribe();
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
       clearTimeout(timeout);
     };
   }, []);
@@ -90,18 +99,24 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      // Race against a 12-second timeout so the button never stays stuck forever
-      const result = await Promise.race([
+      const { error: updateErr } = await Promise.race([
         supabase.auth.updateUser({ password }),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("timeout")), 12000)
+        new Promise<{ error: Error }>((_, reject) =>
+          setTimeout(() => reject(new Error("timeout")), 15000)
         ),
-      ]) as Awaited<ReturnType<typeof supabase.auth.updateUser>>;
+      ]);
 
-      if (result.error) {
-        const msg = result.error.message || "";
-        if (msg.includes("reauthentication") || msg.includes("expired") || msg.includes("invalid")) {
-          setError("This reset link has expired. Please request a new one from the login page.");
+      if (updateErr) {
+        const msg = updateErr.message || "";
+        if (
+          msg.toLowerCase().includes("reauth") ||
+          msg.toLowerCase().includes("expired") ||
+          msg.toLowerCase().includes("invalid") ||
+          msg.toLowerCase().includes("session")
+        ) {
+          setError(
+            "This reset link has expired. Please request a new one from the login page."
+          );
         } else {
           setError(msg || "Failed to update password. Please request a new reset link.");
         }
@@ -119,7 +134,10 @@ export default function ResetPassword() {
       return;
     }
 
-    toast({ title: "Password updated!", description: "You can now sign in with your new password." });
+    toast({
+      title: "Password updated!",
+      description: "You can now sign in with your new password.",
+    });
     await supabase.auth.signOut();
     navigate("/login");
   };
@@ -129,14 +147,23 @@ export default function ResetPassword() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center">
           <div className="flex justify-center mb-6">
-            <img src="/daze-logo.png" alt="Daze" className="h-10"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            <img
+              src="/daze-logo.png"
+              alt="Daze"
+              className="h-10"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
           </div>
           <h1 className="text-xl font-bold text-gray-900 mb-2">Link expired</h1>
           <p className="text-sm text-gray-500 mb-6">
-            This reset link has expired or already been used. Request a new one from the login page.
+            This reset link has expired or already been used. Request a new one
+            from the login page.
           </p>
-          <Button onClick={() => navigate("/login")} className="w-full h-11">Back to sign in</Button>
+          <Button onClick={() => navigate("/login")} className="w-full h-11">
+            Back to sign in
+          </Button>
         </div>
       </div>
     );
@@ -147,12 +174,22 @@ export default function ResetPassword() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex justify-center mb-6">
-            <img src="/daze-logo.png" alt="Daze" className="h-10"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            <img
+              src="/daze-logo.png"
+              alt="Daze"
+              className="h-10"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
           </div>
 
-          <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Set new password</h1>
-          <p className="text-sm text-gray-500 text-center mb-6">Enter your new password below.</p>
+          <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
+            Set new password
+          </h1>
+          <p className="text-sm text-gray-500 text-center mb-6">
+            Enter your new password below.
+          </p>
 
           {!sessionReady ? (
             <div className="text-center py-6">
@@ -180,7 +217,11 @@ export default function ResetPassword() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -203,7 +244,11 @@ export default function ResetPassword() {
 
               {error && <p className="text-sm text-red-500">{error}</p>}
 
-              <Button type="submit" className="w-full h-11" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full h-11"
+                disabled={loading}
+              >
                 {loading ? "Updating…" : "Update password"}
               </Button>
             </form>
