@@ -20,18 +20,6 @@ export default function ResetPassword() {
   const settled = useRef(false);
 
   useEffect(() => {
-    // Check if URL has any recovery params at all
-    const url = new URL(window.location.href);
-    const hasCode = url.searchParams.has("code");
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const hasRecoveryHash =
-      hashParams.get("type") === "recovery" && hashParams.has("access_token");
-
-    if (!hasCode && !hasRecoveryHash) {
-      setLinkExpired(true);
-      return;
-    }
-
     const settle = (ready: boolean) => {
       if (settled.current) return;
       settled.current = true;
@@ -39,17 +27,7 @@ export default function ResetPassword() {
       else setLinkExpired(true);
     };
 
-    // For implicit hash flow — session is already baked into the hash
-    if (hasRecoveryHash) {
-      settle(true);
-      return;
-    }
-
-    // For PKCE code flow — the Supabase client auto-exchanges the code on init.
-    // We must NOT call exchangeCodeForSession ourselves (double-exchange corrupts the session).
-    // Strategy: listen for PASSWORD_RECOVERY event, plus poll getSession() to catch the
-    // case where the event fired before our listener was registered.
-
+    // Listen for PASSWORD_RECOVERY event from Supabase auth
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === "PASSWORD_RECOVERY" && session) {
@@ -58,28 +36,48 @@ export default function ResetPassword() {
       }
     );
 
-    // Poll getSession() — catches when the client already processed the code
-    // before our onAuthStateChange listener was registered.
-    const pollSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) settle(true);
-    };
+    // The Supabase JS client auto-exchanges the PKCE ?code= param on init
+    // and strips it from the URL via history.replaceState BEFORE this component
+    // mounts. So we cannot rely on checking for ?code= in the URL.
+    //
+    // Instead, we poll getSession() to detect whether the code was already
+    // exchanged successfully. We also check for the implicit hash flow.
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hasRecoveryHash =
+      hashParams.get("type") === "recovery" && hashParams.has("access_token");
 
-    // Check immediately, then at 500ms and 2s intervals to handle race conditions
-    pollSession();
-    const t1 = setTimeout(pollSession, 500);
-    const t2 = setTimeout(pollSession, 2000);
-    const t3 = setTimeout(pollSession, 4000);
+    if (hasRecoveryHash) {
+      settle(true);
+    } else {
+      // Poll getSession() at increasing intervals to catch the session
+      // that was established by the auto-exchange.
+      const pollSession = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) settle(true);
+      };
 
-    // Hard timeout — if nothing worked in 20s, the link is truly expired
-    const timeout = setTimeout(() => settle(false), 20000);
+      pollSession();
+      const t1 = setTimeout(pollSession, 300);
+      const t2 = setTimeout(pollSession, 800);
+      const t3 = setTimeout(pollSession, 2000);
+      const t4 = setTimeout(pollSession, 4000);
+
+      // Hard timeout â if no session found after 15s, the link is truly expired
+      // or the user navigated here directly without a valid reset link.
+      const timeout = setTimeout(() => settle(false), 15000);
+
+      return () => {
+        subscription.unsubscribe();
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        clearTimeout(t4);
+        clearTimeout(timeout);
+      };
+    }
 
     return () => {
       subscription.unsubscribe();
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(timeout);
     };
   }, []);
 
@@ -194,7 +192,7 @@ export default function ResetPassword() {
           {!sessionReady ? (
             <div className="text-center py-6">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3" />
-              <p className="text-sm text-gray-500">Verifying reset link…</p>
+              <p className="text-sm text-gray-500">Verifying reset linkâ¦</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -249,7 +247,7 @@ export default function ResetPassword() {
                 className="w-full h-11"
                 disabled={loading}
               >
-                {loading ? "Updating…" : "Update password"}
+                {loading ? "Updatingâ¦" : "Update password"}
               </Button>
             </form>
           )}
