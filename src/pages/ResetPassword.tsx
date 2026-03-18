@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -15,58 +15,42 @@ export default function ResetPassword() {
   const [sessionReady, setSessionReady] = useState(false);
   const [linkExpired, setLinkExpired] = useState(false);
   const [error, setError] = useState("");
-  const readyRef = useRef(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Only PASSWORD_RECOVERY event is valid for this page.
-    // Do NOT use getSession() — it returns any existing session, not the recovery one.
-    // Do NOT accept SIGNED_IN — that fires for regular logins and causes updateUser to hang.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        readyRef.current = true;
-        setSessionReady(true);
-      }
-    });
-
-    // Handle PKCE flow: Supabase v2 default sends a `?code=` param in the URL.
-    // We must explicitly exchange it — Supabase only auto-exchanges on initial page load,
-    // not when navigated client-side via React Router.
     const url = new URL(window.location.href);
     const code = url.searchParams.get("code");
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = hashParams.get("access_token");
-    const refreshToken = hashParams.get("refresh_token");
     const hashType = hashParams.get("type");
 
-    if (code) {
-      // PKCE flow
-      supabase.auth.exchangeCodeForSession(code).catch(() => {
-        if (!readyRef.current) setLinkExpired(true);
-      });
-    } else if (accessToken && hashType === "recovery") {
-      // Legacy implicit flow
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken || "",
-      }).then(({ error: sessionError }) => {
-        if (sessionError && !readyRef.current) setLinkExpired(true);
-      });
-    } else {
-      // No recovery params in URL — this isn't a valid reset link
+    if (!code && !(accessToken && hashType === "recovery")) {
+      // No recovery params — not a valid reset link
       setLinkExpired(true);
+      return;
     }
 
-    // Timeout: if PASSWORD_RECOVERY hasn't fired in 15s, the link is expired/invalid
-    const timeout = setTimeout(() => {
-      if (!readyRef.current) setLinkExpired(true);
-    }, 15000);
+    // Show the form immediately based on URL params.
+    // The PASSWORD_RECOVERY event often fires during Supabase client init (before React renders),
+    // so onAuthStateChange alone would miss it. Show the form now, handle errors at submit time.
+    setSessionReady(true);
 
-    return () => {
-      subscription.unsubscribe();
-      clearTimeout(timeout);
-    };
+    // For PKCE flow: exchange the code. The client may have already done this via
+    // detectSessionInUrl, in which case this is a no-op and we ignore the error.
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).catch(() => {/* already exchanged — ok */});
+    }
+
+    // Also subscribe in case we catch the event (timing-dependent)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+        setSessionReady(true);
+        setLinkExpired(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,35 +67,54 @@ export default function ResetPassword() {
     }
 
     setLoading(true);
+
     try {
-      const { error: updateError } = await supabase.auth.updateUser({ password });
-      if (updateError) {
-        setError(updateError.message || "Failed to update password. Please request a new reset link.");
+      // Race against a 12-second timeout so the button never stays stuck forever
+      const result = await Promise.race([
+        supabase.auth.updateUser({ password }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("timeout")), 12000)
+        ),
+      ]) as Awaited<ReturnType<typeof supabase.auth.updateUser>>;
+
+      if (result.error) {
+        const msg = result.error.message || "";
+        if (msg.includes("reauthentication") || msg.includes("expired") || msg.includes("invalid")) {
+          setError("This reset link has expired. Please request a new one from the login page.");
+        } else {
+          setError(msg || "Failed to update password. Please request a new reset link.");
+        }
         setLoading(false);
         return;
       }
-    } catch {
-      setError("Something went wrong. Please request a new reset link.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      setError(
+        msg === "timeout"
+          ? "Request timed out. Please request a new reset link."
+          : "Something went wrong. Please request a new reset link."
+      );
       setLoading(false);
       return;
     }
 
-    toast({ title: "Password updated", description: "You can now sign in with your new password." });
-    // Sign out the recovery session before going to login
+    toast({ title: "Password updated!", description: "You can now sign in with your new password." });
     await supabase.auth.signOut();
     navigate("/login");
   };
 
-  // Expired or invalid link
   if (linkExpired) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center">
           <div className="flex justify-center mb-6">
-            <img src="/daze-logo.png" alt="Daze" className="h-10" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            <img src="/daze-logo.png" alt="Daze" className="h-10"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
           <h1 className="text-xl font-bold text-gray-900 mb-2">Link expired</h1>
-          <p className="text-sm text-gray-500 mb-6">This reset link has expired or already been used. Request a new one from the login page.</p>
+          <p className="text-sm text-gray-500 mb-6">
+            This reset link has expired or already been used. Request a new one from the login page.
+          </p>
           <Button onClick={() => navigate("/login")} className="w-full h-11">Back to sign in</Button>
         </div>
       </div>
@@ -123,7 +126,8 @@ export default function ResetPassword() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="flex justify-center mb-6">
-            <img src="/daze-logo.png" alt="Daze" className="h-10" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            <img src="/daze-logo.png" alt="Daze" className="h-10"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
 
           <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Set new password</h1>
@@ -150,8 +154,11 @@ export default function ResetPassword() {
                     required
                     autoFocus
                   />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
