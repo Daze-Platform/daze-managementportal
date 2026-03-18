@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,22 +13,60 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
+  const [linkExpired, setLinkExpired] = useState(false);
   const [error, setError] = useState("");
+  const readyRef = useRef(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if session already active (token parsed before component mounted)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) setSessionReady(true);
-    });
-
+    // Only PASSWORD_RECOVERY event is valid for this page.
+    // Do NOT use getSession() — it returns any existing session, not the recovery one.
+    // Do NOT accept SIGNED_IN — that fires for regular logins and causes updateUser to hang.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+      if (event === "PASSWORD_RECOVERY") {
+        readyRef.current = true;
         setSessionReady(true);
       }
     });
-    return () => subscription.unsubscribe();
+
+    // Handle PKCE flow: Supabase v2 default sends a `?code=` param in the URL.
+    // We must explicitly exchange it — Supabase only auto-exchanges on initial page load,
+    // not when navigated client-side via React Router.
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get("access_token");
+    const refreshToken = hashParams.get("refresh_token");
+    const hashType = hashParams.get("type");
+
+    if (code) {
+      // PKCE flow
+      supabase.auth.exchangeCodeForSession(code).catch(() => {
+        if (!readyRef.current) setLinkExpired(true);
+      });
+    } else if (accessToken && hashType === "recovery") {
+      // Legacy implicit flow
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken || "",
+      }).then(({ error: sessionError }) => {
+        if (sessionError && !readyRef.current) setLinkExpired(true);
+      });
+    } else {
+      // No recovery params in URL — this isn't a valid reset link
+      setLinkExpired(true);
+    }
+
+    // Timeout: if PASSWORD_RECOVERY hasn't fired in 15s, the link is expired/invalid
+    const timeout = setTimeout(() => {
+      if (!readyRef.current) setLinkExpired(true);
+    }, 15000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,26 +85,43 @@ export default function ResetPassword() {
     setLoading(true);
     try {
       const { error: updateError } = await supabase.auth.updateUser({ password });
-      setLoading(false);
       if (updateError) {
-        setError(updateError.message || "Failed to update password. Try requesting a new reset link.");
+        setError(updateError.message || "Failed to update password. Please request a new reset link.");
+        setLoading(false);
         return;
       }
     } catch {
+      setError("Something went wrong. Please request a new reset link.");
       setLoading(false);
-      setError("Something went wrong. Try requesting a new reset link.");
       return;
     }
 
     toast({ title: "Password updated", description: "You can now sign in with your new password." });
+    // Sign out the recovery session before going to login
+    await supabase.auth.signOut();
     navigate("/login");
   };
+
+  // Expired or invalid link
+  if (linkExpired) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center">
+          <div className="flex justify-center mb-6">
+            <img src="/daze-logo.png" alt="Daze" className="h-10" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          </div>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Link expired</h1>
+          <p className="text-sm text-gray-500 mb-6">This reset link has expired or already been used. Request a new one from the login page.</p>
+          <Button onClick={() => navigate("/login")} className="w-full h-11">Back to sign in</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* Logo */}
           <div className="flex justify-center mb-6">
             <img src="/daze-logo.png" alt="Daze" className="h-10" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
