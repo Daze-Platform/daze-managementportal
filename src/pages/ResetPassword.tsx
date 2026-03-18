@@ -18,10 +18,13 @@ export default function ResetPassword() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Supabase puts the recovery tokens in the URL hash
-    // onAuthStateChange fires with event "PASSWORD_RECOVERY" when tokens are detected
+    // Check if session already active (token parsed before component mounted)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) setSessionReady(true);
+    });
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
+      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
         setSessionReady(true);
       }
     });
@@ -42,11 +45,16 @@ export default function ResetPassword() {
     }
 
     setLoading(true);
-    const { error: updateError } = await supabase.auth.updateUser({ password });
-    setLoading(false);
-
-    if (updateError) {
-      setError(updateError.message);
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+      setLoading(false);
+      if (updateError) {
+        setError(updateError.message || "Failed to update password. Try requesting a new reset link.");
+        return;
+      }
+    } catch {
+      setLoading(false);
+      setError("Something went wrong. Try requesting a new reset link.");
       return;
     }
 
