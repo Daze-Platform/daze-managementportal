@@ -64,8 +64,10 @@ const Login = () => {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setForgotLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
-      redirectTo: "https://daze-management-hub.vercel.app/reset-password",
+    // Use edge function — sends token_hash via Resend (no PKCE code_verifier needed,
+    // works across any browser/device including email-to-mobile flows)
+    const { error } = await supabase.functions.invoke("send-password-reset", {
+      body: { email: forgotEmail },
     });
     setForgotLoading(false);
     if (error) {
