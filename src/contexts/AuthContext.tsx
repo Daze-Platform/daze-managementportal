@@ -118,8 +118,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (mounted) setLoading(false);
     }, 5000);
 
+    // If we're on a recovery/invite page, don't treat the session as a normal login.
+    // The recovery session must be handled by /reset-password or /accept-invite exclusively.
+    const isRecoveryPage = window.location.pathname.includes('/reset-password')
+      || window.location.pathname.includes('/accept-invite');
+
     const resolveAuthFromSession = async (session: import("@supabase/supabase-js").Session | null) => {
       if (!mounted) return;
+
+      if (session?.user && isRecoveryPage) {
+        // On recovery pages, just unblock loading â don't set isAuthenticated
+        // so the app doesn't redirect to /dashboard.
+        if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
+        return;
+      }
 
       if (session?.user) {
         setIsAuthenticated(true);
@@ -134,7 +146,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("userEmail", session.user.email ?? '');
       } else {
-        // No Supabase session — fall back to legacy localStorage auth
+        // No Supabase session â fall back to legacy localStorage auth
         const authStatus = localStorage.getItem("isAuthenticated");
         const email = localStorage.getItem("userEmail");
         const storedProfile = localStorage.getItem("userProfile");
@@ -151,7 +163,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUserProfile(getDefaultProfile(email));
           }
         } else if (authStatus === "true") {
-          // Expired — clean up
+          // Expired â clean up
           localStorage.removeItem("isAuthenticated");
           localStorage.removeItem("userEmail");
           localStorage.removeItem("userProfile");
@@ -172,7 +184,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (!initialResolved.current) {
         initialResolved.current = true;
         resolveAuthFromSession(session).catch(() => {
-          // resolveAuthFromSession threw — still unblock
+          // resolveAuthFromSession threw â still unblock
           if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
         });
       }
@@ -186,7 +198,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // onAuthStateChange handles subsequent login/logout events
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // On INITIAL_SESSION event the getSession() call above already handled it — skip
+      // On INITIAL_SESSION event the getSession() call above already handled it â skip
       if (event === 'INITIAL_SESSION') {
         if (!initialResolved.current) {
           initialResolved.current = true;
@@ -195,7 +207,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return;
       }
 
-      // For all other events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.) — handle normally
+      // For all other events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.) â handle normally
       if (!mounted) return;
 
       if (event === 'SIGNED_OUT') {
@@ -204,6 +216,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserId(null);
         setUserProfile(null);
         setLoading(false);
+        return;
+      }
+
+      // PASSWORD_RECOVERY: do NOT set isAuthenticated â let the /reset-password
+      // page handle the session directly. Setting isAuthenticated here would
+      // cause the app to redirect to /dashboard before the user can reset.
+      if (event === 'PASSWORD_RECOVERY') {
+        if (mounted) setLoading(false);
         return;
       }
 
