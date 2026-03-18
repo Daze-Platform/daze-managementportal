@@ -33,7 +33,7 @@ serve(async (req) => {
       email,
       options: {
         data: { full_name: name, role },
-        redirectTo: "https://daze-management-hub.vercel.app",
+        redirectTo: "https://daze-management-hub.vercel.app/accept-invite",
       },
     });
 
