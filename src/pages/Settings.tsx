@@ -90,11 +90,17 @@ export const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "profile";
 
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    sms: true,
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem("daze_notification_prefs");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { email: true, push: false, sms: true };
   });
+
+  useEffect(() => {
+    localStorage.setItem("daze_notification_prefs", JSON.stringify(notifications));
+  }, [notifications]);
 
   const [isAddBankDialogOpen, setIsAddBankDialogOpen] = useState(false);
   const [currentPlan, setCurrentPlan] = useState("free");

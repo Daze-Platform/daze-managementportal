@@ -15,21 +15,63 @@ interface FilterProviderProps {
   children: ReactNode;
 }
 
+const STORAGE_KEY = "daze_report_filters";
+
+function loadFilters(): { store: string; dateRange: DateRange | undefined } {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        store: parsed.store || "all",
+        dateRange: parsed.dateRange
+          ? {
+              from: parsed.dateRange.from ? new Date(parsed.dateRange.from) : undefined,
+              to: parsed.dateRange.to ? new Date(parsed.dateRange.to) : undefined,
+            }
+          : { from: new Date(), to: new Date() },
+      };
+    }
+  } catch {}
+  return { store: "all", dateRange: { from: new Date(), to: new Date() } };
+}
+
+function saveFilters(store: string, dateRange: DateRange | undefined) {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        store,
+        dateRange: dateRange
+          ? { from: dateRange.from?.toISOString(), to: dateRange.to?.toISOString() }
+          : null,
+      }),
+    );
+  } catch {}
+}
+
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
-  const [selectedStore, setSelectedStore] = useState("all");
-  const [selectedDateRange, setSelectedDateRange] = useState<
+  const initial = loadFilters();
+  const [selectedStore, setSelectedStoreState] = useState(initial.store);
+  const [selectedDateRange, setSelectedDateRangeState] = useState<
     DateRange | undefined
-  >({
-    from: new Date(),
-    to: new Date(),
-  });
+  >(initial.dateRange);
+
+  const setSelectedStore = (store: string) => {
+    setSelectedStoreState(store);
+    saveFilters(store, selectedDateRange);
+  };
+
+  const setSelectedDateRange = (dateRange: DateRange | undefined) => {
+    setSelectedDateRangeState(dateRange);
+    saveFilters(selectedStore, dateRange);
+  };
 
   const resetFilters = () => {
-    setSelectedStore("all");
-    setSelectedDateRange({
-      from: new Date(),
-      to: new Date(),
-    });
+    const defaultRange = { from: new Date(), to: new Date() };
+    setSelectedStoreState("all");
+    setSelectedDateRangeState(defaultRange);
+    saveFilters("all", defaultRange);
   };
 
   return (

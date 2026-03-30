@@ -19,6 +19,7 @@ import {
 import { useStores } from "@/contexts/StoresContext";
 import { useResort } from "@/contexts/DestinationContext";
 import { Store } from "@/types/store";
+import { toast } from "sonner";
 
 interface UserCreateFormProps {
   isOpen: boolean;
@@ -44,6 +45,9 @@ export const UserCreateForm = ({
     resort: "Hilton Pensacola Beach",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
+
   // Update default store when stores change
   useEffect(() => {
     if (stores.length > 0 && !formData.store) {
@@ -53,6 +57,18 @@ export const UserCreateForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
+
+    // Validation
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      setFormError("First and last name are required.");
+      return;
+    }
+    if (!formData.email.trim()) {
+      setFormError("Email is required.");
+      return;
+    }
+
     const userData = {
       name: `${formData.firstName} ${formData.lastName}`,
       email: formData.email,
@@ -64,21 +80,28 @@ export const UserCreateForm = ({
       avatar: "/placeholder.svg",
     };
 
-    await onSubmit(userData);
+    setIsSubmitting(true);
+    try {
+      await onSubmit(userData);
 
-    // Reset form
-    const defaultStore = stores.length > 0 ? stores[0].name : "";
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      role: "Director",
-      store: defaultStore,
-      assignedStores: [],
-      assignedResorts: [],
-      resort: "Hilton Pensacola Beach",
-    });
-    onClose();
+      // Reset form
+      const defaultStore = stores.length > 0 ? stores[0].name : "";
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        role: "Director",
+        store: defaultStore,
+        assignedStores: [],
+        assignedResorts: [],
+        resort: "Hilton Pensacola Beach",
+      });
+      onClose();
+    } catch (err: any) {
+      setFormError(err?.message || "Failed to create user. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCancel = () => {
@@ -244,11 +267,17 @@ export const UserCreateForm = ({
             </div>
           </div>
 
+          {formError && (
+            <p className="text-sm text-red-500">{formError}</p>
+          )}
+
           <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={handleCancel}>
+            <Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit">Create User</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create User"}
+            </Button>
           </div>
         </form>
       </DialogContent>
