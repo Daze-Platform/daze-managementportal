@@ -74,8 +74,15 @@ export default function ResetPassword() {
 
     setLoading(true);
 
+    // Timeout guard — if updateUser hangs >12s, surface an error instead of staying stuck
+    const timeout = setTimeout(() => {
+      setLoading(false);
+      setError("Request timed out. Please try again or request a new reset link.");
+    }, 12000);
+
     try {
       const { error: updateErr } = await supabase.auth.updateUser({ password });
+      clearTimeout(timeout);
 
       if (updateErr) {
         const msg = updateErr.message || "";
@@ -89,7 +96,6 @@ export default function ResetPassword() {
         } else {
           setError(msg || "Failed to update password. Please request a new reset link.");
         }
-        setLoading(false);
         return;
       }
 
@@ -100,7 +106,10 @@ export default function ResetPassword() {
       await supabase.auth.signOut();
       navigate("/login");
     } catch {
+      clearTimeout(timeout);
       setError("Something went wrong. Please request a new reset link.");
+    } finally {
+      clearTimeout(timeout);
       setLoading(false);
     }
   };
