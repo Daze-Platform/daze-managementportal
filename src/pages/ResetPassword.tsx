@@ -169,7 +169,7 @@ export default function ResetPassword() {
             <div className="space-y-2">
               <Label htmlFor="new-password">New password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 inset-y-0 flex items-center h-full w-4 text-gray-400 pointer-events-none" />
                 <Input
                   id="new-password"
                   type={showPassword ? "text" : "password"}
@@ -183,7 +183,7 @@ export default function ResetPassword() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -193,7 +193,7 @@ export default function ResetPassword() {
             <div className="space-y-2">
               <Label htmlFor="confirm-password">Confirm password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-3 inset-y-0 flex items-center h-full w-4 text-gray-400 pointer-events-none" />
                 <Input
                   id="confirm-password"
                   type={showPassword ? "text" : "password"}
