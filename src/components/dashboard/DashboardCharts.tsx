@@ -16,6 +16,14 @@ import {
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
 
+const ChartSkeleton = () => (
+  <div className="animate-pulse bg-gray-100 rounded-lg h-48 w-full" />
+);
+
+const EmptyChartState = ({ message }: { message: string }) => (
+  <div className="flex items-center justify-center h-48 text-gray-400 text-sm">{message}</div>
+);
+
 interface ChartData {
   name: string;
   value?: number;

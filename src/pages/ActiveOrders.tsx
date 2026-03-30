@@ -38,12 +38,18 @@ import { useStores } from "@/contexts/StoresContext";
 
 // ---------- helpers ----------
 
-type StatusKey = "new" | "progress" | "ready" | "fulfillment" | "fulfilled";
+type StatusKey = "new" | "progress" | "ready" | "fulfillment" | "fulfilled" | "all";
 
 const STATUS_META: Record<
   StatusKey,
   { label: string; color: string; dot: string; bg: string }
 > = {
+  all: {
+    label: "All",
+    color: "text-gray-700",
+    dot: "bg-gray-400",
+    bg: "bg-gray-100 border-gray-300",
+  },
   new: {
     label: "New",
     color: "text-emerald-700",
@@ -404,7 +410,7 @@ function OrderDetailSheet({
 // ---------- main component ----------
 
 export const ActiveOrders = () => {
-  const [statusFilter, setStatusFilter] = useState<StatusKey | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<StatusKey>("all");
   const [detailOrder, setDetailOrder] = useState<{
     order: Order;
     tab: StatusKey;
@@ -444,7 +450,7 @@ export const ActiveOrders = () => {
   // Apply status filter
   const visibleOrders = useMemo(() => {
     if (statusFilter === "all") return storeFiltered;
-    return storeFiltered.filter((o) => o.tab === statusFilter);
+    return storeFiltered.filter((o) => (o.tab as string) === statusFilter);
   }, [storeFiltered, statusFilter]);
 
   // KPI computations
@@ -495,6 +501,7 @@ export const ActiveOrders = () => {
   const lateCount = lateOrderIds.size;
 
   const pipelineCounts: Record<StatusKey, number> = {
+    all: storeFiltered.length,
     new: getOrderTypeCount("new") || 0,
     progress: getOrderTypeCount("progress") || 0,
     ready: getOrderTypeCount("ready") || 0,
@@ -572,7 +579,7 @@ export const ActiveOrders = () => {
         {/* --- Status Pipeline --- */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
           <PipelineChip
-            statusKey={"all" as StatusKey}
+            statusKey="all"
             count={storeFiltered.length}
             active={statusFilter === "all"}
             onClick={() => setStatusFilter("all")}
