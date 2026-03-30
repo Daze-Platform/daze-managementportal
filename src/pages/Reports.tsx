@@ -559,8 +559,10 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <CancellationSection data={[]} />
+                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                    <span className="text-4xl mb-3">📊</span>
+                    <p className="font-medium text-gray-600">Coming Soon</p>
+                    <p className="text-sm mt-1">Cancellation analytics will be available in a future update.</p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -579,8 +581,10 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <DowntimeSection />
+                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                    <span className="text-4xl mb-3">🔧</span>
+                    <p className="font-medium text-gray-600">Coming Soon</p>
+                    <p className="text-sm mt-1">Downtime tracking will be available in a future update.</p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -599,8 +603,10 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <MarketingSection />
+                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                    <span className="text-4xl mb-3">📣</span>
+                    <p className="font-medium text-gray-600">Coming Soon</p>
+                    <p className="text-sm mt-1">Marketing analytics will be available in a future update.</p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -619,8 +625,10 @@ export const Reports = () => {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <TeamSection />
+                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                    <span className="text-4xl mb-3">👥</span>
+                    <p className="font-medium text-gray-600">Coming Soon</p>
+                    <p className="text-sm mt-1">Team performance analytics will be available in a future update.</p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
