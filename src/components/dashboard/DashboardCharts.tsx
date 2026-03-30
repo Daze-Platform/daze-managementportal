@@ -63,6 +63,26 @@ const itemVariants = {
   }),
 };
 
+
+// Loading skeleton for chart areas
+const ChartSkeleton = () => (
+  <div className="h-52 lg:h-72 w-full flex items-center justify-center">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+      <p className="text-sm text-muted-foreground">Loading chart data...</p>
+    </div>
+  </div>
+);
+
+// Empty state placeholder when no data is available
+const EmptyChartState = ({ message }: { message: string }) => (
+  <div className="h-52 lg:h-72 w-full flex items-center justify-center">
+    <div className="text-center">
+      <p className="text-sm text-muted-foreground">{message}</p>
+    </div>
+  </div>
+);
+
 export const DashboardCharts = ({
   storeName,
   revenueData,
