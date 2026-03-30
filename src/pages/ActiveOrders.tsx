@@ -428,6 +428,7 @@ export const ActiveOrders = () => {
     selectedStore,
     setSelectedStore,
     getOrderTypeCount,
+    fetchOrders,
   } = useOrderManagement();
 
   const stores = [
@@ -538,7 +539,7 @@ export const ActiveOrders = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon" className="h-9 w-9">
+            <Button variant="outline" size="icon" className="h-9 w-9" onClick={fetchOrders}>
               <RefreshCw className="w-4 h-4" />
             </Button>
           </div>

@@ -395,6 +395,7 @@ export const useOrderData = () => {
 
   return {
     orderData,
+    fetchOrders,
     moveOrder,
     removeOrder,
     scheduleOrder,

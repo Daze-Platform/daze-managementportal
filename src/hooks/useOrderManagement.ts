@@ -26,7 +26,7 @@ export const useOrderManagement = () => {
     setAdvancedFilters,
   } = useOrderState();
 
-  const { orderData, generateInitialOrders } = useOrderData();
+  const { orderData, generateInitialOrders, fetchOrders } = useOrderData();
 
   const { getFilteredOrders, getOrderTypeCount } = useOrderFilters();
 
@@ -165,5 +165,6 @@ export const useOrderManagement = () => {
     moveOrder,
     removeOrder,
     scheduleOrder,
+    fetchOrders,
   };
 };
