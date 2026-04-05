@@ -35,7 +35,7 @@ function endOfDayISO(date: Date): string {
   return d.toISOString();
 }
 
-async function fetchMetrics(): Promise<RightNowMetrics> {
+async function fetchMetrics(tenantId?: string): Promise<RightNowMetrics> {
   const now = new Date();
 
   // Today window
@@ -49,28 +49,31 @@ async function fetchMetrics(): Promise<RightNowMetrics> {
   const yestSameTime = yesterday.toISOString(); // now - 24h
 
   try {
-    // Try the orders table (multiple possible names)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sb = supabase as any;
 
     // 1. In Queue — orders with status new/pending created today
-    const { data: queueData, error: queueError } = await sb
+    let queueQuery = sb
       .from("orders")
       .select("id", { count: "exact" })
       .in("status", ["new", "pending"])
       .gte("created_at", todayStart)
       .lte("created_at", todayEnd);
+    if (tenantId) queueQuery = queueQuery.eq("tenant_id", tenantId);
+    const { data: queueData, error: queueError } = await queueQuery;
 
     const inQueue =
       !queueError && queueData ? (queueData.length ?? 0) : generateFallback("inQueue");
 
     // 2. Completed today
-    const { data: completedData, error: completedError } = await sb
+    let completedQuery = sb
       .from("orders")
       .select("id, created_at, updated_at", { count: "exact" })
       .eq("status", "delivered")
       .gte("created_at", todayStart)
       .lte("created_at", todayEnd);
+    if (tenantId) completedQuery = completedQuery.eq("tenant_id", tenantId);
+    const { data: completedData, error: completedError } = await completedQuery;
 
     const completedToday =
       !completedError && completedData ? completedData.length : generateFallback("completedToday");
@@ -78,7 +81,9 @@ async function fetchMetrics(): Promise<RightNowMetrics> {
     // 3. Avg ticket time
     let avgTicketMinutes: number | null = null;
     if (!completedError && completedData && completedData.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const times = completedData
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((row: any) => {
           if (!row.created_at || !row.updated_at) return null;
           const diff =
@@ -97,12 +102,14 @@ async function fetchMetrics(): Promise<RightNowMetrics> {
     if (avgTicketMinutes === null) avgTicketMinutes = generateFallback("avgTicket") as number;
 
     // 4. Pacing — completed yesterday up to same time of day
-    const { data: yesterdayData, error: yestError } = await sb
+    let yestQuery = sb
       .from("orders")
       .select("id")
       .eq("status", "delivered")
       .gte("created_at", yestStart)
       .lte("created_at", yestSameTime);
+    if (tenantId) yestQuery = yestQuery.eq("tenant_id", tenantId);
+    const { data: yesterdayData, error: yestError } = await yestQuery;
 
     let pacing: number | null = null;
     if (!yestError && yesterdayData) {
@@ -192,7 +199,11 @@ const metricCards = [
   },
 ];
 
-export const RightNowPanel = () => {
+interface RightNowPanelProps {
+  tenantId?: string;
+}
+
+export const RightNowPanel = ({ tenantId }: RightNowPanelProps) => {
   const [metrics, setMetrics] = useState<RightNowMetrics>({
     inQueue: 4,
     avgTicketMinutes: 12,
@@ -204,11 +215,11 @@ export const RightNowPanel = () => {
 
   const refresh = useCallback(async () => {
     setRefreshing(true);
-    const data = await fetchMetrics();
+    const data = await fetchMetrics(tenantId);
     setMetrics(data);
     setLastUpdated(new Date());
     setRefreshing(false);
-  }, []);
+  }, [tenantId]);
 
   // Initial fetch + polling
   useEffect(() => {

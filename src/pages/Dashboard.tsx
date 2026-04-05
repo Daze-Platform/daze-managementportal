@@ -15,6 +15,7 @@ import {
 import { useDashboardLiveData } from "@/hooks/useDashboardLiveData";
 import { useFilters } from "@/contexts/FilterContext";
 import { useResort } from "@/contexts/DestinationContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Dashboard = () => {
   const {
@@ -25,9 +26,11 @@ export const Dashboard = () => {
   } = useFilters();
 
   const { currentResort } = useResort();
+  const { userProfile } = useAuth();
+  const tenantId = userProfile?.tenantId;
 
-  // Live data from Supabase orders table (auto-refreshes every 60s)
-  const liveData = useDashboardLiveData();
+  // Live data from Supabase orders table, scoped to this tenant (auto-refreshes every 60s)
+  const liveData = useDashboardLiveData(tenantId);
 
   // Get resort-specific static data for sections we can't compute live yet
   const resortData =
@@ -70,7 +73,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Right Now Panel */}
-        <RightNowPanel />
+        <RightNowPanel tenantId={tenantId} />
 
         {/* Stats Cards — LIVE from Supabase */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 bg-white rounded-xl border border-border/50 p-4 sm:p-6">
