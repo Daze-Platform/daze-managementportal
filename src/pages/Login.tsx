@@ -67,7 +67,7 @@ const Login = () => {
     // Use edge function — sends token_hash via Resend (no PKCE code_verifier needed,
     // works across any browser/device including email-to-mobile flows)
     const { error } = await supabase.functions.invoke("send-password-reset", {
-      body: { email: forgotEmail },
+      body: { email: forgotEmail, redirectTo: "https://daze-management-hub.vercel.app/reset-password" },
     });
     setForgotLoading(false);
     if (error) {
