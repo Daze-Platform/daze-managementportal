@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email } = await req.json();
+    const { email, redirectTo } = await req.json();
 
     if (!email) {
       return new Response(
@@ -33,7 +33,7 @@ serve(async (req) => {
       type: "recovery",
       email,
       options: {
-        redirectTo: "https://daze-management-hub.vercel.app/reset-password",
+        redirectTo: redirectTo || "https://daze-management-hub.vercel.app/reset-password",
       },
     });
 
@@ -56,7 +56,8 @@ serve(async (req) => {
     }
 
     // Build reset URL using token_hash — works across any browser/device
-    const resetUrl = `https://daze-management-hub.vercel.app/reset-password?token_hash=${hashedToken}&type=recovery`;
+    const appBase = redirectTo || "https://daze-management-hub.vercel.app/reset-password";
+    const resetUrl = `${appBase}?token_hash=${hashedToken}&type=recovery`;
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
     const emailParts = email.split("@");
