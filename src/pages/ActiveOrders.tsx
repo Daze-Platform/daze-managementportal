@@ -42,43 +42,49 @@ type StatusKey = "new" | "progress" | "ready" | "fulfillment" | "fulfilled" | "a
 
 const STATUS_META: Record<
   StatusKey,
-  { label: string; color: string; dot: string; bg: string }
+  { label: string; color: string; dot: string; bg: string; border: string }
 > = {
   all: {
     label: "All",
     color: "text-gray-700",
     dot: "bg-gray-400",
-    bg: "bg-gray-100 border-gray-300",
+    bg: "bg-gray-100",
+    border: "border-gray-300",
   },
   new: {
     label: "New",
     color: "text-emerald-700",
     dot: "bg-emerald-500",
-    bg: "bg-emerald-50 border-emerald-200",
+    bg: "bg-emerald-50",
+    border: "border-emerald-200",
   },
   progress: {
     label: "Preparing",
     color: "text-blue-700",
     dot: "bg-blue-500",
-    bg: "bg-blue-50 border-blue-200",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
   },
   ready: {
     label: "Ready",
     color: "text-amber-700",
     dot: "bg-amber-500",
-    bg: "bg-amber-50 border-amber-200",
+    bg: "bg-amber-50",
+    border: "border-amber-200",
   },
   fulfillment: {
     label: "Out",
     color: "text-violet-700",
     dot: "bg-violet-500",
-    bg: "bg-violet-50 border-violet-200",
+    bg: "bg-violet-50",
+    border: "border-violet-200",
   },
   fulfilled: {
     label: "Done",
     color: "text-gray-500",
     dot: "bg-gray-400",
-    bg: "bg-gray-50 border-gray-200",
+    bg: "bg-gray-50",
+    border: "border-gray-200",
   },
 };
 
@@ -145,29 +151,37 @@ function KpiCard({
   label,
   value,
   sub,
-  accent,
+  iconBg,
+  topBorder,
 }: {
   icon: React.ElementType;
   label: string;
   value: string;
   sub?: string;
-  accent: string;
+  iconBg: string;
+  topBorder: string;
 }) {
   return (
-    <Card className="p-3 sm:p-4 flex items-center gap-3 border bg-card">
-      <div
-        className={`w-10 h-10 rounded-xl flex items-center justify-center ${accent}`}
-      >
-        <Icon className="w-5 h-5 text-white" />
-      </div>
-      <div className="min-w-0">
-        <p className="text-2xl font-bold tracking-tight leading-none">
-          {value}
-        </p>
-        <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
-        {sub && (
-          <p className="text-[11px] text-muted-foreground/70">{sub}</p>
-        )}
+    <Card className={`p-4 border-t-[3px] ${topBorder} bg-card shadow-sm`}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+            {label}
+          </p>
+          <p className="text-2xl sm:text-3xl font-bold tracking-tight mt-1 leading-none tabular-nums">
+            {value}
+          </p>
+          {sub && (
+            <p className="text-[11px] text-muted-foreground mt-1.5 leading-tight">
+              {sub}
+            </p>
+          )}
+        </div>
+        <div
+          className={`w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center ${iconBg}`}
+        >
+          <Icon className="w-4 h-4 text-white" />
+        </div>
       </div>
     </Card>
   );
@@ -190,14 +204,24 @@ function PipelineChip({
       onClick={onClick}
       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all whitespace-nowrap ${
         active
-          ? `${meta.bg} ${meta.color} ring-2 ring-offset-1 ring-current/20`
-          : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
+          ? `${meta.bg} ${meta.color} ${meta.border} shadow-sm`
+          : "bg-background text-muted-foreground border-border/50 hover:border-border hover:text-foreground"
       }`}
     >
-      <span className={`w-2 h-2 rounded-full ${meta.dot} flex-shrink-0`} />
+      <span
+        className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+          active ? meta.dot : "bg-muted-foreground/30"
+        } ${statusKey === "new" && active ? "animate-pulse" : ""}`}
+      />
       {meta.label}
       {count > 0 && (
-        <span className="ml-0.5 font-bold">{count}</span>
+        <span
+          className={`ml-0.5 ${
+            active ? "font-bold" : "text-muted-foreground/60"
+          }`}
+        >
+          {count}
+        </span>
       )}
     </button>
   );
@@ -223,13 +247,18 @@ function OrderRow({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -6 }}
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 border-b border-border/50 last:border-b-0 ${
-        isLate ? "bg-red-50/50" : ""
+      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/40 border-b border-border/40 last:border-b-0 ${
+        isLate ? "bg-red-50/40" : ""
       }`}
     >
-      {/* Status dot */}
+      {/* Status indicator */}
+      <div
+        className={`w-1 self-stretch rounded-full flex-shrink-0 ${meta.dot} opacity-70`}
+      />
+
+      {/* Status dot for "new" pulse */}
       <span
-        className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${meta.dot} ${
+        className={`w-2 h-2 rounded-full flex-shrink-0 ${meta.dot} ${
           tab === "new" ? "animate-pulse" : ""
         }`}
       />
@@ -276,11 +305,11 @@ function OrderRow({
 
       {/* Right side — price + time */}
       <div className="text-right flex-shrink-0">
-        <p className="text-sm font-bold text-foreground">
+        <p className="text-sm font-bold text-foreground tabular-nums">
           ${parsePrice(order.items).toFixed(2)}
         </p>
         <p
-          className={`text-xs ${
+          className={`text-xs tabular-nums ${
             isLate ? "text-red-500 font-medium" : "text-muted-foreground"
           }`}
         >
@@ -288,7 +317,7 @@ function OrderRow({
         </p>
       </div>
 
-      <ChevronRight className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
+      <ChevronRight className="w-4 h-4 text-muted-foreground/40 flex-shrink-0" />
     </motion.button>
   );
 }
@@ -321,7 +350,7 @@ function OrderDetailSheet({
           <SheetDescription>
             <Badge
               variant="outline"
-              className={`${meta.bg} ${meta.color} text-xs`}
+              className={`${meta.bg} ${meta.color} ${meta.border} text-xs`}
             >
               {meta.label}
             </Badge>
@@ -377,7 +406,7 @@ function OrderDetailSheet({
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Total</span>
-              <span className="font-bold text-lg">
+              <span className="font-bold text-lg tabular-nums">
                 ${parsePrice(order.items).toFixed(2)}
               </span>
             </div>
@@ -436,25 +465,21 @@ export const ActiveOrders = () => {
     ...tenantStores.map((s) => ({ id: s.id.toString(), name: s.name })),
   ];
 
-  // Flatten all orders into a single feed
   const allOrders = useMemo(
     () => flattenOrders(orderData, PIPELINE_KEYS),
     [orderData]
   );
 
-  // Apply store filter
   const storeFiltered = useMemo(() => {
     if (selectedStore === "all") return allOrders;
     return allOrders.filter((o) => o.order.storeId === selectedStore);
   }, [allOrders, selectedStore]);
 
-  // Apply status filter
   const visibleOrders = useMemo(() => {
     if (statusFilter === "all") return storeFiltered;
     return storeFiltered.filter((o) => (o.tab as string) === statusFilter);
   }, [storeFiltered, statusFilter]);
 
-  // KPI computations
   const activeCount =
     (getOrderTypeCount("new") || 0) +
     (getOrderTypeCount("progress") || 0) +
@@ -489,7 +514,6 @@ export const ActiveOrders = () => {
       ? Math.round((completedOrders.length / totalProcessed) * 100)
       : 100;
 
-  // Late orders (>15 min, not completed)
   const lateOrderIds = new Set(
     storeFiltered
       .filter(
@@ -512,23 +536,30 @@ export const ActiveOrders = () => {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-5">
+
         {/* --- Header --- */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-              Live Orders
-            </h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+                Live Orders
+              </h1>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live
+              </span>
+            </div>
             <p className="text-sm text-muted-foreground mt-0.5">
               Real-time order intelligence
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Select
               value={selectedStore}
               onValueChange={setSelectedStore}
             >
-              <SelectTrigger className="w-[140px] sm:w-[180px] h-9 text-sm">
+              <SelectTrigger className="w-[140px] sm:w-[160px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -539,7 +570,12 @@ export const ActiveOrders = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon" className="h-9 w-9" onClick={fetchOrders}>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 flex-shrink-0"
+              onClick={fetchOrders}
+            >
               <RefreshCw className="w-4 h-4" />
             </Button>
           </div>
@@ -551,34 +587,38 @@ export const ActiveOrders = () => {
             icon={ShoppingBag}
             label="Active Orders"
             value={activeCount.toString()}
-            sub={lateCount > 0 ? `${lateCount} over 15m` : undefined}
-            accent="bg-emerald-500"
+            sub={lateCount > 0 ? `⚠ ${lateCount} over 15m` : "all on track"}
+            iconBg="bg-emerald-500"
+            topBorder="border-t-emerald-400"
           />
           <KpiCard
             icon={DollarSign}
             label="Revenue Today"
             value={`$${totalRevenue.toFixed(0)}`}
             sub={`${storeFiltered.length} total orders`}
-            accent="bg-blue-500"
+            iconBg="bg-blue-500"
+            topBorder="border-t-blue-400"
           />
           <KpiCard
             icon={Clock}
             label="Avg Wait"
             value={fmtMins(avgWaitMins)}
-            sub={allActiveOrders.length > 0 ? "active orders" : "no active"}
-            accent={avgWaitMins > 15 ? "bg-red-500" : "bg-amber-500"}
+            sub={allActiveOrders.length > 0 ? "across active" : "no active orders"}
+            iconBg={avgWaitMins > 15 ? "bg-red-500" : "bg-amber-500"}
+            topBorder={avgWaitMins > 15 ? "border-t-red-400" : "border-t-amber-400"}
           />
           <KpiCard
             icon={TrendingUp}
             label="Completion"
             value={`${completionRate}%`}
-            sub={`${completedOrders.length} completed`}
-            accent="bg-violet-500"
+            sub={`${completedOrders.length} completed today`}
+            iconBg="bg-violet-500"
+            topBorder="border-t-violet-400"
           />
         </div>
 
         {/* --- Status Pipeline --- */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
           <PipelineChip
             statusKey="all"
             count={storeFiltered.length}
@@ -605,7 +645,7 @@ export const ActiveOrders = () => {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3"
           >
-            <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+            <AlertTriangle className="w-4 h-4 flex-shrink-0" />
             <div className="text-sm">
               <strong>{lateCount} order{lateCount > 1 ? "s" : ""}</strong>{" "}
               waiting more than 15 minutes — check with kitchen
@@ -613,7 +653,7 @@ export const ActiveOrders = () => {
             <Button
               variant="outline"
               size="sm"
-              className="ml-auto text-red-700 border-red-300 hover:bg-red-100"
+              className="ml-auto text-red-700 border-red-300 hover:bg-red-100 flex-shrink-0"
               onClick={() => setStatusFilter("new")}
             >
               View
@@ -622,14 +662,21 @@ export const ActiveOrders = () => {
         )}
 
         {/* --- Order Feed --- */}
-        <Card className="overflow-hidden border">
-          <div className="px-4 py-2.5 bg-muted/30 border-b flex items-center justify-between">
-            <p className="text-sm font-medium text-muted-foreground">
-              {visibleOrders.length} order
-              {visibleOrders.length !== 1 ? "s" : ""}
-              {statusFilter !== "all" &&
-                ` · ${STATUS_META[statusFilter as StatusKey]?.label ?? ""}`}
+        <Card className="overflow-hidden border shadow-sm">
+          <div className="px-4 py-3 bg-muted/20 border-b flex items-center justify-between">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              {visibleOrders.length > 0
+                ? `${visibleOrders.length} Order${visibleOrders.length !== 1 ? "s" : ""}${
+                    statusFilter !== "all"
+                      ? ` · ${STATUS_META[statusFilter as StatusKey]?.label ?? ""}`
+                      : ""
+                  }`
+                : "Orders"}
             </p>
+            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium">
+              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+              Auto-refresh
+            </div>
           </div>
 
           <div className="max-h-[60vh] overflow-y-auto">
@@ -639,19 +686,27 @@ export const ActiveOrders = () => {
                   key="empty"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex flex-col items-center justify-center py-16 text-center px-4"
+                  className="flex flex-col items-center justify-center py-20 text-center px-4"
                 >
-                  <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
-                    <ShoppingBag className="w-7 h-7 text-muted-foreground" />
+                  {/* Icon with live pulse ring */}
+                  <div className="relative mb-5">
+                    <div className="absolute inset-0 rounded-2xl bg-muted/40 animate-ping opacity-30 scale-110" />
+                    <div className="relative w-14 h-14 rounded-2xl bg-muted/60 flex items-center justify-center">
+                      <ShoppingBag className="w-7 h-7 text-muted-foreground/50" />
+                    </div>
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 border-2 border-background flex items-center justify-center">
+                      <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                    </span>
                   </div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    No orders
+                  <p className="text-sm font-semibold text-foreground">
                     {statusFilter !== "all"
-                      ? ` with "${STATUS_META[statusFilter as StatusKey]?.label}" status`
-                      : " yet"}
+                      ? `No "${STATUS_META[statusFilter as StatusKey]?.label}" orders`
+                      : "No orders yet"}
                   </p>
-                  <p className="text-xs text-muted-foreground/70 mt-1">
-                    Orders will appear here in real time
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {statusFilter === "all"
+                      ? "Listening for new orders in real time"
+                      : "Switch to All to see other orders"}
                   </p>
                 </motion.div>
               ) : (
