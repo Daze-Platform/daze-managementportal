@@ -51,6 +51,13 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
   const loadPromotions = async (tenantId: string, showErrors = false) => {
     try {
       setLoading(true);
+
+      if (!tenantId) {
+        setPromotions([]);
+        setLoading(false);
+        return;
+      }
+
       // Scope to this tenant's resorts
       const { data: resortRows } = await supabase
         .from("resorts")

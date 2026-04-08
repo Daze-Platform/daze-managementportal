@@ -57,8 +57,21 @@ const Login = () => {
   }
 
   const handleDemoLogin = () => {
-    setEmail("manuel@innisfree-test.daze.com");
-    setPassword("DazeDemo2026!");
+    // Demo login removed for security - use environment variables if needed
+    const demoEmail = import.meta.env.VITE_DEMO_EMAIL;
+    const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
+
+    if (!demoEmail || !demoPassword) {
+      toast({
+        variant: "destructive",
+        title: "Demo Not Available",
+        description: "Demo login credentials are not configured.",
+      });
+      return;
+    }
+
+    setEmail(demoEmail);
+    setPassword(demoPassword);
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {

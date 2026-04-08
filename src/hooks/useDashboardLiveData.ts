@@ -60,17 +60,30 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchDashboard = useCallback(async () => {
+    // Skip query if tenantId is not available
+    if (!tenantId) {
+      setStats({
+        revenue: 0, orders: 0, customers: 0, avgOrder: 0,
+        trends: { revenue: 0, orders: 0, customers: 0, avgOrder: 0 },
+      });
+      setRevenueData([]);
+      setOrderData([]);
+      setTopItems([]);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const now = new Date();
       const todayStart = startOfDay(now).toISOString();
 
-      // 1) Today's orders (excluding cancelled)
+      // 1) Today's orders (excluding cancelled) - MANDATORY tenant filter
       let todayQuery = sb
         .from("orders")
         .select("id, total_cents, guest_id, created_at, status")
         .neq("status", "cancelled")
-        .gte("created_at", todayStart);
-      if (tenantId) todayQuery = todayQuery.eq("tenant_id", tenantId);
+        .gte("created_at", todayStart)
+        .eq("tenant_id", tenantId);
 
       const { data: todayOrders } = await todayQuery;
       const orders = todayOrders ?? [];
@@ -80,7 +93,7 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
       const uniqueGuests = new Set(orders.map((o: { guest_id: string | null }) => o.guest_id).filter(Boolean)).size;
       const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-      // 2) Yesterday's orders for trend comparison
+      // 2) Yesterday's orders for trend comparison - MANDATORY tenant filter
       const yesterdayStart = startOfDay(new Date(now.getTime() - 86400000)).toISOString();
       const yesterdayEnd = todayStart;
       let yQuery = sb
@@ -88,8 +101,8 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
         .select("id, total_cents, guest_id")
         .neq("status", "cancelled")
         .gte("created_at", yesterdayStart)
-        .lt("created_at", yesterdayEnd);
-      if (tenantId) yQuery = yQuery.eq("tenant_id", tenantId);
+        .lt("created_at", yesterdayEnd)
+        .eq("tenant_id", tenantId);
 
       const { data: yOrders } = await yQuery;
       const yArr = yOrders ?? [];
@@ -113,14 +126,14 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
         },
       });
 
-      // 3) 7-day revenue chart
+      // 3) 7-day revenue chart - MANDATORY tenant filter
       const weekAgo = new Date(now.getTime() - 7 * 86400000);
       let weekQuery = sb
         .from("orders")
         .select("total_cents, created_at")
         .neq("status", "cancelled")
-        .gte("created_at", startOfDay(weekAgo).toISOString());
-      if (tenantId) weekQuery = weekQuery.eq("tenant_id", tenantId);
+        .gte("created_at", startOfDay(weekAgo).toISOString())
+        .eq("tenant_id", tenantId);
 
       const { data: weekOrders } = await weekQuery;
       const dayMap: Record<string, number> = {};

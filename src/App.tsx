@@ -122,7 +122,7 @@ const AppRoutes = () => {
       <Route
         path="/employees"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
             <Layout>
               <Employees />
             </Layout>
@@ -152,7 +152,7 @@ const AppRoutes = () => {
       <Route
         path="/settings"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
             <Layout>
               <Settings />
             </Layout>

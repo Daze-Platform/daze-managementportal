@@ -116,53 +116,62 @@ export const Users = () => {
 
     setInviting(true);
     try {
-      // For now, create a placeholder entry — real auth user creation requires admin API
-      // This adds a user_tenants row with a generated UUID as placeholder user_id
-      const placeholderId = crypto.randomUUID();
-
-      // Check if already a member by email match (future: query auth.users)
-      const { data: existingMember } = await supabase
-        .from('user_tenants')
-        .select('id')
-        .eq('user_id', placeholderId)
-        .single();
-
-      if (existingMember) {
-        toast({ variant: 'destructive', title: 'Already a member', description: 'This user is already on the team.' });
-        return;
-      }
-
-      // Get current user's tenant
-      const { data: currentUserTenant } = await supabase
-        .from('user_tenants')
-        .select('tenant_id')
-        .limit(1)
-        .single();
-
-      const tenantId = currentUserTenant?.tenant_id;
+      const tenantId = userProfile?.tenantId;
       if (!tenantId) {
         toast({ variant: 'destructive', title: 'Error', description: 'Could not determine tenant.' });
         return;
       }
 
-      // Insert tenant member
-      const { error: memberErr } = await supabase
-        .from('user_tenants')
-        .insert({
-          user_id: placeholderId,
-          tenant_id: tenantId,
+      // Call the invite-employee edge function to properly handle invitations
+      const { data: inviteData, error: inviteError } = await supabase.functions.invoke('invite-employee', {
+        body: {
+          email: inviteEmail,
+          name: inviteName,
           role: inviteRole,
-        });
+          tenantId,
+        },
+      });
 
-      if (memberErr) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not add team member: ' + memberErr.message });
-        return;
+      if (inviteError) {
+        const errorMsg = inviteError.message || 'Unknown error';
+        if (errorMsg.includes('already been registered') || errorMsg.includes('already')) {
+          toast({
+            variant: 'info',
+            title: 'User already has account',
+            description: inviteEmail + ' already has an account — adding to team directly.',
+          });
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Invite failed',
+            description: errorMsg,
+          });
+          return;
+        }
+      }
+
+      if (inviteData?.error) {
+        const errorMsg = inviteData.error || 'Unknown error';
+        if (errorMsg.includes('already been registered') || errorMsg.includes('already')) {
+          toast({
+            variant: 'info',
+            title: 'User already has account',
+            description: inviteEmail + ' already has an account — adding to team directly.',
+          });
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Invite failed',
+            description: errorMsg,
+          });
+          return;
+        }
       }
 
       toast({
         variant: 'success',
-        title: 'User added',
-        description: `${inviteName || inviteEmail} added as ${inviteRole}.`,
+        title: 'Invitation sent',
+        description: `Invite sent to ${inviteEmail}.`,
       });
 
       setInviteEmail('');

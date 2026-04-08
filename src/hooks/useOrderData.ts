@@ -329,7 +329,8 @@ export const useOrderData = () => {
       const { error } = await sb
         .from("orders")
         .update(updatePayload)
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("tenant_id", tenantId);
 
       if (error) {
         console.error("Failed to update order status:", error);
@@ -356,7 +357,8 @@ export const useOrderData = () => {
           cancelled_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("tenant_id", tenantId);
 
       if (error) {
         console.error("Failed to cancel order:", error);
