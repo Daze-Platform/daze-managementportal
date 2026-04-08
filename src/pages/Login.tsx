@@ -57,15 +57,30 @@ const Login = () => {
   }
 
   const handleDemoLogin = () => {
-    setEmail("manuel@innisfree-test.daze.com");
-    setPassword("DazeDemo2026!");
+    // Demo login removed for security - use environment variables if needed
+    const demoEmail = import.meta.env.VITE_DEMO_EMAIL;
+    const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
+
+    if (!demoEmail || !demoPassword) {
+      toast({
+        variant: "destructive",
+        title: "Demo Not Available",
+        description: "Demo login credentials are not configured.",
+      });
+      return;
+    }
+
+    setEmail(demoEmail);
+    setPassword(demoPassword);
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setForgotLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
-      redirectTo: "https://daze-management-hub.vercel.app/reset-password",
+    // Use edge function — sends token_hash via Resend (no PKCE code_verifier needed,
+    // works across any browser/device including email-to-mobile flows)
+    const { error } = await supabase.functions.invoke("send-password-reset", {
+      body: { email: forgotEmail, redirectTo: "https://daze-management-hub.vercel.app/reset-password" },
     });
     setForgotLoading(false);
     if (error) {
@@ -248,7 +263,7 @@ const Login = () => {
                   <motion.button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-md transition-colors"
+                    className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground p-1 rounded-md transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >

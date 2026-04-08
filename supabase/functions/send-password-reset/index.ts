@@ -3,8 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 serve(async (req) => {
@@ -13,11 +12,11 @@ serve(async (req) => {
   }
 
   try {
-    const { email, name, role, tenantId } = await req.json();
+    const { email, redirectTo } = await req.json();
 
-    if (!email || !tenantId) {
+    if (!email) {
       return new Response(
-        JSON.stringify({ error: "email and tenantId are required" }),
+        JSON.stringify({ error: "email is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
@@ -27,29 +26,42 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Generate invite link directly — bypasses Supabase SMTP entirely
+    // Generate recovery link — get hashed_token for OTP-based (non-PKCE) reset.
+    // This works across any browser/device: the user can click the link from their
+    // email on mobile, a different browser, or incognito — no code_verifier needed.
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "invite",
+      type: "recovery",
       email,
       options: {
-        data: { full_name: name, role },
-        redirectTo: "https://daze-management-hub.vercel.app/accept-invite",
+        redirectTo: redirectTo || "https://daze-management-hub.vercel.app/reset-password",
       },
     });
 
     if (linkError) {
+      // Don't reveal if the email exists or not — always return success to caller
+      console.error("generateLink error:", linkError.message);
       return new Response(
-        JSON.stringify({ error: linkError.message }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        JSON.stringify({ success: true }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
-    const inviteUrl = linkData.properties?.action_link;
-    const userId = linkData.user?.id;
+    const hashedToken = linkData.properties?.hashed_token;
+    if (!hashedToken) {
+      console.error("No hashed_token in response");
+      return new Response(
+        JSON.stringify({ success: true }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
 
-    // Send invite email via Resend directly
+    // Build reset URL using token_hash — works across any browser/device
+    const appBase = redirectTo || "https://daze-management-hub.vercel.app/reset-password";
+    const resetUrl = `${appBase}?token_hash=${hashedToken}&type=recovery`;
+
     const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
-    const firstName = name ? name.split(" ")[0] : "there";
+    const emailParts = email.split("@");
+    const firstName = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
 
     const emailHtml = `<!DOCTYPE html>
 <html>
@@ -75,10 +87,10 @@ serve(async (req) => {
   <div class="wrapper">
     <div class="header"><span class="logo-text">DAZE</span></div>
     <div class="body">
-      <p class="greeting">Hi ${firstName}, you've been invited!</p>
-      <p class="text">You've been invited to join the Daze management platform${role ? ` as a <strong>${role}</strong>` : ""}. Click the button below to accept your invitation and set up your account.</p>
-      <div class="btn-wrap"><a href="${inviteUrl}" class="btn">Accept Invitation</a></div>
-      <p class="note">This link expires in 24 hours. If you did not expect this invitation, you can safely ignore this email.</p>
+      <p class="greeting">Reset your password</p>
+      <p class="text">We received a request to reset the password for your Daze account (<strong>${email}</strong>). Click the button below to set a new password.</p>
+      <div class="btn-wrap"><a href="${resetUrl}" class="btn">Reset Password</a></div>
+      <p class="note">This link expires in 1 hour and can only be used once. If you did not request a password reset, you can safely ignore this email — your password will not change.</p>
     </div>
     <div class="footer">Daze Technologies &nbsp;&bull;&nbsp; Pensacola Beach, FL<br>hello@dazeapp.com</div>
   </div>
@@ -94,7 +106,7 @@ serve(async (req) => {
       body: JSON.stringify({
         from: "Daze <hello@dazeapp.com>",
         to: [email],
-        subject: "You have been invited to Daze",
+        subject: "Reset your Daze password",
         html: emailHtml,
       }),
     });
@@ -102,21 +114,14 @@ serve(async (req) => {
     if (!resendRes.ok) {
       const resendErr = await resendRes.text();
       console.error("Resend error:", resendErr);
-      // Don't fail the whole request — user was created, just log the email error
-    }
-
-    // Best-effort: link user to tenant
-    if (userId) {
-      await supabaseAdmin
-        .from("user_tenants")
-        .insert({ user_id: userId, tenant_id: tenantId, role });
     }
 
     return new Response(
-      JSON.stringify({ success: true, userId }),
+      JSON.stringify({ success: true }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (err) {
+    console.error("Unhandled error:", err);
     return new Response(
       JSON.stringify({ error: String(err) }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },

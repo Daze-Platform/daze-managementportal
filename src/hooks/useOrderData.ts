@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface Order {
   id: string;
@@ -228,14 +229,19 @@ export const useOrderData = () => {
     scheduled: [],
   });
 
+  const { userProfile } = useAuth();
+  const tenantId = userProfile?.tenantId;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sb = supabase as any;
 
   const fetchOrders = useCallback(async () => {
+    if (!tenantId) return; // Don't fetch until tenant is known
     try {
       const { data, error } = await sb
         .from("orders")
         .select("*, guests(name), order_items(name, quantity)")
+        .eq("tenant_id", tenantId)
         .neq("status", "cancelled")
         .order("created_at", { ascending: false });
 
@@ -250,17 +256,23 @@ export const useOrderData = () => {
     } catch (err) {
       console.error("Error fetching orders:", err);
     }
-  }, [sb]);
+  }, [sb, tenantId]);
 
   // Initial fetch + realtime subscription
   useEffect(() => {
+    if (!tenantId) return;
     fetchOrders();
 
     const channel = sb
       .channel("orders-realtime")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "orders" },
+        {
+          event: "*",
+          schema: "public",
+          table: "orders",
+          filter: `tenant_id=eq.${tenantId}`,
+        },
         () => {
           fetchOrders();
         },
@@ -270,7 +282,7 @@ export const useOrderData = () => {
     return () => {
       sb.removeChannel(channel);
     };
-  }, [fetchOrders, sb]);
+  }, [fetchOrders, sb, tenantId]);
 
   // No-op — orders load from DB automatically
   const generateInitialOrders = useCallback(() => {}, []);
@@ -317,7 +329,8 @@ export const useOrderData = () => {
       const { error } = await sb
         .from("orders")
         .update(updatePayload)
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("tenant_id", tenantId);
 
       if (error) {
         console.error("Failed to update order status:", error);
@@ -344,7 +357,8 @@ export const useOrderData = () => {
           cancelled_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("tenant_id", tenantId);
 
       if (error) {
         console.error("Failed to cancel order:", error);
@@ -383,6 +397,7 @@ export const useOrderData = () => {
 
   return {
     orderData,
+    fetchOrders,
     moveOrder,
     removeOrder,
     scheduleOrder,

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 
 interface StoresContextType {
   stores: Store[];
+  loading: boolean;
   getStoresByDestination: (destinationId: string) => Store[];
   // Legacy alias
   getStoresByResort: (resortId: string) => Store[];
@@ -226,6 +227,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
     <StoresContext.Provider
       value={{
         stores,
+        loading,
         getStoresByDestination,
         getStoresByResort,
         addStore,

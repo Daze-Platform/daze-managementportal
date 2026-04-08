@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "./Sidebar";
@@ -57,6 +57,15 @@ export const Layout = ({ children }: LayoutProps) => {
     };
   }, []);
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top on every route change
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [location.pathname]);
+
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const toggleSidebarCollapse = () => setSidebarCollapsed(!sidebarCollapsed);
   const closeSidebar = () => setSidebarOpen(false);
@@ -78,7 +87,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
         {/* Main content with page transitions */}
         <main className="flex-1 overflow-hidden relative">
-          <div className="h-full overflow-y-auto scroll-container bg-muted/30">
+          <div ref={scrollContainerRef} className="h-full overflow-y-auto scroll-container bg-muted/30">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

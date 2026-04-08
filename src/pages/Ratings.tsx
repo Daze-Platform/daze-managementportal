@@ -7,7 +7,7 @@ import { RecentReviews } from "@/components/ratings/RecentReviews";
 import { motion } from "framer-motion";
 import { Star, Calendar } from "lucide-react";
 
-import { format } from "date-fns";
+import { format, parse, isWithinInterval, startOfDay, endOfDay } from "date-fns";
 
 const ratingsData = {
   overall: 4.7,
@@ -119,6 +119,22 @@ export const Ratings = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const lastUpdatedLabel = format(new Date(), "MMM dd, yyyy");
 
+  // Filter ratings data by selected date range
+  const filteredReviews = dateRange?.from
+    ? ratingsData.recentReviews.filter((review) => {
+        try {
+          // Parse dates like "Dec 15, 2024 7:30PM" or "Dec 14, 2024 9:45AM"
+          const reviewDate = new Date(review.date.replace(/(\d{1,2}:\d{2})(AM|PM)/i, '$1 $2'));
+          if (isNaN(reviewDate.getTime())) return true; // keep if unparseable
+          const from = startOfDay(dateRange.from!);
+          const to = dateRange.to ? endOfDay(dateRange.to) : endOfDay(dateRange.from!);
+          return isWithinInterval(reviewDate, { start: from, end: to });
+        } catch {
+          return true;
+        }
+      })
+    : ratingsData.recentReviews;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -186,8 +202,8 @@ export const Ratings = () => {
       {/* Reviews Section */}
       <motion.div variants={itemVariants}>
         <RecentReviews
-          reviews={ratingsData.recentReviews}
-          totalReviews={ratingsData.totalReviews}
+          reviews={filteredReviews}
+          totalReviews={filteredReviews.length}
           reviewsChange={ratingsData.reviewsChange}
         />
       </motion.div>

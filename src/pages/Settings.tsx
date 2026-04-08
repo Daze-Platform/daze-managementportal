@@ -35,6 +35,7 @@ import { ResortVenueMapping } from "@/components/settings/ResortVenueMapping";
 import { AddBankAccountDialog } from "@/components/settings/AddBankAccountDialog";
 import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { POSIntegration } from "@/components/settings/POSIntegration";
 
 const plans = [
@@ -89,14 +90,26 @@ export const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "profile";
 
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    sms: true,
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem("daze_notification_prefs");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { email: true, push: false, sms: true };
   });
+
+  useEffect(() => {
+    localStorage.setItem("daze_notification_prefs", JSON.stringify(notifications));
+  }, [notifications]);
 
   const [isAddBankDialogOpen, setIsAddBankDialogOpen] = useState(false);
   const [currentPlan, setCurrentPlan] = useState("free");
+
+  // Password change state
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   const initialProfileDataRef = useRef<ProfileData | null>(null);
 
@@ -167,6 +180,31 @@ export const Settings = () => {
   const handlePlanChange = (planId: string) => {
     setCurrentPlan(planId);
     console.log("Changing plan to:", planId);
+  };
+
+  const handlePasswordChange = async () => {
+    if (!newPassword || newPassword !== confirmPassword) {
+      toast({ title: "Passwords don't match", variant: "destructive" });
+      return;
+    }
+    if (newPassword.length < 8) {
+      toast({ title: "Password must be at least 8 characters", variant: "destructive" });
+      return;
+    }
+    setPasswordLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast({ title: "Password updated successfully" });
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      toast({ title: "Failed to update password", description: message, variant: "destructive" });
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   return (
@@ -504,19 +542,19 @@ export const Settings = () => {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="current-password">Current Password</Label>
-                      <Input id="current-password" type="password" />
+                      <Input id="current-password" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
                     </div>
                     <div>
                       <Label htmlFor="new-password">New Password</Label>
-                      <Input id="new-password" type="password" />
+                      <Input id="new-password" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
                     </div>
                     <div>
                       <Label htmlFor="confirm-password">
                         Confirm New Password
                       </Label>
-                      <Input id="confirm-password" type="password" />
+                      <Input id="confirm-password" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
                     </div>
-                    <Button>Update Password</Button>
+                    <Button onClick={handlePasswordChange} disabled={passwordLoading}>{passwordLoading ? "Updating..." : "Update Password"}</Button>
                   </div>
                 </div>
 
@@ -529,7 +567,7 @@ export const Settings = () => {
                   <p className="text-sm text-gray-500 mb-4">
                     Add an extra layer of security to your account
                   </p>
-                  <Button variant="outline">Enable 2FA</Button>
+                  <Button variant="outline" onClick={() => toast({ title: "Two-factor authentication", description: "2FA setup coming soon. Contact support at support@dazeapp.com to enable it early." })}>Enable 2FA</Button>
                 </div>
               </CardContent>
             </Card>

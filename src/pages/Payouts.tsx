@@ -24,6 +24,7 @@ import {
   Filter,
   FileText,
   FileSpreadsheet,
+  Loader2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -40,87 +41,108 @@ import { useResort } from "@/contexts/DestinationContext";
 import { useFilters } from "@/contexts/FilterContext";
 import { format } from "date-fns";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
-const financialData = [
-  {
-    id: 1,
-    store: "Windrose Restaurant",
-    date: "May 7, 2021 11:50AM",
-    status: "Succeeded",
-    subtotal: "$6790.89",
-    serviceFee: "$679.09",
-    commissions: "$679.09",
-    net: "$6111.80",
-    storeIcon: "🦊",
-    bgColor: "bg-amber-600",
-    customLogo: "/images/stores/windrose-restaurant-logo.jpg",
-  },
-  {
-    id: 2,
-    store: "Windrose Restaurant",
-    date: "May 6, 2021 2:30PM",
-    status: "Pending",
-    subtotal: "$4523.45",
-    serviceFee: "$452.35",
-    commissions: "$452.35",
-    net: "$4071.10",
-    storeIcon: "🦊",
-    bgColor: "bg-amber-600",
-    customLogo: "/images/stores/windrose-restaurant-logo.jpg",
-  },
-  {
-    id: 3,
-    store: "Tiki Bar",
-    date: "May 6, 2021 10:15AM",
-    status: "Failed",
-    subtotal: "$2890.67",
-    serviceFee: "$289.07",
-    commissions: "$289.07",
-    net: "$2601.60",
-    storeIcon: "🐔",
-    bgColor: "bg-rose-600",
-    customLogo: "/images/stores/tiki-bar-logo.jpg",
-  },
-  {
-    id: 4,
-    store: "Salty Rose Beach Bar",
-    date: "May 5, 2021 4:45PM",
-    status: "Succeeded",
-    subtotal: "$5234.12",
-    serviceFee: "$523.41",
-    commissions: "$523.41",
-    net: "$4710.71",
-    storeIcon: "🐺",
-    bgColor: "bg-slate-700",
-    customLogo: "/images/stores/salty-rose-beach-bar-logo.webp",
-  },
-  {
-    id: 5,
-    store: "Tiki Bar",
-    date: "May 5, 2021 1:20PM",
-    status: "Succeeded",
-    subtotal: "$3456.78",
-    serviceFee: "$345.68",
-    commissions: "$345.68",
-    net: "$3111.10",
-    storeIcon: "🐔",
-    bgColor: "bg-rose-600",
-    customLogo: "/images/stores/tiki-bar-logo.jpg",
-  },
-  {
-    id: 6,
-    store: "Salty Rose Beach Bar",
-    date: "May 4, 2021 11:00AM",
-    status: "Pending",
-    subtotal: "$7890.34",
-    serviceFee: "$789.03",
-    commissions: "$789.03",
-    net: "$7101.31",
-    storeIcon: "🐺",
-    bgColor: "bg-slate-700",
-    customLogo: "/images/stores/salty-rose-beach-bar-logo.webp",
-  },
-];
+interface PayoutRow {
+  id: string;
+  store: string;
+  date: string;
+  status: "Succeeded" | "Pending" | "Failed";
+  subtotal: string;
+  serviceFee: string;
+  commissions: string;
+  net: string;
+  storeIcon: string;
+  bgColor: string;
+  customLogo: string;
+}
+
+function formatMoney(cents: number): string {
+  return "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function mapStatus(status: string): "Succeeded" | "Pending" | "Failed" {
+  const s = (status ?? "").toLowerCase();
+  if (s === "completed" || s === "delivered") return "Succeeded";
+  if (s === "cancelled" || s === "canceled" || s === "failed") return "Failed";
+  return "Pending";
+}
+
+function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error | null } {
+  const { userProfile } = useAuth();
+  const { selectedDateRange } = useFilters();
+  const [data, setData] = useState<PayoutRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const tenantId = userProfile?.tenantId;
+    if (!tenantId) {
+      setData([]);
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+
+    (async () => {
+      try {
+        let query = supabase
+          .from("orders")
+          .select("id, created_at, status, subtotal_cents, total_cents, restaurant_id, stores!orders_restaurant_id_fkey(name)")
+          .eq("tenant_id", tenantId)
+          .order("created_at", { ascending: false });
+
+        if (selectedDateRange?.from) {
+          query = query.gte("created_at", selectedDateRange.from.toISOString());
+        }
+        if (selectedDateRange?.to) {
+          const toEnd = new Date(selectedDateRange.to);
+          toEnd.setHours(23, 59, 59, 999);
+          query = query.lte("created_at", toEnd.toISOString());
+        }
+
+        const { data: rows, error: qErr } = await query;
+        if (cancelled) return;
+        if (qErr) throw qErr;
+
+        const mapped: PayoutRow[] = (rows ?? []).map((row: any) => {
+          const subtotalCents: number = row.subtotal_cents ?? 0;
+          const totalCents: number = row.total_cents ?? subtotalCents;
+          const serviceFeeCents = Math.round(subtotalCents * 0.1);
+          const storeName: string = row.stores?.name ?? "Unknown Store";
+
+          return {
+            id: row.id,
+            store: storeName,
+            date: format(new Date(row.created_at), "MMM d, yyyy h:mmaaa"),
+            status: mapStatus(row.status ?? ""),
+            subtotal: formatMoney(subtotalCents),
+            serviceFee: formatMoney(serviceFeeCents),
+            commissions: formatMoney(serviceFeeCents),
+            net: formatMoney(totalCents),
+            storeIcon: "",
+            bgColor: "",
+            customLogo: "",
+          };
+        });
+
+        setData(mapped);
+        setError(null);
+      } catch (err) {
+        if (!cancelled) setError(err as Error);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [userProfile?.tenantId, selectedDateRange]);
+
+  return { data, loading, error };
+}
 
 export const Payouts = () => {
   const { stores: allStores, getStoresByResort } = useStores();
@@ -132,6 +154,8 @@ export const Payouts = () => {
     selectedDateRange,
     setSelectedDateRange,
   } = useFilters();
+  const { data: realPayoutsData, loading: payoutsLoading } = usePayoutsData();
+  const financialData = realPayoutsData;
   const lastUpdatedLabel = format(new Date(), "MMM dd, yyyy");
 
   // Get all stores regardless of resort assignment and remove duplicates
@@ -504,7 +528,27 @@ export const Payouts = () => {
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         <div className="p-4 sm:p-6">
+          {/* Loading state */}
+          {payoutsLoading && (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+              <span className="ml-3 text-gray-600">Loading payouts...</span>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!payoutsLoading && filteredData.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <DollarSign className="w-12 h-12 text-gray-300 mb-3" />
+              <p className="text-lg font-medium text-gray-500">No payouts found</p>
+              <p className="text-sm text-gray-400 mt-1">
+                Try adjusting the date range or store filter.
+              </p>
+            </div>
+          )}
+
           {/* Desktop Table */}
+          {!payoutsLoading && filteredData.length > 0 && (
           <div className="hidden lg:block">
             <Card className="rounded-xl border border-border/50 shadow-sm">
               <CardHeader>
@@ -570,8 +614,10 @@ export const Payouts = () => {
               </CardContent>
             </Card>
           </div>
+          )}
 
           {/* Mobile/Tablet Cards */}
+          {!payoutsLoading && filteredData.length > 0 && (
           <div className="lg:hidden space-y-3 sm:space-y-4">
             {filteredData.map((item) => (
               <Card
@@ -641,6 +687,7 @@ export const Payouts = () => {
               </Card>
             ))}
           </div>
+          )}
 
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 border-t gap-4">

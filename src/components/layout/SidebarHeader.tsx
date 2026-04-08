@@ -28,12 +28,14 @@ export const SidebarHeader = ({
               onClick={onToggleCollapse}
               aria-label="Expand sidebar"
             >
-              {/* Cloud Logo - visible by default, fades on hover */}
-              <img
-                src="/daze-logo.png"
-                alt="DAZE Logo"
-                className="h-5 w-auto object-contain transition-opacity duration-200 lg:group-hover:opacity-0"
-              />
+              {/* D Logo - wrapped in white rounded container for visibility on dark bg */}
+              <div className="bg-white rounded-lg p-1 transition-opacity duration-200 lg:group-hover:opacity-0">
+                <img
+                  src="/daze-logo.png"
+                  alt="DAZE Logo"
+                  className="h-5 w-auto object-contain"
+                />
+              </div>
 
               {/* Chevron - hidden by default, appears on hover (desktop only) */}
               <ChevronRight className="absolute w-5 h-5 text-white/70 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200" />
@@ -43,14 +45,21 @@ export const SidebarHeader = ({
           /* Expanded State - DAZE Logo + Controls */
           <div className="flex items-center justify-between gap-2">
             <div className="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 flex-shrink-0">
-              <img
-                src="/daze-logo.png"
-                alt="DAZE Logo"
-                className="h-5 sm:h-6 md:h-7 w-auto object-contain"
-              />
-              <span className="text-white text-sm sm:text-base font-semibold tracking-wide">
-                DAZE
-              </span>
+              <div className="bg-white rounded-lg p-1">
+                <img
+                  src="/daze-logo.png"
+                  alt="DAZE Logo"
+                  className="h-5 sm:h-6 md:h-7 w-auto object-contain"
+                />
+              </div>
+              <div className="flex flex-col leading-none gap-0.5">
+                <span className="font-extrabold tracking-widest text-sm sm:text-[15px] bg-gradient-to-r from-white via-blue-100 to-white/80 bg-clip-text text-transparent">
+                  DAZE
+                </span>
+                <span className="text-white/40 text-[8px] tracking-[0.18em] font-medium uppercase">
+                  Management Hub
+                </span>
+              </div>
             </div>
 
             {/* Controls container */}

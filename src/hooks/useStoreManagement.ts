@@ -13,6 +13,7 @@ import { defaultHours } from "@/data/defaultStores";
 export const useStoreManagement = () => {
   const {
     stores,
+    loading,
     addStore,
     updateStore,
     deleteStore: deleteStoreFromContext,
@@ -114,6 +115,7 @@ export const useStoreManagement = () => {
 
   return {
     stores,
+    loading,
     view,
     selectedStore,
     editingStore,

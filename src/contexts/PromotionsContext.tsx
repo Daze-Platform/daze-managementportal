@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface Promotion {
   id: string;
@@ -43,16 +44,34 @@ const PromotionsContext = createContext<PromotionsContextType | undefined>(
 export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { userProfile } = useAuth();
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadPromotions = async (showErrors = false) => {
+  const loadPromotions = async (tenantId: string, showErrors = false) => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+
+      if (!tenantId) {
+        setPromotions([]);
+        setLoading(false);
+        return;
+      }
+
+      // Scope to this tenant's resorts
+      const { data: resortRows } = await supabase
+        .from("resorts")
+        .select("id")
+        .eq("tenant_id", tenantId);
+      const resortIds = resortRows?.map((r) => r.id) ?? [];
+
+      const query = supabase
         .from("promotions")
         .select("*")
         .order("created_at", { ascending: false });
+      const { data, error } = resortIds.length > 0
+        ? await query.in("resort_id", resortIds)
+        : await query.eq("resort_id", "no-match");
 
       if (error) {
         console.warn("Could not load promotions:", error.message);
@@ -74,7 +93,7 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const refreshPromotions = async () => {
-    await loadPromotions(true);
+    if (userProfile?.tenantId) await loadPromotions(userProfile.tenantId, true);
   };
 
   const addPromotion = async (
@@ -192,8 +211,12 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    loadPromotions();
-  }, []);
+    if (userProfile?.tenantId) {
+      loadPromotions(userProfile.tenantId);
+    } else {
+      setLoading(false);
+    }
+  }, [userProfile?.tenantId]);
 
   const value: PromotionsContextType = {
     promotions,

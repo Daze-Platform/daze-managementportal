@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface Employee {
   id: string;
@@ -36,16 +37,34 @@ const EmployeesContext = createContext<EmployeesContextType | undefined>(
 export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { userProfile } = useAuth();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadEmployees = async (showErrors = false) => {
+  const loadEmployees = async (tenantId: string, showErrors = false) => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+
+      if (!tenantId) {
+        setEmployees([]);
+        setLoading(false);
+        return;
+      }
+
+      // Scope to this tenant's resorts
+      const { data: resortRows } = await supabase
+        .from("resorts")
+        .select("id")
+        .eq("tenant_id", tenantId);
+      const resortIds = resortRows?.map((r) => r.id) ?? [];
+
+      const query = supabase
         .from("employees")
         .select("*")
         .order("created_at", { ascending: false });
+      const { data, error } = resortIds.length > 0
+        ? await query.in("resort_id", resortIds)
+        : await query.eq("resort_id", "no-match");
 
       if (error) {
         console.warn("Could not load employees:", error.message);
@@ -67,7 +86,7 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const refreshEmployees = async () => {
-    await loadEmployees(true);
+    if (userProfile?.tenantId) await loadEmployees(userProfile.tenantId, true);
   };
 
   const addEmployee = async (
@@ -189,8 +208,12 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    loadEmployees();
-  }, []);
+    if (userProfile?.tenantId) {
+      loadEmployees(userProfile.tenantId);
+    } else {
+      setLoading(false);
+    }
+  }, [userProfile?.tenantId]);
 
   const value: EmployeesContextType = {
     employees,

@@ -27,7 +27,9 @@ import { Settings } from "./pages/Settings";
 import { Notifications } from "./pages/Notifications";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import AcceptInvite from "./pages/AcceptInvite";
 import Index from "./pages/Index";
+import { LoadingScreen } from "./components/LoadingScreen";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,20 +39,14 @@ const AppRoutes = () => {
 
   // Show loading while checking authentication
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/accept-invite" element={<AcceptInvite />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route
         path="/dashboard"
@@ -126,7 +122,7 @@ const AppRoutes = () => {
       <Route
         path="/employees"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
             <Layout>
               <Employees />
             </Layout>
@@ -156,7 +152,7 @@ const AppRoutes = () => {
       <Route
         path="/settings"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
             <Layout>
               <Settings />
             </Layout>
