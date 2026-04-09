@@ -3,6 +3,7 @@ import { Destination } from "@/components/settings/DestinationManagement";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useAuth } from "./AuthContext";
 
 interface DestinationContextType {
   currentDestination: Destination | null;
@@ -28,6 +29,7 @@ export const DestinationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { userProfile } = useAuth();
   const [destinations, setDestinationsState] =
     useState<Destination[]>([]);
   const [currentDestination, setCurrentDestination] =
