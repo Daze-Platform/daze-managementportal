@@ -1,5 +1,14 @@
+// Shared edge function: used by both Order Manager and Management Hub.
+// Each caller MUST pass { email, redirectTo } where redirectTo is the
+// app-specific /reset-password URL (e.g. https://daze-order-manager.vercel.app/reset-password).
+//
+// ROOT CAUSE FIX (April 17, 2026):
+// The Supabase JS client's admin.generateLink() sends the Supabase default email
+// in addition to our custom Resend email. Because the project Site URL is set to
+// https://daze-management-hub.vercel.app, Supabase's email redirected users to
+// Management Hub instead of the correct app. Fix: use the raw GoTrue Admin REST API
+// with send_email: false — only our Resend email gets sent, with the correct URL.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,47 +30,53 @@ serve(async (req) => {
       );
     }
 
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const appBase = redirectTo || "https://daze-order-manager.vercel.app/reset-password";
 
-    // Generate recovery link — get hashed_token for OTP-based (non-PKCE) reset.
-    // This works across any browser/device: the user can click the link from their
-    // email on mobile, a different browser, or incognito — no code_verifier needed.
-    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "recovery",
-      email,
-      options: {
-        redirectTo: redirectTo || "https://daze-management-hub.vercel.app/reset-password",
+    // Use raw GoTrue Admin API with send_email: false so Supabase does NOT send its
+    // own recovery email (which would use the project Site URL, not the app-specific URL).
+    // We send the only email below via Resend, with the correct redirectTo per app.
+    const genRes = await fetch(`${supabaseUrl}/auth/v1/admin/generate_link`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": serviceKey,
+        "Authorization": `Bearer ${serviceKey}`,
       },
+      body: JSON.stringify({
+        type: "recovery",
+        email,
+        redirect_to: appBase,
+        send_email: false,
+      }),
     });
 
-    if (linkError) {
+    if (!genRes.ok) {
+      const errText = await genRes.text();
+      console.error("generateLink API error:", errText);
       // Don't reveal if the email exists or not — always return success to caller
-      console.error("generateLink error:", linkError.message);
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
-    const hashedToken = linkData.properties?.hashed_token;
+    const linkResp = await genRes.json();
+    const hashedToken = linkResp.hashed_token;
+
     if (!hashedToken) {
-      console.error("No hashed_token in response");
+      console.error("No hashed_token in generateLink response");
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
-    // Build reset URL using token_hash — works across any browser/device
-    const appBase = redirectTo || "https://daze-management-hub.vercel.app/reset-password";
+    // Build reset URL using token_hash — works across any browser/device (no PKCE needed)
     const resetUrl = `${appBase}?token_hash=${hashedToken}&type=recovery`;
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
-    const emailParts = email.split("@");
-    const firstName = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
 
     const emailHtml = `<!DOCTYPE html>
 <html>
