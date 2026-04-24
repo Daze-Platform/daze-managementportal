@@ -53,7 +53,7 @@ export const SidebarHeader = ({
                 />
               </div>
               <div className="flex flex-col leading-none gap-0.5">
-                <span className="font-extrabold tracking-widest text-sm sm:text-[15px] bg-gradient-to-r from-white via-blue-100 to-white/80 bg-clip-text text-transparent">
+                <span className="font-extrabold tracking-widest text-sm sm:text-[15px] text-foreground">
                   DAZE
                 </span>
                 <span className="text-white/40 text-[8px] tracking-[0.18em] font-medium uppercase">

@@ -433,8 +433,8 @@ export const Settings = () => {
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-full">
-                      <Mail className="h-4 w-4 text-blue-600" />
+                    <div className="p-2 bg-primary/10 rounded-full">
+                      <Mail className="h-4 w-4 text-primary" />
                     </div>
                     <div>
                       <Label

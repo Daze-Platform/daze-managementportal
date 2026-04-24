@@ -274,7 +274,7 @@ export const Notifications = () => {
                           <div className="flex-shrink-0">
                             <Badge
                               variant="secondary"
-                              className="bg-blue-100 text-blue-700 text-xs"
+                              className="bg-primary/10 text-primary text-xs"
                             >
                               New
                             </Badge>
@@ -287,9 +287,9 @@ export const Notifications = () => {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleMarkAsRead(notification.id)}
-                              className="h-8 w-8 p-0 hover:bg-blue-100"
+                              className="h-8 w-8 p-0 hover:bg-primary/10"
                             >
-                              <CheckCircle className="w-4 h-4 text-blue-600" />
+                              <CheckCircle className="w-4 h-4 text-primary" />
                             </Button>
                           )}
                           <Button

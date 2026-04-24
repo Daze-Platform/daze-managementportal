@@ -227,8 +227,8 @@ export const Promotions = () => {
                         {promotions.length}
                       </p>
                     </div>
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Calendar className="w-5 h-5 text-blue-600" />
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Calendar className="w-5 h-5 text-primary" />
                     </div>
                   </div>
                 </CardContent>
@@ -259,14 +259,14 @@ export const Promotions = () => {
                       <p className="text-sm font-medium text-gray-600">
                         Avg. Discount
                       </p>
-                      <p className="text-2xl font-bold text-orange-600">
+                      <p className="text-2xl font-bold text-accent">
                         {promotions.length > 0
                           ? `${(promotions.reduce((acc, p) => acc + p.discount_value, 0) / promotions.length).toFixed(1)}%`
                           : "0%"}
                       </p>
                     </div>
-                    <div className="p-2 bg-orange-100 rounded-lg">
-                      <Percent className="w-5 h-5 text-orange-600" />
+                    <div className="p-2 bg-accent/10 rounded-lg">
+                      <Percent className="w-5 h-5 text-accent" />
                     </div>
                   </div>
                 </CardContent>

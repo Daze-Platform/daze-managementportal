@@ -567,7 +567,7 @@ export const OrderHistory = () => {
           }`}
         >
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
+            <h1 className="text-xl sm:text-2xl font-bold font-display text-gray-900 mb-1">
               Order History
             </h1>
             <p className="text-gray-600 text-xs sm:text-sm">

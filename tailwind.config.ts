@@ -203,37 +203,14 @@ export default {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
 				},
-				// New micro-interaction animations
-				'bounce-subtle': {
-					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-4px)' }
-				},
-				'wiggle': {
-					'0%, 100%': { transform: 'rotate(0deg)' },
-					'25%': { transform: 'rotate(-2deg)' },
-					'75%': { transform: 'rotate(2deg)' }
-				},
 				'slide-up-fade': {
 					'0%': { opacity: '0', transform: 'translateY(20px)' },
 					'100%': { opacity: '1', transform: 'translateY(0)' }
-				},
-				'ripple': {
-					'0%': { transform: 'scale(0)', opacity: '0.5' },
-					'100%': { transform: 'scale(4)', opacity: '0' }
 				},
 				'check-bounce': {
 					'0%': { transform: 'scale(0)' },
 					'50%': { transform: 'scale(1.2)' },
 					'100%': { transform: 'scale(1)' }
-				},
-				'shake': {
-					'0%, 100%': { transform: 'translateX(0)' },
-					'20%, 60%': { transform: 'translateX(-4px)' },
-					'40%, 80%': { transform: 'translateX(4px)' }
-				},
-								'spin-slow': {
-					from: { transform: 'rotate(0deg)' },
-					to: { transform: 'rotate(360deg)' }
 				},
 				'count-up': {
 					from: { opacity: '0', transform: 'translateY(10px)' },
@@ -258,13 +235,8 @@ export default {
 				'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
 				'enter': 'fade-in 0.2s ease-out, scale-in 0.2s ease-out',
 				'exit': 'fade-out 0.15s ease-out, scale-out 0.15s ease-out',
-				'bounce-subtle': 'bounce-subtle 0.4s ease-in-out',
-				'wiggle': 'wiggle 0.25s ease-in-out',
 				'slide-up-fade': 'slide-up-fade 0.3s ease-out',
-				'ripple': 'ripple 0.5s ease-out',
 				'check-bounce': 'check-bounce 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-				'shake': 'shake 0.3s ease-in-out',
-								'spin-slow': 'spin-slow 3s linear infinite',
 				'count-up': 'count-up 0.4s ease-out forwards',
 			},
 			transitionTimingFunction: {

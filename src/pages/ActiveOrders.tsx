@@ -542,7 +542,7 @@ export const ActiveOrders = () => {
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight">
                 Live Orders
               </h1>
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold">
@@ -596,8 +596,8 @@ export const ActiveOrders = () => {
             label="Revenue Today"
             value={`$${totalRevenue.toFixed(0)}`}
             sub={`${storeFiltered.length} total orders`}
-            iconBg="bg-blue-500"
-            topBorder="border-t-blue-400"
+            iconBg="bg-primary"
+            topBorder="border-t-primary"
           />
           <KpiCard
             icon={Clock}

@@ -432,7 +432,7 @@ export const Payouts = () => {
       <div className="flex-shrink-0 bg-white border-b px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <DollarSign className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -447,7 +447,7 @@ export const Payouts = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button className="bg-primary hover:bg-primary/90 text-white">
                 <Download className="mr-2 h-4 w-4" />
                 Export Data
               </Button>
@@ -462,7 +462,7 @@ export const Payouts = () => {
                 <span>Export as CSV</span>
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={exportToExcel}>
-                <File className="mr-2 h-4 w-4 text-blue-600" />
+                <File className="mr-2 h-4 w-4 text-primary" />
                 <span>Excel Compatible</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -531,7 +531,7 @@ export const Payouts = () => {
           {/* Loading state */}
           {payoutsLoading && (
             <div className="flex items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
               <span className="ml-3 text-gray-600">Loading payouts...</span>
             </div>
           )}

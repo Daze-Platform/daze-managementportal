@@ -311,13 +311,13 @@ export const RightNowPanel = ({ tenantId }: RightNowPanelProps) => {
                       {isPacing && pacingStyle ? (
                         <div className="flex items-baseline gap-1">
                           <span
-                            className={`text-xl sm:text-2xl font-bold ${pacingStyle.color}`}
+                            className={`text-xl sm:text-2xl font-bold font-display ${pacingStyle.color}`}
                           >
                             {card.format(metrics.pacing)}
                           </span>
                         </div>
                       ) : (
-                        <span className="text-xl sm:text-2xl font-bold text-foreground">
+                        <span className="text-xl sm:text-2xl font-bold font-display text-foreground">
                           {card.format(rawValue as number | null)}
                         </span>
                       )}
