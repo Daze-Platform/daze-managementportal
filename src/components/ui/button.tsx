@@ -42,7 +42,7 @@ const buttonVariants = cva(
         none: "rounded-none",
         sm: "rounded-md",
         default: "rounded-xl",
-        lg: "rounded-2xl",
+        lg: "rounded-xl",
         full: "rounded-full",
       },
     },

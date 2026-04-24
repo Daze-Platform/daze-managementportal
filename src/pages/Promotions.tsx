@@ -185,7 +185,7 @@ export const Promotions = () => {
   return (
     <div className="min-h-screen">
       {/* Fixed Header */}
-      <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b px-6 py-4 z-10">
+      <div className="sticky top-0 bg-white border-b px-6 py-4 z-10">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Promotions</h1>

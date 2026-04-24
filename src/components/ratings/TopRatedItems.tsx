@@ -113,13 +113,13 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
   };
 
   return (
-    <Card className="overflow-hidden border-border/50 bg-card shadow-elevated hover:shadow-elevated-lg transition-all duration-300">
+    <Card className="overflow-hidden border-border/50 bg-card shadow-card hover:shadow-pop transition-all duration-300">
       {/* Header with gradient accent */}
       <CardHeader className="pb-4 bg-gradient-to-br from-accent/5 via-transparent to-transparent">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <motion.div
-              className="w-12 h-12 bg-gradient-to-br from-accent to-accent/80 rounded-2xl flex items-center justify-center shadow-lg"
+              className="w-12 h-12 bg-gradient-to-br from-accent to-accent/80 rounded-xl flex items-center justify-center shadow-lg"
               whileHover={{ scale: 1.05, rotate: 5 }}
               transition={{ type: "spring", stiffness: 400 }}
             >
@@ -136,7 +136,7 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
           </div>
 
           <motion.div
-            className={`flex items-center gap-2 px-4 py-2 rounded-2xl ${ratingVariant.bg}`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl ${ratingVariant.bg}`}
             whileHover={{ scale: 1.02 }}
           >
             <Star className={`w-4 h-4 ${ratingVariant.text} fill-current`} />
@@ -163,7 +163,7 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="group relative overflow-hidden bg-secondary/30 hover:bg-secondary/50 p-4 rounded-2xl border border-border/50 hover:border-border transition-all duration-300 hover:shadow-md"
+                className="group relative overflow-hidden bg-secondary/30 hover:bg-secondary/50 p-4 rounded-xl border border-border/50 hover:border-border transition-all duration-300 hover:shadow-md"
                 whileHover={{ y: -2 }}
               >
                 <div className="flex items-center gap-4">
@@ -270,7 +270,7 @@ export const TopRatedItems = ({ items }: TopRatedItemsProps) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-6 bg-gradient-to-br from-accent/5 via-accent/3 to-transparent p-5 rounded-2xl border border-accent/20"
+          className="mt-6 bg-gradient-to-br from-accent/5 via-accent/3 to-transparent p-5 rounded-xl border border-accent/20"
         >
           <div className="flex items-start gap-4">
             <div className="w-11 h-11 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">

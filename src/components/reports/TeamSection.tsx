@@ -182,7 +182,7 @@ export const TeamSection = () => {
                       whileHover={{ scale: 1.1 }}
                       className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center"
                     >
-                      <span className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      <span className="text-sm font-semibold text-foreground">
                         #{index + 1}
                       </span>
                     </motion.div>

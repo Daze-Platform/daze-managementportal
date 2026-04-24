@@ -490,7 +490,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
             {/* Preview Tab */}
             <TabsContent value="preview" className="mt-0">
               <div className="max-w-sm mx-auto">
-                <div className="p-5 rounded-2xl border border-border bg-card shadow-sm">
+                <div className="p-5 rounded-xl border border-border bg-card shadow-sm">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>

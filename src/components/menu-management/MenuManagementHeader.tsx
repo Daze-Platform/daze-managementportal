@@ -50,7 +50,7 @@ export const MenuManagementHeader: React.FC<MenuManagementHeaderProps> = ({
   return (
     <div className="flex flex-col gap-4 sm:gap-6 min-h-[120px] sm:min-h-[140px]">
       <div className="min-w-0 flex-1">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold font-display text-foreground mb-2">
           Menu Management
         </h1>
         <p className="text-gray-600 text-sm sm:text-base leading-relaxed">

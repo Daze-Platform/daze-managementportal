@@ -31,11 +31,11 @@ export const OverallRating = ({
   };
 
   return (
-    <Card className="overflow-hidden border-border/50 bg-card shadow-elevated hover:shadow-elevated-lg transition-all duration-300">
+    <Card className="overflow-hidden border-border/50 bg-card shadow-card hover:shadow-pop transition-all duration-300">
       <CardHeader className="pb-4 bg-gradient-to-br from-primary/5 via-transparent to-transparent">
         <div className="flex items-center gap-3">
           <motion.div
-            className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-lg"
+            className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg"
             whileHover={{ scale: 1.05, rotate: -5 }}
             transition={{ type: "spring", stiffness: 400 }}
           >
@@ -135,7 +135,7 @@ export const OverallRating = ({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gradient-to-r from-success/10 via-success/5 to-transparent p-4 rounded-2xl border border-success/20"
+          className="bg-gradient-to-r from-success/10 via-success/5 to-transparent p-4 rounded-xl border border-success/20"
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-success/10 rounded-xl flex items-center justify-center flex-shrink-0">

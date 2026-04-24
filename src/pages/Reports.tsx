@@ -199,13 +199,13 @@ export const Reports = () => {
       : `${visibleCount} of ${totalCount} sections visible`;
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-full bg-gray-50">
       {/* Animated Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex-shrink-0 bg-white/80 backdrop-blur-md border-b border-gray-200/50 px-3 sm:px-4 lg:px-6 py-4 lg:py-6 shadow-sm"
+        className="flex-shrink-0 bg-white border-b border-gray-200 px-3 sm:px-4 lg:px-6 py-4 lg:py-6 shadow-sm"
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
           <motion.div
@@ -218,7 +218,7 @@ export const Reports = () => {
                 <BarChart3 className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-foreground">
                   Reports
                 </h1>
                 <p className="text-sm text-gray-600 mt-0.5 flex items-center gap-2">
@@ -371,7 +371,7 @@ export const Reports = () => {
           </motion.div>
         </motion.div>
 
-        <div className="mt-5 rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-md p-4 shadow-sm">
+        <div className="mt-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm font-semibold text-gray-900">
@@ -464,7 +464,7 @@ export const Reports = () => {
               <AccordionItem
                 id="customerAnalytics"
                 value="customerAnalytics"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -487,7 +487,7 @@ export const Reports = () => {
               <AccordionItem
                 id="productMix"
                 value="productMix"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -510,7 +510,7 @@ export const Reports = () => {
               <AccordionItem
                 id="revenue"
                 value="revenue"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -530,7 +530,7 @@ export const Reports = () => {
               <AccordionItem
                 id="paymentTypes"
                 value="paymentTypes"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -550,7 +550,7 @@ export const Reports = () => {
               <AccordionItem
                 id="cancellations"
                 value="cancellations"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -572,7 +572,7 @@ export const Reports = () => {
               <AccordionItem
                 id="downtime"
                 value="downtime"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -594,7 +594,7 @@ export const Reports = () => {
               <AccordionItem
                 id="marketing"
                 value="marketing"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">
@@ -616,7 +616,7 @@ export const Reports = () => {
               <AccordionItem
                 id="team"
                 value="team"
-                className="rounded-2xl border border-gray-200/70 bg-white/90 shadow-sm"
+                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
               >
                 <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
                   <div className="flex items-center gap-2">

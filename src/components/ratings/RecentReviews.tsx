@@ -96,12 +96,12 @@ export const RecentReviews = ({
 
   return (
     <>
-      <Card className="overflow-hidden border-border/50 bg-card shadow-elevated hover:shadow-elevated-lg transition-all duration-300">
+      <Card className="overflow-hidden border-border/50 bg-card shadow-card hover:shadow-pop transition-all duration-300">
         <CardHeader className="pb-4 bg-gradient-to-br from-info/5 via-transparent to-transparent">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <motion.div
-                className="w-12 h-12 bg-gradient-to-br from-info to-info/80 rounded-2xl flex items-center justify-center shadow-lg"
+                className="w-12 h-12 bg-gradient-to-br from-info to-info/80 rounded-xl flex items-center justify-center shadow-lg"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
@@ -250,7 +250,7 @@ export const RecentReviews = ({
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="bg-secondary/30 hover:bg-secondary/50 p-4 rounded-2xl border border-border/50 transition-all duration-200"
+                className="bg-secondary/30 hover:bg-secondary/50 p-4 rounded-xl border border-border/50 transition-all duration-200"
               >
                 {/* Customer Info */}
                 <div className="flex items-start justify-between mb-3">
@@ -330,7 +330,7 @@ export const RecentReviews = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="m-4 bg-gradient-to-br from-info/5 via-info/3 to-transparent p-4 rounded-2xl border border-info/20"
+            className="m-4 bg-gradient-to-br from-info/5 via-info/3 to-transparent p-4 rounded-xl border border-info/20"
           >
             <div className="flex items-start gap-3">
               <div className="w-9 h-9 bg-info/10 rounded-xl flex items-center justify-center flex-shrink-0">

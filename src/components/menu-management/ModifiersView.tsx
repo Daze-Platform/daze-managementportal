@@ -307,7 +307,7 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({
             exit={{ opacity: 0 }}
             className="flex flex-col items-center justify-center py-16 px-6 text-center"
           >
-            <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+            <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center mb-4">
               <Settings className="w-7 h-7 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">

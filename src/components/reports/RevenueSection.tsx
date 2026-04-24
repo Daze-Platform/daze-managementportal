@@ -110,7 +110,7 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
                 <DollarSign className="w-5 h-5 text-white" />
               </motion.div>
               <div>
-                <CardTitle className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl font-bold text-foreground">
                   Gross Revenue
                 </CardTitle>
                 <p className="text-sm text-gray-600">
@@ -155,7 +155,7 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
               </div>
             </div>
             <div className="flex items-end gap-4">
-              <span className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="text-4xl font-bold font-display text-foreground">
                 $<AnimatedCounter value={revenueData.total} />
               </span>
               <motion.div

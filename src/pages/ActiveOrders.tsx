@@ -690,8 +690,8 @@ export const ActiveOrders = () => {
                 >
                   {/* Icon with live pulse ring */}
                   <div className="relative mb-5">
-                    <div className="absolute inset-0 rounded-2xl bg-muted/40 animate-ping opacity-30 scale-110" />
-                    <div className="relative w-14 h-14 rounded-2xl bg-muted/60 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-xl bg-muted/40 animate-ping opacity-30 scale-110" />
+                    <div className="relative w-14 h-14 rounded-xl bg-muted/60 flex items-center justify-center">
                       <ShoppingBag className="w-7 h-7 text-muted-foreground/50" />
                     </div>
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 border-2 border-background flex items-center justify-center">

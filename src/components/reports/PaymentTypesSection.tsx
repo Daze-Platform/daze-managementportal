@@ -133,7 +133,7 @@ export const PaymentTypesSection = ({ data }: PaymentTypesSectionProps) => {
                 <CreditCard className="w-5 h-5 text-white" />
               </motion.div>
               <div>
-                <CardTitle className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl font-bold text-foreground">
                   Payment Methods
                 </CardTitle>
                 <p className="text-sm text-gray-600">
@@ -177,7 +177,7 @@ export const PaymentTypesSection = ({ data }: PaymentTypesSectionProps) => {
                 This period
               </div>
             </div>
-            <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <div className="text-4xl font-bold font-display text-foreground">
               $<AnimatedCounter value={total} />
             </div>
           </motion.div>

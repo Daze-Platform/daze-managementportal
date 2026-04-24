@@ -522,10 +522,10 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden hover:bg-gray-100 w-10 h-10 touch-manipulation bg-blue-50"
+              className="md:hidden hover:bg-gray-100 w-10 h-10 touch-manipulation bg-primary/10"
               onClick={() => console.log("Mobile search button clicked!")}
             >
-              <Search className="w-5 h-5 text-blue-600" />
+              <Search className="w-5 h-5 text-primary" />
             </Button>
           </PopoverTrigger>
           <PopoverContent
@@ -618,7 +618,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             align="end"
           >
             {/* Enhanced Header */}
-            <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-100">
+            <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-semibold text-gray-900 text-lg">
@@ -644,7 +644,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                       variant="ghost"
                       size="sm"
                       onClick={handleMarkAllAsRead}
-                      className="text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-100 rounded-lg px-3 py-1.5 h-auto font-medium transition-colors"
+                      className="text-xs text-primary hover:text-primary/80 hover:bg-primary/10 rounded-lg px-3 py-1.5 h-auto font-medium transition-colors"
                     >
                       Mark all read
                     </Button>
@@ -668,7 +668,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             <div className="max-h-96 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="p-12 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md ring-1 ring-black/5">
+                  <div className="w-16 h-16 bg-gray-100 rounded-md flex items-center justify-center mx-auto mb-4 shadow-card ring-1 ring-black/5">
                     <Bell className="w-8 h-8 text-gray-400" />
                   </div>
                   <p className="text-gray-600 font-medium">No notifications</p>
@@ -689,7 +689,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 mt-0.5">
                         <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-sm ${
+                          className={`w-10 h-10 rounded-md flex items-center justify-center shadow-sm ${
                             notification.unread
                               ? "bg-white ring-1 ring-black/5"
                               : "bg-gray-100"
@@ -771,35 +771,35 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl hover:bg-gray-100 transition-colors touch-manipulation p-0"
+                className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-full hover:bg-gray-100 transition-colors touch-manipulation p-0"
               >
-                <Avatar className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl shadow-md ring-1 ring-black/5">
+                <Avatar className="h-9 w-9 sm:h-10 sm:w-10 rounded-full shadow-md ring-1 ring-black/5">
                   <AvatarImage
                     src={userProfile?.avatar || ""}
                     alt={getFullName()}
-                    className="rounded-xl"
+                    className="rounded-full"
                   />
-                  <AvatarFallback className="bg-primary text-white font-semibold text-xs sm:text-sm rounded-xl">
+                  <AvatarFallback className="bg-primary text-white font-semibold text-xs sm:text-sm rounded-full">
                     {getUserInitials()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-64 shadow-lg border-0 mr-2 sm:mr-4 z-50"
+              className="w-64 shadow-pop border-0 mr-2 sm:mr-4 z-50"
               align="end"
               forceMount
             >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-11 w-11 rounded-xl shadow-md ring-1 ring-black/5">
+                    <Avatar className="h-11 w-11 rounded-full shadow-md ring-1 ring-black/5">
                       <AvatarImage
                         src={userProfile?.avatar || ""}
                         alt={getFullName()}
-                        className="rounded-xl"
+                        className="rounded-full"
                       />
-                      <AvatarFallback className="bg-primary text-white font-semibold rounded-xl">
+                      <AvatarFallback className="bg-primary text-white font-semibold rounded-full">
                         {getUserInitials()}
                       </AvatarFallback>
                     </Avatar>

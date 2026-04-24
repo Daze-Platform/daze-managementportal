@@ -126,7 +126,7 @@ export default function ResetPassword() {
   if (verifying) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 text-center">
           <div className="flex justify-center mb-6"><DazeLogo /></div>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3" />
           <p className="text-sm text-gray-500">Verifying reset link…</p>
@@ -138,7 +138,7 @@ export default function ResetPassword() {
   if (linkExpired) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 text-center">
           <div className="flex justify-center mb-6"><DazeLogo /></div>
           <h1 className="text-xl font-bold text-gray-900 mb-2">Link expired or already used</h1>
           <p className="text-sm text-gray-500 mb-6">
@@ -155,7 +155,7 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-xl shadow-xl p-8">
           <div className="flex justify-center mb-6"><DazeLogo /></div>
 
           <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">

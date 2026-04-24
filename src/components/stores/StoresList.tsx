@@ -30,7 +30,7 @@ export const StoresList = ({
     <div className="space-y-6">
       {/* Header */}
       <FadeIn>
-        <Card className="border-border/50 bg-card shadow-glass">
+        <Card className="border-border/50 bg-card shadow-card">
           <CardContent className="p-5 sm:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
@@ -66,7 +66,7 @@ export const StoresList = ({
       {/* Stores List */}
       {uniqueStores.length === 0 ? (
         <FadeIn delay={0.1}>
-          <Card className="border-border/50 bg-card shadow-glass">
+          <Card className="border-border/50 bg-card shadow-card">
             <CardContent className="p-8 sm:p-12">
               <div className="flex flex-col items-center justify-center text-center">
                 <motion.div
@@ -101,7 +101,7 @@ export const StoresList = ({
         </FadeIn>
       ) : (
         <FadeIn delay={0.1}>
-          <Card className="border-border/50 bg-card shadow-glass overflow-hidden">
+          <Card className="border-border/50 bg-card shadow-card overflow-hidden">
             <CardContent className="p-4 sm:p-6">
               <StaggerContainer className="space-y-3">
                 {uniqueStores.map((store, index) => (
@@ -112,7 +112,7 @@ export const StoresList = ({
                       transition={{ duration: 0.2 }}
                     >
                       <Card
-                        className="group cursor-pointer border border-border/50 hover:border-primary/30 hover:shadow-elevated transition-all duration-300 overflow-hidden"
+                        className="group cursor-pointer border border-border/50 hover:border-primary/30 hover:shadow-card transition-all duration-300 overflow-hidden"
                         onClick={() => onViewStore(store)}
                       >
                         <CardContent className="p-4 sm:p-5">

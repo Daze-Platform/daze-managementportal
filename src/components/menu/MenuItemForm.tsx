@@ -186,7 +186,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
           className={`flex-shrink-0 ${isMobileOrTablet ? "pb-3" : "pb-4"}`}
         >
           <DialogTitle
-            className={`${isMobileOrTablet ? "text-lg" : "text-xl sm:text-2xl"} font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent flex items-center gap-2`}
+            className={`${isMobileOrTablet ? "text-lg" : "text-xl sm:text-2xl"} font-semibold text-foreground flex items-center gap-2`}
           >
             <ChefHat className="w-5 h-5 text-blue-600" />
             {item ? "Edit Menu Item" : "Add Menu Item"}

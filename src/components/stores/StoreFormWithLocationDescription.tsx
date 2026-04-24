@@ -257,7 +257,7 @@ export const StoreFormWithLocationDescription = ({
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-blue-500 hover:bg-blue-600"
+                className="flex-1 bg-primary hover:bg-primary/90"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {store ? "Update" : "Create"}

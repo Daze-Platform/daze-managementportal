@@ -42,7 +42,7 @@ export const OrderFilters = ({
               type="button"
               aria-pressed={orderType === "all"}
               onClick={() => onOrderTypeChange("all")}
-              className={`flex items-center gap-2 px-3 py-2 rounded-2xl border-2 transition-all shadow-sm whitespace-nowrap ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all shadow-sm whitespace-nowrap ${
                 orderType === "all"
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-background text-foreground border-border hover:bg-muted/60"

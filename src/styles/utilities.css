@@ -43,7 +43,7 @@
   @apply transition-all duration-300 ease-smooth;
 }
 .hover-lift:hover {
-  @apply -translate-y-1 shadow-elevated-lg;
+  @apply -translate-y-1 shadow-pop;
 }
 
 /* Hover scale with spring */
@@ -166,7 +166,7 @@
   transform-origin: center;
 }
 .card-interactive:hover {
-  @apply -translate-y-1 shadow-elevated-lg;
+  @apply -translate-y-1 shadow-pop;
 }
 .card-interactive:active {
   transform: translateY(0) scale(0.99);

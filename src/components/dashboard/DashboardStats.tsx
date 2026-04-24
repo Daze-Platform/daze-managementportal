@@ -110,7 +110,7 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
                       {card.label}
                     </p>
                     <motion.p
-                      className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground"
+                      className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-foreground"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.1 + 0.2 }}

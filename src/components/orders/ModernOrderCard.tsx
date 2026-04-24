@@ -270,8 +270,8 @@ export const ModernOrderCard = ({
         ref={cardRef}
         className={`relative overflow-hidden bg-card border transition-all duration-300 hover:shadow-md transition-shadow ${borderAccent} ${
           isSelected
-            ? "ring-2 ring-primary shadow-elevated-lg border-primary/30"
-            : "border-border/50 hover:border-border hover:shadow-elevated"
+            ? "ring-2 ring-primary shadow-pop border-primary/30"
+            : "border-border/50 hover:border-border hover:shadow-card"
         }`}
         style={{
           width: "100%",

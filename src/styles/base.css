@@ -354,7 +354,7 @@
   }
 
   .card-hover:hover {
-    @apply shadow-elevated-lg -translate-y-1;
+    @apply shadow-pop -translate-y-1;
   }
 
   /* Loading skeleton */

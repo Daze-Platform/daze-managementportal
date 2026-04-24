@@ -108,7 +108,7 @@ export const StoreDetails = ({
         <div className="flex items-center space-x-2">
           <Button
             onClick={onEdit}
-            className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base px-3 sm:px-4 py-2"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-base px-3 sm:px-4 py-2"
             size="sm"
           >
             <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />

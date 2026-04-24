@@ -178,7 +178,7 @@ const Login = () => {
       </div>
 
       <FadeIn className="w-full max-w-md relative z-10">
-        <Card className="glass shadow-glass-lg border-border/50">
+        <Card className="glass shadow-pop border-border/50">
           <CardHeader className="text-center pb-4">
             <ScaleIn delay={0.1}>
               <motion.div
@@ -375,7 +375,7 @@ const Login = () => {
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-sm"
           >
-            <Card className="glass shadow-glass-lg border-border/50">
+            <Card className="glass shadow-pop border-border/50">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Reset Password</CardTitle>
                 <CardDescription>

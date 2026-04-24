@@ -62,7 +62,7 @@ export default function AcceptInvite() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-xl shadow-xl p-8">
           <div className="flex justify-center mb-6">
             <img src="/daze-logo.png" alt="Daze" className="h-10" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>

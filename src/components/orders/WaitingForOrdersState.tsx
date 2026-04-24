@@ -14,7 +14,7 @@ export const WaitingForOrdersState = () => {
               <div className="relative mx-auto w-28 h-28 sm:w-32 sm:h-32 mb-4 sm:mb-6">
                 {/* Phone outline */}
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl shadow-xl transform rotate-3">
-                  <div className="absolute inset-2 bg-white rounded-2xl flex items-center justify-center">
+                  <div className="absolute inset-2 bg-white rounded-xl flex items-center justify-center">
                     <div className="text-2xl sm:text-3xl">📱</div>
                   </div>
                 </div>

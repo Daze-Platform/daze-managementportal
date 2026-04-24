@@ -281,7 +281,7 @@ export const ModifierGroupManager: React.FC = () => {
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-lg border border-gray-200/50">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+            <DialogTitle className="text-xl font-semibold text-foreground">
               {editingGroup ? "Edit Modifier Group" : "Create Modifier Group"}
             </DialogTitle>
           </DialogHeader>

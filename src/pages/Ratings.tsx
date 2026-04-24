@@ -165,7 +165,7 @@ export const Ratings = () => {
         className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
       >
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-gradient-to-br from-accent to-accent/80 rounded-2xl flex items-center justify-center shadow-lg">
+          <div className="w-14 h-14 bg-gradient-to-br from-accent to-accent/80 rounded-xl flex items-center justify-center shadow-lg">
             <Star className="w-7 h-7 text-accent-foreground fill-accent-foreground" />
           </div>
           <div>

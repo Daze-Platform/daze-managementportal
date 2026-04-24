@@ -99,7 +99,7 @@ export const DashboardHeader = ({
     <div className="flex flex-col gap-3">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold font-display text-foreground">
             Dashboard
           </h1>
           <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-0.5">
