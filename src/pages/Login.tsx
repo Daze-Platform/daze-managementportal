@@ -193,9 +193,9 @@ const Login = () => {
                 />
               </motion.div>
             </ScaleIn>
-            <CardTitle className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-bold text-foreground">
               Welcome Back
-            </CardTitle>
+            </h1>
             <CardDescription className="text-muted-foreground">
               Management Hub · Powered by Daze
             </CardDescription>
@@ -308,7 +308,7 @@ const Login = () => {
               >
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-medium gradient-primary hover:opacity-90 transition-opacity shadow-md"
+                  className="w-full h-12 text-base font-medium bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
                   disabled={isLoading}
                 >
                   {isLoading ? (
