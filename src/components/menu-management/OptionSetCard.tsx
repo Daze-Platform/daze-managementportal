@@ -132,7 +132,7 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
           className={`text-xs font-medium ${
             group.multipleSelection
               ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
-              : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+              : "bg-primary/10 text-primary dark:bg-blue-900/30 dark:text-blue-400"
           }`}
         >
           {selectionText}

@@ -60,12 +60,12 @@ interface StoreFormProps {
 const colorOptions = [
   { value: "bg-purple-500", label: "Purple" },
   { value: "bg-red-500", label: "Red" },
-  { value: "bg-blue-500", label: "Blue" },
+  { value: "bg-primary", label: "Blue" },
   { value: "bg-green-500", label: "Green" },
   { value: "bg-yellow-500", label: "Yellow" },
   { value: "bg-pink-500", label: "Pink" },
   { value: "bg-indigo-500", label: "Indigo" },
-  { value: "bg-orange-500", label: "Orange" },
+  { value: "bg-accent", label: "Orange" },
 ];
 const days = [
   "Monday",

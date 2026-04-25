@@ -38,9 +38,9 @@ interface StoreAssignmentDialogProps {
 const bgColorOptions = [
   { value: "bg-purple-500", label: "Purple", color: "#8b5cf6" },
   { value: "bg-red-500", label: "Red", color: "#ef4444" },
-  { value: "bg-blue-500", label: "Blue", color: "#3b82f6" },
+  { value: "bg-primary", label: "Blue", color: "#3b82f6" },
   { value: "bg-green-500", label: "Green", color: "#22c55e" },
-  { value: "bg-orange-500", label: "Orange", color: "#f97316" },
+  { value: "bg-accent", label: "Orange", color: "#f97316" },
   { value: "bg-pink-500", label: "Pink", color: "#ec4899" },
   { value: "bg-amber-500", label: "Amber", color: "#f59e0b" },
   { value: "bg-emerald-500", label: "Emerald", color: "#10b981" },
@@ -68,7 +68,7 @@ export const StoreAssignmentDialog = ({
     address: store?.address || "",
     locationDescription: store?.locationDescription || "",
     logo: store?.logo || "🏪",
-    bgColor: store?.bgColor || "bg-blue-500",
+    bgColor: store?.bgColor || "bg-primary",
     activeOrders: store?.activeOrders || 0,
   });
 
@@ -106,7 +106,7 @@ export const StoreAssignmentDialog = ({
           address: "",
           locationDescription: "",
           logo: "🏪",
-          bgColor: "bg-blue-500",
+          bgColor: "bg-primary",
           activeOrders: 0,
         });
       }
@@ -218,7 +218,7 @@ export const StoreAssignmentDialog = ({
                       key={availableStore.id}
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                         selectedExistingStore?.id === availableStore.id
-                          ? "border-blue-500 bg-blue-50"
+                          ? "border-primary bg-primary/10"
                           : "border-gray-200 hover:border-gray-300"
                       }`}
                       onClick={() => setSelectedExistingStore(availableStore)}

@@ -60,7 +60,7 @@ export const PaymentTypesSection = ({ data }: PaymentTypesSectionProps) => {
     {
       type: "Credit/Debit Cards",
       amount: 1928,
-      color: "bg-blue-500",
+      color: "bg-primary",
       percentage: 64,
       icon: CreditCard,
       trend: "+2.1%",

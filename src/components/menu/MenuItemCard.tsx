@@ -26,9 +26,9 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({
   onDeleteItem,
 }) => {
   return (
-    <div className="group flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-blue-200 hover:bg-blue-50/20 transition-all duration-200">
+    <div className="group flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-primary/20 hover:bg-primary/10/20 transition-all duration-200">
       <div className="flex-1">
-        <h4 className="font-medium text-gray-900 group-hover:text-blue-600">
+        <h4 className="font-medium text-gray-900 group-hover:text-primary">
           {item.name}
         </h4>
         <p className="text-sm text-gray-600 mt-1 mb-2">{item.description}</p>
@@ -40,7 +40,7 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({
             <div className="flex items-center space-x-2">
               <Badge
                 variant="outline"
-                className="text-xs bg-blue-50 text-blue-600 border-blue-200 flex items-center space-x-1"
+                className="text-xs bg-primary/10 text-primary border-primary/20 flex items-center space-x-1"
               >
                 <Settings className="w-3 h-3" />
                 <span>
@@ -57,7 +57,7 @@ export const MenuItemCard: React.FC<MenuItemCardProps> = ({
           size="sm"
           variant="ghost"
           onClick={() => onEditItem(categoryId, item)}
-          className="text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+          className="text-primary hover:text-primary hover:bg-primary/10"
         >
           <Edit2 className="w-4 h-4" />
         </Button>

@@ -277,7 +277,7 @@ export const MenuSyncPanel = ({
                 </Badge>
               )}
               {result.summary.priceDiscrepancies > 0 && (
-                <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
+                <Badge className="bg-accent/10 text-accent hover:bg-accent/10">
                   <Tag className="w-3 h-3 mr-1" />
                   {result.summary.priceDiscrepancies} price mismatches
                 </Badge>
@@ -325,7 +325,7 @@ export const MenuSyncPanel = ({
                   {result.priceDiscrepancies.map((item) => (
                     <div
                       key={item.dazeName}
-                      className="text-xs text-orange-700 bg-orange-50 rounded px-2 py-1 flex justify-between"
+                      className="text-xs text-accent bg-orange-50 rounded px-2 py-1 flex justify-between"
                     >
                       <span>{item.dazeName}</span>
                       <span className="font-mono">

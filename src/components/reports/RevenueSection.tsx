@@ -65,11 +65,11 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
         color: "bg-emerald-500",
         percentage: 45.7,
       },
-      { label: "Tax", amount: 1060, color: "bg-blue-500", percentage: 25.1 },
+      { label: "Tax", amount: 1060, color: "bg-primary", percentage: 25.1 },
       {
         label: "Commission",
         amount: 844,
-        color: "bg-orange-500",
+        color: "bg-accent",
         percentage: 20.0,
       },
       { label: "Tips", amount: 388, color: "bg-purple-500", percentage: 9.2 },

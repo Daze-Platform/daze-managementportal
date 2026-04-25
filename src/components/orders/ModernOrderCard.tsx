@@ -56,7 +56,7 @@ interface ModernOrderCardProps {
 
 const statusConfig = {
   new: { color: "bg-emerald-500", pulse: true },
-  progress: { color: "bg-blue-500", pulse: false },
+  progress: { color: "bg-primary", pulse: false },
   ready: { color: "bg-amber-500", pulse: true },
   fulfillment: { color: "bg-violet-500", pulse: false },
   fulfilled: { color: "bg-teal-600", pulse: false },
@@ -191,7 +191,7 @@ export const ModernOrderCard = ({
                   </div>
                   <Badge
                     variant="outline"
-                    className={`text-xs ${order.type === "Delivery" ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-green-50 text-green-700 border-green-200"}`}
+                    className={`text-xs ${order.type === "Delivery" ? "bg-primary/10 text-primary border-primary/20" : "bg-green-50 text-green-700 border-green-200"}`}
                   >
                     {order.type}
                   </Badge>

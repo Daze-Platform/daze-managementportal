@@ -409,7 +409,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       case "error":
         return <AlertCircle className="w-5 h-5 text-red-500" />;
       case "info":
-        return <Info className="w-5 h-5 text-blue-500" />;
+        return <Info className="w-5 h-5 text-primary" />;
       default:
         return <Bell className="w-5 h-5 text-gray-500" />;
     }
@@ -426,9 +426,9 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       case "error":
         return "bg-red-50 border-l-4 border-l-red-500";
       case "info":
-        return "bg-blue-50 border-l-4 border-l-blue-500";
+        return "bg-primary/10 border-l-4 border-l-blue-500";
       default:
-        return "bg-blue-50 border-l-4 border-l-blue-500";
+        return "bg-primary/10 border-l-4 border-l-blue-500";
     }
   };
 
@@ -477,12 +477,12 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             onChange={handleSearchChange}
             onFocus={handleSearchFocus}
             onBlur={handleSearchBlur}
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm transition-all duration-200 hover:border-gray-400"
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary500 focus:border-transparent w-full text-sm transition-all duration-200 hover:border-gray-400"
             onKeyDown={(e) =>
                     handleMobileSearch(value);
                   }}
                   autoFocus
-                  className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm"
+                  className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary500 focus:border-transparent w-full text-sm"
                 />
               </div>
 
@@ -661,7 +661,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
 
                           {notification.unread && (
                             <div className="flex-shrink-0 mt-1">
-                              <div className="w-2.5 h-2.5 bg-blue-500 rounded-full shadow-sm"></div>
+                              <div className="w-2.5 h-2.5 bg-primary rounded-full shadow-sm"></div>
                             </div>
                           )}
                         </div>

@@ -137,12 +137,12 @@ export const DowntimeSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.7 }}
-            className="bg-blue-50 p-3 rounded-lg border border-blue-200"
+            className="bg-primary/10 p-3 rounded-lg border border-primary/20"
           >
             <div className="text-xs font-medium text-blue-800 mb-1">
               📊 Summary
             </div>
-            <div className="text-xs text-blue-700">
+            <div className="text-xs text-primary">
               Tiki Bar had the longest downtime. Consider staff scheduling
               optimization.
             </div>

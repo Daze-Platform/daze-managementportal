@@ -369,7 +369,7 @@ export const OrderDetails = ({
           <Card className="animate-fade-in">
             <CardContent className="p-3">
               <h3 className="font-semibold mb-2 flex items-center text-sm">
-                <Clock className="w-4 h-4 mr-2 text-blue-600" />
+                <Clock className="w-4 h-4 mr-2 text-primary" />
                 Ready Time
               </h3>
               <div className="flex items-center justify-center space-x-4">
@@ -383,7 +383,7 @@ export const OrderDetails = ({
                   <Minus className="w-4 h-4" />
                 </Button>
                 <div className="text-center min-w-0">
-                  <div className="text-xl font-bold text-blue-600 transition-all duration-300">
+                  <div className="text-xl font-bold text-primary transition-all duration-300">
                     {estimatedMinutes} min
                   </div>
                   <div className="text-xs text-gray-500 truncate">
@@ -528,16 +528,16 @@ export const OrderDetails = ({
                 </div>
               </div>
               {(activeTab === "ready" || activeTab === "fulfillment") && (
-                <div className="flex items-center justify-between p-2 bg-blue-50 rounded-lg animate-fade-in">
+                <div className="flex items-center justify-between p-2 bg-primary/10 rounded-lg animate-fade-in">
                   <div className="flex items-center space-x-2">
-                    <Truck className="w-4 h-4 text-blue-600" />
+                    <Truck className="w-4 h-4 text-primary" />
                     <span className="font-medium text-blue-900 text-xs">
                       Courier:
                     </span>
                   </div>
                   <Badge
                     variant="outline"
-                    className="bg-blue-100 text-blue-700 border-blue-200 text-xs"
+                    className="bg-primary/10 text-primary border-primary/20 text-xs"
                   >
                     {selectedOrderDetails.delivery.courier}
                   </Badge>
@@ -587,7 +587,7 @@ export const OrderDetails = ({
                             <Badge
                               key={modIndex}
                               variant="secondary"
-                              className="text-xs bg-blue-50 text-blue-700 border-blue-200 px-1 py-0"
+                              className="text-xs bg-primary/10 text-primary border-primary/20 px-1 py-0"
                             >
                               {modifier}
                             </Badge>
@@ -605,14 +605,14 @@ export const OrderDetails = ({
 
             {/* Special Instructions */}
             {selectedOrderDetails.specialInstructions && (
-              <div className="mt-3 p-2 bg-orange-50 border border-orange-200 rounded-lg animate-fade-in">
+              <div className="mt-3 p-2 bg-orange-50 border border-accent/20 rounded-lg animate-fade-in">
                 <div className="flex items-start space-x-2">
-                  <AlertCircle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <AlertCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
                   <div className="min-w-0">
-                    <div className="font-medium text-orange-800 text-xs">
+                    <div className="font-medium text-accent text-xs">
                       Special Instructions
                     </div>
-                    <div className="text-xs text-orange-700 mt-1 break-words">
+                    <div className="text-xs text-accent mt-1 break-words">
                       {selectedOrderDetails.specialInstructions}
                     </div>
                   </div>

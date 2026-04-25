@@ -27,13 +27,13 @@ export const StatusDisplay = ({
 
   const getStatusColor = () => {
     if (storeStatus === "closed") return "text-red-600";
-    if (orderStatus === "paused") return "text-orange-600";
+    if (orderStatus === "paused") return "text-accent";
     return "text-green-600";
   };
 
   const getStatusDotColor = () => {
     if (storeStatus === "closed") return "bg-red-500";
-    if (orderStatus === "paused") return "bg-orange-500";
+    if (orderStatus === "paused") return "bg-accent";
     return "bg-green-500";
   };
 

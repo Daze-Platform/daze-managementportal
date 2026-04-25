@@ -44,7 +44,7 @@ const statCards = [
     format: (v: number) => v.toLocaleString(),
     gradient: "from-blue-500 to-indigo-600",
     bgLight: "bg-blue-50",
-    iconColor: "text-blue-600",
+    iconColor: "text-primary",
   },
   {
     key: "customers",

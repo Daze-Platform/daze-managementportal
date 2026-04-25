@@ -46,7 +46,7 @@ export const CustomerSatisfaction = ({ data }: CustomerSatisfactionProps) => {
             Customer Satisfaction
           </CardTitle>
           <div className="flex items-center gap-1 sm:gap-2">
-            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             <span className="text-xs sm:text-sm text-gray-600">
               <span className="hidden sm:inline">
                 {data.totalReviews.toLocaleString()} reviews
@@ -64,7 +64,7 @@ export const CustomerSatisfaction = ({ data }: CustomerSatisfactionProps) => {
           <div className="flex items-center justify-between p-3 sm:p-4 bg-blue-50 rounded-lg">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5">
-                <Star className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 fill-current" />
+                <Star className="w-5 h-5 sm:w-6 sm:h-6 text-primary fill-current" />
               </div>
               <div>
                 <p className="text-base sm:text-lg font-bold text-gray-900">

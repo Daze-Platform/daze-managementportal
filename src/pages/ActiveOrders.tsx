@@ -286,7 +286,7 @@ function OrderRow({
             variant="outline"
             className={`text-[10px] px-1.5 py-0 h-4 font-medium ${
               order.type === "Delivery"
-                ? "bg-blue-50 text-blue-600 border-blue-200"
+                ? "bg-primary/10 text-primary border-primary/30"
                 : "bg-green-50 text-green-600 border-green-200"
             }`}
           >

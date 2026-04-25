@@ -50,7 +50,7 @@ export const OrderCardActionButton = ({
       )}
       {activeTab === "progress" && (
         <button
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+          className="w-full bg-primary hover:bg-primary text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
           onClick={(e) => handleButtonClick(e, "ready")}
         >
           Mark as ready

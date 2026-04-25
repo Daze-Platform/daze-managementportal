@@ -78,7 +78,7 @@ export const OrderCardActions = ({
       <div className="mb-4">
         <Button
           variant="outline"
-          className="w-full h-11 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border-blue-200 hover:from-blue-100 hover:to-indigo-100 hover:border-blue-300 font-medium flex items-center justify-center space-x-2 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group relative z-20"
+          className="w-full h-11 bg-gradient-to-r from-blue-50 to-indigo-50 text-primary border-primary/20 hover:from-blue-100 hover:to-indigo-100 hover:border-primary/30 font-medium flex items-center justify-center space-x-2 transition-all duration-200 hover:shadow-md hover:scale-[1.02] group relative z-20"
           onClick={handleViewDetails}
           type="button"
         >
@@ -111,7 +111,7 @@ export const OrderCardActions = ({
         )}
         {activeTab === "progress" && (
           <Button
-            className="w-full h-10 bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
+            className="w-full h-10 bg-primary hover:bg-primary text-white font-semibold shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
             onClick={(e) => handleButtonClick(e, "ready")}
           >
             Mark as Ready

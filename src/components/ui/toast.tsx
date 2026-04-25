@@ -35,7 +35,7 @@ const toastVariants = cva(
           "border-green-200 border-l-green-500 bg-green-50/95 text-green-900 shadow-lg shadow-green-100/50",
         warning:
           "border-yellow-200 border-l-yellow-500 bg-yellow-50/95 text-yellow-900 shadow-lg shadow-yellow-100/50",
-        info: "border-blue-200 border-l-blue-500 bg-blue-50/95 text-blue-900 shadow-lg shadow-blue-100/50",
+        info: "border-primary/20 border-l-blue-500 bg-primary/10/95 text-blue-900 shadow-lg shadow-blue-100/50",
       },
     },
     defaultVariants: {
@@ -125,7 +125,7 @@ const ToastIcon = ({ variant }: { variant?: string }) => {
     case "warning":
       return <AlertTriangle className="h-5 w-5 text-yellow-600" />;
     case "info":
-      return <Info className="h-5 w-5 text-blue-600" />;
+      return <Info className="h-5 w-5 text-primary" />;
     default:
       return <Info className="h-5 w-5 text-gray-600" />;
   }

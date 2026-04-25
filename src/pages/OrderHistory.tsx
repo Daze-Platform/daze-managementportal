@@ -339,7 +339,7 @@ export const OrderHistory = () => {
     return (
       <div className="inline-flex flex-wrap items-center gap-1.5">
         {order.type === "Delivery" ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 tracking-wide">
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/30 px-2.5 py-0.5 text-[11px] font-semibold text-primary tracking-wide">
             <Truck className="w-3 h-3" />
             Delivery
           </span>
@@ -368,7 +368,7 @@ export const OrderHistory = () => {
 
         {hasRefund && (
           <span
-            className="inline-flex items-center gap-1 rounded-full bg-orange-50 border border-orange-200 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700 tracking-wide"
+            className="inline-flex items-center gap-1 rounded-full bg-accent/10 border border-accent/30 px-2.5 py-0.5 text-[11px] font-semibold text-accent tracking-wide"
             title={isPartialRefund ? `Partial refund ${order.refundAmount}` : `Full refund ${order.refundAmount}`}
           >
             <DollarSign className="w-3 h-3" />
@@ -418,7 +418,7 @@ export const OrderHistory = () => {
                 onClick={() => handleOrderClick(order)}
               >
                 {expandedOrder === order.supabase_id ? (
-                  <ChevronDown className="w-4 h-4 text-blue-600" />
+                  <ChevronDown className="w-4 h-4 text-primary" />
                 ) : (
                   <ChevronRight className="w-4 h-4 text-gray-500" />
                 )}
@@ -470,7 +470,7 @@ export const OrderHistory = () => {
             size="sm"
             variant="outline"
             onClick={(e) => handleRefundClick(order, e)}
-            className="w-full flex items-center justify-center space-x-2 text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+            className="w-full flex items-center justify-center space-x-2 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-colors"
           >
             <DollarSign className="w-4 h-4" />
             <span>Process Refund</span>
@@ -704,7 +704,7 @@ export const OrderHistory = () => {
                               <TableCell>
                                 <button className="w-8 h-8 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center">
                                   {expandedOrder === order.supabase_id ? (
-                                    <ChevronDown className="w-4 h-4 text-blue-600" />
+                                    <ChevronDown className="w-4 h-4 text-primary" />
                                   ) : (
                                     <ChevronRight className="w-4 h-4 text-gray-500" />
                                   )}
@@ -748,7 +748,7 @@ export const OrderHistory = () => {
                                   size="sm"
                                   variant="outline"
                                   onClick={(e) => handleRefundClick(order, e)}
-                                  className="flex items-center space-x-1 text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                                  className="flex items-center space-x-1 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-colors"
                                 >
                                   <DollarSign className="w-3 h-3" />
                                   <span>Refund</span>

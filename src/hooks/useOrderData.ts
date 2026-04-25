@@ -164,7 +164,7 @@ function transformDbOrder(dbOrder: DbOrder): Order {
   // Completed orders get check icon
   if (dbOrder.status === "delivered") {
     icon = "\u2705";
-    iconBg = uiType === "Delivery" ? "bg-green-500" : "bg-blue-500";
+    iconBg = uiType === "Delivery" ? "bg-green-500" : "bg-primary";
   }
 
   return {
@@ -308,7 +308,7 @@ export const useOrderData = () => {
             order.type === "Delivery" ? "Delivered" : "Picked Up";
           order.icon = "\u2705";
           order.iconBg =
-            order.type === "Delivery" ? "bg-green-500" : "bg-blue-500";
+            order.type === "Delivery" ? "bg-green-500" : "bg-primary";
           order.estimatedTime = "Completed";
         }
 

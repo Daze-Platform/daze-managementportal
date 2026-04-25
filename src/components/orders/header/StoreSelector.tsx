@@ -31,7 +31,7 @@ const StoreSelectorTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-12 sm:h-11 w-full items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 sm:py-2.5 text-base sm:text-sm font-medium text-gray-900 shadow-sm ring-offset-background placeholder:text-gray-500 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 ease-out [&>span]:line-clamp-1 touch-manipulation",
+      "flex h-12 sm:h-11 w-full items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 sm:py-2.5 text-base sm:text-sm font-medium text-gray-900 shadow-sm ring-offset-background placeholder:text-gray-500 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary500 focus:ring-offset-1 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 ease-out [&>span]:line-clamp-1 touch-manipulation",
       className,
     )}
     {...props}
@@ -95,7 +95,7 @@ const StoreSelectorItem = React.forwardRef<
   >
     <span className="absolute left-3 sm:left-2 flex h-4 w-4 sm:h-3.5 sm:w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-5 w-5 sm:h-4 sm:w-4 text-blue-600" />
+        <Check className="h-5 w-5 sm:h-4 sm:w-4 text-primary" />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -140,7 +140,7 @@ export const StoreSelector = ({
                 {orderCount > 0 && (
                   <Badge
                     variant="secondary"
-                    className="ml-2 bg-orange-500 text-white border-orange-600 text-xs px-1.5 py-0.5 min-w-[18px] h-4 flex items-center justify-center font-bold"
+                    className="ml-2 bg-accent text-white border-accent text-xs px-1.5 py-0.5 min-w-[18px] h-4 flex items-center justify-center font-bold"
                   >
                     {orderCount}
                   </Badge>

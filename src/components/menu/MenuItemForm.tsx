@@ -188,7 +188,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
           <DialogTitle
             className={`${isMobileOrTablet ? "text-lg" : "text-xl sm:text-2xl"} font-semibold text-foreground flex items-center gap-2`}
           >
-            <ChefHat className="w-5 h-5 text-blue-600" />
+            <ChefHat className="w-5 h-5 text-primary" />
             {item ? "Edit Menu Item" : "Add Menu Item"}
           </DialogTitle>
         </DialogHeader>
@@ -446,7 +446,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
 
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
-                  <Settings className="w-5 h-5 text-blue-600" />
+                  <Settings className="w-5 h-5 text-primary" />
                   <FormLabel
                     className={`text-gray-800 font-medium ${isMobileOrTablet ? "text-base" : "text-sm sm:text-base"}`}
                   >
@@ -489,7 +489,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                             key={group.id}
                             className={`relative ${isMobileOrTablet ? "p-3" : "p-4"} rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                               isSelected
-                                ? "border-blue-500 bg-blue-50 shadow-md"
+                                ? "border-primary bg-primary/10 shadow-md"
                                 : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
                             }`}
                             onClick={() => toggleModifier(group.id)}
@@ -501,7 +501,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                                 >
                                   <div
                                     className={`${isMobileOrTablet ? "w-5 h-5" : "w-6 h-6"} rounded-lg flex items-center justify-center ${
-                                      isSelected ? "bg-blue-600" : "bg-gray-200"
+                                      isSelected ? "bg-primary" : "bg-gray-200"
                                     }`}
                                   >
                                     {isSelected && (
@@ -525,7 +525,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                                     variant="secondary"
                                     className={`text-xs ${
                                       group.type === "single"
-                                        ? "bg-blue-100 text-blue-700"
+                                        ? "bg-primary/10 text-primary"
                                         : "bg-purple-100 text-purple-700"
                                     }`}
                                   >
@@ -536,7 +536,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                                   {group.required && (
                                     <Badge
                                       variant="outline"
-                                      className="text-xs border-orange-200 text-orange-700 bg-orange-50"
+                                      className="text-xs border-accent/20 text-accent bg-orange-50"
                                     >
                                       Required
                                     </Badge>
@@ -589,7 +589,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
 
                     {selectedModifiers.length > 0 && (
                       <div
-                        className={`mt-4 ${isMobileOrTablet ? "p-3" : "p-3"} bg-blue-50 rounded-xl border border-blue-200`}
+                        className={`mt-4 ${isMobileOrTablet ? "p-3" : "p-3"} bg-primary/10 rounded-xl border border-primary/20`}
                       >
                         <p
                           className={`${isMobileOrTablet ? "text-sm" : "text-sm"} font-medium text-blue-900 mb-2`}
@@ -602,7 +602,7 @@ export const MenuItemForm: React.FC<MenuItemFormProps> = ({
                             return group ? (
                               <Badge
                                 key={modifierId}
-                                className="bg-blue-100 text-blue-800 border-blue-300"
+                                className="bg-primary/10 text-blue-800 border-primary/30"
                               >
                                 {group.name}
                               </Badge>

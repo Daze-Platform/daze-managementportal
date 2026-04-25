@@ -128,7 +128,7 @@ export default function ResetPassword() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 text-center">
           <div className="flex justify-center mb-6"><DazeLogo /></div>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3" />
           <p className="text-sm text-gray-500">Verifying reset link…</p>
         </div>
       </div>

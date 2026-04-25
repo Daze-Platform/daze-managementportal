@@ -165,7 +165,7 @@ export const StoreClosedState = ({
               Need help? Check your{" "}
               <Link
                 to="/settings"
-                className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                className="text-primary hover:text-primary hover:underline font-medium"
               >
                 venue settings
               </Link>{" "}

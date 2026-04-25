@@ -26,7 +26,7 @@ export const PerformanceAlerts = ({ alerts }: PerformanceAlertsProps) => {
         );
       case "high":
         return (
-          <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100 text-xs">
+          <Badge className="bg-accent/10 text-accent hover:bg-accent/10 text-xs">
             🟠 High
           </Badge>
         );
@@ -95,7 +95,7 @@ export const PerformanceAlerts = ({ alerts }: PerformanceAlertsProps) => {
             Platform Performance
           </CardTitle>
           <div className="flex items-center gap-1 sm:gap-2">
-            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
             <Badge className="bg-red-100 text-red-800 hover:bg-red-100 text-xs hidden sm:inline-flex">
               {
                 alerts.filter(
@@ -124,8 +124,8 @@ export const PerformanceAlerts = ({ alerts }: PerformanceAlertsProps) => {
               className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
             >
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mb-2 sm:mb-0">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Target className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Target className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-1">

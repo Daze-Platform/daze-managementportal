@@ -26,8 +26,8 @@ export const OrderCardFooter = ({ order }: OrderCardFooterProps) => {
 
     const minutes = parseInt(order.estimatedTime?.split(" ")[0] || "0");
     if (minutes <= 5) return "text-red-700 bg-red-50 border-red-200";
-    if (minutes <= 10) return "text-orange-700 bg-orange-50 border-orange-200";
-    return "text-blue-700 bg-blue-50 border-blue-200";
+    if (minutes <= 10) return "text-accent bg-orange-50 border-accent/20";
+    return "text-primary bg-primary/10 border-primary/20";
   };
 
   return (

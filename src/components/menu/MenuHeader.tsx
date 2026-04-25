@@ -64,7 +64,7 @@ export const MenuHeader: React.FC<MenuHeaderProps> = ({
             onChange={(e) => onMenuUpdate({ name: e.target.value })}
             className={`${
               isNew
-                ? `border-2 border-blue-200 focus:border-blue-500 px-4 py-3 rounded-lg ${
+                ? `border-2 border-primary/20 focus:border-primary px-4 py-3 rounded-lg ${
                     isMobile ? "h-12 text-lg" : "h-14 text-2xl"
                   } font-semibold placeholder:text-gray-400`
                 : `border-none p-0 h-auto ${

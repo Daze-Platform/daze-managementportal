@@ -43,8 +43,8 @@ export const OrderCardItems = ({ items, platformFee }: OrderCardItemsProps) => {
     <div className="mb-3">
       <div className="flex items-center justify-between p-3 bg-gray-50/70 rounded-lg border border-gray-100/50">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <ShoppingBag className="w-3.5 h-3.5 text-blue-600" />
+          <div className="w-7 h-7 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+            <ShoppingBag className="w-3.5 h-3.5 text-primary" />
           </div>
           <div className="text-sm text-gray-900 font-medium truncate flex-1">
             {items}
@@ -61,7 +61,7 @@ export const OrderCardItems = ({ items, platformFee }: OrderCardItemsProps) => {
           )}
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger
-              className="flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors p-1.5 hover:bg-blue-50 rounded-full w-8 h-8"
+              className="flex items-center justify-center text-primary hover:text-primary transition-colors p-1.5 hover:bg-primary/10 rounded-full w-8 h-8"
               onClick={(e) => e.stopPropagation()}
             >
               {isDropdownOpen ? (

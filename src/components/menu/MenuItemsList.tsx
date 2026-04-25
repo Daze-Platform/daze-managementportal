@@ -45,7 +45,7 @@ export const MenuItemsList: React.FC<MenuItemsListProps> = ({
         <Button
           size="sm"
           onClick={handleAddItemClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white h-9 sm:h-10 text-xs sm:text-sm px-3 sm:px-4"
+          className="bg-primary hover:bg-primary text-white h-9 sm:h-10 text-xs sm:text-sm px-3 sm:px-4"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add First Item

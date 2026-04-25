@@ -26,7 +26,7 @@ export const InventoryAlerts = ({ items }: InventoryAlertsProps) => {
         );
       case "high":
         return (
-          <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100 text-xs">
+          <Badge className="bg-accent/10 text-accent hover:bg-accent/10 text-xs">
             🟠 High
           </Badge>
         );
@@ -38,7 +38,7 @@ export const InventoryAlerts = ({ items }: InventoryAlertsProps) => {
         );
       case "low":
         return (
-          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs">
+          <Badge className="bg-primary/10 text-blue-800 hover:bg-primary/10 text-xs">
             🔵 Low
           </Badge>
         );
@@ -59,7 +59,7 @@ export const InventoryAlerts = ({ items }: InventoryAlertsProps) => {
             Inventory Alerts
           </CardTitle>
           <div className="flex items-center gap-1 sm:gap-2">
-            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
             <Badge className="bg-red-100 text-red-800 hover:bg-red-100 text-xs hidden sm:inline-flex">
               {items.filter((item) => item.urgency === "critical").length}{" "}
               Critical
@@ -78,8 +78,8 @@ export const InventoryAlerts = ({ items }: InventoryAlertsProps) => {
               className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
             >
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mb-2 sm:mb-0">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Package className="w-3 h-3 sm:w-4 sm:h-4 text-orange-600" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Package className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -104,7 +104,7 @@ export const InventoryAlerts = ({ items }: InventoryAlertsProps) => {
                                 item.currentStock,
                                 item.minStock,
                               ) < 50
-                            ? "bg-orange-500"
+                            ? "bg-accent"
                             : getStockPercentage(
                                   item.currentStock,
                                   item.minStock,

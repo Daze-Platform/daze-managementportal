@@ -62,7 +62,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
           locationDescription: store.location_description || "",
           logo: store.logo || "🏪",
           customLogo: store.custom_logo || "",
-          bgColor: store.bg_color || "bg-blue-500",
+          bgColor: store.bg_color || "bg-primary",
           activeOrders: store.active_orders || 0,
           hours: (store.hours as any) || [],
           destinationId: store.resort_id || "",

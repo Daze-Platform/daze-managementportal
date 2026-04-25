@@ -124,7 +124,7 @@ export const OrderFilters = ({
                   className={`h-4 px-1.5 text-xs font-bold transition-colors duration-300 ${
                     orderType === "all"
                       ? "bg-white/20 text-white border-white/30"
-                      : "bg-blue-100 text-blue-700 border-blue-200"
+                      : "bg-primary/10 text-primary border-primary/20"
                   }`}
                 >
                   {totalCount}

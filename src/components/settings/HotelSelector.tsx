@@ -90,10 +90,10 @@ export const HotelSelector = () => {
         </div>
 
         {currentHotel && (
-          <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="bg-primary/10 p-4 rounded-lg">
             <h4 className="font-medium text-blue-900">{currentHotel.name}</h4>
-            <p className="text-sm text-blue-700">{currentHotel.location}</p>
-            <p className="text-xs text-blue-600 mt-2">
+            <p className="text-sm text-primary">{currentHotel.location}</p>
+            <p className="text-xs text-primary mt-2">
               All settings and data will be specific to this hotel location.
             </p>
           </div>

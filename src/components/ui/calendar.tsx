@@ -34,23 +34,23 @@ function Calendar({
         head_cell:
           "text-gray-600 rounded-md w-10 sm:w-9 font-semibold text-sm sm:text-xs uppercase tracking-wider",
         row: "flex w-full mt-2",
-        cell: "h-10 w-10 sm:h-9 sm:w-9 text-center text-sm p-0 relative hover:bg-blue-50 focus-within:relative focus-within:z-20 rounded-md transition-colors duration-200",
+        cell: "h-10 w-10 sm:h-9 sm:w-9 text-center text-sm p-0 relative hover:bg-primary/10 focus-within:relative focus-within:z-20 rounded-md transition-colors duration-200",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-10 w-10 sm:h-9 sm:w-9 p-0 font-medium hover:bg-blue-100 hover:text-blue-900 focus:bg-blue-100 focus:text-blue-900 text-gray-700 transition-all duration-200 rounded-md",
+          "h-10 w-10 sm:h-9 sm:w-9 p-0 font-medium hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary text-gray-700 transition-all duration-200 rounded-md",
         ),
         day_range_end:
-          "day-range-end bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white",
+          "day-range-end bg-primary text-white hover:bg-primary/90 hover:text-white focus:bg-primary/90 focus:text-white",
         day_selected:
-          "bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-700 focus:text-white font-semibold shadow-md",
+          "bg-primary text-white hover:bg-primary/90 hover:text-white focus:bg-primary/90 focus:text-white font-semibold shadow-md",
         day_today:
-          "bg-blue-50 text-blue-900 font-semibold border-2 border-blue-200",
+          "bg-primary/10 text-primary font-semibold border-2 border-primary/20",
         day_outside:
           "day-outside text-gray-400 opacity-60 hover:text-gray-500 hover:opacity-80",
         day_disabled:
           "text-gray-300 opacity-50 cursor-not-allowed hover:bg-transparent",
         day_range_middle:
-          "aria-selected:bg-blue-100 aria-selected:text-blue-900 hover:bg-blue-200 bg-blue-50 text-blue-800",
+          "aria-selected:bg-primary/10 aria-selected:text-primary hover:bg-primary/20 bg-primary/10 text-primary",
         day_hidden: "invisible",
         ...classNames,
       }}

@@ -99,7 +99,7 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
                 } bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-md relative`}
               >
                 <ChefHat
-                  className={`${isMobileOrTablet ? "w-8 h-8" : "w-10 h-10"} text-blue-600`}
+                  className={`${isMobileOrTablet ? "w-8 h-8" : "w-10 h-10"} text-primary`}
                 />
                 <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                   <Sparkles className="w-2 h-2 text-white" />

@@ -83,7 +83,7 @@ export const OrderCardInfo = ({ order, activeTab }: OrderCardInfoProps) => {
         <div className="mb-3">
           <Badge
             variant="outline"
-            className="text-xs bg-blue-50 text-blue-700 border-blue-200"
+            className="text-xs bg-primary/10 text-primary border-primary/20"
           >
             {order.storeName}
           </Badge>

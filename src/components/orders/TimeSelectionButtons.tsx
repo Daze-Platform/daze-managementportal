@@ -28,7 +28,7 @@ export const TimeSelectionButtons = ({
             onClick={() => onTimeSelect(time)}
             className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg border-2 transition-all ${
               selectedTime === time
-                ? "border-blue-500 bg-blue-50 text-blue-700"
+                ? "border-primary bg-primary/10 text-primary"
                 : "border-gray-200 hover:border-gray-300 text-gray-700"
             }`}
           >
@@ -53,7 +53,7 @@ export const TimeSelectionButtons = ({
           {onAccept && (
             <Button
               onClick={onAccept}
-              className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+              className="flex-1 h-12 bg-primary hover:bg-primary/90 text-white font-medium"
             >
               Accept
             </Button>

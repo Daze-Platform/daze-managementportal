@@ -26,8 +26,8 @@ export const MenuStats: React.FC<MenuStatsProps> = ({ menus }) => {
       title: "Total Menus",
       value: totalMenus.toString(),
       icon: Star,
-      color: "bg-blue-50",
-      iconColor: "text-blue-500",
+      color: "bg-primary/10",
+      iconColor: "text-primary",
       borderColor: "border-blue-100",
     },
     {
@@ -50,8 +50,8 @@ export const MenuStats: React.FC<MenuStatsProps> = ({ menus }) => {
       title: "Avg. Price",
       value: `$${avgPrice.toFixed(2)}`,
       icon: DollarSign,
-      color: "bg-blue-50",
-      iconColor: "text-blue-500",
+      color: "bg-primary/10",
+      iconColor: "text-primary",
       borderColor: "border-blue-100",
     },
   ];

@@ -120,7 +120,7 @@ export const ModifierGroupManager: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-            <Settings className="w-5 h-5 text-blue-500" />
+            <Settings className="w-5 h-5 text-primary" />
             <span>Modifier Groups</span>
           </h3>
           <p className="text-sm text-gray-600 mt-1">
@@ -180,7 +180,7 @@ export const ModifierGroupManager: React.FC = () => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+                      className="h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary"
                       onClick={() => {
                         setEditingGroup(group);
                         form.reset({
@@ -207,7 +207,7 @@ export const ModifierGroupManager: React.FC = () => {
                   <span
                     className={`px-2 py-1 rounded-full ${
                       group.type === "single"
-                        ? "bg-blue-100 text-blue-700"
+                        ? "bg-primary/10 text-primary"
                         : "bg-purple-100 text-purple-700"
                     }`}
                   >
@@ -218,7 +218,7 @@ export const ModifierGroupManager: React.FC = () => {
                   <span
                     className={`px-2 py-1 rounded-full ${
                       group.required
-                        ? "bg-orange-100 text-orange-700"
+                        ? "bg-accent/10 text-accent"
                         : "bg-gray-100 text-gray-600"
                     }`}
                   >

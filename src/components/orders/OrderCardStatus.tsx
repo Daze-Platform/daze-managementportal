@@ -18,7 +18,7 @@ export const OrderCardStatus = ({
       case "new":
         return "bg-green-500";
       case "progress":
-        return "bg-blue-500";
+        return "bg-primary";
       case "ready":
         return "bg-purple-500";
       case "fulfillment":

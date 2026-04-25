@@ -432,7 +432,7 @@ export const employeeDeliveries = [
     rating: 4.8,
     earnings: "$184",
     status: "active",
-    color: "bg-blue-500",
+    color: "bg-primary",
   },
   {
     id: 2,
@@ -465,7 +465,7 @@ export const employeeDeliveries = [
     rating: 4.5,
     earnings: "$96",
     status: "active",
-    color: "bg-orange-500",
+    color: "bg-accent",
   },
   {
     id: 5,

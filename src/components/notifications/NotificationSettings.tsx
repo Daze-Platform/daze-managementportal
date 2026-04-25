@@ -125,11 +125,11 @@ export const NotificationSettings = () => {
         )}
 
         {subscription && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
             <h4 className="font-medium text-blue-800 mb-2">
               Notification Types You'll Receive:
             </h4>
-            <ul className="text-sm text-blue-700 space-y-1">
+            <ul className="text-sm text-primary space-y-1">
               <li>• New order alerts</li>
               <li>• Order status updates</li>
               <li>• System alerts and maintenance notices</li>

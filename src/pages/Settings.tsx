@@ -452,7 +452,7 @@ export const Settings = () => {
                       setNotifications({ ...notifications, email: pressed })
                     }
                     variant="outline"
-                    className="data-[state=on]:bg-blue-500 data-[state=on]:text-white"
+                    className="data-[state=on]:bg-primary data-[state=on]:text-white"
                   >
                     {notifications.email ? "ON" : "OFF"}
                   </Toggle>
@@ -592,12 +592,12 @@ export const Settings = () => {
                         key={plan.id}
                         className={`relative rounded-lg border-2 p-6 transition-all ${
                           currentPlan === plan.id
-                            ? "border-blue-500 bg-blue-50"
+                            ? "border-primary/50 bg-primary/10"
                             : "border-gray-200 hover:border-gray-300"
-                        } ${plan.popular ? "ring-2 ring-blue-500 ring-opacity-50" : ""}`}
+                        } ${plan.popular ? "ring-2 ring-primary500 ring-opacity-50" : ""}`}
                       >
                         {plan.popular && (
-                          <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 bg-blue-500">
+                          <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary">
                             Most Popular
                           </Badge>
                         )}
@@ -674,7 +674,7 @@ export const Settings = () => {
                   <div className="border rounded-lg p-4">
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-6 bg-blue-600 rounded text-white text-xs flex items-center justify-center">
+                        <div className="w-10 h-6 bg-primary rounded text-white text-xs flex items-center justify-center">
                           VISA
                         </div>
                         <div>

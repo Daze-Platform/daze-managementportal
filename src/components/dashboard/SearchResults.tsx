@@ -46,13 +46,13 @@ export const SearchResults = ({
   const getResultIcon = (type: string) => {
     switch (type) {
       case "store":
-        return <Store className="w-4 h-4 text-blue-500" />;
+        return <Store className="w-4 h-4 text-primary" />;
       case "revenue":
         return <DollarSign className="w-4 h-4 text-green-500" />;
       case "menu-item":
         return <Menu className="w-4 h-4 text-purple-500" />;
       case "inventory":
-        return <Package className="w-4 h-4 text-orange-500" />;
+        return <Package className="w-4 h-4 text-accent" />;
       case "order":
         return <Receipt className="w-4 h-4 text-indigo-500" />;
       case "employee":

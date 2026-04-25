@@ -18,8 +18,8 @@ export const TeamSection = () => {
       change: "+2",
       trend: "up",
       icon: Users,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       name: "Avg. Hours/Week",
@@ -93,7 +93,7 @@ export const TeamSection = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden relative group">
+      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-primary/20/50 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden relative group">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
         <CardHeader className="pb-3 relative z-10">
@@ -103,7 +103,7 @@ export const TeamSection = () => {
                 whileHover={{ scale: 1.1, rotate: -10 }}
                 className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center shadow-md ring-1 ring-black/5"
               >
-                <Users className="w-5 h-5 text-blue-600" />
+                <Users className="w-5 h-5 text-primary" />
               </motion.div>
               <CardTitle className="text-lg">Team Performance</CardTitle>
             </div>
@@ -275,12 +275,12 @@ export const TeamSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 1 }}
-            className="bg-blue-50 p-3 rounded-lg border border-blue-200"
+            className="bg-primary/10 p-3 rounded-lg border border-primary/20"
           >
             <div className="text-xs font-medium text-blue-800 mb-1">
               👥 Team Insight
             </div>
-            <div className="text-xs text-blue-700">
+            <div className="text-xs text-primary">
               Performance scores are up 7% this month. Sarah Johnson leads with
               exceptional efficiency.
             </div>

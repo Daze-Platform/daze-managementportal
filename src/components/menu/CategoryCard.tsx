@@ -95,7 +95,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
                     value={tempName}
                     onChange={(e) => setTempName(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    className={`text-base font-semibold border-2 border-blue-300 focus:border-blue-500 ${
+                    className={`text-base font-semibold border-2 border-primary/30 focus:border-primary ${
                       isMobileOrTablet
                         ? "h-12 text-lg"
                         : "h-11 sm:h-12 sm:text-lg"
@@ -138,7 +138,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
             ) : (
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <h3
-                  className={`font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors px-3 py-2 rounded-lg hover:bg-blue-50/50 border-2 border-transparent hover:border-blue-200 flex-1 min-w-0 truncate ${
+                  className={`font-semibold text-gray-900 cursor-pointer hover:text-primary transition-colors px-3 py-2 rounded-lg hover:bg-primary/10/50 border-2 border-transparent hover:border-primary/20 flex-1 min-w-0 truncate ${
                     isMobileOrTablet ? "text-base" : "text-lg sm:text-xl"
                   }`}
                   onClick={() => setIsEditing(true)}
@@ -150,7 +150,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsEditing(true)}
-                    className="hover:bg-blue-50 text-gray-400 hover:text-blue-600 p-2 h-9 w-9 flex-shrink-0"
+                    className="hover:bg-primary/10 text-gray-400 hover:text-primary p-2 h-9 w-9 flex-shrink-0"
                   >
                     <Pencil className="w-4 h-4" />
                   </Button>
@@ -165,7 +165,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
               size="sm"
               variant="outline"
               onClick={handleAddItemClick}
-              className={`border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 shadow-sm ${
+              className={`border-primary/20 text-primary hover:bg-primary/10 hover:border-primary/30 shadow-sm ${
                 isMobileOrTablet
                   ? "flex-1 h-12 text-base font-semibold"
                   : "h-9 sm:h-10 text-xs sm:text-sm px-3 sm:px-4"

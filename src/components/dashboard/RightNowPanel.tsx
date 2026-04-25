@@ -158,7 +158,7 @@ const metricCards = [
     icon: ListOrdered,
     gradient: "from-blue-500 to-indigo-600",
     bgLight: "bg-blue-50",
-    iconColor: "text-blue-600",
+    iconColor: "text-primary",
     format: (v: number | null) => (v !== null ? String(v) : "—"),
     sub: "New & pending orders",
   },

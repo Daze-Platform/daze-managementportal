@@ -26,10 +26,10 @@ export const OrderCardStatusInfo = ({
       case "progress":
         return {
           label: "In Progress",
-          color: "bg-blue-500",
-          bgColor: "bg-blue-50",
-          textColor: "text-blue-700",
-          borderColor: "border-blue-200",
+          color: "bg-primary",
+          bgColor: "bg-primary/10",
+          textColor: "text-primary",
+          borderColor: "border-primary/20",
         };
       case "ready":
         return {

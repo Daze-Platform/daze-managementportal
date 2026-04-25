@@ -182,7 +182,7 @@ export const DashboardHeader = ({
                     <span className="text-sm text-gray-600">
                       Selected Range:
                     </span>
-                    <span className="text-sm font-semibold text-blue-700">
+                    <span className="text-sm font-semibold text-primary">
                       {Math.ceil(
                         (selectedDateRange.to.getTime() -
                           selectedDateRange.from.getTime()) /

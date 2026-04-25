@@ -25,8 +25,8 @@ export const ModernTabNavigation = ({
         ? "bg-emerald-500 text-white border-emerald-500"
         : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-200",
       progress: isActive
-        ? "bg-blue-500 text-white border-blue-500"
-        : "bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200",
+        ? "bg-primary text-white border-primary"
+        : "bg-primary/10 text-primary hover:bg-primary/10 border-primary/20",
       ready: isActive
         ? "bg-amber-500 text-white border-amber-500"
         : "bg-amber-50 text-amber-700 hover:bg-amber-100 border-amber-200",

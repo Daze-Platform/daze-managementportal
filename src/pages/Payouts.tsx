@@ -465,9 +465,9 @@ export const Payouts = () => {
         </div>
 
         {/* Commission Information Banner */}
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-lg">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
               <span className="text-white text-xs">i</span>
             </div>
             <p className="text-sm text-blue-800">
@@ -484,7 +484,7 @@ export const Payouts = () => {
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500 hidden sm:block" />
               <Select value={selectedStore} onValueChange={setSelectedStore}>
-                <SelectTrigger className="w-full sm:w-48 transition-all duration-300 hover:border-blue-400 focus:border-blue-500">
+                <SelectTrigger className="w-full sm:w-48 transition-all duration-300 hover:border-primary/40 focus:border-primary/50">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="animate-in fade-in-0 zoom-in-95 duration-200 bg-white border-gray-300 shadow-lg z-50">
@@ -492,7 +492,7 @@ export const Payouts = () => {
                     <SelectItem
                       key={store.id}
                       value={store.id}
-                      className="hover:bg-blue-50 transition-colors cursor-pointer"
+                      className="hover:bg-primary/10 transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-2">
                         <span>{store.name}</span>
@@ -593,7 +593,7 @@ export const Payouts = () => {
                         <TableCell className="font-medium text-right">
                           {item.subtotal}
                         </TableCell>
-                        <TableCell className="text-orange-600 text-right">
+                        <TableCell className="text-accent text-right">
                           {item.serviceFee}
                         </TableCell>
                         <TableCell className="text-red-600 text-right">
@@ -654,10 +654,10 @@ export const Payouts = () => {
                       </p>
                     </div>
                     <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-orange-600 uppercase tracking-wide mb-1">
+                      <p className="text-[10px] sm:text-xs text-accent uppercase tracking-wide mb-1">
                         Service Fee
                       </p>
-                      <p className="text-sm sm:text-base font-medium text-orange-600">
+                      <p className="text-sm sm:text-base font-medium text-accent">
                         {item.serviceFee}
                       </p>
                     </div>

@@ -76,7 +76,7 @@ export const OperationalMetrics = ({ data }: OperationalMetricsProps) => {
                 className="p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center">
                     <IconComponent className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
@@ -87,7 +87,7 @@ export const OperationalMetrics = ({ data }: OperationalMetricsProps) => {
                       {metric.trend === "good" ? (
                         <TrendingUp className="w-4 h-4 text-green-500" />
                       ) : (
-                        <TrendingDown className="w-4 h-4 text-orange-500" />
+                        <TrendingDown className="w-4 h-4 text-accent" />
                       )}
                     </div>
                     <p className="text-xs text-gray-500">
@@ -104,7 +104,7 @@ export const OperationalMetrics = ({ data }: OperationalMetricsProps) => {
                       className={`h-2 rounded-full ${
                         metric.trend === "good"
                           ? "bg-green-500"
-                          : "bg-orange-500"
+                          : "bg-accent"
                       }`}
                       style={{
                         width: `${
@@ -127,16 +127,16 @@ export const OperationalMetrics = ({ data }: OperationalMetricsProps) => {
           })}
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-primary/20">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Activity className="w-4 h-4 text-blue-600" />
+            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+              <Activity className="w-4 h-4 text-primary" />
             </div>
             <div>
               <div className="font-semibold text-blue-800 mb-1">
                 Today's Performance
               </div>
-              <div className="text-sm text-blue-700">
+              <div className="text-sm text-primary">
                 Peak dining: 12-2pm & 6-8pm. Beachside orders up 23% this week.
               </div>
             </div>

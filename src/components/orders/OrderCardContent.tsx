@@ -32,9 +32,9 @@ export const OrderCardContent = ({ order }: OrderCardContentProps) => {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
             {order.type === "Delivery" ? (
-              <div className="flex items-center space-x-1.5 bg-blue-100 px-2 py-1 rounded-full">
-                <Utensils className="w-3 h-3 text-blue-600" />
-                <span className="text-xs font-semibold text-blue-700">
+              <div className="flex items-center space-x-1.5 bg-primary/10 px-2 py-1 rounded-full">
+                <Utensils className="w-3 h-3 text-primary" />
+                <span className="text-xs font-semibold text-primary">
                   Delivery
                 </span>
               </div>
@@ -65,9 +65,9 @@ export const OrderCardContent = ({ order }: OrderCardContentProps) => {
           </div>
 
           {order.estimatedTime && order.estimatedTime !== "Completed" && (
-            <div className="flex items-center space-x-1 bg-orange-100 px-2 py-1 rounded-full flex-shrink-0">
-              <Timer className="w-3 h-3 text-orange-600" />
-              <span className="text-xs font-semibold text-orange-700 whitespace-nowrap">
+            <div className="flex items-center space-x-1 bg-accent/10 px-2 py-1 rounded-full flex-shrink-0">
+              <Timer className="w-3 h-3 text-accent" />
+              <span className="text-xs font-semibold text-accent whitespace-nowrap">
                 {order.estimatedTime}
               </span>
             </div>

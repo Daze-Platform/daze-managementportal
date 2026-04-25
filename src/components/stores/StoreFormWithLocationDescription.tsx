@@ -59,7 +59,7 @@ export const StoreFormWithLocationDescription = ({
     address: "",
     locationDescription: "",
     logo: "🏪",
-    bgColor: "bg-blue-500",
+    bgColor: "bg-primary",
     hours: defaultHours,
   });
 
@@ -80,7 +80,7 @@ export const StoreFormWithLocationDescription = ({
         address: "",
         locationDescription: "",
         logo: "🏪",
-        bgColor: "bg-blue-500",
+        bgColor: "bg-primary",
         hours: defaultHours,
       });
     }

@@ -22,8 +22,8 @@ export const EmptyOrdersState = ({ onResumeOrders }: EmptyOrdersStateProps) => {
             <div className="absolute top-0 left-1/4 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center animate-bounce shadow-sm">
               <CheckCircle className="w-4 h-4 text-green-600" />
             </div>
-            <div className="absolute top-4 right-1/4 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center animate-bounce delay-150 shadow-sm">
-              <Clock className="w-4 h-4 text-orange-600" />
+            <div className="absolute top-4 right-1/4 w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center animate-bounce delay-150 shadow-sm">
+              <Clock className="w-4 h-4 text-accent" />
             </div>
           </div>
 
@@ -76,7 +76,7 @@ export const EmptyOrdersState = ({ onResumeOrders }: EmptyOrdersStateProps) => {
             Need help? Check your{" "}
             <Link
               to="/settings"
-              className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+              className="text-primary hover:text-primary hover:underline font-medium"
             >
               store settings
             </Link>{" "}

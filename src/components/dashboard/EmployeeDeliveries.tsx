@@ -54,7 +54,7 @@ export const EmployeeDeliveries = ({ employees }: EmployeeDeliveriesProps) => {
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Deliveries Today</CardTitle>
-          <Truck className="w-5 h-5 text-blue-500" />
+          <Truck className="w-5 h-5 text-primary" />
         </div>
       </CardHeader>
       <CardContent className="pb-6">

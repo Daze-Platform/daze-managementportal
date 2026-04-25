@@ -55,7 +55,7 @@ export const CancellationSection = ({ data }: CancellationSectionProps) => {
 
   const cancellationData = data || defaultData;
   const rejectionReasons = cancellationData.reasons.map((reason, index) => {
-    const colors = ["bg-red-500", "bg-orange-500", "bg-yellow-500"];
+    const colors = ["bg-red-500", "bg-accent", "bg-yellow-500"];
     return {
       ...reason,
       color: colors[index] || "bg-gray-500",
@@ -205,19 +205,19 @@ export const CancellationSection = ({ data }: CancellationSectionProps) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.8 }}
-            className="bg-orange-50 p-3 rounded-lg border border-orange-200 flex items-start gap-2"
+            className="bg-orange-50 p-3 rounded-lg border border-accent/20 flex items-start gap-2"
           >
             <motion.div
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ repeat: Infinity, duration: 2 }}
             >
-              <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
             </motion.div>
             <div>
-              <div className="text-xs font-medium text-orange-800 mb-1">
+              <div className="text-xs font-medium text-accent mb-1">
                 Action Needed
               </div>
-              <div className="text-xs text-orange-700">
+              <div className="text-xs text-accent">
                 61% of cancellations are due to unavailable items. Update
                 inventory management.
               </div>

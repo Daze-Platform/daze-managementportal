@@ -174,7 +174,7 @@ export const StoreDetails = ({
                 </span>
               </div>
               {store.locationDescription && (
-                <div className="flex items-start text-blue-600 mt-2 bg-blue-50 p-2 rounded-md">
+                <div className="flex items-start text-primary mt-2 bg-primary/10 p-2 rounded-md">
                   <Info className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0 mt-0.5" />
                   <span className="text-xs sm:text-sm font-medium">
                     {store.locationDescription}
@@ -259,7 +259,7 @@ export const StoreDetails = ({
                     Venue Status:
                   </span>
                   <div className="mt-2">
-                    <Badge variant="default" className="bg-blue-500 text-xs">
+                    <Badge variant="default" className="bg-primary text-xs">
                       Operational
                     </Badge>
                   </div>

@@ -1043,9 +1043,9 @@ export const MenuImport = () => {
                     </div>
                   </div>
 
-                  <div className="text-xs text-muted-foreground bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <p className="font-medium text-blue-700 mb-1">💡 Note</p>
-                    <p className="text-blue-600">
+                  <div className="text-xs text-muted-foreground bg-primary/10 p-3 rounded-lg border border-blue-100">
+                    <p className="font-medium text-primary mb-1">💡 Note</p>
+                    <p className="text-primary">
                       POS import requires full read/write integration with your
                       POS provider. Contact support to set up new integrations.
                     </p>

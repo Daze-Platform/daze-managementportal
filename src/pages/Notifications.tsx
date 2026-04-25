@@ -125,7 +125,7 @@ export const Notifications = () => {
       case "error":
         return <AlertCircle className="w-5 h-5 text-red-500" />;
       case "info":
-        return <Info className="w-5 h-5 text-blue-500" />;
+        return <Info className="w-5 h-5 text-primary" />;
       default:
         return <Bell className="w-5 h-5 text-gray-500" />;
     }
@@ -142,9 +142,9 @@ export const Notifications = () => {
       case "error":
         return "bg-red-50 border-l-4 border-l-red-500";
       case "info":
-        return "bg-blue-50 border-l-4 border-l-blue-500";
+        return "bg-primary/10 border-l-4 border-l-blue-500";
       default:
-        return "bg-blue-50 border-l-4 border-l-blue-500";
+        return "bg-primary/10 border-l-4 border-l-blue-500";
     }
   };
 

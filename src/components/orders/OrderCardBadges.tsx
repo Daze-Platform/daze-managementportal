@@ -16,7 +16,7 @@ interface OrderCardBadgesProps {
 
 export const getTypeIcon = (type: string) => {
   return type === "Delivery" ? (
-    <div className="flex items-center gap-1.5 text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">
+    <div className="flex items-center gap-1.5 text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-blue-100">
       <Utensils className="w-3 h-3" />
       <span className="text-xs font-medium">Delivery</span>
     </div>
@@ -38,7 +38,7 @@ export const getStatusBadge = (status?: string, showStatus?: boolean) => {
 
   const statusConfig = {
     Delivered: { className: "bg-green-50 text-green-700 border-green-100" },
-    "Picked Up": { className: "bg-blue-50 text-blue-700 border-blue-100" },
+    "Picked Up": { className: "bg-primary/10 text-primary border-blue-100" },
   };
 
   const config = statusConfig[status as keyof typeof statusConfig];

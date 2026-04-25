@@ -23,7 +23,7 @@ export const TabNavigation = ({
       "flex items-center space-x-3 px-6 py-4 font-medium text-sm transition-all duration-200 relative border-b-2";
 
     if (activeTab === tabId) {
-      return `${baseStyle} border-blue-500 text-blue-600 bg-blue-50/50`;
+      return `${baseStyle} border-primary text-primary bg-primary/10`;
     }
 
     return `${baseStyle} border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50`;
@@ -35,7 +35,7 @@ export const TabNavigation = ({
     }
 
     if (activeTab === tabId) {
-      return "bg-blue-100 text-blue-700 border-blue-200";
+      return "bg-primary/10 text-primary border-primary/20";
     }
 
     if (tabId === "new" && count > 0) {
@@ -43,7 +43,7 @@ export const TabNavigation = ({
     }
 
     if (tabId === "ready" && count > 0) {
-      return "bg-orange-100 text-orange-700 border-orange-200";
+      return "bg-accent/10 text-accent border-accent/20";
     }
 
     return "bg-gray-100 text-gray-600 border-gray-200";

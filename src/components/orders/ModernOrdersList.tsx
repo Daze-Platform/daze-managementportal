@@ -236,7 +236,7 @@ export const ModernOrdersList = ({
               {visibleOrders.length}{" "}
               {visibleOrders.length === 1 ? "Order" : "Orders"}
               {isWaitingForOrders && (
-                <span className="text-blue-600 ml-2">(Loading more...)</span>
+                <span className="text-primary ml-2">(Loading more...)</span>
               )}
             </h2>
             <p className="text-gray-600 text-xs mt-1">
