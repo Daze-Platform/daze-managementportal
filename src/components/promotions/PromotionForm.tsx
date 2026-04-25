@@ -489,6 +489,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
                     size="sm"
                     className="absolute top-2 right-2 h-8 w-8 p-0 z-20 shadow-lg"
                     onClick={removeImage}
+                    aria-label="Remove image"
                   >
                     <X className="h-4 w-4" />
                   </Button>

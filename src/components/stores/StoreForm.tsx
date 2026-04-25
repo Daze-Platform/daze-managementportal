@@ -531,6 +531,7 @@ export const StoreForm = ({
                               onClick={handleRemoveCustomLogo}
                               className="absolute -top-2 -right-2 h-8 w-8 rounded-full p-0"
                               disabled={isUploading}
+                              aria-label="Remove logo"
                             >
                               <X className="h-4 w-4" />
                             </Button>

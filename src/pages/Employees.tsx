@@ -183,6 +183,7 @@ export const Employees = () => {
                         variant="ghost"
                         size="icon"
                         className="w-8 h-8 flex-shrink-0"
+                        aria-label="Employee options menu"
                       >
                         <MoreVertical className="w-4 h-4" />
                       </Button>

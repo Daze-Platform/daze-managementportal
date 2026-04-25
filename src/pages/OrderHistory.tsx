@@ -859,6 +859,7 @@ export const OrderHistory = () => {
                             className="h-8 w-8 p-0 border-gray-200"
                             disabled={safePage <= 1}
                             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                            aria-label="Previous page"
                           >
                             <ChevronLeft className="w-4 h-4" />
                           </Button>
@@ -868,6 +869,7 @@ export const OrderHistory = () => {
                             className="h-8 w-8 p-0 border-gray-200"
                             disabled={safePage >= totalPages}
                             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                            aria-label="Next page"
                           >
                             <ChevronRightIcon className="w-4 h-4" />
                           </Button>
@@ -911,6 +913,7 @@ export const OrderHistory = () => {
                                 className="h-8 w-8 p-0 border-gray-200"
                                 disabled={safePage <= 1}
                                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                aria-label="Previous page"
                               >
                                 <ChevronLeft className="w-4 h-4" />
                               </Button>
@@ -920,6 +923,7 @@ export const OrderHistory = () => {
                                 className="h-8 w-8 p-0 border-gray-200"
                                 disabled={safePage >= totalPages}
                                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                aria-label="Next page"
                               >
                                 <ChevronRightIcon className="w-4 h-4" />
                               </Button>

@@ -36,6 +36,7 @@ export const DesktopOrderDetailsPanel = ({
           size="sm"
           onClick={onClose}
           className="p-2 hover-scale"
+          aria-label="Close order details"
         >
           <X className="w-5 h-5" />
         </Button>

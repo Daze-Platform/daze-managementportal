@@ -575,6 +575,7 @@ export const ActiveOrders = () => {
               size="icon"
               className="h-9 w-9 flex-shrink-0"
               onClick={fetchOrders}
+              aria-label="Refresh orders"
             >
               <RefreshCw className="w-4 h-4" />
             </Button>

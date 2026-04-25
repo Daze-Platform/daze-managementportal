@@ -158,6 +158,7 @@ export const Notifications = () => {
             size="icon"
             onClick={() => navigate(-1)}
             className="hover:bg-gray-100"
+            aria-label="Go back"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

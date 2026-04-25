@@ -121,7 +121,7 @@ export const StoreFormWithLocationDescription = ({
       <Card className="w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>{store ? "Edit Store" : "Add New Store"}</CardTitle>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close dialog">
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>

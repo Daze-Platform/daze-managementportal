@@ -675,6 +675,7 @@ export const MenuBuilderDialog: React.FC<MenuBuilderDialogProps> = ({
                                   type="button"
                                   onClick={handleRemoveImage}
                                   className="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+                                  aria-label="Remove image"
                                 >
                                   <X className="w-3 h-3" />
                                 </button>

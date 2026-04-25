@@ -77,13 +77,14 @@ export const OptionSetCard: React.FC<OptionSetCardProps> = ({
             size="icon"
             className="h-8 w-8"
             onClick={() => onEdit(group)}
+            aria-label="Edit option set"
           >
             <Edit2 className="w-4 h-4" />
           </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More options">
                 <MoreHorizontal className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>

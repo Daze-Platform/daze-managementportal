@@ -78,6 +78,7 @@ export const OrderDetailsOverlay = ({
           size="sm"
           onClick={onClose}
           className="absolute top-3 right-3 z-30 p-2 hover:bg-muted rounded-full transition-colors bg-background/80 backdrop-blur-sm"
+          aria-label="Close order details"
         >
           <X className="w-5 h-5" />
         </Button>

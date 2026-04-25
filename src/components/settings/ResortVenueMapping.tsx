@@ -184,7 +184,7 @@ export const ResortVenueMapping = () => {
                       <button
                         className="ml-1 hover:text-destructive transition-colors"
                         onClick={() => handleRemove(store.id, resort.id)}
-                        title="Remove from resort"
+                        aria-label={`Remove ${store.name} from resort`}
                       >
                         <X className="h-3 w-3" />
                       </button>

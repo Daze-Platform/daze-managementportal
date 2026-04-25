@@ -329,6 +329,7 @@ export const DestinationManagement = () => {
                               className="absolute -top-2 -right-2 h-7 w-7 rounded-full p-0 bg-white shadow-md border-gray-200 hover:bg-red-50 hover:border-red-200"
                               onClick={handleRemoveLogo}
                               disabled={isUploading}
+                              aria-label="Remove logo"
                             >
                               <X className="h-3.5 w-3.5 text-gray-500 hover:text-red-500" />
                             </Button>

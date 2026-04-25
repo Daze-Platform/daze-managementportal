@@ -463,6 +463,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
           size="icon"
           onClick={onToggleSidebar}
           className="lg:hidden hover:bg-gray-100 w-10 h-10 sm:w-12 sm:h-12 p-2 sm:p-3 flex-shrink-0 touch-manipulation"
+          aria-label="Toggle sidebar"
         >
           <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
         </Button>
@@ -496,6 +497,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
               variant="ghost"
               size="icon"
               className="relative hover:bg-gray-100 transition-colors w-9 h-9 sm:w-10 sm:h-10 touch-manipulation"
+              aria-label="Open notifications"
             >
               <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
               {unreadCount > 0 && (

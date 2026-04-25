@@ -404,6 +404,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                       disabled={!newOptionName.trim()}
                       size="icon"
                       className="h-10 w-10 shrink-0"
+                      aria-label="Add option"
                     >
                       <Plus className="w-4 h-4" />
                     </Button>
@@ -463,8 +464,8 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                         size="icon"
                         className="h-8 w-8 shrink-0"
                         onClick={() => handleToggleDefault(option.id)}
-                        title={
-                          option.isDefault ? "Default option" : "Set as default"
+                        aria-label={
+                          option.isDefault ? "Remove as default option" : "Set as default"
                         }
                       >
                         <Star
@@ -478,6 +479,7 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                         size="icon"
                         className="h-8 w-8 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={() => handleRemoveOption(option.id)}
+                        aria-label="Delete option"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

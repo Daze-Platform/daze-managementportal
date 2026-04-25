@@ -235,6 +235,7 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({
                 size="icon"
                 className="h-8 w-8"
                 onClick={() => setViewMode("grid")}
+                aria-label="Grid view"
               >
                 <LayoutGrid className="w-4 h-4" />
               </Button>
@@ -243,6 +244,7 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({
                 size="icon"
                 className="h-8 w-8"
                 onClick={() => setViewMode("list")}
+                aria-label="List view"
               >
                 <List className="w-4 h-4" />
               </Button>

@@ -321,6 +321,7 @@ export const Users = () => {
                         size="icon"
                         className="h-8 w-8 text-gray-400 hover:text-red-500"
                         onClick={() => onRemoveUser(user.id)}
+                        aria-label={`Delete user ${user.name}`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
