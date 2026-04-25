@@ -482,11 +482,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
                     alt="Promotion Preview"
                     className="w-full h-full object-cover"
                     style={{ imageRendering: "auto" }}
-                    onLoad={() =>
-                      const target = e.target as HTMLImageElement;
-                      target.src =
-                        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDgwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zNzUgMTc1SDQyNVYyMjVIMzc1VjE3NVoiIGZpbGw9IiM5QjlDQTEiLz4KPHBhdGggZD0iTTM4NSAxOTVMMzk1IDIwNUw0MTUgMTg1VjIxNUgzOTVWMjA1TDM4NSAxOTVaIiBmaWxsPSIjRjlGQUZCIi8+Cjx0ZXh0IHg9IjQwMCIgeT0iMjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM2MzYzIiBmb250LXNpemU9IjE0cHgiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPgo=";
-                    }}
                   />
                   <Button
                     type="button"

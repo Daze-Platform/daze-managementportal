@@ -340,11 +340,11 @@ export const Reports = () => {
             <Button
               variant="outline"
               className="w-full sm:w-auto bg-white/70 backdrop-blur-sm border-gray-200 hover:border-primary/50 transition-colors gap-2"
-              onClick={() => {
+              onClick={async () => {
                 const storeName =
                   stores.find((s) => s.id === selectedStore)?.name ||
                   "All Stores";
-                exportReportsToPdf({
+                await exportReportsToPdf({
                   storeName,
                   dateRange: selectedDateRange,
                   visibleSections,

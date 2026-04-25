@@ -32,8 +32,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+// Dynamically import jsPDF to reduce main bundle size
+// import jsPDF from "jspdf";
+// import "jspdf-autotable";
 import { useToast } from "@/hooks/use-toast";
 import { StoreLogo } from "@/components/stores/StoreLogo";
 import { useStores } from "@/contexts/StoresContext";
@@ -246,8 +247,12 @@ export const Payouts = () => {
     });
   };
 
-  const exportToPdf = () => {
+  const exportToPdf = async () => {
     try {
+      // Dynamically import jsPDF when needed
+      const jsPDFModule = await import("jspdf");
+      const { jsPDF } = jsPDFModule;
+
       const filteredData =
         selectedStore === "all"
           ? financialData

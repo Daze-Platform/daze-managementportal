@@ -477,54 +477,14 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             onChange={handleSearchChange}
             onFocus={handleSearchFocus}
             onBlur={handleSearchBlur}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleMobileSearch(searchQuery);
+              }
+            }}
             className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary500 focus:border-transparent w-full text-sm transition-all duration-200 hover:border-gray-400"
-            onKeyDown={(e) =>
-                    handleMobileSearch(value);
-                  }}
-                  autoFocus
-                  className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary500 focus:border-transparent w-full text-sm"
-                />
-              </div>
-
-              {/* Mobile Search Results */}
-              {mobileSearchResults.length > 0 && (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg max-h-64 overflow-y-auto">
-                  {mobileSearchResults.map((result, index) => (
-                    <div
-                      key={result.id}
-                      onClick={() => {
-                        handleSearchResultClick(result);
-                        setMobileSearchQuery("");
-                        setMobileSearchResults([]);
-                      }}
-                      className="p-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <div className="text-sm font-medium text-gray-900">
-                        {result.title}
-                      </div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        {result.description}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {mobileSearchQuery.trim().length > 0 &&
-                mobileSearchResults.length === 0 && (
-                  <div className="text-center py-4 text-gray-500 text-sm">
-                    No results found for "{mobileSearchQuery}"
-                  </div>
-                )}
-
-              {mobileSearchQuery.trim().length === 0 && (
-                <div className="text-center py-3 text-gray-400 text-sm">
-                  Start typing to search stores, orders, and menu items...
-                </div>
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
+          />
+        </div>
 
         {/* Notifications - mobile optimized */}
         <Popover

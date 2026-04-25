@@ -1,5 +1,3 @@
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
@@ -35,12 +33,17 @@ interface ExportOptions {
   data: ReportData;
 }
 
-export const exportReportsToPdf = ({
+export const exportReportsToPdf = async ({
   storeName,
   dateRange,
   visibleSections,
   data,
 }: ExportOptions) => {
+  // Dynamically import jsPDF to reduce main bundle size
+  const jsPDFModule = await import("jspdf");
+  const { jsPDF } = jsPDFModule;
+  await import("jspdf-autotable");
+
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
