@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -15,30 +8,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import {
-  Upload,
-  FileText,
-  Loader2,
-  CheckCircle,
-  AlertCircle,
-  Globe,
-  RefreshCw,
-  Link,
-} from "lucide-react";
+import { FileText, Globe, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useStores } from "@/contexts/StoresContext";
 import { useMenus, MenuItem } from "@/contexts/MenusContext";
+import {
+  ProgressDisplay,
+  SuccessDisplay,
+  ErrorDisplay,
+  PDFUploadSection,
+  WebLinkImportSection,
+  POSImportSection,
+} from "./MenuImportSubcomponents";
 
 // Sample menu item templates for mock generation
 const sampleMenuItems = {
@@ -419,12 +401,6 @@ const generateMenuFromPOS = (
 type ImportStatus = "idle" | "uploading" | "success" | "error";
 type ImportTab = "pdf" | "weblink" | "pos";
 
-interface ProgressStep {
-  label: string;
-  completed: boolean;
-  active: boolean;
-}
-
 export const MenuImport = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ImportTab>("pdf");
@@ -758,118 +734,6 @@ export const MenuImport = () => {
     }, 2800);
   };
 
-  // Venue selector component
-  const StoreSelector = () => (
-    <div className="space-y-2">
-      <Label htmlFor="store-select">Assign to Venue</Label>
-      <Select value={selectedStoreId} onValueChange={setSelectedStoreId}>
-        <SelectTrigger id="store-select">
-          <SelectValue placeholder="Select a venue (optional)" />
-        </SelectTrigger>
-        <SelectContent>
-          {stores.map((store) => (
-            <SelectItem key={store.id} value={store.id.toString()}>
-              {store.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-
-  // Progress display component
-  const ProgressDisplay = ({ title }: { title: string }) => (
-    <Card>
-      <CardContent className="text-center py-8">
-        <Loader2 className="w-12 h-12 mx-auto text-primary animate-spin mb-4" />
-        <CardTitle className="text-lg mb-4">{title}</CardTitle>
-        <div className="space-y-2 text-left max-w-xs mx-auto">
-          {progressSteps.map((step, index) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              {step.completed ? (
-                <CheckCircle className="w-4 h-4 text-green-500" />
-              ) : step.active ? (
-                <Loader2 className="w-4 h-4 text-primary animate-spin" />
-              ) : (
-                <div className="w-4 h-4 rounded-full border-2 border-muted" />
-              )}
-              <span
-                className={
-                  step.completed
-                    ? "text-muted-foreground"
-                    : step.active
-                      ? "text-foreground font-medium"
-                      : "text-muted-foreground"
-                }
-              >
-                {step.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  // Success display component
-  const SuccessDisplay = () => (
-    <Card>
-      <CardContent className="text-center py-8">
-        <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
-        <CardTitle className="text-lg mb-2">
-          Menu Imported Successfully!
-        </CardTitle>
-        <CardDescription className="space-y-2">
-          <p>
-            <strong>Menu:</strong> {uploadResult?.menuName}
-          </p>
-          <p>
-            <strong>Items imported:</strong> {uploadResult?.itemCount}
-          </p>
-          {uploadResult?.categories && (
-            <p>
-              <strong>Categories:</strong> {uploadResult.categories}
-            </p>
-          )}
-          <p className="text-xs text-muted-foreground mt-4">
-            You can now view and edit the imported menu in your menu list.
-          </p>
-        </CardDescription>
-        <div className="flex gap-2 mt-4">
-          <Button onClick={resetState} variant="outline" className="flex-1">
-            Import Another
-          </Button>
-          <Button onClick={handleClose} className="flex-1">
-            Done
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  // Error display component
-  const ErrorDisplay = () => (
-    <Card>
-      <CardContent className="text-center py-8">
-        <AlertCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
-        <CardTitle className="text-lg mb-2">Import Failed</CardTitle>
-        <CardDescription className="space-y-2">
-          <p className="text-red-600">{uploadResult?.error}</p>
-          <p className="text-xs text-muted-foreground mt-4">
-            Please try again or contact support if the issue persists.
-          </p>
-        </CardDescription>
-        <div className="flex gap-2 mt-4">
-          <Button onClick={resetState} variant="outline" className="flex-1">
-            Try Again
-          </Button>
-          <Button onClick={handleClose} variant="outline" className="flex-1">
-            Cancel
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -901,11 +765,24 @@ export const MenuImport = () => {
                   ? "Analyzing Website..."
                   : `Syncing with ${toastPOS.name}...`
             }
+            steps={progressSteps}
           />
         )}
 
-        {uploadStatus === "success" && <SuccessDisplay />}
-        {uploadStatus === "error" && <ErrorDisplay />}
+        {uploadStatus === "success" && (
+          <SuccessDisplay
+            result={uploadResult}
+            onImportAnother={resetState}
+            onDone={handleClose}
+          />
+        )}
+        {uploadStatus === "error" && (
+          <ErrorDisplay
+            result={uploadResult}
+            onRetry={resetState}
+            onCancel={handleClose}
+          />
+        )}
 
         {uploadStatus === "idle" && (
           <Tabs
@@ -934,124 +811,33 @@ export const MenuImport = () => {
 
             {/* PDF Upload Tab */}
             <TabsContent value="pdf" className="mt-4">
-              <Card>
-                <CardHeader className="text-center pb-2">
-                  <Upload className="w-10 h-10 mx-auto text-muted-foreground mb-2" />
-                  <CardTitle className="text-base">Upload PDF Menu</CardTitle>
-                  <CardDescription className="text-xs">
-                    Our AI will extract menu items, prices, and descriptions
-                    automatically.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <StoreSelector />
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileUpload}
-                    className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 file:cursor-pointer cursor-pointer text-sm"
-                  />
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <p>• Supported format: PDF (max 10MB)</p>
-                    <p>• Best results with text-based PDFs</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <PDFUploadSection
+                selectedStoreId={selectedStoreId}
+                onStoreChange={setSelectedStoreId}
+                onFileUpload={handleFileUpload}
+              />
             </TabsContent>
 
             {/* Web Link Tab */}
             <TabsContent value="weblink" className="mt-4">
-              <Card>
-                <CardHeader className="text-center pb-2">
-                  <Globe className="w-10 h-10 mx-auto text-muted-foreground mb-2" />
-                  <CardTitle className="text-base">
-                    Import from Website
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Enter a URL and our AI will scrape the menu structure,
-                    items, and images.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="menu-url">Menu URL</Label>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1">
-                        <Link className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="menu-url"
-                          type="url"
-                          placeholder="https://restaurant.com/menu"
-                          value={webUrl}
-                          onChange={(e) => setWebUrl(e.target.value)}
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <StoreSelector />
-                  <Button onClick={handleWebLinkImport} className="w-full">
-                    <Globe className="w-4 h-4 mr-2" />
-                    Analyze & Import Menu
-                  </Button>
-                </CardContent>
-              </Card>
+              <WebLinkImportSection
+                selectedStoreId={selectedStoreId}
+                onStoreChange={setSelectedStoreId}
+                webUrl={webUrl}
+                onUrlChange={setWebUrl}
+                onImport={handleWebLinkImport}
+              />
             </TabsContent>
 
             {/* POS Import Tab */}
             <TabsContent value="pos" className="mt-4">
-              <Card>
-                <CardHeader className="text-center pb-2">
-                  <RefreshCw className="w-10 h-10 mx-auto text-muted-foreground mb-2" />
-                  <CardTitle className="text-base">POS Import</CardTitle>
-                  <CardDescription className="text-xs">
-                    Sync your menu directly from connected POS systems.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <StoreSelector />
-
-                  <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={toastPOS.logo}
-                        alt="Toast POS"
-                        className="h-8 w-auto object-contain"
-                      />
-                      <div>
-                        <p className="font-medium text-sm">{toastPOS.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          Last synced: {toastPOS.lastSync}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant="outline"
-                        className="bg-green-50 text-green-700 border-green-200 text-xs"
-                      >
-                        Connected
-                      </Badge>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handlePOSSync(toastPOS.id)}
-                      >
-                        <RefreshCw className="w-3 h-3 mr-1" />
-                        Sync
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="text-xs text-muted-foreground bg-primary/10 p-3 rounded-lg border border-blue-100">
-                    <p className="font-medium text-primary mb-1">💡 Note</p>
-                    <p className="text-primary">
-                      POS import requires full read/write integration with your
-                      POS provider. Contact support to set up new integrations.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              <POSImportSection
+                selectedStoreId={selectedStoreId}
+                onStoreChange={setSelectedStoreId}
+                syncingPOS={syncingPOS}
+                onPOSSync={handlePOSSync}
+                toastPOS={toastPOS}
+              />
             </TabsContent>
           </Tabs>
         )}
