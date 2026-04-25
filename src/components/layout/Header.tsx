@@ -549,6 +549,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                       handleClearAll();
                     }}
                     className="text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg px-2 py-1.5 h-auto transition-colors"
+                    aria-label="Clear all notifications"
                   >
                     <X className="w-3 h-3" />
                   </Button>

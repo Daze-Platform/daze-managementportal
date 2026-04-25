@@ -416,6 +416,7 @@ export const OrderHistory = () => {
               <button
                 className="w-8 h-8 flex-shrink-0 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
                 onClick={() => handleOrderClick(order)}
+                aria-label={expandedOrder === order.supabase_id ? "Collapse order details" : "Expand order details"}
               >
                 {expandedOrder === order.supabase_id ? (
                   <ChevronDown className="w-4 h-4 text-primary" />
@@ -702,7 +703,10 @@ export const OrderHistory = () => {
                               onClick={() => handleOrderClick(order)}
                             >
                               <TableCell>
-                                <button className="w-8 h-8 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center">
+                                <button
+                                  className="w-8 h-8 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
+                                  aria-label={expandedOrder === order.supabase_id ? "Collapse order details" : "Expand order details"}
+                                >
                                   {expandedOrder === order.supabase_id ? (
                                     <ChevronDown className="w-4 h-4 text-primary" />
                                   ) : (

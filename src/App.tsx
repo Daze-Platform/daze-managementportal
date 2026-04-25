@@ -24,7 +24,6 @@ const MenuManagement = lazy(() => import("./pages/MenuManagement").then(m => ({ 
 const Reports = lazy(() => import("./pages/Reports").then(m => ({ default: m.Reports })));
 const Payouts = lazy(() => import("./pages/Payouts").then(m => ({ default: m.Payouts })));
 const Employees = lazy(() => import("./pages/Employees").then(m => ({ default: m.Employees })));
-const Users = lazy(() => import("./pages/Users").then(m => ({ default: m.Users })));
 const Ratings = lazy(() => import("./pages/Ratings").then(m => ({ default: m.Ratings })));
 const Promotions = lazy(() => import("./pages/Promotions").then(m => ({ default: m.Promotions })));
 const Settings = lazy(() => import("./pages/Settings").then(m => ({ default: m.Settings })));
