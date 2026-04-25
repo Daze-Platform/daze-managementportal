@@ -42,7 +42,6 @@ export const usePushNotifications = () => {
     try {
       const registration =
         await navigator.serviceWorker.register("/sw.js?v=20260107");
-      console.log("Service Worker registered:", registration);
     } catch (error) {
       console.error("Service Worker registration failed:", error);
     }
@@ -119,8 +118,6 @@ export const usePushNotifications = () => {
 
       // For demo purposes, we'll skip the actual push subscription
       // In production, you'd need valid VAPID keys from your server
-      console.log("Push subscription setup (demo mode)");
-
       // Simulate a subscription object for the UI
       const mockSubscription = {
         endpoint: "demo-endpoint",
@@ -134,8 +131,6 @@ export const usePushNotifications = () => {
 
       // Store demo subscription in localStorage
       localStorage.setItem("pushSubscription", JSON.stringify({ demo: true }));
-
-      console.log("Demo push subscription created");
     } catch (error) {
       console.error("Failed to subscribe to push notifications:", error);
       toast({

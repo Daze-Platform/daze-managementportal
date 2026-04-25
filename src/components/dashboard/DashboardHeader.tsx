@@ -42,16 +42,11 @@ export const DashboardHeader = ({
   const { stores: allStores, getStoresByResort } = useStores();
   const { currentResort } = useResort();
 
-  console.log("DashboardHeader - All stores:", allStores);
-  console.log("DashboardHeader - Current resort:", currentResort);
-
   // Get all stores regardless of resort assignment and remove duplicates
   // This ensures all stores are available in dropdowns without duplicates
   const availableStores = allStores.filter(
     (store, index, self) => index === self.findIndex((s) => s.id === store.id),
   );
-
-  console.log("DashboardHeader - Available stores:", availableStores);
 
   // Transform stores to match dashboard format
   const stores: DashboardStore[] = [

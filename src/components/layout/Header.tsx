@@ -94,7 +94,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
   const unreadCount = notifications.filter((n) => n.unread).length;
 
   const handleSearchResultClick = (result: any) => {
-    console.log("Search result clicked:", result);
     setShowSearchResults(false);
     setSearchQuery("");
 
@@ -164,25 +163,17 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    console.log(
-      "Header search input changed to:",
-      value,
-      "Current searchQuery:",
-      searchQuery,
-    );
     setSearchQuery(value);
     setShowSearchResults(value.trim().length > 0);
   };
 
   const handleSearchFocus = () => {
-    console.log("Header search focused, current query:", searchQuery);
     if (searchQuery.trim().length > 0) {
       setShowSearchResults(true);
     }
   };
 
   const handleSearchBlur = () => {
-    console.log("Header search blurred");
     // Delay hiding to allow for clicks on results
     setTimeout(() => {
       setShowSearchResults(false);
@@ -191,7 +182,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
 
   // Mobile search functionality - uses global search data
   const handleMobileSearch = (query: string) => {
-    console.log("Mobile search query:", query);
     setMobileSearchQuery(query);
 
     if (!query.trim()) {
@@ -291,7 +281,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
         });
       });
 
-    console.log("Mobile search results:", results);
     setMobileSearchResults(results.slice(0, 6));
   };
 
@@ -301,7 +290,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
         notif.id === id ? { ...notif, unread: false } : notif,
       ),
     );
-    console.log(`Marking notification ${id} as read`);
   };
 
   // Helper function to get human-readable route labels
@@ -350,7 +338,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       title: "All notifications marked as read",
       description: "You're all caught up!",
     });
-    console.log("Marking all notifications as read");
   };
 
   const handleClearAll = () => {
@@ -360,7 +347,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       title: "Notifications cleared",
       description: "All notifications have been removed",
     });
-    console.log("Clearing all notifications");
   };
 
   const handleProfileAction = (action: string) => {
@@ -369,7 +355,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
     } else if (action === "settings") {
       navigate("/settings?tab=security");
     } else if (action === "logout") {
-      console.log("Logging out user...");
       // Thorough cleanup before logout
       cleanupAuthState();
       // Call the logout function from context
@@ -408,7 +393,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
       }
     });
 
-    console.log("Auth state cleanup completed");
   };
 
   const handleViewAllNotifications = () => {
@@ -495,57 +479,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
             onBlur={handleSearchBlur}
             className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm transition-all duration-200 hover:border-gray-400"
             onKeyDown={(e) =>
-              console.log(
-                "Key pressed:",
-                e.key,
-                "Current value:",
-                e.currentTarget.value,
-              )
-            }
-          />
-
-          {/* Global Search Results - works on all pages */}
-          {showSearchResults && hasResults && (
-            <SearchResults
-              results={searchResults}
-              onResultClick={handleSearchResultClick}
-              isVisible={true}
-            />
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
-        {/* Mobile search - simplified and always visible */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden hover:bg-gray-100 w-10 h-10 touch-manipulation bg-primary/10"
-              onClick={() => console.log("Mobile search button clicked!")}
-            >
-              <Search className="w-5 h-5 text-primary" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            className="w-[calc(100vw-2rem)] max-w-sm p-4 mx-4"
-            align="end"
-            side="bottom"
-          >
-            <div className="space-y-3">
-              <div className="text-sm font-medium text-gray-900 mb-2">
-                Search
-              </div>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search orders, stores, menu items..."
-                  value={mobileSearchQuery}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    console.log("Mobile search input changed:", value);
                     handleMobileSearch(value);
                   }}
                   autoFocus
@@ -560,7 +493,6 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
                     <div
                       key={result.id}
                       onClick={() => {
-                        console.log("Mobile search result clicked:", result);
                         handleSearchResultClick(result);
                         setMobileSearchQuery("");
                         setMobileSearchResults([]);

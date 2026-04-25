@@ -259,11 +259,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem("userEmail", email);
     localStorage.setItem("userProfile", JSON.stringify(defaultProfile));
     localStorage.setItem("loginTimestamp", Date.now().toString());
-    console.log("User logged in and session saved:", email);
   };
 
   const logout = async () => {
-    console.log("Starting logout process...");
     await supabase.auth.signOut().catch(() => {});
 
     setIsAuthenticated(false);
@@ -286,8 +284,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         localStorage.removeItem(key);
       }
     });
-
-    console.log("User logged out and all auth data cleared");
   };
 
   const updateUserProfile = async (profileUpdates: Partial<UserProfile>) => {

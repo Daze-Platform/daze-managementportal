@@ -41,12 +41,6 @@ export const exportReportsToPdf = ({
   visibleSections,
   data,
 }: ExportOptions) => {
-  console.log("PDF Export - Starting export with:", {
-    storeName,
-    visibleSections: Array.from(visibleSections),
-    data,
-  });
-
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
@@ -105,7 +99,6 @@ export const exportReportsToPdf = ({
 
   // Customer Analytics Section
   if (isSectionVisible("customerAnalytics") && data.customerAnalytics) {
-    console.log("PDF Export - Adding Customer Analytics");
     addSectionHeader("Customer Analytics");
 
     autoTable(doc, {
@@ -143,7 +136,6 @@ export const exportReportsToPdf = ({
 
   // Revenue Section
   if (isSectionVisible("revenue") && data.revenue) {
-    console.log("PDF Export - Adding Revenue");
     addSectionHeader("Revenue");
 
     autoTable(doc, {
@@ -171,7 +163,6 @@ export const exportReportsToPdf = ({
 
   // Payment Types Section
   if (isSectionVisible("paymentTypes") && data.paymentTypes) {
-    console.log("PDF Export - Adding Payment Types");
     addSectionHeader("Payment Types");
 
     autoTable(doc, {
@@ -188,7 +179,6 @@ export const exportReportsToPdf = ({
 
   // Cancellations Section
   if (isSectionVisible("cancellations") && data.cancellations) {
-    console.log("PDF Export - Adding Cancellations");
     addSectionHeader("Cancellations");
 
     autoTable(doc, {
@@ -222,8 +212,6 @@ export const exportReportsToPdf = ({
       yPosition = (doc as any).lastAutoTable.finalY + 15;
     }
   }
-
-  console.log("PDF Export - Finished adding sections, saving document");
 
   // Add footer on each page
   const pageCount = (doc as any).internal.getNumberOfPages();

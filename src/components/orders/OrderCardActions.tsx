@@ -43,20 +43,15 @@ export const OrderCardActions = ({
       | "activate",
   ) => {
     e.stopPropagation();
-    console.log("🔥 Button clicked:", action, "for order:", order.id);
-    console.log("🔥 onOrderUpdate function:", onOrderUpdate);
     if (onOrderUpdate) {
-      console.log("🔥 Calling onOrderUpdate with:", order.id, action);
       onOrderUpdate(order.id, action);
     } else {
-      console.log("🔥 ERROR: onOrderUpdate is undefined!");
     }
   };
 
   const handleViewDetails = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("View Details clicked for order:", order.id);
     if (onViewDetails) {
       onViewDetails(order.id);
     }
@@ -64,7 +59,6 @@ export const OrderCardActions = ({
 
   const handlePickupComplete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Customer pickup - moving order to completed:", order.id);
     if (onOrderUpdate) {
       // For pickup orders, skip fulfillment and go directly to fulfilled/completed
       onOrderUpdate(order.id, "fulfill");
@@ -73,7 +67,6 @@ export const OrderCardActions = ({
 
   const handleDeliveryHandoff = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Hand to courier - moving order to fulfillment:", order.id);
     if (onOrderUpdate) {
       onOrderUpdate(order.id, "complete");
     }

@@ -26,8 +26,6 @@ export const useOrderActions = (
       | "activate",
     data?: any,
   ) => {
-    console.log("Order update action:", action, "for order:", orderId);
-
     // Find the order to check its type
     const currentOrder = orderData[activeTab as keyof typeof orderData]?.find(
       (order) => order.id === orderId,
@@ -35,12 +33,10 @@ export const useOrderActions = (
 
     switch (action) {
       case "accept":
-        console.log("Moving order from new to progress:", orderId);
         moveOrder(orderId, "new", "progress");
         setActiveTab("progress");
         break;
       case "decline":
-        console.log("Declining order from new:", orderId);
         removeOrder(orderId, "new");
         if (selectedOrder === orderId) {
           setSelectedOrder(null);
@@ -48,27 +44,20 @@ export const useOrderActions = (
         }
         break;
       case "ready":
-        console.log("Moving order from progress to ready:", orderId);
         moveOrder(orderId, "progress", "ready");
         setActiveTab("ready");
         break;
       case "complete":
-        console.log("Moving order from ready to fulfillment:", orderId);
         moveOrder(orderId, "ready", "fulfillment");
         setActiveTab("fulfillment");
         break;
       case "fulfill":
-        console.log(
-          "Moving order from fulfillment/ready to fulfilled:",
-          orderId,
-        );
         // Handle both pickup orders (skip fulfillment) and delivery orders
         const fromTab = activeTab === "ready" ? "ready" : "fulfillment";
         moveOrder(orderId, fromTab as keyof typeof orderData, "fulfilled");
         setActiveTab("fulfilled");
         break;
       case "schedule":
-        console.log("Moving order to scheduled:", orderId);
         const scheduledTime = data?.scheduledTime || "Tomorrow, 2:00PM";
         scheduleOrder(
           orderId,
@@ -78,7 +67,6 @@ export const useOrderActions = (
         setActiveTab("scheduled");
         break;
       case "activate":
-        console.log("Moving scheduled order to new:", orderId);
         moveOrder(orderId, "scheduled", "new");
         setActiveTab("new");
         break;

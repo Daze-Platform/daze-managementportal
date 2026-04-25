@@ -48,7 +48,6 @@ export const StoresList = ({
               >
                 <Button
                   onClick={() => {
-                    console.log("Add Venue button clicked!");
                     onCreateStore();
                   }}
                   className="w-full sm:w-auto gradient-primary text-primary-foreground hover:opacity-90 shadow-md"

@@ -73,8 +73,6 @@ const statusBorderAccent: Record<string, string> = {
   default: "border-l-4 border-l-border",
 };
 
-
-
 export const ModernOrderCard = ({
   order,
   isSelected,
@@ -114,7 +112,6 @@ export const ModernOrderCard = ({
   };
 
   const handleDeclineOrder = (reason: string) => {
-    console.log("Declining order with reason:", reason);
     setShowDeclineDialog(false);
     if (onOrderUpdate) {
       onOrderUpdate(order.id, "decline");

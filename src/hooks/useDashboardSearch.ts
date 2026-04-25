@@ -85,9 +85,6 @@ export const useDashboardSearch = () => {
     const results: SearchResult[] = [];
     const isDashboard = location.pathname === "/dashboard";
     const isOrderHistory = location.pathname === "/orders/history";
-
-    console.log("Searching with query:", query, "on page:", location.pathname);
-
     // Dashboard-specific search results
     if (isDashboard) {
       // Store search
@@ -162,19 +159,10 @@ export const useDashboardSearch = () => {
           });
         });
     }
-
-    console.log("Search results:", results);
     return results.slice(0, 8); // Limit to 8 results
   }, [searchQuery, location.pathname]);
 
   const hasResults = searchResults.length > 0;
-
-  console.log("useDashboardSearch hook state:", {
-    searchQuery,
-    hasResults,
-    resultsCount: searchResults.length,
-  });
-
   return {
     searchQuery,
     setSearchQuery,

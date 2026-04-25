@@ -53,10 +53,6 @@ export const Dashboard = () => {
 
   // Log filter changes for debugging
   useEffect(() => {
-    console.log("Dashboard filters changed:", {
-      selectedStore,
-      selectedDateRange,
-    });
   }, [selectedStore, selectedDateRange]);
 
   return (

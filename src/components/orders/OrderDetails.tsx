@@ -162,7 +162,6 @@ export const OrderDetails = ({
   };
 
   const handleAcceptOrder = () => {
-    console.log("Order accepted:", selectedOrder);
     onOrderUpdate?.(selectedOrder, "accept");
     toast({
       title: "Order Accepted",
@@ -171,7 +170,6 @@ export const OrderDetails = ({
   };
 
   const handleDeclineOrder = (reason: string) => {
-    console.log("Order declined:", selectedOrder, "Reason:", reason);
     onOrderUpdate?.(selectedOrder, "decline", { reason });
     setShowDeclineDialog(false);
     toast({
@@ -182,7 +180,6 @@ export const OrderDetails = ({
   };
 
   const handleMarkAsReady = () => {
-    console.log("Order marked as ready:", selectedOrder);
     onOrderUpdate?.(selectedOrder, "ready");
     toast({
       title: "Order Ready",
@@ -191,7 +188,6 @@ export const OrderDetails = ({
   };
 
   const handleCompleteOrder = () => {
-    console.log("Order completed:", selectedOrder);
     onOrderUpdate?.(selectedOrder, "complete");
     toast({
       title: "Order Completed",

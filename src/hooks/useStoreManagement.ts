@@ -27,13 +27,11 @@ export const useStoreManagement = () => {
   // No need for local state management, using context
 
   const handleCreateStore = () => {
-    console.log("handleCreateStore called!");
     setEditingStore(undefined);
     setView("form");
   };
 
   const handleViewStore = (store: Store) => {
-    console.log("Viewing store:", store);
     setSelectedStore(store);
     setView("details");
   };
@@ -88,7 +86,6 @@ export const useStoreManagement = () => {
           customLogo: storeData.customLogo,
           hours: storeData.hours || defaultHours,
         };
-        console.log("Creating new venue:", newStore);
         await addStore(newStore);
         toast({
           title: "Venue created",

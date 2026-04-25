@@ -38,12 +38,6 @@ export const AddBankAccountDialog: React.FC<AddBankAccountDialogProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, you'd send this to a secure backend.
-    console.log({
-      accountHolderName,
-      accountNumber,
-      routingNumber,
-      accountType,
-    });
     toast({
       title: "Bank Account Added",
       description: "Your bank account has been successfully added.",

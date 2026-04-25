@@ -137,10 +137,6 @@ export const Reports = () => {
 
   // Log filter changes for debugging
   useEffect(() => {
-    console.log("Reports filters changed:", {
-      selectedStore,
-      selectedDateRange,
-    });
   }, [selectedStore, selectedDateRange]);
 
   // Format date range for display

@@ -71,15 +71,6 @@ export const ModernOrdersList = ({
   } | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  console.log("ModernOrdersList: Rendering with props:", {
-    ordersCount: orders.length,
-    isWaitingForOrders,
-    activeTab,
-    visibleOrdersCount: orders.filter((order) => order.isVisible !== false)
-      .length,
-    selectedStore,
-  });
-
   // Filter orders to only show visible ones
   const visibleOrders = orders.filter((order) => order.isVisible !== false);
 
@@ -97,7 +88,6 @@ export const ModernOrdersList = ({
     orderId: string,
     cardRef: React.RefObject<HTMLDivElement>,
   ) => {
-    console.log("ModernOrdersList: View details called for order:", orderId);
 
     if (cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
@@ -171,19 +161,14 @@ export const ModernOrdersList = ({
     orders.length === 0 &&
     selectedStore === "all"
   ) {
-    console.log(
-      "ModernOrdersList: Showing waiting state - no orders exist yet",
-    );
     return <WaitingForOrdersState />;
   }
 
   // Show empty state ONLY when store is paused (not when filtering by specific store)
   if (orderStatus === "paused") {
-    console.log("ModernOrdersList: Showing empty state - orders paused");
     return (
       <EmptyOrdersState
         onResumeOrders={() => {
-          console.log("Resume orders clicked in EmptyOrdersState");
           if (onResumeOrders) {
             onResumeOrders();
           }
@@ -194,9 +179,6 @@ export const ModernOrdersList = ({
 
   // When filtering by specific store and no orders match, just show empty list (no special state)
   if (visibleOrders.length === 0 && selectedStore !== "all") {
-    console.log(
-      "ModernOrdersList: No orders for selected store - showing empty list",
-    );
     return (
       <div className="h-full flex flex-col bg-black">
         <div className="flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200">
@@ -220,9 +202,6 @@ export const ModernOrdersList = ({
 
   // When no orders for any tab (except the ones already handled above), show empty state with black background
   if (visibleOrders.length === 0) {
-    console.log(
-      "ModernOrdersList: No orders for current tab - showing empty list",
-    );
     return (
       <div className="h-full flex flex-col bg-black">
         <div className="flex-shrink-0 px-4 py-3 bg-white border-b border-gray-200">
@@ -246,12 +225,6 @@ export const ModernOrdersList = ({
       </div>
     );
   }
-
-  console.log(
-    "ModernOrdersList: Showing orders list with",
-    visibleOrders.length,
-    "visible orders",
-  );
 
   return (
     <div className="h-full flex flex-col bg-black relative">

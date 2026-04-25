@@ -84,14 +84,11 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
   }, [initialData]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handleImageUpload called");
     const file = event.target.files?.[0];
-    console.log("Selected file:", file);
 
     if (file) {
       // Validate file type
       if (!file.type.startsWith("image/")) {
-        console.log("Invalid file type:", file.type);
         toast({
           title: "Invalid File Type",
           description: "Please select an image file (JPEG, PNG, or GIF).",
@@ -106,7 +103,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
 
       // Validate file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
-        console.log("File too large:", file.size);
         toast({
           title: "File Too Large",
           description: "Image cannot exceed 10MB.",
@@ -119,17 +115,12 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
         return;
       }
 
-      console.log("Setting selected image:", file.name);
       setSelectedImage(file);
 
       // Create preview with proper compression for better performance
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        console.log(
-          "FileReader result received, length:",
-          result ? result.length : 0,
-        );
 
         // Create an image element to check dimensions and compress if needed
         const img = new Image();
@@ -156,10 +147,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
           ctx?.drawImage(img, 0, 0, width, height);
           const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
 
-          console.log(
-            "Image compressed, new length:",
-            compressedDataUrl.length,
-          );
           setImagePreview(compressedDataUrl);
           // Update form data with compressed image
           setFormData((prev) => ({ ...prev, image: compressedDataUrl }));
@@ -181,7 +168,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
       };
       reader.readAsDataURL(file);
     } else {
-      console.log("No file selected");
     }
   };
 
@@ -255,7 +241,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
   };
 
   const handleUploadAreaClick = () => {
-    console.log("Upload area clicked");
     fileInputRef.current?.click();
   };
 
@@ -498,10 +483,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
                     className="w-full h-full object-cover"
                     style={{ imageRendering: "auto" }}
                     onLoad={() =>
-                      console.log("Image preview loaded successfully")
-                    }
-                    onError={(e) => {
-                      console.error("Image preview failed to load");
                       const target = e.target as HTMLImageElement;
                       target.src =
                         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDgwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zNzUgMTc1SDQyNVYyMjVIMzc1VjE3NVoiIGZpbGw9IiM5QjlDQTEiLz4KPHBhdGggZD0iTTM4NSAxOTVMMzk1IDIwNUw0MTUgMTg1VjIxNUgzOTVWMjA1TDM4NSAxOTVaIiBmaWxsPSIjRjlGQUZCIi8+Cjx0ZXh0IHg9IjQwMCIgeT0iMjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM2MzYzIiBmb250LXNpemU9IjE0cHgiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPgo=";

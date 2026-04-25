@@ -25,7 +25,6 @@ export const HotelSelector = () => {
     const selected = allDestinations.find((d) => d.id === destinationId);
     if (selected) {
       setCurrentDestination(selected);
-      console.log("Destination changed to:", selected);
     }
   };
 

@@ -175,10 +175,6 @@ export const Payouts = () => {
 
   // Log filter changes for debugging
   useEffect(() => {
-    console.log("Payouts filters changed:", {
-      selectedStore,
-      selectedDateRange,
-    });
   }, [selectedStore, selectedDateRange]);
 
   // Format date range for display
@@ -252,7 +248,6 @@ export const Payouts = () => {
 
   const exportToPdf = () => {
     try {
-      console.log("PDF export triggered - starting download...");
       const filteredData =
         selectedStore === "all"
           ? financialData

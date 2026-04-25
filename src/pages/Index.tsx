@@ -1,8 +1,6 @@
 import React from "react";
 
 const Index = () => {
-  console.log("Index component is rendering");
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center p-8">

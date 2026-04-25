@@ -18,10 +18,6 @@ export const useFullScreenScroll = () => {
 
     setIsScrollingDown(shouldHideUI);
     setLastScrollY(scrollY);
-
-    console.log(
-      `Scroll direction: ${shouldHideUI ? "hiding UI" : "showing UI"}, scrollY: ${scrollY}`,
-    );
   }, [lastScrollY]);
 
   useEffect(() => {

@@ -52,7 +52,6 @@ export const StoreClosedState = ({
           "No new orders at the moment. Your venue is currently paused from receiving new orders.",
         primaryCtaText: "Resume Taking Orders",
         primaryCtaAction: () => {
-          console.log("Resume Taking Orders button clicked");
           onResumeOrders();
         },
         statusText: "Venue is paused",

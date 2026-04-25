@@ -55,7 +55,6 @@ export const EmptyOrdersState = ({ onResumeOrders }: EmptyOrdersStateProps) => {
           <div className="space-y-3">
             <Button
               onClick={() => {
-                console.log("Resume Taking Orders clicked in EmptyOrdersState");
                 onResumeOrders();
               }}
               className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-md"

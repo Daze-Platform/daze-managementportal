@@ -71,33 +71,8 @@ export const useOrderFilters = () => {
   ): Order[] => {
     const orders = orderData[activeTab as keyof typeof orderData] || [];
     let filtered = orders;
-
-    console.log("getFilteredOrders called with:", {
-      activeTab,
-      selectedStore,
-      orderType,
-      totalOrders: orders.length,
-      allOrderStoreIds: orders.map((o) => ({
-        id: o.id,
-        storeId: o.storeId,
-        storeName: o.storeName,
-        isVisible: o.isVisible,
-      })),
-    });
-
     // Filter by store - only if a specific store is selected
     if (selectedStore !== "all") {
-      console.log(`🔍 Filtering by store: "${selectedStore}"`);
-      console.log(
-        `📦 Orders to filter:`,
-        filtered.map((o) => ({
-          id: o.id,
-          storeId: o.storeId,
-          storeName: o.storeName,
-          customer: o.customer,
-        })),
-      );
-
       const beforeFilter = filtered.length;
       filtered = filtered.filter((order) => {
         // Match both by storeId AND by storeName for more reliable matching
@@ -106,27 +81,9 @@ export const useOrderFilters = () => {
           order.storeName &&
           order.storeName.toLowerCase() === selectedStore.toLowerCase();
         const matches = matchesById || matchesByName;
-
-        console.log(
-          `🔸 Order ${order.id}: storeId="${order.storeId}", storeName="${order.storeName}", selectedStore="${selectedStore}", matches=${matches}`,
-        );
-
         return matches;
       });
-      console.log(
-        `📊 Store filtering result: ${beforeFilter} → ${filtered.length} orders for store "${selectedStore}"`,
-      );
-      console.log(
-        `✅ Final filtered orders:`,
-        filtered.map((o) => ({
-          id: o.id,
-          storeId: o.storeId,
-          storeName: o.storeName,
-          customer: o.customer,
-        })),
-      );
     } else {
-      console.log("🌟 No store filtering (showing all stores)");
     }
 
     // Filter by order type
@@ -137,28 +94,11 @@ export const useOrderFilters = () => {
           ? order.type === "Pick Up"
           : order.type === "Delivery",
       );
-      console.log(
-        `Type filtering (${orderType}): ${beforeTypeFilter} → ${filtered.length} orders`,
-      );
     }
 
     // Apply advanced filters
     const beforeAdvancedFilter = filtered.length;
     filtered = applyAdvancedFilters(filtered, advancedFilters);
-    console.log(
-      `Advanced filtering: ${beforeAdvancedFilter} → ${filtered.length} orders`,
-    );
-
-    console.log(
-      "Final filtered result:",
-      filtered.map((o) => ({
-        id: o.id,
-        storeId: o.storeId,
-        customer: o.customer,
-        isVisible: o.isVisible,
-      })),
-    );
-
     return filtered;
   };
 
@@ -207,9 +147,6 @@ export const useOrderFilters = () => {
           order.storeName.toLowerCase() === selectedStore.toLowerCase();
         return matchesById || matchesByName;
       }).length;
-      console.log(
-        `getOrderTypeCount for ${type} tab with store ${selectedStore}: ${filteredCount} orders`,
-      );
       return filteredCount;
     }
   };

@@ -160,8 +160,6 @@ export const Settings = () => {
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating profile:", profileData);
-
     updateUserProfile(profileData);
 
     initialProfileDataRef.current = profileData;
@@ -179,7 +177,6 @@ export const Settings = () => {
 
   const handlePlanChange = (planId: string) => {
     setCurrentPlan(planId);
-    console.log("Changing plan to:", planId);
   };
 
   const handlePasswordChange = async () => {

@@ -46,22 +46,12 @@ export const useOrderManagement = () => {
 
   // Generate initial batch of orders when user clicks "Start Taking Orders"
   useEffect(() => {
-    console.log("useOrderManagement: Order status changed:", {
-      orderStatus,
-      storeStatus,
-      activeTab,
-      existingOrdersCount: orderData.new.length,
-    });
-
     // Generate orders when user activates orders AND no orders exist yet
     if (
       orderStatus === "active" &&
       storeStatus === "open" &&
       orderData.new.length === 0
     ) {
-      console.log(
-        'useOrderManagement: User clicked "Start Taking Orders" - generating orders for ALL stores',
-      );
       generateInitialOrders();
     }
 
@@ -81,9 +71,6 @@ export const useOrderManagement = () => {
   // Also ensure no waiting state when switching stores - we're just filtering, not generating new orders
   useEffect(() => {
     if (orderData.new.length > 0) {
-      console.log(
-        "useOrderManagement: Orders exist, ensuring no waiting state for filtering",
-      );
       setIsWaitingForOrders(false);
     }
   }, [orderData.new.length, selectedStore, setIsWaitingForOrders]);
@@ -104,17 +91,6 @@ export const useOrderManagement = () => {
       // If isVisible is defined, only show if it's true
       return order.isVisible !== false;
     });
-
-    console.log("getFilteredOrdersWithParams result:", {
-      totalFiltered: filtered.length,
-      visibleOrders: visibleOrders.length,
-      activeTab,
-      selectedStore,
-      storeNames: filtered.map((o) => o.storeName),
-      storeIds: filtered.map((o) => o.storeId),
-      isWaitingForOrders,
-    });
-
     return visibleOrders;
   };
 

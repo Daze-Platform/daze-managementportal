@@ -54,7 +54,6 @@ export const HotelSelector = () => {
 
   const handleHotelChange = (hotelId: string) => {
     setSelectedHotel(hotelId);
-    console.log("Hotel changed to:", hotelId);
     // Here you would typically update the global state or make an API call
   };
 

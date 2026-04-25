@@ -184,7 +184,6 @@ export const StoreForm = ({
         });
       }
     } catch (error) {
-      console.log("Bucket check/create skipped:", error);
     }
   };
 

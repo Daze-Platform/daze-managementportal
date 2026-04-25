@@ -217,14 +217,6 @@ export const useGlobalSearch = () => {
 
     const query = searchQuery.toLowerCase();
     const results: SearchResult[] = [];
-
-    console.log(
-      "Global search with query:",
-      query,
-      "on page:",
-      location.pathname,
-    );
-
     // Search stores
     globalSearchData.stores
       .filter((store) => store.name.toLowerCase().includes(query))
@@ -376,19 +368,10 @@ export const useGlobalSearch = () => {
           page: report.page,
         });
       });
-
-    console.log("Global search results:", results);
     return results.slice(0, 8); // Limit to 8 results
   }, [searchQuery, location.pathname]);
 
   const hasResults = searchResults.length > 0;
-
-  console.log("useGlobalSearch hook state:", {
-    searchQuery,
-    hasResults,
-    resultsCount: searchResults.length,
-  });
-
   return {
     searchQuery,
     setSearchQuery,
