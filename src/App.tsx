@@ -28,6 +28,8 @@ const Ratings = lazy(() => import("./pages/Ratings").then(m => ({ default: m.Rat
 const Promotions = lazy(() => import("./pages/Promotions").then(m => ({ default: m.Promotions })));
 const Settings = lazy(() => import("./pages/Settings").then(m => ({ default: m.Settings })));
 const Notifications = lazy(() => import("./pages/Notifications").then(m => ({ default: m.Notifications })));
+const Couriers = lazy(() => import("./pages/Couriers"));
+const DispatchLog = lazy(() => import("./pages/DispatchLog"));
 const Login = lazy(() => import("./pages/Login"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
@@ -175,6 +177,30 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <Layout>
                 <Notifications />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/couriers"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Suspense fallback={<PageLoader />}>
+                  <Couriers />
+                </Suspense>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dispatch-log"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Suspense fallback={<PageLoader />}>
+                  <DispatchLog />
+                </Suspense>
               </Layout>
             </ProtectedRoute>
           }
