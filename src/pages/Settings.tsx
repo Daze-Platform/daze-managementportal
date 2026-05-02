@@ -37,6 +37,8 @@ import { NotificationSettings } from "@/components/notifications/NotificationSet
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { POSIntegration } from "@/components/settings/POSIntegration";
+import { DispatchModeCard } from "@/components/settings/DispatchModeCard";
+import { Truck } from "lucide-react";
 
 const plans = [
   {
@@ -229,7 +231,7 @@ export const Settings = () => {
             >
               <TabsList
                 variant="underlined"
-                className="inline-flex w-full sm:grid sm:grid-cols-6 bg-transparent border-b border-gray-200 p-0"
+                className="inline-flex w-full sm:grid sm:grid-cols-7 bg-transparent border-b border-gray-200 p-0"
               >
                 <TabsTrigger
                   value="profile"
@@ -275,6 +277,15 @@ export const Settings = () => {
                   <Plug className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">POS Integration</span>
                   <span className="sm:hidden">POS</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="dispatch"
+                  variant="underlined"
+                  className="flex items-center space-x-1 sm:space-x-2 text-sm whitespace-nowrap px-3 py-2 pb-3 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:border-b-4 data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+                >
+                  <Truck className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="hidden sm:inline">Dispatch</span>
+                  <span className="sm:hidden">Disp</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="billing"
@@ -572,6 +583,10 @@ export const Settings = () => {
 
           <TabsContent value="pos">
             <POSIntegration />
+          </TabsContent>
+
+          <TabsContent value="dispatch">
+            <DispatchModeCard />
           </TabsContent>
 
           <TabsContent value="billing">
