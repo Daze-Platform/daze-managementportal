@@ -26,22 +26,20 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
     return <Navigate to="/login" replace />;
   }
 
-  // Role-gated routes: wait for the profile to load before deciding.
-  // userProfile is hydrated asynchronously after isAuthenticated flips true,
-  // and a missing role would otherwise bounce the user before their role arrives.
-  // "owner" always satisfies any role gate — it's the top of the hierarchy.
+  // Role-gated routes. Resolve the user's role from React state first, then
+  // fall back to the cached profile in localStorage so navigation doesn't block
+  // on a slow/in-flight profile fetch. "owner" is the top of the hierarchy
+  // and satisfies any role gate.
   if (allowedRoles && allowedRoles.length > 0) {
-    if (!userProfile) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading…</p>
-          </div>
-        </div>
-      );
+    let userRole = userProfile?.role;
+    if (!userRole) {
+      try {
+        const cached = localStorage.getItem("userProfile");
+        if (cached) userRole = JSON.parse(cached)?.role;
+      } catch {
+        /* ignore cache miss */
+      }
     }
-    const userRole = userProfile.role;
     if (!userRole || (userRole !== "owner" && !allowedRoles.includes(userRole))) {
       return <Navigate to="/dashboard" replace />;
     }
