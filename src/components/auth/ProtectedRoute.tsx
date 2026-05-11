@@ -26,11 +26,23 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
     return <Navigate to="/login" replace />;
   }
 
-  // Check role-based access control if allowedRoles is specified
+  // Role-gated routes: wait for the profile to load before deciding.
+  // userProfile is hydrated asynchronously after isAuthenticated flips true,
+  // and a missing role would otherwise bounce the user before their role arrives.
+  // "owner" always satisfies any role gate — it's the top of the hierarchy.
   if (allowedRoles && allowedRoles.length > 0) {
-    const userRole = userProfile?.role;
-    if (!userRole || !allowedRoles.includes(userRole)) {
-      // User does not have required role - redirect to not authorized page or dashboard
+    if (!userProfile) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading…</p>
+          </div>
+        </div>
+      );
+    }
+    const userRole = userProfile.role;
+    if (!userRole || (userRole !== "owner" && !allowedRoles.includes(userRole))) {
       return <Navigate to="/dashboard" replace />;
     }
   }
