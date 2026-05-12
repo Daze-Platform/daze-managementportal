@@ -83,6 +83,9 @@ export const useReportsData = () => {
     if (selectedDateRange) {
       fetchData(storeIdArray, selectedDateRange);
     }
+    // Safety net: never leave the UI in a permanent loading state.
+    const safetyTimeout = setTimeout(() => setLoading(false), 8000);
+    return () => clearTimeout(safetyTimeout);
   }, [selectedStore, selectedDateRange, fetchData]);
 
   return { data, loading, error };

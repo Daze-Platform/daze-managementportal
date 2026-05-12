@@ -76,7 +76,13 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
     ],
   };
 
-  const revenueData = data || defaultData;
+  // Fall back to the placeholder shape if the upstream payload is missing the
+  // expected fields (the RPC currently returns array data; the section was
+  // built against a richer object shape).
+  const revenueData =
+    data && typeof data === "object" && Array.isArray((data as any).breakdown)
+      ? (data as typeof defaultData)
+      : defaultData;
   const revenueBreakdown = revenueData.breakdown.map((item) => ({
     ...item,
     icon:

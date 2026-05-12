@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { UserCreateForm } from "@/components/employees/UserCreateForm";
 import { UserEditForm } from "@/components/employees/UserEditForm";
-import { Plus, Search, User, MoreVertical, Edit, Trash2 } from "lucide-react";
+import { Plus, Search, User, MoreVertical, Edit, Trash2, Loader2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -113,7 +113,8 @@ export const Employees = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-muted-foreground">Loading employees...</div>
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <span className="ml-3 text-muted-foreground">Loading employees…</span>
       </div>
     );
   }

@@ -12,6 +12,14 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+// Pass-through lock: the default GoTrue lock uses the Navigator Locks API,
+// which can deadlock when an auto token refresh holds the lock and a
+// .from().select() also tries to acquire it (the data query needs a fresh
+// access token, so it queues behind auth). Disabling the lock means token
+// refreshes can race, which is fine — the auth server handles concurrent
+// refreshes idempotently — and unblocks every data query on first paint.
+const passthroughLock = <R,>(_n: string, _t: number, fn: () => Promise<R>) => fn();
+
 export const supabase = createClient<Database>(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY,
@@ -20,6 +28,7 @@ export const supabase = createClient<Database>(
       storage: localStorage,
       persistSession: true,
       autoRefreshToken: true,
+      lock: passthroughLock,
     },
   },
 );

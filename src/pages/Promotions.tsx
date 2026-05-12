@@ -25,6 +25,7 @@ import {
   Eye,
   Edit,
   Trash2,
+  Loader2,
 } from "lucide-react";
 import { PromotionForm } from "@/components/promotions/PromotionForm";
 import { usePromotions, Promotion } from "@/contexts/PromotionsContext";
@@ -177,7 +178,8 @@ export const Promotions = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-muted-foreground">Loading promotions...</div>
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <span className="ml-3 text-muted-foreground">Loading promotions…</span>
       </div>
     );
   }
