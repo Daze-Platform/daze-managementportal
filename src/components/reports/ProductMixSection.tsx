@@ -79,7 +79,8 @@ export const ProductMixSection: React.FC<ProductMixSectionProps> = ({ data }) =>
     const activeDayparts = (Object.keys(dayparts) as Daypart[]).filter(
       (d) => dayparts[d],
     );
-    return data
+    const safeData = Array.isArray(data) ? data : [];
+    return safeData
       .filter((i) => activeChannels.includes(i.salesChannel))
       .filter((i) => activeDayparts.includes(i.daypart))
       .filter((i) =>

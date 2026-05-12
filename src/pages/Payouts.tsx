@@ -88,6 +88,11 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
     let cancelled = false;
     setLoading(true);
 
+    // Safety net: never leave the UI in a permanent loading state.
+    const safetyTimeout = setTimeout(() => {
+      if (!cancelled) setLoading(false);
+    }, 8000);
+
     (async () => {
       try {
         let query = supabase
@@ -139,7 +144,10 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      clearTimeout(safetyTimeout);
+    };
   }, [userProfile?.tenantId, selectedDateRange]);
 
   return { data, loading, error };

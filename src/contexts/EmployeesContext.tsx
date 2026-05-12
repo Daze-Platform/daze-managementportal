@@ -213,6 +213,9 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setLoading(false);
     }
+    // Safety net: never leave the UI in a permanent loading state.
+    const safetyTimeout = setTimeout(() => setLoading(false), 8000);
+    return () => clearTimeout(safetyTimeout);
   }, [userProfile?.tenantId]);
 
   const value: EmployeesContextType = {
