@@ -26,11 +26,21 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
     return <Navigate to="/login" replace />;
   }
 
-  // Check role-based access control if allowedRoles is specified
+  // Role-gated routes. Resolve the user's role from React state first, then
+  // fall back to the cached profile in localStorage so navigation doesn't block
+  // on a slow/in-flight profile fetch. "owner" is the top of the hierarchy
+  // and satisfies any role gate.
   if (allowedRoles && allowedRoles.length > 0) {
-    const userRole = userProfile?.role;
-    if (!userRole || !allowedRoles.includes(userRole)) {
-      // User does not have required role - redirect to not authorized page or dashboard
+    let userRole = userProfile?.role;
+    if (!userRole) {
+      try {
+        const cached = localStorage.getItem("userProfile");
+        if (cached) userRole = JSON.parse(cached)?.role;
+      } catch {
+        /* ignore cache miss */
+      }
+    }
+    if (!userRole || (userRole !== "owner" && !allowedRoles.includes(userRole))) {
       return <Navigate to="/dashboard" replace />;
     }
   }
