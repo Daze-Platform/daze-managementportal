@@ -78,7 +78,7 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
       const todayStart = startOfDay(now).toISOString();
 
       // 1) Today's orders (excluding cancelled) - MANDATORY tenant filter
-      let todayQuery = sb
+      const todayQuery = sb
         .from("orders")
         .select("id, total_cents, guest_id, created_at, status")
         .neq("status", "cancelled")
@@ -96,7 +96,7 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
       // 2) Yesterday's orders for trend comparison - MANDATORY tenant filter
       const yesterdayStart = startOfDay(new Date(now.getTime() - 86400000)).toISOString();
       const yesterdayEnd = todayStart;
-      let yQuery = sb
+      const yQuery = sb
         .from("orders")
         .select("id, total_cents, guest_id")
         .neq("status", "cancelled")
@@ -128,7 +128,7 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
 
       // 3) 7-day revenue chart - MANDATORY tenant filter
       const weekAgo = new Date(now.getTime() - 7 * 86400000);
-      let weekQuery = sb
+      const weekQuery = sb
         .from("orders")
         .select("total_cents, created_at")
         .neq("status", "cancelled")

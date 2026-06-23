@@ -167,7 +167,6 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
         });
       };
       reader.readAsDataURL(file);
-    } else {
     }
   };
 
