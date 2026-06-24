@@ -84,6 +84,7 @@ export const useOrderFilters = () => {
         return matches;
       });
     } else {
+      // no filter applied when selectedStore is "all"
     }
 
     // Filter by order type

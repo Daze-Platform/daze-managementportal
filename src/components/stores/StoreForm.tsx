@@ -183,7 +183,8 @@ export const StoreForm = ({
           fileSizeLimit: 5242880, // 5MB
         });
       }
-    } catch (error) {
+    } catch {
+      // bucket may already exist or caller lacks permission; proceed anyway
     }
   };
 
