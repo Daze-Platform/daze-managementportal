@@ -96,7 +96,7 @@ export const Settings = () => {
     try {
       const saved = localStorage.getItem("daze_notification_prefs");
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { /* localStorage may be unavailable */ }
     return { email: true, push: false, sms: true };
   });
 

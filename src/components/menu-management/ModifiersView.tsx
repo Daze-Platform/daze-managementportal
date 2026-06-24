@@ -65,7 +65,7 @@ export const ModifiersView: React.FC<ModifiersViewProps> = ({
 
   // Filter and sort modifier groups
   const filteredGroups = useMemo(() => {
-    let filtered = modifierGroups.filter(
+    const filtered = modifierGroups.filter(
       (group) =>
         group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         group.description?.toLowerCase().includes(searchQuery.toLowerCase()),
