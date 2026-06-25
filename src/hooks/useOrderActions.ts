@@ -51,13 +51,14 @@ export const useOrderActions = (
         moveOrder(orderId, "ready", "fulfillment");
         setActiveTab("fulfillment");
         break;
-      case "fulfill":
+      case "fulfill": {
         // Handle both pickup orders (skip fulfillment) and delivery orders
         const fromTab = activeTab === "ready" ? "ready" : "fulfillment";
         moveOrder(orderId, fromTab as keyof typeof orderData, "fulfilled");
         setActiveTab("fulfilled");
         break;
-      case "schedule":
+      }
+      case "schedule": {
         const scheduledTime = data?.scheduledTime || "Tomorrow, 2:00PM";
         scheduleOrder(
           orderId,
@@ -66,6 +67,7 @@ export const useOrderActions = (
         );
         setActiveTab("scheduled");
         break;
+      }
       case "activate":
         moveOrder(orderId, "scheduled", "new");
         setActiveTab("new");
