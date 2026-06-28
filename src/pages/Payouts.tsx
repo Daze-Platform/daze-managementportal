@@ -230,6 +230,8 @@ export const Payouts = () => {
           `"${item.net}"`,
         ].join(","),
       ),
+      "",
+      `"TOTAL (accrued service fees, paid orders)","","","","$${filteredData.reduce((s, it) => s + (parseFloat(it.serviceFee.replace(/[$,]/g, "")) || 0), 0).toFixed(2)}","",""`,
     ];
 
     const csvContent = csvRows.join("\n");
