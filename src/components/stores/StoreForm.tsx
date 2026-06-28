@@ -183,8 +183,7 @@ export const StoreForm = ({
           fileSizeLimit: 5242880, // 5MB
         });
       }
-    } catch (error) {
-    }
+    } catch { /* no-op: image upload error already handled by Supabase client */ }
   };
 
   const handleImageUpload = async (
