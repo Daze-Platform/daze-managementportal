@@ -97,8 +97,12 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
       try {
         let query = supabase
           .from("orders")
-          .select("id, created_at, status, subtotal_cents, total_cents, restaurant_id, stores!orders_restaurant_id_fkey(name)")
+          .select("id, created_at, status, payment_status, subtotal_cents, total_cents, platform_fee_cents, restaurant_id, stores!orders_restaurant_id_fkey(name)")
           .eq("tenant_id", tenantId)
+          // Payouts = fees actually collected. Unpaid / failed orders never
+          // charged a platform fee, so counting them would over-invoice the
+          // merchant. Only paid orders contribute to the accrued total.
+          .eq("payment_status", "paid")
           .order("created_at", { ascending: false });
 
         if (selectedDateRange?.from) {
@@ -117,7 +121,10 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
         const mapped: PayoutRow[] = (rows ?? []).map((row: any) => {
           const subtotalCents: number = row.subtotal_cents ?? 0;
           const totalCents: number = row.total_cents ?? subtotalCents;
-          const serviceFeeCents = Math.round(subtotalCents * 0.1);
+          // Use the ACTUAL platform fee charged + recorded by route-order-to-square
+          // (source of truth; honors per-tenant platform_fee_bps). Fall back to a
+          // flat 10% estimate only for legacy paid orders that predate the field.
+          const serviceFeeCents: number = row.platform_fee_cents ?? Math.round(subtotalCents * 0.1);
           const storeName: string = row.stores?.name ?? "Unknown Store";
 
           return {
@@ -338,6 +345,7 @@ export const Payouts = () => {
       "", // Empty row
       "SUMMARY", // Summary section
       `Total Records: ${filteredData.length}`,
+      `Total Service Fees (accrued, paid orders): $${filteredData.reduce((s, it) => s + (parseFloat(it.serviceFee.replace(/[$,]/g, "")) || 0), 0).toFixed(2)}`,
       `Date Range: ${formatDateRangeForPayouts()}`,
       `Export Date: ${new Date().toLocaleDateString()}`,
       `Filter Applied: ${selectedStore === "all" ? "All Stores" : selectedStore}`,
