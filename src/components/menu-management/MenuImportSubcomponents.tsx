@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { useStores } from "@/contexts/StoresContext";
 
-interface ProgressStep {
+export interface ProgressStep {
   label: string;
   completed: boolean;
   active: boolean;

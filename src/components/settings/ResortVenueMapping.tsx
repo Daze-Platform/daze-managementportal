@@ -50,7 +50,7 @@ export const ResortVenueMapping = () => {
       const { data: resortData } = await supabase
         .from("resorts")
         .select("id, name, location")
-        .eq("tenant_id", userProfile?.tenantId)
+        .eq("tenant_id", userProfile?.tenantId ?? "")
         .order("name");
 
       // Load all stores
@@ -64,11 +64,13 @@ export const ResortVenueMapping = () => {
         .from("store_resort_availability")
         .select("store_id, resort_id");
 
-      if (resortData) setResorts(resortData);
-      if (storeData) setAllStores(storeData);
+      if (resortData) setResorts(resortData.map((r) => ({ ...r, location: r.location ?? "" })));
+      if (storeData) setAllStores(storeData.map((s) => ({ ...s, address: s.address ?? "" })));
 
       if (mapData && storeData) {
-        const storeMap = Object.fromEntries(storeData.map((s) => [s.id, s]));
+        const storeMap = Object.fromEntries(
+          storeData.map((s) => [s.id, { ...s, address: s.address ?? "" }]),
+        );
         setMappings(
           mapData.map((m) => ({ ...m, store: storeMap[m.store_id] })).filter((m) => m.store),
         );

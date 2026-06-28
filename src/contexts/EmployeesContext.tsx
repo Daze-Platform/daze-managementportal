@@ -74,7 +74,18 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      setEmployees(data || []);
+      setEmployees(
+        (data || []).map((row) => ({
+          ...row,
+          store: row.store ?? undefined,
+          avatar: row.avatar ?? undefined,
+          resort_id: row.resort_id ?? undefined,
+          assigned_stores: row.assigned_stores ?? undefined,
+          assigned_resorts: row.assigned_resorts ?? undefined,
+          created_at: row.created_at ?? undefined,
+          updated_at: row.updated_at ?? undefined,
+        })),
+      );
     } catch (error) {
       console.warn("Network error loading employees:", error);
       if (showErrors) {
@@ -119,9 +130,9 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      // Replace temp ID with real ID from database
+      // Replace temp ID with real ID from database, preserving the optimistic domain shape
       setEmployees((prev) =>
-        prev.map((emp) => (emp.id === tempId ? data : emp)),
+        prev.map((emp) => (emp.id === tempId ? { ...optimisticEmployee, id: data.id } : emp)),
       );
 
       // Send invite email if tenantId provided

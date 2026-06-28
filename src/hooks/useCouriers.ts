@@ -108,9 +108,9 @@ export const useCouriers = (tenantId: string | null) => {
 };
 
 export const useReassignOrder = () => {
-  const { user } = useAuth();
+  const { userId } = useAuth();
   return useCallback(async (orderId: string, courierId: string | null): Promise<{ ok: boolean; reason?: string }> => {
-    if (!user) return { ok: false, reason: "Not signed in" };
+    if (!userId) return { ok: false, reason: "Not signed in" };
     const { data, error } = await supabase
       .from("orders")
       .update({ courier_user_id: courierId })
@@ -120,5 +120,5 @@ export const useReassignOrder = () => {
     if (error) return { ok: false, reason: error.message };
     if (!data) return { ok: false, reason: "Order not found or RLS blocked update" };
     return { ok: true };
-  }, [user]);
+  }, [userId]);
 };

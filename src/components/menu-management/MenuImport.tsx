@@ -20,6 +20,7 @@ import {
   PDFUploadSection,
   WebLinkImportSection,
   POSImportSection,
+  type ProgressStep,
 } from "./MenuImportSubcomponents";
 
 // Sample menu item templates for mock generation

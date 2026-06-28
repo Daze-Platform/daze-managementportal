@@ -80,9 +80,9 @@ export const Promotions = () => {
       start_date: formData.startDate?.toISOString() || new Date().toISOString(),
       end_date: formData.endDate?.toISOString() || new Date().toISOString(),
       is_active: true,
-      store_id: null,
-      resort_id: null,
-      usage_limit: null,
+      store_id: undefined,
+      resort_id: undefined,
+      usage_limit: undefined,
       conditions: {
         ...(formData.image && { image: formData.image }),
       },

@@ -206,7 +206,7 @@ export const MenuManagement = () => {
     if (menu) {
       await updateMenu({
         ...menu,
-        store_id: storeId,
+        store_id: storeId ?? undefined,
       });
     }
     setShowStoreAssignment(false);

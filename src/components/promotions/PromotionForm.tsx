@@ -385,7 +385,7 @@ export const PromotionForm: React.FC<PromotionFormProps> = ({
                           const today = new Date();
                           const startDate = formData.startDate;
                           return (
-                            date < today || (startDate && date <= startDate)
+                            date < today || (startDate != null && date <= startDate)
                           );
                         }}
                         initialFocus

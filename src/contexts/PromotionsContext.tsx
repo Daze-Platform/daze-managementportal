@@ -81,7 +81,25 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      setPromotions((data || []) as Promotion[]);
+      setPromotions(
+        (data || []).map((row) => ({
+          id: row.id,
+          title: row.name,
+          description: row.description ?? undefined,
+          discount_type: (row.type === "percentage" || row.type === "fixed" ? row.type : "percentage") as "percentage" | "fixed",
+          discount_value: row.value,
+          start_date: row.start_date ?? new Date().toISOString(),
+          end_date: row.end_date ?? new Date().toISOString(),
+          is_active: row.is_active ?? false,
+          store_id: undefined,
+          resort_id: undefined,
+          conditions: {},
+          usage_limit: row.usage_limit ?? undefined,
+          usage_count: row.usage_count ?? 0,
+          created_at: row.created_at ?? undefined,
+          updated_at: row.updated_at ?? undefined,
+        } satisfies Promotion)),
+      );
     } catch (error) {
       console.warn("Network error loading promotions:", error);
       if (showErrors) {
@@ -119,7 +137,17 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { data, error } = await supabase
         .from("promotions")
-        .insert([{ ...promotionData, usage_count: 0 }])
+        .insert([{
+          name: promotionData.title,
+          description: promotionData.description,
+          type: promotionData.discount_type,
+          value: promotionData.discount_value,
+          start_date: promotionData.start_date,
+          end_date: promotionData.end_date,
+          is_active: promotionData.is_active,
+          usage_limit: promotionData.usage_limit,
+          usage_count: 0,
+        }])
         .select()
         .single();
 
@@ -129,9 +157,9 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      // Replace temp ID with real ID from database
+      // Replace temp ID with real ID from database, preserving the optimistic domain shape
       setPromotions((prev) =>
-        prev.map((p) => (p.id === tempId ? (data as Promotion) : p)),
+        prev.map((p) => (p.id === tempId ? { ...optimisticPromotion, id: data.id } : p)),
       );
     } catch (error) {
       console.warn("Network error syncing promotion:", error);

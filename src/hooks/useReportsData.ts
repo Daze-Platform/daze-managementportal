@@ -29,7 +29,7 @@ interface PaymentTypesData {
   order_count: number;
 }
 
-interface ReportsData {
+export interface ReportsData {
   revenue: RevenueData[];
   productMix: ProductMixData[];
   customerAnalytics: CustomerAnalyticsData[];
@@ -62,11 +62,14 @@ export const useReportsData = () => {
       // The other three RPCs accept the same p_tenant_id arg under schema drift; if a prod RPC
       // hasn't been updated yet, Supabase will return an "function does not exist" error and that
       // specific report will fail — the others continue to load via Promise.all's rejection isolation.
+      // get_revenue_report requires p_store_ids: number[] (not optional) — pass empty array when null
+      const storeIdsForRevenue: number[] = storeIds ?? [];
+      const storeIdsOrUndefined = storeIds ?? undefined;
       const [revenueRes, productMixRes, customerAnalyticsRes, paymentTypesRes] = await Promise.all([
-        supabase.rpc('get_revenue_report', { p_tenant_id: tId, p_store_ids: storeIds, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
-        supabase.rpc('get_product_mix_report', { p_tenant_id: tId, p_store_ids: storeIds, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
-        supabase.rpc('get_customer_analytics_report', { p_tenant_id: tId, p_store_ids: storeIds, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
-        supabase.rpc('get_payment_types_report', { p_tenant_id: tId, p_store_ids: storeIds, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
+        supabase.rpc('get_revenue_report', { p_tenant_id: tId, p_store_ids: storeIdsForRevenue, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
+        supabase.rpc('get_product_mix_report', { p_store_ids: storeIdsOrUndefined, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
+        supabase.rpc('get_customer_analytics_report', { p_store_ids: storeIdsOrUndefined, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
+        supabase.rpc('get_payment_types_report', { p_store_ids: storeIdsOrUndefined, p_start_date: dateRange.from.toISOString(), p_end_date: dateRange.to.toISOString() }),
       ]);
 
       if (revenueRes.error) throw revenueRes.error;

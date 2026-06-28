@@ -42,7 +42,15 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
   const [mobileSearchResults, setMobileSearchResults] = useState<any[]>([]);
 
   const [notificationPopoverOpen, setNotificationPopoverOpen] = useState(false);
-  const [notifications, setNotifications] = useState([
+  const [notifications, setNotifications] = useState<Array<{
+    id: number;
+    title: string;
+    message: string;
+    time: string;
+    unread: boolean;
+    type: "success" | "warning" | "info" | "error";
+    route: string;
+  }>>([
     {
       id: 1,
       title: "Refund Processed",
@@ -143,8 +151,7 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setShowSearchResults(value.trim().length > 0);
   };

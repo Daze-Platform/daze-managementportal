@@ -1,36 +1,13 @@
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
-
-interface ReportData {
-  name: string;
-  revenue: {
-    total: number;
-    growth: number;
-    breakdown: Array<{ label: string; amount: number; percentage: number }>;
-  };
-  customerAnalytics: {
-    totalCustomers: number;
-    customerGrowth: number;
-    lifetimeValue: number;
-    lifetimeValueGrowth: number;
-    retentionRate: number;
-    retentionGrowth: number;
-    satisfaction: number;
-    totalReviews: number;
-  };
-  paymentTypes: Array<{ name: string; value: number }>;
-  cancellations: {
-    rate: number;
-    totalCancelled: number;
-    reasons: Array<{ reason: string; count: number; percentage: number }>;
-  };
-}
+import autoTable from "jspdf-autotable";
+import { ReportsData } from "@/hooks/useReportsData";
 
 interface ExportOptions {
   storeName: string;
   dateRange: DateRange | undefined;
   visibleSections: Set<string>;
-  data: ReportData;
+  data: ReportsData;
 }
 
 export const exportReportsToPdf = async ({
@@ -41,10 +18,16 @@ export const exportReportsToPdf = async ({
 }: ExportOptions) => {
   // Dynamically import jsPDF to reduce main bundle size
   const jsPDFModule = await import("jspdf");
-  const { jsPDF } = jsPDFModule;
-  await import("jspdf-autotable");
+  const jsPDF = jsPDFModule.default;
 
   const doc = new jsPDF();
+  // jspdf-autotable augments the doc instance with `lastAutoTable` at runtime,
+  // and getNumberOfPages exists at runtime but isn't in jsPDF's bundled types;
+  // narrow explicitly (not `any`).
+  type DocWithAutoTable = typeof doc & {
+    lastAutoTable: { finalY: number };
+    getNumberOfPages: () => number;
+  };
   const pageWidth = doc.internal.pageSize.getWidth();
   let yPosition = 20;
 
@@ -101,123 +84,80 @@ export const exportReportsToPdf = async ({
   };
 
   // Customer Analytics Section
-  if (isSectionVisible("customerAnalytics") && data.customerAnalytics) {
+  if (isSectionVisible("customerAnalytics") && data.customerAnalytics.length > 0) {
     addSectionHeader("Customer Analytics");
 
     autoTable(doc, {
       startY: yPosition,
-      head: [["Metric", "Value", "Change"]],
-      body: [
-        [
-          "Total Customers",
-          data.customerAnalytics.totalCustomers.toLocaleString(),
-          `+${data.customerAnalytics.customerGrowth}%`,
-        ],
-        [
-          "Customer Lifetime Value",
-          `$${data.customerAnalytics.lifetimeValue}`,
-          `+${data.customerAnalytics.lifetimeValueGrowth}%`,
-        ],
-        [
-          "Retention Rate",
-          `${data.customerAnalytics.retentionRate}%`,
-          `+${data.customerAnalytics.retentionGrowth}%`,
-        ],
-        [
-          "Satisfaction Score",
-          `${data.customerAnalytics.satisfaction}/5`,
-          `${data.customerAnalytics.totalReviews} reviews`,
-        ],
-      ],
+      head: [["Metric", "Value"]],
+      body: data.customerAnalytics.map((item) => [item.metric, item.value.toLocaleString()]),
       theme: "striped",
       headStyles: { fillColor: [59, 130, 246], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    yPosition = (doc as DocWithAutoTable).lastAutoTable.finalY + 15;
   }
 
   // Revenue Section
-  if (isSectionVisible("revenue") && data.revenue) {
+  if (isSectionVisible("revenue") && data.revenue.length > 0) {
     addSectionHeader("Revenue");
 
     autoTable(doc, {
       startY: yPosition,
-      head: [["Category", "Amount", "Percentage"]],
-      body: [
-        [
-          "Total Revenue",
-          `$${data.revenue.total.toLocaleString()}`,
-          `+${data.revenue.growth}% growth`,
-        ],
-        ...data.revenue.breakdown.map((item) => [
-          item.label,
-          `$${item.amount.toLocaleString()}`,
-          `${item.percentage}%`,
-        ]),
-      ],
+      head: [["Period", "Total Revenue", "Orders", "Avg Order Value"]],
+      body: data.revenue.map((item) => [
+        item.period,
+        `$${item.total_revenue.toLocaleString()}`,
+        item.total_orders.toLocaleString(),
+        `$${item.average_order_value.toFixed(2)}`,
+      ]),
       theme: "striped",
       headStyles: { fillColor: [16, 185, 129], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    yPosition = (doc as DocWithAutoTable).lastAutoTable.finalY + 15;
   }
 
   // Payment Types Section
-  if (isSectionVisible("paymentTypes") && data.paymentTypes) {
+  if (isSectionVisible("paymentTypes") && data.paymentTypes.length > 0) {
     addSectionHeader("Payment Types");
 
     autoTable(doc, {
       startY: yPosition,
-      head: [["Payment Method", "Percentage"]],
-      body: data.paymentTypes.map((item) => [item.name, `${item.value}%`]),
+      head: [["Payment Method", "Order Count"]],
+      body: data.paymentTypes.map((item) => [item.payment_method, item.order_count.toString()]),
       theme: "striped",
       headStyles: { fillColor: [245, 158, 11], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    yPosition = (doc as DocWithAutoTable).lastAutoTable.finalY + 15;
   }
 
-  // Cancellations Section
-  if (isSectionVisible("cancellations") && data.cancellations) {
-    addSectionHeader("Cancellations");
+  // Product Mix Section
+  if (isSectionVisible("productMix") && data.productMix.length > 0) {
+    addSectionHeader("Product Mix");
 
     autoTable(doc, {
       startY: yPosition,
-      head: [["Metric", "Value"]],
-      body: [
-        ["Cancellation Rate", `${data.cancellations.rate}%`],
-        ["Total Cancelled", data.cancellations.totalCancelled.toString()],
-      ],
+      head: [["Item", "Qty Sold", "Total Sales"]],
+      body: data.productMix.map((item) => [
+        item.item_name,
+        item.quantity_sold.toLocaleString(),
+        `$${item.total_sales.toFixed(2)}`,
+      ]),
       theme: "striped",
       headStyles: { fillColor: [239, 68, 68], textColor: 255 },
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 10;
-
-    if (data.cancellations.reasons && data.cancellations.reasons.length > 0) {
-      autoTable(doc, {
-        startY: yPosition,
-        head: [["Reason", "Count", "Percentage"]],
-        body: data.cancellations.reasons.map((item) => [
-          item.reason,
-          item.count.toString(),
-          `${item.percentage}%`,
-        ]),
-        theme: "striped",
-        headStyles: { fillColor: [239, 68, 68], textColor: 255 },
-        margin: { left: 14, right: 14 },
-      });
-
-      yPosition = (doc as any).lastAutoTable.finalY + 15;
-    }
+    yPosition = (doc as DocWithAutoTable).lastAutoTable.finalY + 15;
   }
 
   // Add footer on each page
-  const pageCount = (doc as any).internal.getNumberOfPages();
+  const pageCount = (doc as DocWithAutoTable).getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(10);

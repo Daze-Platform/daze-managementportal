@@ -58,7 +58,7 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         const convertedStores: Store[] = storesData.map((store) => ({
           id: store.id,
           name: store.name,
-          address: store.address,
+          address: store.address ?? "",
           locationDescription: store.location_description || "",
           logo: store.logo || "🏪",
           customLogo: store.custom_logo || "",

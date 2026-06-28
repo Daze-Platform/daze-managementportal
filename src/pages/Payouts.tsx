@@ -259,7 +259,7 @@ export const Payouts = () => {
     try {
       // Dynamically import jsPDF when needed
       const jsPDFModule = await import("jspdf");
-      const { jsPDF } = jsPDFModule;
+      const jsPDF = jsPDFModule.default;
 
       const filteredData =
         selectedStore === "all"

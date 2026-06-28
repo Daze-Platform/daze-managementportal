@@ -7,7 +7,7 @@ import { OrderDetails } from "./OrderDetails";
 interface OrderDetailsOverlayProps {
   selectedOrder: string;
   activeTab: string;
-  onOrderUpdate: (
+  onOrderUpdate?: (
     orderId: string,
     action:
       | "accept"

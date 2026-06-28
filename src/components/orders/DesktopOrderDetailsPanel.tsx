@@ -6,7 +6,7 @@ import { OrderDetails } from "./OrderDetails";
 interface DesktopOrderDetailsPanelProps {
   selectedOrder: string;
   activeTab: string;
-  onOrderUpdate: (
+  onOrderUpdate?: (
     orderId: string,
     action:
       | "accept"

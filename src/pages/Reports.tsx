@@ -356,7 +356,9 @@ export const Reports = () => {
             <Button
               variant="outline"
               className="w-full sm:w-auto bg-white/70 backdrop-blur-sm border-gray-200 hover:border-primary/50 transition-colors gap-2"
+              disabled={!reportsData}
               onClick={async () => {
+                if (!reportsData) return;
                 const storeName =
                   stores.find((s) => s.id === selectedStore)?.name ||
                   "All Stores";
@@ -495,9 +497,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <CustomerAnalyticsSection
-                      data={reportsData.customerAnalytics}
-                    />
+                    <CustomerAnalyticsSection />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -518,10 +518,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <ProductMixSection
-                      selectedStore={selectedStore}
-                      selectedDateRange={selectedDateRange}
-                    />
+                    <ProductMixSection data={reportsData?.productMix ?? []} />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -541,7 +538,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <RevenueSection data={reportsData.revenue} />
+                    <RevenueSection />
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -561,7 +558,7 @@ export const Reports = () => {
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-6">
                   <div className="overflow-x-auto w-full">
-                    <PaymentTypesSection data={reportsData.paymentTypes} />
+                    <PaymentTypesSection />
                   </div>
                 </AccordionContent>
               </AccordionItem>

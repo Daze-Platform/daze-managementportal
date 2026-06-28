@@ -244,7 +244,7 @@ export const MenuItemForm = ({
             onChange={(value) =>
               setCurrentItem((prev) => ({
                 ...prev,
-                price: parseFloat(value) || 0,
+                price: value,
               }))
             }
           />

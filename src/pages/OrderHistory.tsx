@@ -155,7 +155,7 @@ export const OrderHistory = () => {
           .from("orders")
           .select("*, order_items(name, quantity, unit_price), guests(name, email)")
           .eq("tenant_id", tenantId)
-          .in("status", ["delivered", "completed", "fulfilled"]);
+          .in("status", ["delivered"]);
 
         // Date filter
         let startDate: Date | null = null;
