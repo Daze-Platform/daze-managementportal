@@ -44,6 +44,12 @@ import { format } from "date-fns";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  formatMoney,
+  mapStatus,
+  serviceFeeCents,
+  accruedServiceFeeCents,
+} from "@/lib/payoutMath";
 
 interface PayoutRow {
   id: string;
@@ -53,21 +59,11 @@ interface PayoutRow {
   subtotal: string;
   serviceFee: string;
   commissions: string;
+  serviceFeeCentsRaw: number;
   net: string;
   storeIcon: string;
   bgColor: string;
   customLogo: string;
-}
-
-function formatMoney(cents: number): string {
-  return "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function mapStatus(status: string): "Succeeded" | "Pending" | "Failed" {
-  const s = (status ?? "").toLowerCase();
-  if (s === "completed" || s === "delivered") return "Succeeded";
-  if (s === "cancelled" || s === "canceled" || s === "failed") return "Failed";
-  return "Pending";
 }
 
 function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error | null } {
@@ -121,10 +117,7 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
         const mapped: PayoutRow[] = (rows ?? []).map((row: any) => {
           const subtotalCents: number = row.subtotal_cents ?? 0;
           const totalCents: number = row.total_cents ?? subtotalCents;
-          // Use the ACTUAL platform fee charged + recorded by route-order-to-square
-          // (source of truth; honors per-tenant platform_fee_bps). Fall back to a
-          // flat 10% estimate only for legacy paid orders that predate the field.
-          const serviceFeeCents: number = row.platform_fee_cents ?? Math.round(subtotalCents * 0.1);
+          const feeCents = serviceFeeCents(row);
           const storeName: string = row.stores?.name ?? "Unknown Store";
 
           return {
@@ -133,8 +126,9 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
             date: format(new Date(row.created_at), "MMM d, yyyy h:mmaaa"),
             status: mapStatus(row.status ?? ""),
             subtotal: formatMoney(subtotalCents),
-            serviceFee: formatMoney(serviceFeeCents),
-            commissions: formatMoney(serviceFeeCents),
+            serviceFee: formatMoney(feeCents),
+            commissions: formatMoney(feeCents),
+            serviceFeeCentsRaw: feeCents,
             net: formatMoney(totalCents),
             storeIcon: "",
             bgColor: "",
@@ -231,7 +225,7 @@ export const Payouts = () => {
         ].join(","),
       ),
       "",
-      `"TOTAL (accrued service fees, paid orders)","","","","$${filteredData.reduce((s, it) => s + (parseFloat(it.serviceFee.replace(/[$,]/g, "")) || 0), 0).toFixed(2)}","",""`,
+      `"TOTAL (accrued service fees, paid orders)","","","","$${(accruedServiceFeeCents(filteredData.map((d) => d.serviceFeeCentsRaw)) / 100).toFixed(2)}","",""`,
     ];
 
     const csvContent = csvRows.join("\n");
@@ -347,7 +341,7 @@ export const Payouts = () => {
       "", // Empty row
       "SUMMARY", // Summary section
       `Total Records: ${filteredData.length}`,
-      `Total Service Fees (accrued, paid orders): $${filteredData.reduce((s, it) => s + (parseFloat(it.serviceFee.replace(/[$,]/g, "")) || 0), 0).toFixed(2)}`,
+      `Total Service Fees (accrued, paid orders): $${(accruedServiceFeeCents(filteredData.map((d) => d.serviceFeeCentsRaw)) / 100).toFixed(2)}`,
       `Date Range: ${formatDateRangeForPayouts()}`,
       `Export Date: ${new Date().toLocaleDateString()}`,
       `Filter Applied: ${selectedStore === "all" ? "All Stores" : selectedStore}`,
