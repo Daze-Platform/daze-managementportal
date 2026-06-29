@@ -184,6 +184,7 @@ export const StoreForm = ({
         });
       }
     } catch (error) {
+      console.error("Failed to ensure store-logos bucket exists:", error);
     }
   };
 
