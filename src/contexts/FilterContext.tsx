@@ -32,7 +32,9 @@ function loadFilters(): { store: string; dateRange: DateRange | undefined } {
           : { from: new Date(), to: new Date() },
       };
     }
-  } catch {}
+  } catch {
+    // localStorage unavailable (private browsing or storage full)
+  }
   return { store: "all", dateRange: { from: new Date(), to: new Date() } };
 }
 
@@ -47,7 +49,9 @@ function saveFilters(store: string, dateRange: DateRange | undefined) {
           : null,
       }),
     );
-  } catch {}
+  } catch {
+    // localStorage unavailable (private browsing or storage full)
+  }
 }
 
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {
