@@ -97,8 +97,8 @@ export const UserCreateForm = ({
         resort: "Hilton Pensacola Beach",
       });
       onClose();
-    } catch (err: any) {
-      setFormError(err?.message || "Failed to create user. Please try again.");
+    } catch (err) {
+      setFormError((err as Error)?.message || "Failed to create user. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
