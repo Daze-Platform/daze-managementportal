@@ -161,8 +161,8 @@ export const MenuSyncPanel = ({
       setResult(data);
       setStatus("done");
       if (persist && onSyncComplete) onSyncComplete(data);
-    } catch (err: any) {
-      setError(err?.message || "Menu sync failed");
+    } catch (err) {
+      setError((err as Error)?.message || "Menu sync failed");
       setStatus("error");
     } finally {
       setPersisting(false);

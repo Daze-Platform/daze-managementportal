@@ -520,7 +520,7 @@ export const MenuImport = () => {
           title: "Menu imported successfully!",
           description: `Imported "${menuName}" with ${items.length} items.`,
         });
-      } catch (error: any) {
+      } catch (error) {
         setUploadStatus("error");
         setUploadResult({ error: error.message || "Failed to process PDF" });
         toast({
@@ -626,7 +626,7 @@ export const MenuImport = () => {
           title: "Menu imported successfully!",
           description: `Imported "${menuName}" with ${items.length} items from ${categories} categories.`,
         });
-      } catch (error: any) {
+      } catch (error) {
         setUploadStatus("error");
         setUploadResult({ error: error.message || "Failed to scrape menu" });
         toast({
@@ -721,7 +721,7 @@ export const MenuImport = () => {
           title: "POS menu synced!",
           description: `Imported "${menuName}" with ${items.length} items from ${toastPOS.name}.`,
         });
-      } catch (error: any) {
+      } catch (error) {
         setUploadStatus("error");
         setUploadResult({ error: error.message || "Failed to sync POS" });
         setSyncingPOS(null);
