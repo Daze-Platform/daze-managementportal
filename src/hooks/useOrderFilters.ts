@@ -83,7 +83,6 @@ export const useOrderFilters = () => {
         const matches = matchesById || matchesByName;
         return matches;
       });
-    } else {
     }
 
     // Filter by order type
