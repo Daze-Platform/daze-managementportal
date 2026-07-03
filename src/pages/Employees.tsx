@@ -25,6 +25,7 @@ import { useEmployees, Employee } from "@/contexts/EmployeesContext";
 import { useAuth } from "@/contexts/AuthContext";
 import ResortBadges from "@/components/employees/ResortBadges";
 import StoreBadges from "@/components/employees/StoreBadges";
+import StaffPinsManager from "@/components/employees/StaffPinsManager";
 
 export const Employees = () => {
   const { employees, loading, addEmployee, updateEmployee, deleteEmployee } =
@@ -332,6 +333,11 @@ export const Employees = () => {
             </div>
           </div>
         )}
+
+        <StaffPinsManager
+          tenantId={userProfile?.tenantId}
+          userRole={userProfile?.role}
+        />
 
         <UserCreateForm
           isOpen={isCreateFormOpen}
