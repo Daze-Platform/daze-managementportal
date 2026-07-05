@@ -337,7 +337,7 @@ export const useOrderData = () => {
         fetchOrders(); // re-sync on failure
       }
     },
-    [sb, fetchOrders],
+    [sb, fetchOrders, tenantId],
   );
 
   const removeOrder = useCallback(
@@ -365,7 +365,7 @@ export const useOrderData = () => {
         fetchOrders();
       }
     },
-    [sb, fetchOrders],
+    [sb, fetchOrders, tenantId],
   );
 
   const scheduleOrder = useCallback(
