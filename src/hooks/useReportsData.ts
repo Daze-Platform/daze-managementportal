@@ -81,7 +81,7 @@ export const useReportsData = () => {
         paymentTypes: paymentTypesRes.data,
       });
 
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error fetching reports data:', err);
       setError(err);
     } finally {

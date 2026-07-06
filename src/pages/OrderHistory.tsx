@@ -186,7 +186,7 @@ export const OrderHistory = () => {
         } else {
           setRawOrders(data ?? []);
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error("OrderHistory unexpected error:", err);
         setFetchError(err?.message ?? "Unknown error");
         setRawOrders([]);

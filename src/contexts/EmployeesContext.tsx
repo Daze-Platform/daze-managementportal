@@ -145,7 +145,7 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
           } else {
             toast.success("Invite sent to " + employeeData.email);
           }
-        } catch (inviteErr: any) {
+        } catch (inviteErr) {
           toast.error("Could not send invite: " + (inviteErr?.message || "Unknown error"));
         }
       }
