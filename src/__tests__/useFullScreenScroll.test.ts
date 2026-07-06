@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useFullScreenScroll } from '@/hooks/useFullScreenScroll';
 
@@ -6,6 +6,10 @@ describe('useFullScreenScroll', () => {
   beforeEach(() => {
     vi.spyOn(window, 'addEventListener');
     vi.spyOn(window, 'removeEventListener');
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('removes the orientationchange listener with the same reference it was added with', () => {
