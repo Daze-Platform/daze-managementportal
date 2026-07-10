@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -110,8 +110,8 @@ const DispatchLog = () => {
               </tr>
             )}
             {rows.map((row) => (
-              <>
-                <tr key={row.id} className="hover:bg-muted/20 cursor-pointer" onClick={() => toggle(row.id)}>
+              <Fragment key={row.id}>
+                <tr className="hover:bg-muted/20 cursor-pointer" onClick={() => toggle(row.id)}>
                   <td className="px-4 py-3">
                     {expanded.has(row.id) ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                   </td>
@@ -122,7 +122,7 @@ const DispatchLog = () => {
                   <td className="px-4 py-3 font-mono text-xs">{row.orderId.slice(0, 8)}…</td>
                 </tr>
                 {expanded.has(row.id) && <ExpandedRow row={row} />}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
