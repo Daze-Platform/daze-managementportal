@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { RightNowPanel } from "@/components/dashboard/RightNowPanel";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
@@ -50,10 +50,6 @@ export const Dashboard = () => {
   if (!currentStoreData) {
     currentStoreData = resortData["all"];
   }
-
-  // Log filter changes for debugging
-  useEffect(() => {
-  }, [selectedStore, selectedDateRange]);
 
   return (
     <div className="min-h-full bg-gray-50 page-fade-in">
