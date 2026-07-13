@@ -64,12 +64,10 @@ export const useFullScreenScroll = () => {
         );
         scrollContainers.forEach((container) => {
           if (container instanceof HTMLElement) {
-            const containerStyle = container.style as any;
-            containerStyle.height = "100%";
-            containerStyle.overflowY = "auto";
-            // Use bracket notation for vendor-prefixed properties
-            containerStyle["-webkit-overflow-scrolling"] = "touch";
-            containerStyle.paddingBottom = `calc(env(safe-area-inset-bottom) + 20px)`;
+            container.style.height = "100%";
+            container.style.overflowY = "auto";
+            container.style.setProperty("-webkit-overflow-scrolling", "touch");
+            container.style.paddingBottom = `calc(env(safe-area-inset-bottom) + 20px)`;
           }
         });
 
