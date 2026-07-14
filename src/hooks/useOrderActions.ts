@@ -24,7 +24,7 @@ export const useOrderActions = (
       | "fulfill"
       | "schedule"
       | "activate",
-    data?: any,
+    data?: unknown,
   ) => {
     // Find the order to check its type
     const currentOrder = orderData[activeTab as keyof typeof orderData]?.find(
