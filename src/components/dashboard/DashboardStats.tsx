@@ -120,7 +120,9 @@ export const DashboardStats = ({ stats }: DashboardStatsProps) => {
                     <div
                       className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full border border-current/10 ${trend.bgColor}`}
                     >
-                      <TrendIcon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${trend.color}`} />
+                      <TrendIcon
+                        className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${trend.color}`}
+                      />
                       <span className={`text-xs font-bold ${trend.color}`}>
                         {trend.value}
                       </span>

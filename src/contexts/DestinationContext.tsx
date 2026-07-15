@@ -28,8 +28,7 @@ export const DestinationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [destinations, setDestinationsState] =
-    useState<Destination[]>([]);
+  const [destinations, setDestinationsState] = useState<Destination[]>([]);
   const [currentDestination, setCurrentDestination] =
     useState<Destination | null>(null);
   const [loading, setLoading] = useState(true);

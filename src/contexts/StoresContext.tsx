@@ -43,9 +43,10 @@ export const StoresProvider = ({ children }: { children: ReactNode }) => {
         .from("stores")
         .select("*")
         .order("created_at", { ascending: true });
-      const { data: storesData, error } = resortIds.length > 0
-        ? await query.in("resort_id", resortIds)
-        : await query.eq("resort_id", "no-match"); // no resorts → no stores
+      const { data: storesData, error } =
+        resortIds.length > 0
+          ? await query.in("resort_id", resortIds)
+          : await query.eq("resort_id", "no-match"); // no resorts → no stores
 
       if (error) {
         console.warn("Could not load stores from database:", error.message);

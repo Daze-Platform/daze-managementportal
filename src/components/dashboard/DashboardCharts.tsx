@@ -21,7 +21,9 @@ const ChartSkeleton = () => (
 );
 
 const EmptyChartState = ({ message }: { message: string }) => (
-  <div className="flex items-center justify-center h-48 text-gray-400 text-sm">{message}</div>
+  <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
+    {message}
+  </div>
 );
 
 interface ChartData {
@@ -70,7 +72,6 @@ const itemVariants = {
     },
   }),
 };
-
 
 export const DashboardCharts = ({
   storeName,

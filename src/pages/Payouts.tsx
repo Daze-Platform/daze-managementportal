@@ -60,7 +60,13 @@ interface PayoutRow {
 }
 
 function formatMoney(cents: number): string {
-  return "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return (
+    "$" +
+    (cents / 100).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  );
 }
 
 function mapStatus(status: string): "Succeeded" | "Pending" | "Failed" {
@@ -70,7 +76,11 @@ function mapStatus(status: string): "Succeeded" | "Pending" | "Failed" {
   return "Pending";
 }
 
-function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error | null } {
+function usePayoutsData(): {
+  data: PayoutRow[];
+  loading: boolean;
+  error: Error | null;
+} {
   const { userProfile } = useAuth();
   const { selectedDateRange } = useFilters();
   const [data, setData] = useState<PayoutRow[]>([]);
@@ -97,7 +107,9 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
       try {
         let query = supabase
           .from("orders")
-          .select("id, created_at, status, subtotal_cents, total_cents, restaurant_id, stores!orders_restaurant_id_fkey(name)")
+          .select(
+            "id, created_at, status, subtotal_cents, total_cents, restaurant_id, stores!orders_restaurant_id_fkey(name)",
+          )
           .eq("tenant_id", tenantId)
           .order("created_at", { ascending: false });
 
@@ -183,8 +195,7 @@ export const Payouts = () => {
   ];
 
   // Log filter changes for debugging
-  useEffect(() => {
-  }, [selectedStore, selectedDateRange]);
+  useEffect(() => {}, [selectedStore, selectedDateRange]);
 
   // Format date range for display
   const formatDateRangeForPayouts = () => {
@@ -548,7 +559,9 @@ export const Payouts = () => {
           {!payoutsLoading && filteredData.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <DollarSign className="w-12 h-12 text-gray-300 mb-3" />
-              <p className="text-lg font-medium text-gray-500">No payouts found</p>
+              <p className="text-lg font-medium text-gray-500">
+                No payouts found
+              </p>
               <p className="text-sm text-gray-400 mt-1">
                 Try adjusting the date range or store filter.
               </p>
@@ -557,144 +570,144 @@ export const Payouts = () => {
 
           {/* Desktop Table */}
           {!payoutsLoading && filteredData.length > 0 && (
-          <div className="hidden lg:block">
-            <Card className="rounded-xl border border-border/50 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">
-                  Payout Transactions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-50">
-                      <TableHead className="font-semibold">Store</TableHead>
-                      <TableHead className="font-semibold">Date</TableHead>
-                      <TableHead className="font-semibold">Status</TableHead>
-                      <TableHead className="font-semibold text-right">
-                        Subtotal
-                      </TableHead>
-                      <TableHead className="font-semibold text-right">
-                        Service Fee
-                      </TableHead>
-                      <TableHead className="font-semibold text-right">
-                        Commission
-                      </TableHead>
-                      <TableHead className="font-semibold text-right">
-                        NET
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredData.map((item) => (
-                      <TableRow key={item.id} className="hover:bg-gray-50">
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <StoreLogo
-                              logo={item.storeIcon}
-                              customLogo={item.customLogo}
-                              bgColor={item.bgColor}
-                              size="sm"
-                            />
-                            <span className="font-medium">{item.store}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-gray-600">
-                          {item.date}
-                        </TableCell>
-                        <TableCell>{getStatusBadge(item.status)}</TableCell>
-                        <TableCell className="font-medium text-right">
-                          {item.subtotal}
-                        </TableCell>
-                        <TableCell className="text-accent text-right">
-                          {item.serviceFee}
-                        </TableCell>
-                        <TableCell className="text-red-600 text-right">
-                          {item.commissions}
-                        </TableCell>
-                        <TableCell className="font-bold text-green-600 text-right">
-                          {item.net}
-                        </TableCell>
+            <div className="hidden lg:block">
+              <Card className="rounded-xl border border-border/50 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold">
+                    Payout Transactions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="font-semibold">Store</TableHead>
+                        <TableHead className="font-semibold">Date</TableHead>
+                        <TableHead className="font-semibold">Status</TableHead>
+                        <TableHead className="font-semibold text-right">
+                          Subtotal
+                        </TableHead>
+                        <TableHead className="font-semibold text-right">
+                          Service Fee
+                        </TableHead>
+                        <TableHead className="font-semibold text-right">
+                          Commission
+                        </TableHead>
+                        <TableHead className="font-semibold text-right">
+                          NET
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </div>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredData.map((item) => (
+                        <TableRow key={item.id} className="hover:bg-gray-50">
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <StoreLogo
+                                logo={item.storeIcon}
+                                customLogo={item.customLogo}
+                                bgColor={item.bgColor}
+                                size="sm"
+                              />
+                              <span className="font-medium">{item.store}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-gray-600">
+                            {item.date}
+                          </TableCell>
+                          <TableCell>{getStatusBadge(item.status)}</TableCell>
+                          <TableCell className="font-medium text-right">
+                            {item.subtotal}
+                          </TableCell>
+                          <TableCell className="text-accent text-right">
+                            {item.serviceFee}
+                          </TableCell>
+                          <TableCell className="text-red-600 text-right">
+                            {item.commissions}
+                          </TableCell>
+                          <TableCell className="font-bold text-green-600 text-right">
+                            {item.net}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {/* Mobile/Tablet Cards */}
           {!payoutsLoading && filteredData.length > 0 && (
-          <div className="lg:hidden space-y-3 sm:space-y-4">
-            {filteredData.map((item) => (
-              <Card
-                key={item.id}
-                className="rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-              >
-                <CardContent className="p-0">
-                  {/* Header Section */}
-                  <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50/50">
-                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                      <StoreLogo
-                        logo={item.storeIcon}
-                        customLogo={item.customLogo}
-                        bgColor={item.bgColor}
-                        size="sm"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                          {item.store}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-gray-500 truncate">
-                          {item.date}
+            <div className="lg:hidden space-y-3 sm:space-y-4">
+              {filteredData.map((item) => (
+                <Card
+                  key={item.id}
+                  className="rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                >
+                  <CardContent className="p-0">
+                    {/* Header Section */}
+                    <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-50/50">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        <StoreLogo
+                          logo={item.storeIcon}
+                          customLogo={item.customLogo}
+                          bgColor={item.bgColor}
+                          size="sm"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                            {item.store}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-gray-500 truncate">
+                            {item.date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 ml-2">
+                        {getStatusBadge(item.status)}
+                      </div>
+                    </div>
+
+                    {/* Financial Details Grid */}
+                    <div className="grid grid-cols-2 gap-px bg-gray-100">
+                      <div className="bg-white p-3 sm:p-4">
+                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wide mb-1">
+                          Subtotal
+                        </p>
+                        <p className="text-sm sm:text-base font-semibold text-gray-900">
+                          {item.subtotal}
+                        </p>
+                      </div>
+                      <div className="bg-white p-3 sm:p-4">
+                        <p className="text-[10px] sm:text-xs text-accent uppercase tracking-wide mb-1">
+                          Service Fee
+                        </p>
+                        <p className="text-sm sm:text-base font-medium text-accent">
+                          {item.serviceFee}
+                        </p>
+                      </div>
+                      <div className="bg-white p-3 sm:p-4">
+                        <p className="text-[10px] sm:text-xs text-red-600 uppercase tracking-wide mb-1">
+                          Commission
+                        </p>
+                        <p className="text-sm sm:text-base font-medium text-red-600">
+                          {item.commissions}
+                        </p>
+                      </div>
+                      <div className="bg-white p-3 sm:p-4">
+                        <p className="text-[10px] sm:text-xs text-green-600 uppercase tracking-wide mb-1">
+                          Net Earnings
+                        </p>
+                        <p className="text-sm sm:text-base font-bold text-green-600">
+                          {item.net}
                         </p>
                       </div>
                     </div>
-                    <div className="flex-shrink-0 ml-2">
-                      {getStatusBadge(item.status)}
-                    </div>
-                  </div>
-
-                  {/* Financial Details Grid */}
-                  <div className="grid grid-cols-2 gap-px bg-gray-100">
-                    <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wide mb-1">
-                        Subtotal
-                      </p>
-                      <p className="text-sm sm:text-base font-semibold text-gray-900">
-                        {item.subtotal}
-                      </p>
-                    </div>
-                    <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-accent uppercase tracking-wide mb-1">
-                        Service Fee
-                      </p>
-                      <p className="text-sm sm:text-base font-medium text-accent">
-                        {item.serviceFee}
-                      </p>
-                    </div>
-                    <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-red-600 uppercase tracking-wide mb-1">
-                        Commission
-                      </p>
-                      <p className="text-sm sm:text-base font-medium text-red-600">
-                        {item.commissions}
-                      </p>
-                    </div>
-                    <div className="bg-white p-3 sm:p-4">
-                      <p className="text-[10px] sm:text-xs text-green-600 uppercase tracking-wide mb-1">
-                        Net Earnings
-                      </p>
-                      <p className="text-sm sm:text-base font-bold text-green-600">
-                        {item.net}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
 
           {/* Pagination */}

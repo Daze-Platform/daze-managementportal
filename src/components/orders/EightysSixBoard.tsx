@@ -16,7 +16,12 @@ interface MenuItem {
 
 // Static fallback data so the board renders even if the DB table isn't seeded
 const FALLBACK_ITEMS: MenuItem[] = [
-  { id: "f1", name: "Wood-Fired Oysters", category: "Starters", available: true },
+  {
+    id: "f1",
+    name: "Wood-Fired Oysters",
+    category: "Starters",
+    available: true,
+  },
   { id: "f2", name: "Shrimp Cocktail", category: "Starters", available: true },
   { id: "f3", name: "Lobster Bisque", category: "Starters", available: true },
   { id: "f4", name: "Charbroiled Salmon", category: "Mains", available: true },
@@ -26,7 +31,12 @@ const FALLBACK_ITEMS: MenuItem[] = [
   { id: "f8", name: "Tiki Punch", category: "Cocktails", available: true },
   { id: "f9", name: "Mojito", category: "Cocktails", available: true },
   { id: "f10", name: "Piña Colada", category: "Cocktails", available: true },
-  { id: "f11", name: "Chocolate Lava Cake", category: "Desserts", available: true },
+  {
+    id: "f11",
+    name: "Chocolate Lava Cake",
+    category: "Desserts",
+    available: true,
+  },
   { id: "f12", name: "Key Lime Pie", category: "Desserts", available: true },
 ];
 
@@ -110,9 +120,7 @@ export const EightySixBoard = () => {
     sessionAvailability.set(idKey, newAvailable);
     setItems((prev) =>
       prev.map((item) =>
-        String(item.id) === idKey
-          ? { ...item, available: newAvailable }
-          : item,
+        String(item.id) === idKey ? { ...item, available: newAvailable } : item,
       ),
     );
     setPendingToggles((prev) => new Set(prev).add(idKey));

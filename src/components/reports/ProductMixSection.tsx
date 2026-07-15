@@ -39,7 +39,7 @@ import {
 import { Download, Filter, ListFilter } from "lucide-react";
 
 interface ProductMixSectionProps {
-    data: any[];
+  data: any[];
 }
 
 type GroupBy = "item" | "category";
@@ -53,7 +53,9 @@ type SortKey =
   | "%"
   | "avgPrice";
 
-export const ProductMixSection: React.FC<ProductMixSectionProps> = ({ data }) => {
+export const ProductMixSection: React.FC<ProductMixSectionProps> = ({
+  data,
+}) => {
   const [search, setSearch] = useState("");
   const [groupBy, setGroupBy] = useState<GroupBy>("item");
   const [topN, setTopN] = useState<string>("25");

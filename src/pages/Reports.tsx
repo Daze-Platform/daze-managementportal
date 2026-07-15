@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -130,12 +129,13 @@ export const Reports = () => {
   // shape than the RPC actually returns, so empty arrays would crash them.
   const hasReportsData =
     !!reportsData &&
-    (
-      (Array.isArray(reportsData.revenue) && reportsData.revenue.length > 0) ||
-      (Array.isArray(reportsData.productMix) && reportsData.productMix.length > 0) ||
-      (Array.isArray(reportsData.customerAnalytics) && reportsData.customerAnalytics.length > 0) ||
-      (Array.isArray(reportsData.paymentTypes) && reportsData.paymentTypes.length > 0)
-    );
+    ((Array.isArray(reportsData.revenue) && reportsData.revenue.length > 0) ||
+      (Array.isArray(reportsData.productMix) &&
+        reportsData.productMix.length > 0) ||
+      (Array.isArray(reportsData.customerAnalytics) &&
+        reportsData.customerAnalytics.length > 0) ||
+      (Array.isArray(reportsData.paymentTypes) &&
+        reportsData.paymentTypes.length > 0));
 
   // Get all stores regardless of resort assignment and remove duplicates
   const availableStores = allStores.filter(
@@ -152,8 +152,7 @@ export const Reports = () => {
   ];
 
   // Log filter changes for debugging
-  useEffect(() => {
-  }, [selectedStore, selectedDateRange]);
+  useEffect(() => {}, [selectedStore, selectedDateRange]);
 
   // Format date range for display
   const formatDateRangeForReports = () => {
@@ -451,9 +450,9 @@ export const Reports = () => {
 
       {/* Content */}
       {loading ? (
-        <div className='flex items-center justify-center h-64'>
-          <Loader2 className='w-6 h-6 animate-spin text-muted-foreground' />
-          <span className='ml-3 text-muted-foreground'>Loading reports…</span>
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          <span className="ml-3 text-muted-foreground">Loading reports…</span>
         </div>
       ) : error ? (
         <EmptyState
@@ -468,215 +467,226 @@ export const Reports = () => {
           description="Try a wider date range or a different venue to see reporting data."
         />
       ) : (
-      <div>
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="p-4 sm:p-6 lg:p-8 xl:p-10"
-        >
-          <Accordion
-            type="multiple"
-            defaultValue={REPORT_SECTIONS.map((section) => section.id)}
-            className="space-y-6"
+        <div>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="p-4 sm:p-6 lg:p-8 xl:p-10"
           >
-            {/* Customer Analytics Section - Full width on desktop */}
-            {isSectionVisible("customerAnalytics") && (
-              <AccordionItem
-                id="customerAnalytics"
-                value="customerAnalytics"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
-                    Customer Analytics
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <CustomerAnalyticsSection
-                      data={reportsData.customerAnalytics}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {/* Product Mix - Full width */}
-            {isSectionVisible("productMix") && (
-              <AccordionItem
-                id="productMix"
-                value="productMix"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full" />
-                    Product Mix
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <ProductMixSection
-                      selectedStore={selectedStore}
-                      selectedDateRange={selectedDateRange}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {isSectionVisible("revenue") && (
-              <AccordionItem
-                id="revenue"
-                value="revenue"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full" />
-                    Revenue
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <RevenueSection data={reportsData.revenue} />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {isSectionVisible("paymentTypes") && (
-              <AccordionItem
-                id="paymentTypes"
-                value="paymentTypes"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full" />
-                    Payment Types
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="overflow-x-auto w-full">
-                    <PaymentTypesSection data={reportsData.paymentTypes} />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {isSectionVisible("cancellations") && (
-              <AccordionItem
-                id="cancellations"
-                value="cancellations"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-rose-500 to-orange-500 rounded-full" />
-                    Cancellations
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
-                    <span className="text-4xl mb-3">📊</span>
-                    <p className="font-medium text-gray-600">Coming Soon</p>
-                    <p className="text-sm mt-1">Cancellation analytics will be available in a future update.</p>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {isSectionVisible("downtime") && (
-              <AccordionItem
-                id="downtime"
-                value="downtime"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-gray-400 to-gray-600 rounded-full" />
-                    Downtime
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
-                    <span className="text-4xl mb-3">🔧</span>
-                    <p className="font-medium text-gray-600">Coming Soon</p>
-                    <p className="text-sm mt-1">Downtime tracking will be available in a future update.</p>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {isSectionVisible("marketing") && (
-              <AccordionItem
-                id="marketing"
-                value="marketing"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full" />
-                    Marketing
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
-                    <span className="text-4xl mb-3">📣</span>
-                    <p className="font-medium text-gray-600">Coming Soon</p>
-                    <p className="text-sm mt-1">Marketing analytics will be available in a future update.</p>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {isSectionVisible("team") && (
-              <AccordionItem
-                id="team"
-                value="team"
-                className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
-              >
-                <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1 h-6 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full" />
-                    Team Performance
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-5 pb-6">
-                  <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
-                    <span className="text-4xl mb-3">👥</span>
-                    <p className="font-medium text-gray-600">Coming Soon</p>
-                    <p className="text-sm mt-1">Team performance analytics will be available in a future update.</p>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-          </Accordion>
-
-          {/* Empty state when no sections visible */}
-          {visibleCount === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-10 flex flex-col items-center justify-center py-20 text-center"
+            <Accordion
+              type="multiple"
+              defaultValue={REPORT_SECTIONS.map((section) => section.id)}
+              className="space-y-6"
             >
-              <Filter className="w-12 h-12 text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No sections selected
-              </h3>
-              <p className="text-gray-500 mb-4">
-                Use the Sections filter to show report data
-              </p>
-              <Button onClick={() => toggleAllSections(true)}>
-                Show All Sections
-              </Button>
-            </motion.div>
-          )}
-        </motion.div>
-      </div>
+              {/* Customer Analytics Section - Full width on desktop */}
+              {isSectionVisible("customerAnalytics") && (
+                <AccordionItem
+                  id="customerAnalytics"
+                  value="customerAnalytics"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
+                      Customer Analytics
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="overflow-x-auto w-full">
+                      <CustomerAnalyticsSection
+                        data={reportsData.customerAnalytics}
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {/* Product Mix - Full width */}
+              {isSectionVisible("productMix") && (
+                <AccordionItem
+                  id="productMix"
+                  value="productMix"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full" />
+                      Product Mix
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="overflow-x-auto w-full">
+                      <ProductMixSection
+                        selectedStore={selectedStore}
+                        selectedDateRange={selectedDateRange}
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {isSectionVisible("revenue") && (
+                <AccordionItem
+                  id="revenue"
+                  value="revenue"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full" />
+                      Revenue
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="overflow-x-auto w-full">
+                      <RevenueSection data={reportsData.revenue} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {isSectionVisible("paymentTypes") && (
+                <AccordionItem
+                  id="paymentTypes"
+                  value="paymentTypes"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full" />
+                      Payment Types
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="overflow-x-auto w-full">
+                      <PaymentTypesSection data={reportsData.paymentTypes} />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {isSectionVisible("cancellations") && (
+                <AccordionItem
+                  id="cancellations"
+                  value="cancellations"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-rose-500 to-orange-500 rounded-full" />
+                      Cancellations
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                      <span className="text-4xl mb-3">📊</span>
+                      <p className="font-medium text-gray-600">Coming Soon</p>
+                      <p className="text-sm mt-1">
+                        Cancellation analytics will be available in a future
+                        update.
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {isSectionVisible("downtime") && (
+                <AccordionItem
+                  id="downtime"
+                  value="downtime"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-gray-400 to-gray-600 rounded-full" />
+                      Downtime
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                      <span className="text-4xl mb-3">🔧</span>
+                      <p className="font-medium text-gray-600">Coming Soon</p>
+                      <p className="text-sm mt-1">
+                        Downtime tracking will be available in a future update.
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {isSectionVisible("marketing") && (
+                <AccordionItem
+                  id="marketing"
+                  value="marketing"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full" />
+                      Marketing
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                      <span className="text-4xl mb-3">📣</span>
+                      <p className="font-medium text-gray-600">Coming Soon</p>
+                      <p className="text-sm mt-1">
+                        Marketing analytics will be available in a future
+                        update.
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {isSectionVisible("team") && (
+                <AccordionItem
+                  id="team"
+                  value="team"
+                  className="rounded-xl border border-gray-200/70 bg-white/90 shadow-sm"
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1 h-6 bg-gradient-to-b from-amber-500 to-yellow-500 rounded-full" />
+                      Team Performance
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 pb-6">
+                    <div className="flex flex-col items-center justify-center py-10 text-center text-gray-400">
+                      <span className="text-4xl mb-3">👥</span>
+                      <p className="font-medium text-gray-600">Coming Soon</p>
+                      <p className="text-sm mt-1">
+                        Team performance analytics will be available in a future
+                        update.
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+            </Accordion>
+
+            {/* Empty state when no sections visible */}
+            {visibleCount === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-10 flex flex-col items-center justify-center py-20 text-center"
+              >
+                <Filter className="w-12 h-12 text-gray-300 mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No sections selected
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  Use the Sections filter to show report data
+                </p>
+                <Button onClick={() => toggleAllSections(true)}>
+                  Show All Sections
+                </Button>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
       )}
     </div>
   );

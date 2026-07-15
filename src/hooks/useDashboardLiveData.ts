@@ -9,7 +9,12 @@ interface LiveStats {
   orders: number;
   customers: number;
   avgOrder: number;
-  trends: { revenue: number; orders: number; customers: number; avgOrder: number };
+  trends: {
+    revenue: number;
+    orders: number;
+    customers: number;
+    avgOrder: number;
+  };
 }
 
 interface ChartPoint {
@@ -51,7 +56,10 @@ const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
   const [stats, setStats] = useState<LiveStats>({
-    revenue: 0, orders: 0, customers: 0, avgOrder: 0,
+    revenue: 0,
+    orders: 0,
+    customers: 0,
+    avgOrder: 0,
     trends: { revenue: 0, orders: 0, customers: 0, avgOrder: 0 },
   });
   const [revenueData, setRevenueData] = useState<ChartPoint[]>([]);
@@ -63,7 +71,10 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
     // Skip query if tenantId is not available
     if (!tenantId) {
       setStats({
-        revenue: 0, orders: 0, customers: 0, avgOrder: 0,
+        revenue: 0,
+        orders: 0,
+        customers: 0,
+        avgOrder: 0,
         trends: { revenue: 0, orders: 0, customers: 0, avgOrder: 0 },
       });
       setRevenueData([]);
@@ -88,13 +99,22 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
       const { data: todayOrders } = await todayQuery;
       const orders = todayOrders ?? [];
 
-      const totalRevenue = orders.reduce((s: number, o: { total_cents: number }) => s + (o.total_cents || 0), 0);
+      const totalRevenue = orders.reduce(
+        (s: number, o: { total_cents: number }) => s + (o.total_cents || 0),
+        0,
+      );
       const totalOrders = orders.length;
-      const uniqueGuests = new Set(orders.map((o: { guest_id: string | null }) => o.guest_id).filter(Boolean)).size;
+      const uniqueGuests = new Set(
+        orders
+          .map((o: { guest_id: string | null }) => o.guest_id)
+          .filter(Boolean),
+      ).size;
       const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
       // 2) Yesterday's orders for trend comparison - MANDATORY tenant filter
-      const yesterdayStart = startOfDay(new Date(now.getTime() - 86400000)).toISOString();
+      const yesterdayStart = startOfDay(
+        new Date(now.getTime() - 86400000),
+      ).toISOString();
       const yesterdayEnd = todayStart;
       const yQuery = sb
         .from("orders")
@@ -106,12 +126,20 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
 
       const { data: yOrders } = await yQuery;
       const yArr = yOrders ?? [];
-      const yRevenue = yArr.reduce((s: number, o: { total_cents: number }) => s + (o.total_cents || 0), 0);
+      const yRevenue = yArr.reduce(
+        (s: number, o: { total_cents: number }) => s + (o.total_cents || 0),
+        0,
+      );
       const yCount = yArr.length;
-      const yGuests = new Set(yArr.map((o: { guest_id: string | null }) => o.guest_id).filter(Boolean)).size;
+      const yGuests = new Set(
+        yArr
+          .map((o: { guest_id: string | null }) => o.guest_id)
+          .filter(Boolean),
+      ).size;
       const yAvg = yCount > 0 ? yRevenue / yCount : 0;
 
-      const pct = (cur: number, prev: number) => prev > 0 ? +((cur - prev) / prev * 100).toFixed(1) : 0;
+      const pct = (cur: number, prev: number) =>
+        prev > 0 ? +(((cur - prev) / prev) * 100).toFixed(1) : 0;
 
       setStats({
         revenue: Math.round(totalRevenue / 100),
@@ -144,9 +172,12 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
       for (const o of weekOrders ?? []) {
         const d = new Date(o.created_at);
         const key = DAY_NAMES[d.getDay()];
-        if (key in dayMap) dayMap[key] += Math.round((o.total_cents || 0) / 100);
+        if (key in dayMap)
+          dayMap[key] += Math.round((o.total_cents || 0) / 100);
       }
-      setRevenueData(Object.entries(dayMap).map(([name, value]) => ({ name, value })));
+      setRevenueData(
+        Object.entries(dayMap).map(([name, value]) => ({ name, value })),
+      );
 
       // 4) Orders by hour (today)
       const hourCounts: Record<number, number> = {};
@@ -160,7 +191,12 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
         }
         hourCounts[best] = (hourCounts[best] || 0) + 1;
       }
-      setOrderData(HOUR_BUCKETS.map((b, i) => ({ name: HOUR_LABELS[i], orders: hourCounts[b] })));
+      setOrderData(
+        HOUR_BUCKETS.map((b, i) => ({
+          name: HOUR_LABELS[i],
+          orders: hourCounts[b],
+        })),
+      );
 
       // 5) Top items
       let itemsQuery = sb
@@ -178,7 +214,8 @@ export function useDashboardLiveData(tenantId?: string): DashboardLiveData {
         const key = item.name || "Unknown";
         if (!itemAgg[key]) itemAgg[key] = { count: 0, revenue: 0 };
         itemAgg[key].count += item.quantity || 1;
-        itemAgg[key].revenue += (item.unit_price_cents || 0) * (item.quantity || 1);
+        itemAgg[key].revenue +=
+          (item.unit_price_cents || 0) * (item.quantity || 1);
       }
       const sorted = Object.entries(itemAgg)
         .sort(([, a], [, b]) => b.count - a.count)

@@ -57,7 +57,9 @@ export const MenuSyncPanel = ({
   storeSlug,
   tenantId,
 }: MenuSyncPanelProps) => {
-  const [status, setStatus] = useState<"idle" | "syncing" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "syncing" | "done" | "error">(
+    "idle",
+  );
   const [result, setResult] = useState<SyncResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [persisting, setPersisting] = useState(false);
@@ -90,7 +92,9 @@ export const MenuSyncPanel = ({
       try {
         const { data, error: fetchError } = await (supabase as any)
           .from("pos_configs")
-          .select("location_id, api_key, account_id, ordering_api_base, env, provider")
+          .select(
+            "location_id, api_key, account_id, ordering_api_base, env, provider",
+          )
           .eq("store_slug", storeSlug)
           .eq("tenant_id", tenantId)
           .maybeSingle();
@@ -174,7 +178,8 @@ export const MenuSyncPanel = ({
     runSync(true);
   };
 
-  const activeEnv = storeSlug && tenantId && posConfig ? posConfig.env : FALLBACK_CONFIG.env;
+  const activeEnv =
+    storeSlug && tenantId && posConfig ? posConfig.env : FALLBACK_CONFIG.env;
 
   return (
     <Card className="border border-border/60 bg-white/90 shadow-sm">
@@ -198,7 +203,8 @@ export const MenuSyncPanel = ({
           )}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Pull the live menu from Omnivore and match item IDs to your Daze catalog.
+          Pull the live menu from Omnivore and match item IDs to your Daze
+          catalog.
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -291,7 +297,8 @@ export const MenuSyncPanel = ({
             {result.persistResult && (
               <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
                 <CheckCircle className="w-4 h-4 shrink-0" />
-                Saved {result.persistResult.updated}/{result.persistResult.total} item mappings to the catalog.
+                Saved {result.persistResult.updated}/
+                {result.persistResult.total} item mappings to the catalog.
               </div>
             )}
 
@@ -329,7 +336,8 @@ export const MenuSyncPanel = ({
                     >
                       <span>{item.dazeName}</span>
                       <span className="font-mono">
-                        Daze ${item.dazePrice.toFixed(2)} ↔ POS ${item.omnivorePrice?.toFixed(2) ?? "?"}
+                        Daze ${item.dazePrice.toFixed(2)} ↔ POS $
+                        {item.omnivorePrice?.toFixed(2) ?? "?"}
                       </span>
                     </div>
                   ))}

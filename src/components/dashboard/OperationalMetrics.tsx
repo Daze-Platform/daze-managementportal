@@ -102,9 +102,7 @@ export const OperationalMetrics = ({ data }: OperationalMetricsProps) => {
                   <div className="w-16 h-2 bg-gray-200 rounded-full">
                     <div
                       className={`h-2 rounded-full ${
-                        metric.trend === "good"
-                          ? "bg-green-500"
-                          : "bg-accent"
+                        metric.trend === "good" ? "bg-green-500" : "bg-accent"
                       }`}
                       style={{
                         width: `${

@@ -90,7 +90,10 @@ export const Stores = () => {
             {/* List skeleton */}
             <div className="rounded-xl border bg-card shadow overflow-hidden p-4 sm:p-6 space-y-3">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="flex items-center gap-4 p-4 rounded-lg border border-border/50">
+                <div
+                  key={i}
+                  className="flex items-center gap-4 p-4 rounded-lg border border-border/50"
+                >
                   <Skeleton className="h-12 w-12 rounded-xl flex-shrink-0" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 w-40" />

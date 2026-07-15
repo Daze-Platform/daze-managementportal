@@ -46,20 +46,23 @@ interface AuthProviderProps {
 }
 
 const getDefaultProfile = (email: string): UserProfile => ({
-  firstName: email.split('@')[0].split('.')[0] || 'User',
-  lastName: email.split('@')[0].split('.')[1] || '',
+  firstName: email.split("@")[0].split(".")[0] || "User",
+  lastName: email.split("@")[0].split(".")[1] || "",
   email,
-  phone: '',
-  timezone: 'America/Chicago',
-  language: 'English',
-  avatar: ''
+  phone: "",
+  timezone: "America/Chicago",
+  language: "English",
+  avatar: "",
 });
 
 // Use raw fetch instead of the supabase-js query builder. The query builder
 // shares an internal auth lock with auth.* calls, and the very-first navigation
 // after a token refresh can deadlock — the .from().select() promise just never
 // resolves. Raw fetch bypasses the lock entirely.
-const restFetch = async (path: string, accessToken: string): Promise<unknown[] | null> => {
+const restFetch = async (
+  path: string,
+  accessToken: string,
+): Promise<unknown[] | null> => {
   const url = import.meta.env.VITE_SUPABASE_URL;
   const apikey = import.meta.env.VITE_SUPABASE_ANON_KEY;
   if (!url || !apikey) return null;
@@ -67,7 +70,11 @@ const restFetch = async (path: string, accessToken: string): Promise<unknown[] |
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 4000);
     const res = await fetch(`${url}/rest/v1/${path}`, {
-      headers: { Authorization: `Bearer ${accessToken}`, apikey, Accept: 'application/json' },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey,
+        Accept: "application/json",
+      },
       signal: ctrl.signal,
     });
     clearTimeout(timeout);
@@ -78,7 +85,11 @@ const restFetch = async (path: string, accessToken: string): Promise<unknown[] |
   }
 };
 
-const fetchProfile = async (userId: string, email: string, accessToken: string | null): Promise<UserProfile> => {
+const fetchProfile = async (
+  userId: string,
+  email: string,
+  accessToken: string | null,
+): Promise<UserProfile> => {
   let profile: UserProfile = getDefaultProfile(email);
   if (!accessToken) return profile;
 
@@ -88,15 +99,15 @@ const fetchProfile = async (userId: string, email: string, accessToken: string |
   );
   const profileData = profileRows && profileRows[0];
   if (profileData) {
-    const names = ((profileData as any).full_name || '').split(' ');
+    const names = ((profileData as any).full_name || "").split(" ");
     profile = {
-      firstName: names[0] || email.split('@')[0],
-      lastName: names.slice(1).join(' ') || '',
+      firstName: names[0] || email.split("@")[0],
+      lastName: names.slice(1).join(" ") || "",
       email: (profileData as any).email || email,
-      phone: (profileData as any).phone || '',
-      timezone: (profileData as any).timezone || 'America/Chicago',
-      language: (profileData as any).language || 'English',
-      avatar: '',
+      phone: (profileData as any).phone || "",
+      timezone: (profileData as any).timezone || "America/Chicago",
+      language: (profileData as any).language || "English",
+      avatar: "",
     };
   }
 
@@ -132,16 +143,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // If we're on a recovery/invite page, don't treat the session as a normal login.
     // The recovery session must be handled by /reset-password or /accept-invite exclusively.
-    const isRecoveryPage = window.location.pathname.includes('/reset-password')
-      || window.location.pathname.includes('/accept-invite');
+    const isRecoveryPage =
+      window.location.pathname.includes("/reset-password") ||
+      window.location.pathname.includes("/accept-invite");
 
-    const resolveAuthFromSession = async (session: import("@supabase/supabase-js").Session | null) => {
+    const resolveAuthFromSession = async (
+      session: import("@supabase/supabase-js").Session | null,
+    ) => {
       if (!mounted) return;
 
       if (session?.user && isRecoveryPage) {
         // On recovery pages, just unblock loading â don't set isAuthenticated
         // so the app doesn't redirect to /dashboard.
-        if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
+        if (mounted) {
+          setLoading(false);
+          clearTimeout(loadingTimeout);
+        }
         return;
       }
 
@@ -150,16 +167,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserEmail(session.user.email ?? null);
         setUserId(session.user.id);
         try {
-          const profile = await fetchProfile(session.user.id, session.user.email ?? '', session.access_token ?? null);
+          const profile = await fetchProfile(
+            session.user.id,
+            session.user.email ?? "",
+            session.access_token ?? null,
+          );
           if (mounted) setUserProfile(profile);
           // Cache the profile so ProtectedRoute can decide synchronously
           // on subsequent navigations even if fetchProfile is slow.
-          try { localStorage.setItem("userProfile", JSON.stringify(profile)); } catch { /* quota */ }
+          try {
+            localStorage.setItem("userProfile", JSON.stringify(profile));
+          } catch {
+            /* quota */
+          }
         } catch {
-          if (mounted) setUserProfile(getDefaultProfile(session.user.email ?? ''));
+          if (mounted)
+            setUserProfile(getDefaultProfile(session.user.email ?? ""));
         }
         localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("userEmail", session.user.email ?? '');
+        localStorage.setItem("userEmail", session.user.email ?? "");
       } else {
         // No Supabase session â fall back to legacy localStorage auth
         const authStatus = localStorage.getItem("isAuthenticated");
@@ -167,13 +193,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const storedProfile = localStorage.getItem("userProfile");
         const loginTimestamp = localStorage.getItem("loginTimestamp");
         const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
-        const isNotExpired = loginTimestamp && Date.now() - parseInt(loginTimestamp) < thirtyDaysInMs;
+        const isNotExpired =
+          loginTimestamp &&
+          Date.now() - parseInt(loginTimestamp) < thirtyDaysInMs;
 
         if (mounted && authStatus === "true" && email && isNotExpired) {
           setIsAuthenticated(true);
           setUserEmail(email);
           if (storedProfile) {
-            try { setUserProfile(JSON.parse(storedProfile)); } catch { setUserProfile(getDefaultProfile(email)); }
+            try {
+              setUserProfile(JSON.parse(storedProfile));
+            } catch {
+              setUserProfile(getDefaultProfile(email));
+            }
           } else {
             setUserProfile(getDefaultProfile(email));
           }
@@ -195,26 +227,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // FIX: Explicitly call getSession() so we don't rely solely on onAuthStateChange
     // firing on mount. onAuthStateChange may not fire synchronously for the initial
     // session, causing loading to stay true indefinitely.
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!initialResolved.current) {
-        initialResolved.current = true;
-        resolveAuthFromSession(session).catch(() => {
-          // resolveAuthFromSession threw â still unblock
-          if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
-        });
-      }
-    }).catch(() => {
-      // If getSession fails, still unblock the UI
-      if (!initialResolved.current) {
-        initialResolved.current = true;
-        if (mounted) { setLoading(false); clearTimeout(loadingTimeout); }
-      }
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (!initialResolved.current) {
+          initialResolved.current = true;
+          resolveAuthFromSession(session).catch(() => {
+            // resolveAuthFromSession threw â still unblock
+            if (mounted) {
+              setLoading(false);
+              clearTimeout(loadingTimeout);
+            }
+          });
+        }
+      })
+      .catch(() => {
+        // If getSession fails, still unblock the UI
+        if (!initialResolved.current) {
+          initialResolved.current = true;
+          if (mounted) {
+            setLoading(false);
+            clearTimeout(loadingTimeout);
+          }
+        }
+      });
 
     // onAuthStateChange handles subsequent login/logout events
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       // On INITIAL_SESSION event the getSession() call above already handled it â skip
-      if (event === 'INITIAL_SESSION') {
+      if (event === "INITIAL_SESSION") {
         if (!initialResolved.current) {
           initialResolved.current = true;
           resolveAuthFromSession(session);
@@ -225,7 +268,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // For all other events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.) â handle normally
       if (!mounted) return;
 
-      if (event === 'SIGNED_OUT') {
+      if (event === "SIGNED_OUT") {
         setIsAuthenticated(false);
         setUserEmail(null);
         setUserId(null);
@@ -237,7 +280,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // PASSWORD_RECOVERY: do NOT set isAuthenticated â let the /reset-password
       // page handle the session directly. Setting isAuthenticated here would
       // cause the app to redirect to /dashboard before the user can reset.
-      if (event === 'PASSWORD_RECOVERY') {
+      if (event === "PASSWORD_RECOVERY") {
         if (mounted) setLoading(false);
         return;
       }
@@ -247,14 +290,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserEmail(session.user.email ?? null);
         setUserId(session.user.id);
         try {
-          const profile = await fetchProfile(session.user.id, session.user.email ?? '', session.access_token ?? null);
+          const profile = await fetchProfile(
+            session.user.id,
+            session.user.email ?? "",
+            session.access_token ?? null,
+          );
           if (mounted) setUserProfile(profile);
-          try { localStorage.setItem("userProfile", JSON.stringify(profile)); } catch { /* quota */ }
+          try {
+            localStorage.setItem("userProfile", JSON.stringify(profile));
+          } catch {
+            /* quota */
+          }
         } catch {
-          if (mounted) setUserProfile(getDefaultProfile(session.user.email ?? ''));
+          if (mounted)
+            setUserProfile(getDefaultProfile(session.user.email ?? ""));
         }
         localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("userEmail", session.user.email ?? '');
+        localStorage.setItem("userEmail", session.user.email ?? "");
         if (mounted) setLoading(false);
       }
     });

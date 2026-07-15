@@ -46,7 +46,10 @@ interface StoreSelectorProps {
   onStoreChange: (storeId: string) => void;
 }
 
-export const StoreSelector = ({ selectedStoreId, onStoreChange }: StoreSelectorProps) => {
+export const StoreSelector = ({
+  selectedStoreId,
+  onStoreChange,
+}: StoreSelectorProps) => {
   const { stores } = useStores();
 
   return (
@@ -112,7 +115,11 @@ interface SuccessDisplayProps {
   onDone: () => void;
 }
 
-export const SuccessDisplay = ({ result, onImportAnother, onDone }: SuccessDisplayProps) => (
+export const SuccessDisplay = ({
+  result,
+  onImportAnother,
+  onDone,
+}: SuccessDisplayProps) => (
   <Card>
     <CardContent className="text-center py-8">
       <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
@@ -153,7 +160,11 @@ interface ErrorDisplayProps {
   onCancel: () => void;
 }
 
-export const ErrorDisplay = ({ result, onRetry, onCancel }: ErrorDisplayProps) => (
+export const ErrorDisplay = ({
+  result,
+  onRetry,
+  onCancel,
+}: ErrorDisplayProps) => (
   <Card>
     <CardContent className="text-center py-8">
       <AlertCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
@@ -192,12 +203,14 @@ export const PDFUploadSection = ({
       <Upload className="w-10 h-10 mx-auto text-muted-foreground mb-2" />
       <CardTitle className="text-base">Upload PDF Menu</CardTitle>
       <CardDescription className="text-xs">
-        Our AI will extract menu items, prices, and descriptions
-        automatically.
+        Our AI will extract menu items, prices, and descriptions automatically.
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-4">
-      <StoreSelector selectedStoreId={selectedStoreId} onStoreChange={onStoreChange} />
+      <StoreSelector
+        selectedStoreId={selectedStoreId}
+        onStoreChange={onStoreChange}
+      />
       <input
         type="file"
         accept=".pdf"
@@ -230,12 +243,10 @@ export const WebLinkImportSection = ({
   <Card>
     <CardHeader className="text-center pb-2">
       <Globe className="w-10 h-10 mx-auto text-muted-foreground mb-2" />
-      <CardTitle className="text-base">
-        Import from Website
-      </CardTitle>
+      <CardTitle className="text-base">Import from Website</CardTitle>
       <CardDescription className="text-xs">
-        Enter a URL and our AI will scrape the menu structure,
-        items, and images.
+        Enter a URL and our AI will scrape the menu structure, items, and
+        images.
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-4">
@@ -255,7 +266,10 @@ export const WebLinkImportSection = ({
           </div>
         </div>
       </div>
-      <StoreSelector selectedStoreId={selectedStoreId} onStoreChange={onStoreChange} />
+      <StoreSelector
+        selectedStoreId={selectedStoreId}
+        onStoreChange={onStoreChange}
+      />
       <Button onClick={onImport} className="w-full">
         <Globe className="w-4 h-4 mr-2" />
         Analyze & Import Menu
@@ -269,7 +283,13 @@ interface POSImportSectionProps {
   onStoreChange: (storeId: string) => void;
   syncingPOS: string | null;
   onPOSSync: (posId: string) => void;
-  toastPOS: { id: string; name: string; logo: string; connected: boolean; lastSync: string };
+  toastPOS: {
+    id: string;
+    name: string;
+    logo: string;
+    connected: boolean;
+    lastSync: string;
+  };
 }
 
 export const POSImportSection = ({
@@ -288,7 +308,10 @@ export const POSImportSection = ({
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-3">
-      <StoreSelector selectedStoreId={selectedStoreId} onStoreChange={onStoreChange} />
+      <StoreSelector
+        selectedStoreId={selectedStoreId}
+        onStoreChange={onStoreChange}
+      />
 
       <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
         <div className="flex items-center gap-3">
@@ -326,8 +349,8 @@ export const POSImportSection = ({
       <div className="text-xs text-muted-foreground bg-primary/10 p-3 rounded-lg border border-blue-100">
         <p className="font-medium text-primary mb-1">💡 Note</p>
         <p className="text-primary">
-          POS import requires full read/write integration with your
-          POS provider. Contact support to set up new integrations.
+          POS import requires full read/write integration with your POS
+          provider. Contact support to set up new integrations.
         </p>
       </div>
     </CardContent>

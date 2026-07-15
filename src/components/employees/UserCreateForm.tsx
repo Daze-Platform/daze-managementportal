@@ -267,12 +267,15 @@ export const UserCreateForm = ({
             </div>
           </div>
 
-          {formError && (
-            <p className="text-sm text-red-500">{formError}</p>
-          )}
+          {formError && <p className="text-sm text-red-500">{formError}</p>}
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>

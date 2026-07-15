@@ -7,7 +7,10 @@ interface ProtectedRouteProps {
   allowedRoles?: string[];
 }
 
-export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+  children,
+  allowedRoles,
+}: ProtectedRouteProps) => {
   const { isAuthenticated, loading, userProfile } = useAuth();
 
   // Show loading spinner while checking authentication
@@ -40,7 +43,10 @@ export const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) 
         /* ignore cache miss */
       }
     }
-    if (!userRole || (userRole !== "owner" && !allowedRoles.includes(userRole))) {
+    if (
+      !userRole ||
+      (userRole !== "owner" && !allowedRoles.includes(userRole))
+    ) {
       return <Navigate to="/dashboard" replace />;
     }
   }

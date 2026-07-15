@@ -26,13 +26,19 @@ function loadFilters(): { store: string; dateRange: DateRange | undefined } {
         store: parsed.store || "all",
         dateRange: parsed.dateRange
           ? {
-              from: parsed.dateRange.from ? new Date(parsed.dateRange.from) : undefined,
-              to: parsed.dateRange.to ? new Date(parsed.dateRange.to) : undefined,
+              from: parsed.dateRange.from
+                ? new Date(parsed.dateRange.from)
+                : undefined,
+              to: parsed.dateRange.to
+                ? new Date(parsed.dateRange.to)
+                : undefined,
             }
           : { from: new Date(), to: new Date() },
       };
     }
-  } catch { /* ignore corrupt localStorage */ }
+  } catch {
+    /* ignore corrupt localStorage */
+  }
   return { store: "all", dateRange: { from: new Date(), to: new Date() } };
 }
 
@@ -43,11 +49,16 @@ function saveFilters(store: string, dateRange: DateRange | undefined) {
       JSON.stringify({
         store,
         dateRange: dateRange
-          ? { from: dateRange.from?.toISOString(), to: dateRange.to?.toISOString() }
+          ? {
+              from: dateRange.from?.toISOString(),
+              to: dateRange.to?.toISOString(),
+            }
           : null,
       }),
     );
-  } catch { /* ignore quota errors */ }
+  } catch {
+    /* ignore quota errors */
+  }
 }
 
 export const FilterProvider: React.FC<FilterProviderProps> = ({ children }) => {

@@ -734,7 +734,6 @@ export const MenuImport = () => {
     }, 2800);
   };
 
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>

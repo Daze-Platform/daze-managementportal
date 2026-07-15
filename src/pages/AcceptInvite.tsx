@@ -19,7 +19,9 @@ export default function AcceptInvite() {
 
   useEffect(() => {
     // Supabase fires SIGNED_IN after exchanging the invite token from the URL hash
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN" || event === "PASSWORD_RECOVERY") {
         setSessionReady(true);
       }
@@ -55,7 +57,10 @@ export default function AcceptInvite() {
       return;
     }
 
-    toast({ title: "Welcome to Daze!", description: "Your account is ready. Taking you to the dashboard." });
+    toast({
+      title: "Welcome to Daze!",
+      description: "Your account is ready. Taking you to the dashboard.",
+    });
     navigate("/dashboard");
   };
 
@@ -64,16 +69,29 @@ export default function AcceptInvite() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-xl shadow-xl p-8">
           <div className="flex justify-center mb-6">
-            <img src="/daze-logo.png" alt="Daze" className="h-10" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            <img
+              src="/daze-logo.png"
+              alt="Daze"
+              className="h-10"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
           </div>
 
-          <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Welcome to Daze</h1>
-          <p className="text-sm text-gray-500 text-center mb-6">Set a password to activate your account.</p>
+          <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
+            Welcome to Daze
+          </h1>
+          <p className="text-sm text-gray-500 text-center mb-6">
+            Set a password to activate your account.
+          </p>
 
           {!sessionReady ? (
             <div className="text-center py-6">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3" />
-              <p className="text-sm text-gray-500">Verifying your invitation…</p>
+              <p className="text-sm text-gray-500">
+                Verifying your invitation…
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,9 +113,15 @@ export default function AcceptInvite() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>

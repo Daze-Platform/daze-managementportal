@@ -45,7 +45,9 @@ export const Layout = ({ children }: LayoutProps) => {
       setTimeout(updateViewportHeight, 100);
     };
 
-    const onOrientationChange = () => { setTimeout(checkScreenSize, 100); };
+    const onOrientationChange = () => {
+      setTimeout(checkScreenSize, 100);
+    };
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
@@ -87,7 +89,10 @@ export const Layout = ({ children }: LayoutProps) => {
 
         {/* Main content with page transitions */}
         <main className="flex-1 overflow-hidden relative">
-          <div ref={scrollContainerRef} className="h-full overflow-y-auto scroll-container bg-muted/30">
+          <div
+            ref={scrollContainerRef}
+            className="h-full overflow-y-auto scroll-container bg-muted/30"
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

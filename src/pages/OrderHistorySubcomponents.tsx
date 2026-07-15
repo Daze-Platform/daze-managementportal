@@ -48,7 +48,9 @@ export const OrderFilters = ({
           disabled={isLoading}
           className="h-10"
         >
-          <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw
+            className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
           Refresh
         </Button>
       </div>
@@ -142,7 +144,10 @@ export const PaginationControls = ({
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
-      <Select value={itemsPerPage.toString()} onValueChange={onItemsPerPageChange}>
+      <Select
+        value={itemsPerPage.toString()}
+        onValueChange={onItemsPerPageChange}
+      >
         <SelectTrigger className="w-32 h-10">
           <SelectValue />
         </SelectTrigger>

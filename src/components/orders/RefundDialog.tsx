@@ -61,7 +61,9 @@ export const RefundDialog = ({
   const [partialAmount, setPartialAmount] = useState("");
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
-  const [voidResult, setVoidResult] = useState<"success" | "error" | null>(null);
+  const [voidResult, setVoidResult] = useState<"success" | "error" | null>(
+    null,
+  );
   const [voidError, setVoidError] = useState<string | null>(null);
 
   if (!order) return null;
@@ -128,7 +130,9 @@ export const RefundDialog = ({
           });
           if (!voidRes.ok) {
             const body = await voidRes.json().catch(() => ({}));
-            throw new Error(body.error || `Omnivore void failed (${voidRes.status})`);
+            throw new Error(
+              body.error || `Omnivore void failed (${voidRes.status})`,
+            );
           }
           setVoidResult("success");
         } catch (voidErr: any) {
@@ -340,7 +344,10 @@ export const RefundDialog = ({
         {voidResult === "error" && (
           <div className="flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>Refund recorded, but Omnivore ticket void failed: {voidError}. Void manually in the POS.</span>
+            <span>
+              Refund recorded, but Omnivore ticket void failed: {voidError}.
+              Void manually in the POS.
+            </span>
           </div>
         )}
 

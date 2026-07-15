@@ -60,7 +60,9 @@ export const useDispatchLog = (tenantId: string | null, limit = 50) => {
     setLoading(true);
     const { data, error: err } = await supabase
       .from("dispatch_decisions")
-      .select("id, order_id, tenant_id, decided_at, mode, chosen_courier_id, outcome, eligible_count, eligible_summary, error_message")
+      .select(
+        "id, order_id, tenant_id, decided_at, mode, chosen_courier_id, outcome, eligible_count, eligible_summary, error_message",
+      )
       .eq("tenant_id", tenantId)
       .order("decided_at", { ascending: false })
       .limit(limit);
@@ -81,8 +83,13 @@ export const useDispatchLog = (tenantId: string | null, limit = 50) => {
       .channel(`mgmt-dispatch-log-${tenantId}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "dispatch_decisions", filter: `tenant_id=eq.${tenantId}` },
-        () => refetch()
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "dispatch_decisions",
+          filter: `tenant_id=eq.${tenantId}`,
+        },
+        () => refetch(),
       )
       .subscribe();
     return () => {

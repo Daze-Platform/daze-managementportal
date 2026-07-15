@@ -88,7 +88,6 @@ export const ModernOrdersList = ({
     orderId: string,
     cardRef: React.RefObject<HTMLDivElement>,
   ) => {
-
     if (cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
       setCardPosition({

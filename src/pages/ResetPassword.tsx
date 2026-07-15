@@ -45,7 +45,10 @@ export default function ResetPassword() {
 
       // Fallback: implicit hash fragment (legacy or non-PKCE flows)
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      if (hashParams.get("type") === "recovery" && hashParams.has("access_token")) {
+      if (
+        hashParams.get("type") === "recovery" &&
+        hashParams.has("access_token")
+      ) {
         setSessionReady(true);
         setVerifying(false);
         return;
@@ -77,7 +80,9 @@ export default function ResetPassword() {
     // Timeout guard — if updateUser hangs >12s, surface an error instead of staying stuck
     const timeout = setTimeout(() => {
       setLoading(false);
-      setError("Request timed out. Please try again or request a new reset link.");
+      setError(
+        "Request timed out. Please try again or request a new reset link.",
+      );
     }, 12000);
 
     try {
@@ -92,9 +97,14 @@ export default function ResetPassword() {
           msg.toLowerCase().includes("invalid") ||
           msg.toLowerCase().includes("session")
         ) {
-          setError("This reset link has expired. Please request a new one from the login page.");
+          setError(
+            "This reset link has expired. Please request a new one from the login page.",
+          );
         } else {
-          setError(msg || "Failed to update password. Please request a new reset link.");
+          setError(
+            msg ||
+              "Failed to update password. Please request a new reset link.",
+          );
         }
         return;
       }
@@ -119,7 +129,9 @@ export default function ResetPassword() {
       src="/daze-logo.png"
       alt="Daze"
       className="h-10"
-      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+      onError={(e) => {
+        (e.target as HTMLImageElement).style.display = "none";
+      }}
     />
   );
 
@@ -127,7 +139,9 @@ export default function ResetPassword() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 text-center">
-          <div className="flex justify-center mb-6"><DazeLogo /></div>
+          <div className="flex justify-center mb-6">
+            <DazeLogo />
+          </div>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3" />
           <p className="text-sm text-gray-500">Verifying reset link…</p>
         </div>
@@ -139,10 +153,15 @@ export default function ResetPassword() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 text-center">
-          <div className="flex justify-center mb-6"><DazeLogo /></div>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">Link expired or already used</h1>
+          <div className="flex justify-center mb-6">
+            <DazeLogo />
+          </div>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
+            Link expired or already used
+          </h1>
           <p className="text-sm text-gray-500 mb-6">
-            Reset links are single-use and expire after 1 hour. Request a fresh one from the login page.
+            Reset links are single-use and expire after 1 hour. Request a fresh
+            one from the login page.
           </p>
           <Button onClick={() => navigate("/login")} className="w-full h-11">
             Back to sign in
@@ -156,7 +175,9 @@ export default function ResetPassword() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-xl shadow-xl p-8">
-          <div className="flex justify-center mb-6"><DazeLogo /></div>
+          <div className="flex justify-center mb-6">
+            <DazeLogo />
+          </div>
 
           <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
             Set new password
@@ -186,7 +207,11 @@ export default function ResetPassword() {
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>

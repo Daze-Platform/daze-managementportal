@@ -38,7 +38,13 @@ import { useStores } from "@/contexts/StoresContext";
 
 // ---------- helpers ----------
 
-type StatusKey = "new" | "progress" | "ready" | "fulfillment" | "fulfilled" | "all";
+type StatusKey =
+  | "new"
+  | "progress"
+  | "ready"
+  | "fulfillment"
+  | "fulfilled"
+  | "all";
 
 const STATUS_META: Record<
   StatusKey,
@@ -110,7 +116,7 @@ function minutesAgo(createdAt?: string): number {
   if (!createdAt) return 0;
   return Math.max(
     0,
-    Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000)
+    Math.floor((Date.now() - new Date(createdAt).getTime()) / 60000),
   );
 }
 
@@ -124,7 +130,7 @@ function fmtMins(mins: number): string {
 
 function flattenOrders(
   data: OrderData,
-  keys: StatusKey[]
+  keys: StatusKey[],
 ): { order: Order; tab: StatusKey }[] {
   const out: { order: Order; tab: StatusKey }[] = [];
   for (const k of keys) {
@@ -133,12 +139,8 @@ function flattenOrders(
     }
   }
   out.sort((a, b) => {
-    const aT = a.order.createdAt
-      ? new Date(a.order.createdAt).getTime()
-      : 0;
-    const bT = b.order.createdAt
-      ? new Date(b.order.createdAt).getTime()
-      : 0;
+    const aT = a.order.createdAt ? new Date(a.order.createdAt).getTime() : 0;
+    const bT = b.order.createdAt ? new Date(b.order.createdAt).getTime() : 0;
     return bT - aT;
   });
   return out;
@@ -367,9 +369,7 @@ function OrderDetailSheet({
               <User className="w-4 h-4 text-muted-foreground" />
             </div>
             <div>
-              <p className="text-sm font-medium">
-                {order.customer || "Guest"}
-              </p>
+              <p className="text-sm font-medium">{order.customer || "Guest"}</p>
               <p className="text-xs text-muted-foreground">{order.type}</p>
             </div>
           </div>
@@ -424,8 +424,8 @@ function OrderDetailSheet({
               <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg">
                 <AlertTriangle className="w-4 h-4" />
                 <span>
-                  This order has been waiting <strong>{fmtMins(age)}</strong>{" "}
-                  — check with kitchen staff
+                  This order has been waiting <strong>{fmtMins(age)}</strong> —
+                  check with kitchen staff
                 </span>
               </div>
             </>
@@ -467,7 +467,7 @@ export const ActiveOrders = () => {
 
   const allOrders = useMemo(
     () => flattenOrders(orderData, PIPELINE_KEYS),
-    [orderData]
+    [orderData],
   );
 
   const storeFiltered = useMemo(() => {
@@ -486,16 +486,12 @@ export const ActiveOrders = () => {
     (getOrderTypeCount("ready") || 0) +
     (getOrderTypeCount("fulfillment") || 0);
 
-  const allActiveOrders = storeFiltered.filter(
-    (o) => o.tab !== "fulfilled"
-  );
-  const completedOrders = storeFiltered.filter(
-    (o) => o.tab === "fulfilled"
-  );
+  const allActiveOrders = storeFiltered.filter((o) => o.tab !== "fulfilled");
+  const completedOrders = storeFiltered.filter((o) => o.tab === "fulfilled");
 
   const totalRevenue = storeFiltered.reduce(
     (sum, o) => sum + parsePrice(o.order.items),
-    0
+    0,
   );
 
   const avgWaitMins =
@@ -503,8 +499,8 @@ export const ActiveOrders = () => {
       ? Math.round(
           allActiveOrders.reduce(
             (sum, o) => sum + minutesAgo(o.order.createdAt),
-            0
-          ) / allActiveOrders.length
+            0,
+          ) / allActiveOrders.length,
         )
       : 0;
 
@@ -517,10 +513,9 @@ export const ActiveOrders = () => {
   const lateOrderIds = new Set(
     storeFiltered
       .filter(
-        (o) =>
-          o.tab !== "fulfilled" && minutesAgo(o.order.createdAt) > 15
+        (o) => o.tab !== "fulfilled" && minutesAgo(o.order.createdAt) > 15,
       )
-      .map((o) => o.order.id)
+      .map((o) => o.order.id),
   );
 
   const lateCount = lateOrderIds.size;
@@ -537,7 +532,6 @@ export const ActiveOrders = () => {
   return (
     <div className="min-h-screen w-full bg-background">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-5">
-
         {/* --- Header --- */}
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -555,10 +549,7 @@ export const ActiveOrders = () => {
             </p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <Select
-              value={selectedStore}
-              onValueChange={setSelectedStore}
-            >
+            <Select value={selectedStore} onValueChange={setSelectedStore}>
               <SelectTrigger className="w-[140px] sm:w-[160px] h-9 text-sm">
                 <SelectValue />
               </SelectTrigger>
@@ -604,9 +595,13 @@ export const ActiveOrders = () => {
             icon={Clock}
             label="Avg Wait"
             value={fmtMins(avgWaitMins)}
-            sub={allActiveOrders.length > 0 ? "across active" : "no active orders"}
+            sub={
+              allActiveOrders.length > 0 ? "across active" : "no active orders"
+            }
             iconBg={avgWaitMins > 15 ? "bg-red-500" : "bg-amber-500"}
-            topBorder={avgWaitMins > 15 ? "border-t-red-400" : "border-t-amber-400"}
+            topBorder={
+              avgWaitMins > 15 ? "border-t-red-400" : "border-t-amber-400"
+            }
           />
           <KpiCard
             icon={TrendingUp}
@@ -632,9 +627,7 @@ export const ActiveOrders = () => {
               statusKey={k}
               count={pipelineCounts[k]}
               active={statusFilter === k}
-              onClick={() =>
-                setStatusFilter(statusFilter === k ? "all" : k)
-              }
+              onClick={() => setStatusFilter(statusFilter === k ? "all" : k)}
             />
           ))}
         </div>
@@ -648,7 +641,9 @@ export const ActiveOrders = () => {
           >
             <AlertTriangle className="w-4 h-4 flex-shrink-0" />
             <div className="text-sm">
-              <strong>{lateCount} order{lateCount > 1 ? "s" : ""}</strong>{" "}
+              <strong>
+                {lateCount} order{lateCount > 1 ? "s" : ""}
+              </strong>{" "}
               waiting more than 15 minutes — check with kitchen
             </div>
             <Button

@@ -70,7 +70,9 @@ export const ResortVenueMapping = () => {
       if (mapData && storeData) {
         const storeMap = Object.fromEntries(storeData.map((s) => [s.id, s]));
         setMappings(
-          mapData.map((m) => ({ ...m, store: storeMap[m.store_id] })).filter((m) => m.store),
+          mapData
+            .map((m) => ({ ...m, store: storeMap[m.store_id] }))
+            .filter((m) => m.store),
         );
       }
     } catch (err) {
@@ -88,7 +90,10 @@ export const ResortVenueMapping = () => {
     mappings.filter((m) => m.resort_id === resortId).map((m) => m.store);
 
   const unassignedStores = (resortId: string) =>
-    allStores.filter((s) => !mappings.some((m) => m.resort_id === resortId && m.store_id === s.id));
+    allStores.filter(
+      (s) =>
+        !mappings.some((m) => m.resort_id === resortId && m.store_id === s.id),
+    );
 
   const handleRemove = async (storeId: number, resortId: string) => {
     const { error } = await supabase
@@ -98,11 +103,17 @@ export const ResortVenueMapping = () => {
       .eq("resort_id", resortId);
 
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: error.message });
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
       return;
     }
 
-    setMappings((prev) => prev.filter((m) => !(m.store_id === storeId && m.resort_id === resortId)));
+    setMappings((prev) =>
+      prev.filter((m) => !(m.store_id === storeId && m.resort_id === resortId)),
+    );
     toast({ title: "Venue removed from resort" });
   };
 
@@ -116,11 +127,18 @@ export const ResortVenueMapping = () => {
     });
 
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: error.message });
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
     } else {
       const store = allStores.find((s) => s.id === storeId);
       if (store) {
-        setMappings((prev) => [...prev, { store_id: storeId, resort_id: selectedResortId, store }]);
+        setMappings((prev) => [
+          ...prev,
+          { store_id: storeId, resort_id: selectedResortId, store },
+        ]);
       }
       toast({ title: "Venue assigned to resort" });
       setAssignDialogOpen(false);
@@ -145,7 +163,9 @@ export const ResortVenueMapping = () => {
       {resorts.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
           <Building2 className="h-10 w-10 mx-auto mb-3 opacity-30" />
-          <p>No resorts found. Add a resort in the Destinations section first.</p>
+          <p>
+            No resorts found. Add a resort in the Destinations section first.
+          </p>
         </div>
       )}
 
@@ -159,13 +179,18 @@ export const ResortVenueMapping = () => {
                   <Building2 className="h-5 w-5 text-primary" />
                   <CardTitle className="text-base">{resort.name}</CardTitle>
                   {resort.location && (
-                    <span className="text-xs text-muted-foreground">{resort.location}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {resort.location}
+                    </span>
                   )}
                 </div>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => { setSelectedResortId(resort.id); setAssignDialogOpen(true); }}
+                  onClick={() => {
+                    setSelectedResortId(resort.id);
+                    setAssignDialogOpen(true);
+                  }}
                 >
                   <Plus className="h-4 w-4 mr-1" />
                   Assign Venue
@@ -174,11 +199,17 @@ export const ResortVenueMapping = () => {
             </CardHeader>
             <CardContent>
               {assigned.length === 0 ? (
-                <p className="text-sm text-muted-foreground italic">No venues assigned yet.</p>
+                <p className="text-sm text-muted-foreground italic">
+                  No venues assigned yet.
+                </p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {assigned.map((store) => (
-                    <Badge key={store.id} variant="secondary" className="flex items-center gap-1 pr-1">
+                    <Badge
+                      key={store.id}
+                      variant="secondary"
+                      className="flex items-center gap-1 pr-1"
+                    >
                       <Store className="h-3 w-3" />
                       {store.name}
                       <button
@@ -204,7 +235,8 @@ export const ResortVenueMapping = () => {
             <DialogTitle>Assign Venue to Resort</DialogTitle>
           </DialogHeader>
           <div className="space-y-2 py-2">
-            {selectedResortId && unassignedStores(selectedResortId).length === 0 ? (
+            {selectedResortId &&
+            unassignedStores(selectedResortId).length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
                 All venues are already assigned to this resort.
               </p>
@@ -218,18 +250,31 @@ export const ResortVenueMapping = () => {
                   <div>
                     <p className="font-medium text-sm">{store.name}</p>
                     {store.address && (
-                      <p className="text-xs text-muted-foreground">{store.address}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {store.address}
+                      </p>
                     )}
                   </div>
-                  <Button size="sm" onClick={() => handleAssign(store.id)} disabled={saving}>
-                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Assign"}
+                  <Button
+                    size="sm"
+                    onClick={() => handleAssign(store.id)}
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Assign"
+                    )}
                   </Button>
                 </div>
               ))
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAssignDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setAssignDialogOpen(false)}
+            >
               Close
             </Button>
           </DialogFooter>

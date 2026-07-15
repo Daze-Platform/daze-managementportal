@@ -6,7 +6,9 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  throw new Error("Missing required Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set");
+  throw new Error(
+    "Missing required Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set",
+  );
 }
 
 // Import the supabase client like this:
@@ -18,7 +20,8 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 // access token, so it queues behind auth). Disabling the lock means token
 // refreshes can race, which is fine — the auth server handles concurrent
 // refreshes idempotently — and unblocks every data query on first paint.
-const passthroughLock = <R,>(_n: string, _t: number, fn: () => Promise<R>) => fn();
+const passthroughLock = <R>(_n: string, _t: number, fn: () => Promise<R>) =>
+  fn();
 
 export const supabase = createClient<Database>(
   SUPABASE_URL,

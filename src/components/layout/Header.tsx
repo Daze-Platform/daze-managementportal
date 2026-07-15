@@ -374,14 +374,12 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
         sessionStorage.removeItem(key);
       }
     });
-
   };
 
   const handleViewAllNotifications = () => {
     setNotificationPopoverOpen(false); // Close the popover
     navigate("/notifications");
   };
-
 
   return (
     <header
@@ -432,7 +430,10 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-96 p-4 shadow-2xl border border-gray-200 bg-white rounded-xl mr-2 sm:mr-4 z-50" align="end">
+          <PopoverContent
+            className="w-96 p-4 shadow-2xl border border-gray-200 bg-white rounded-xl mr-2 sm:mr-4 z-50"
+            align="end"
+          >
             <NotificationsPanel
               notifications={notifications}
               unreadCount={unreadCount}
@@ -447,7 +448,10 @@ export const Header = ({ onToggleSidebar, isHidden = false }: HeaderProps) => {
 
         {/* User Profile - mobile optimized */}
         <div className="ml-4 sm:ml-6">
-          <ProfileDropdown userProfile={userProfile} onProfileAction={handleProfileAction} />
+          <ProfileDropdown
+            userProfile={userProfile}
+            onProfileAction={handleProfileAction}
+          />
         </div>
       </div>
     </header>

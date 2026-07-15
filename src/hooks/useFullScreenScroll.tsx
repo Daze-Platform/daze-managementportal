@@ -87,7 +87,9 @@ export const useFullScreenScroll = () => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleViewportChange, { passive: true });
-    window.addEventListener("orientationchange", handleOrientationChange, { passive: true });
+    window.addEventListener("orientationchange", handleOrientationChange, {
+      passive: true,
+    });
 
     // Initialize after a brief delay to ensure proper setup
     setTimeout(() => {

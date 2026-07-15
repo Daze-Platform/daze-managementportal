@@ -34,7 +34,6 @@ const Login = () => {
   const { login, isAuthenticated, loading } = useAuth();
   const { toast } = useToast();
 
-
   useEffect(() => {
     if (!loading && isAuthenticated) {
       navigate("/dashboard", { replace: true });
@@ -80,11 +79,18 @@ const Login = () => {
     // Use edge function — sends token_hash via Resend (no PKCE code_verifier needed,
     // works across any browser/device including email-to-mobile flows)
     const { error } = await supabase.functions.invoke("send-password-reset", {
-      body: { email: forgotEmail, redirectTo: "https://daze-management-hub.vercel.app/reset-password" },
+      body: {
+        email: forgotEmail,
+        redirectTo: "https://daze-management-hub.vercel.app/reset-password",
+      },
     });
     setForgotLoading(false);
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: error.message });
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
     } else {
       setForgotSent(true);
     }
@@ -107,7 +113,9 @@ const Login = () => {
     }
 
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error: authError } = await supabase.auth.signInWithPassword(
+        { email, password },
+      );
 
       if (authError || !data.session) {
         const errorMessage = authError?.message || "Invalid email or password.";
@@ -138,7 +146,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -193,9 +200,7 @@ const Login = () => {
                 />
               </motion.div>
             </ScaleIn>
-            <h1 className="text-2xl font-bold text-foreground">
-              Welcome Back
-            </h1>
+            <h1 className="text-2xl font-bold text-foreground">Welcome Back</h1>
             <CardDescription className="text-muted-foreground">
               Management Hub · Powered by Daze
             </CardDescription>
@@ -279,7 +284,11 @@ const Login = () => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={() => { setShowForgotPassword(true); setForgotEmail(email); setForgotSent(false); }}
+                  onClick={() => {
+                    setShowForgotPassword(true);
+                    setForgotEmail(email);
+                    setForgotSent(false);
+                  }}
                   className="text-sm font-medium text-primary/80 hover:text-primary hover:underline transition-colors py-0.5"
                 >
                   Forgot password?
@@ -386,7 +395,11 @@ const Login = () => {
                 {forgotSent ? (
                   <div className="text-center py-4 space-y-3">
                     <p className="text-sm text-muted-foreground">
-                      Check your inbox at <span className="font-medium text-foreground">{forgotEmail}</span> for the reset link.
+                      Check your inbox at{" "}
+                      <span className="font-medium text-foreground">
+                        {forgotEmail}
+                      </span>{" "}
+                      for the reset link.
                     </p>
                     <Button
                       variant="outline"

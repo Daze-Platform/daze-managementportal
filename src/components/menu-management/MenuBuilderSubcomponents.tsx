@@ -13,7 +13,15 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Trash2, Sparkles, Building2, Pencil, Check, X } from "lucide-react";
+import {
+  Upload,
+  Trash2,
+  Sparkles,
+  Building2,
+  Pencil,
+  Check,
+  X,
+} from "lucide-react";
 import { useStores } from "@/contexts/StoresContext";
 
 interface MenuItem {
@@ -34,14 +42,7 @@ interface MenuFormData {
   venueId?: string;
 }
 
-const categories = [
-  "restaurant",
-  "bar",
-  "cafe",
-  "bakery",
-  "dessert",
-  "drinks",
-];
+const categories = ["restaurant", "bar", "cafe", "bakery", "dessert", "drinks"];
 
 interface MenuMetadataFormProps {
   formData: MenuFormData;
@@ -143,10 +144,7 @@ export const MenuMetadataForm = ({
           <SelectContent>
             {availableVenues.length > 0 ? (
               availableVenues.map((venue) => (
-                <SelectItem
-                  key={venue.id}
-                  value={venue.id.toString()}
-                >
+                <SelectItem key={venue.id} value={venue.id.toString()}>
                   <div className="flex items-center gap-2">
                     <Building2 className="w-4 h-4 text-muted-foreground" />
                     {venue.name}
@@ -161,7 +159,8 @@ export const MenuMetadataForm = ({
           </SelectContent>
         </Select>
         <p className="text-xs text-muted-foreground">
-          Menus can be assigned to specific venues or left unassigned to apply across all venues.
+          Menus can be assigned to specific venues or left unassigned to apply
+          across all venues.
         </p>
       </div>
     </div>
@@ -193,7 +192,7 @@ export const MenuItemForm = ({
       price: 0,
       category: "main",
       available: true,
-    }
+    },
   );
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -267,7 +266,7 @@ export const MenuItemForm = ({
                   <SelectItem key={cat} value={cat}>
                     {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </SelectItem>
-                )
+                ),
               )}
             </SelectContent>
           </Select>
@@ -321,10 +320,7 @@ export const MenuItemForm = ({
       />
 
       <div className="flex gap-2">
-        <Button
-          onClick={() => onSave(currentItem)}
-          className="flex-1"
-        >
+        <Button onClick={() => onSave(currentItem)} className="flex-1">
           <Check className="w-4 h-4 mr-2" />
           {isEditMode ? "Save" : "Add Item"}
         </Button>
@@ -375,7 +371,9 @@ export const MenuItemsList = ({
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-            <span className="text-sm font-semibold">${item.price.toFixed(2)}</span>
+            <span className="text-sm font-semibold">
+              ${item.price.toFixed(2)}
+            </span>
             {!item.available && (
               <Badge variant="secondary" className="text-xs">
                 Out

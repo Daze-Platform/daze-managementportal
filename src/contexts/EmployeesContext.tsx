@@ -62,9 +62,10 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
         .from("employees")
         .select("*")
         .order("created_at", { ascending: false });
-      const { data, error } = resortIds.length > 0
-        ? await query.in("resort_id", resortIds)
-        : await query.eq("resort_id", "no-match");
+      const { data, error } =
+        resortIds.length > 0
+          ? await query.in("resort_id", resortIds)
+          : await query.eq("resort_id", "no-match");
 
       if (error) {
         console.warn("Could not load employees:", error.message);
@@ -127,18 +128,23 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
       // Send invite email if tenantId provided
       if (tenantId) {
         try {
-          const { data: inviteData, error: inviteError } = await supabase.functions.invoke("invite-employee", {
-            body: {
-              email: employeeData.email,
-              name: employeeData.name,
-              role: employeeData.role,
-              tenantId,
-            },
-          });
+          const { data: inviteData, error: inviteError } =
+            await supabase.functions.invoke("invite-employee", {
+              body: {
+                email: employeeData.email,
+                name: employeeData.name,
+                role: employeeData.role,
+                tenantId,
+              },
+            });
           if (inviteError || inviteData?.error) {
-            const msg = inviteData?.error || inviteError?.message || "Unknown error";
+            const msg =
+              inviteData?.error || inviteError?.message || "Unknown error";
             if (msg.includes("already been registered")) {
-              toast.info(employeeData.email + " already has an account — no invite needed.");
+              toast.info(
+                employeeData.email +
+                  " already has an account — no invite needed.",
+              );
             } else {
               toast.error("Invite failed: " + msg);
             }
@@ -146,7 +152,9 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({
             toast.success("Invite sent to " + employeeData.email);
           }
         } catch (inviteErr: any) {
-          toast.error("Could not send invite: " + (inviteErr?.message || "Unknown error"));
+          toast.error(
+            "Could not send invite: " + (inviteErr?.message || "Unknown error"),
+          );
         }
       }
     } catch (error) {

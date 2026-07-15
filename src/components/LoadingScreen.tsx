@@ -12,13 +12,16 @@ export const LoadingScreen = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white gap-8">
       {/* Outer container for logo + ring */}
-      <div className="relative flex items-center justify-center" style={{ width: 96, height: 96 }}>
-
+      <div
+        className="relative flex items-center justify-center"
+        style={{ width: 96, height: 96 }}
+      >
         {/* Soft glow bloom behind logo */}
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(100,160,255,0.22) 0%, rgba(100,160,255,0) 70%)",
+            background:
+              "radial-gradient(circle, rgba(100,160,255,0.22) 0%, rgba(100,160,255,0) 70%)",
             animation: "daze-breath 2s ease-in-out infinite",
           }}
         />

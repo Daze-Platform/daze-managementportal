@@ -69,9 +69,10 @@ export const PromotionsProvider: React.FC<{ children: React.ReactNode }> = ({
         .from("promotions")
         .select("*")
         .order("created_at", { ascending: false });
-      const { data, error } = resortIds.length > 0
-        ? await query.in("resort_id", resortIds)
-        : await query.eq("resort_id", "no-match");
+      const { data, error } =
+        resortIds.length > 0
+          ? await query.in("resort_id", resortIds)
+          : await query.eq("resort_id", "no-match");
 
       if (error) {
         console.warn("Could not load promotions:", error.message);

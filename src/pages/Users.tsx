@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -10,14 +10,14 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -25,12 +25,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { useToast } from '@/hooks/use-toast';
-import { Plus, Loader2, Trash2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useDestination } from '@/contexts/DestinationContext';
-import { useAuth } from '@/contexts/AuthContext';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { Plus, Loader2, Trash2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useDestination } from "@/contexts/DestinationContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 type TeamUser = {
   id: string;
@@ -48,9 +48,9 @@ export const Users = () => {
   const [users, setUsers] = useState<TeamUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteName, setInviteName] = useState('');
-  const [inviteRole, setInviteRole] = useState<string>('staff');
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteName, setInviteName] = useState("");
+  const [inviteRole, setInviteRole] = useState<string>("staff");
   const [inviting, setInviting] = useState(false);
 
   const loadUsers = async () => {
@@ -65,8 +65,9 @@ export const Users = () => {
       }
 
       const { data, error } = await supabase
-        .from('user_tenants')
-        .select(`
+        .from("user_tenants")
+        .select(
+          `
           id,
           role,
           user_id,
@@ -76,12 +77,13 @@ export const Users = () => {
             email,
             full_name
           )
-        `)
-        .eq('tenant_id', tenantId)
-        .order('created_at', { ascending: true });
+        `,
+        )
+        .eq("tenant_id", tenantId)
+        .order("created_at", { ascending: true });
 
       if (error) {
-        console.warn('Could not load tenant members:', error.message);
+        console.warn("Could not load tenant members:", error.message);
         setUsers([]);
         return;
       }
@@ -89,16 +91,16 @@ export const Users = () => {
       if (data) {
         const mapped: TeamUser[] = data.map((m: any) => ({
           id: m.id,
-          name: m.profiles?.full_name || 'User',
-          email: m.profiles?.email || '',
-          role: m.role || 'staff',
-          status: 'Active',
+          name: m.profiles?.full_name || "User",
+          email: m.profiles?.email || "",
+          role: m.role || "staff",
+          status: "Active",
           userId: m.user_id,
         }));
         setUsers(mapped);
       }
     } catch (err) {
-      console.error('Error loading users:', err);
+      console.error("Error loading users:", err);
     } finally {
       setLoading(false);
     }
@@ -110,7 +112,11 @@ export const Users = () => {
 
   const onInvite = async () => {
     if (!inviteEmail) {
-      toast({ variant: 'destructive', title: 'Email required', description: 'Please enter an email address.' });
+      toast({
+        variant: "destructive",
+        title: "Email required",
+        description: "Please enter an email address.",
+      });
       return;
     }
 
@@ -118,32 +124,42 @@ export const Users = () => {
     try {
       const tenantId = userProfile?.tenantId;
       if (!tenantId) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not determine tenant.' });
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not determine tenant.",
+        });
         return;
       }
 
       // Call the invite-employee edge function to properly handle invitations
-      const { data: inviteData, error: inviteError } = await supabase.functions.invoke('invite-employee', {
-        body: {
-          email: inviteEmail,
-          name: inviteName,
-          role: inviteRole,
-          tenantId,
-        },
-      });
+      const { data: inviteData, error: inviteError } =
+        await supabase.functions.invoke("invite-employee", {
+          body: {
+            email: inviteEmail,
+            name: inviteName,
+            role: inviteRole,
+            tenantId,
+          },
+        });
 
       if (inviteError) {
-        const errorMsg = inviteError.message || 'Unknown error';
-        if (errorMsg.includes('already been registered') || errorMsg.includes('already')) {
+        const errorMsg = inviteError.message || "Unknown error";
+        if (
+          errorMsg.includes("already been registered") ||
+          errorMsg.includes("already")
+        ) {
           toast({
-            variant: 'info',
-            title: 'User already has account',
-            description: inviteEmail + ' already has an account — adding to team directly.',
+            variant: "info",
+            title: "User already has account",
+            description:
+              inviteEmail +
+              " already has an account — adding to team directly.",
           });
         } else {
           toast({
-            variant: 'destructive',
-            title: 'Invite failed',
+            variant: "destructive",
+            title: "Invite failed",
             description: errorMsg,
           });
           return;
@@ -151,17 +167,22 @@ export const Users = () => {
       }
 
       if (inviteData?.error) {
-        const errorMsg = inviteData.error || 'Unknown error';
-        if (errorMsg.includes('already been registered') || errorMsg.includes('already')) {
+        const errorMsg = inviteData.error || "Unknown error";
+        if (
+          errorMsg.includes("already been registered") ||
+          errorMsg.includes("already")
+        ) {
           toast({
-            variant: 'info',
-            title: 'User already has account',
-            description: inviteEmail + ' already has an account — adding to team directly.',
+            variant: "info",
+            title: "User already has account",
+            description:
+              inviteEmail +
+              " already has an account — adding to team directly.",
           });
         } else {
           toast({
-            variant: 'destructive',
-            title: 'Invite failed',
+            variant: "destructive",
+            title: "Invite failed",
             description: errorMsg,
           });
           return;
@@ -169,19 +190,23 @@ export const Users = () => {
       }
 
       toast({
-        variant: 'success',
-        title: 'Invitation sent',
+        variant: "success",
+        title: "Invitation sent",
         description: `Invite sent to ${inviteEmail}.`,
       });
 
-      setInviteEmail('');
-      setInviteName('');
-      setInviteRole('staff');
+      setInviteEmail("");
+      setInviteName("");
+      setInviteRole("staff");
       setOpen(false);
       loadUsers();
     } catch (err) {
-      console.error('Invite error:', err);
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to invite user.' });
+      console.error("Invite error:", err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to invite user.",
+      });
     } finally {
       setInviting(false);
     }
@@ -190,27 +215,34 @@ export const Users = () => {
   const onRemoveUser = async (memberId: string) => {
     try {
       const { error } = await supabase
-        .from('user_tenants')
+        .from("user_tenants")
         .delete()
-        .eq('id', memberId);
+        .eq("id", memberId);
 
       if (error) {
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not remove user.' });
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not remove user.",
+        });
         return;
       }
 
-      toast({ variant: 'success', title: 'User removed' });
+      toast({ variant: "success", title: "User removed" });
       loadUsers();
     } catch (err) {
-      console.error('Remove error:', err);
+      console.error("Remove error:", err);
     }
   };
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
-      case 'admin': return 'default';
-      case 'manager': return 'secondary';
-      default: return 'outline';
+      case "admin":
+        return "default";
+      case "manager":
+        return "secondary";
+      default:
+        return "outline";
     }
   };
 
@@ -220,7 +252,9 @@ export const Users = () => {
         <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 flex items-center justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Team Users</h1>
-            <p className="text-sm text-gray-600 mt-1">Manage team access and permissions.</p>
+            <p className="text-sm text-gray-600 mt-1">
+              Manage team access and permissions.
+            </p>
           </div>
 
           <Dialog open={open} onOpenChange={setOpen}>
@@ -233,7 +267,9 @@ export const Users = () => {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Add Team Member</DialogTitle>
-                <DialogDescription>Add a user with role-based access.</DialogDescription>
+                <DialogDescription>
+                  Add a user with role-based access.
+                </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 py-2">
@@ -274,9 +310,13 @@ export const Users = () => {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  Cancel
+                </Button>
                 <Button onClick={onInvite} disabled={inviting}>
-                  {inviting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  {inviting ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : null}
                   Add User
                 </Button>
               </DialogFooter>
@@ -310,7 +350,12 @@ export const Users = () => {
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={getRoleBadgeVariant(user.role)} className="capitalize">{user.role}</Badge>
+                      <Badge
+                        variant={getRoleBadgeVariant(user.role)}
+                        className="capitalize"
+                      >
+                        {user.role}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">{user.status}</Badge>

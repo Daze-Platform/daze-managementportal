@@ -1,6 +1,18 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, User, Settings, LogOut, UserCircle, Clock, X, CheckCircle, AlertCircle, Info } from "lucide-react";
+import {
+  Bell,
+  Search,
+  User,
+  Settings,
+  LogOut,
+  UserCircle,
+  Clock,
+  X,
+  CheckCircle,
+  AlertCircle,
+  Info,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +39,10 @@ interface ProfileDropdownProps {
   onProfileAction: (action: string) => void;
 }
 
-export const ProfileDropdown = ({ userProfile, onProfileAction }: ProfileDropdownProps) => {
+export const ProfileDropdown = ({
+  userProfile,
+  onProfileAction,
+}: ProfileDropdownProps) => {
   const getFullName = () => {
     if (!userProfile) return "User";
     return `${userProfile.firstName} ${userProfile.lastName}`;
@@ -67,7 +82,10 @@ export const ProfileDropdown = ({ userProfile, onProfileAction }: ProfileDropdow
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onProfileAction("logout")} className="text-destructive focus:text-destructive">
+        <DropdownMenuItem
+          onClick={() => onProfileAction("logout")}
+          className="text-destructive focus:text-destructive"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Logout</span>
         </DropdownMenuItem>
@@ -127,7 +145,9 @@ export const NotificationItem = ({
         {getIcon(notification.type)}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <p className={`text-sm font-medium ${notification.unread ? "text-foreground" : "text-muted-foreground"}`}>
+            <p
+              className={`text-sm font-medium ${notification.unread ? "text-foreground" : "text-muted-foreground"}`}
+            >
               {notification.title}
             </p>
             {notification.unread && (

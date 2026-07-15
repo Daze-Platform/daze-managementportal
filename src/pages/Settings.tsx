@@ -96,21 +96,26 @@ export const Settings = () => {
     try {
       const saved = localStorage.getItem("daze_notification_prefs");
       if (saved) return JSON.parse(saved);
-    } catch { /* localStorage may be unavailable */ }
+    } catch {
+      /* localStorage may be unavailable */
+    }
     return { email: true, push: false, sms: true };
   });
 
   useEffect(() => {
-    localStorage.setItem("daze_notification_prefs", JSON.stringify(notifications));
+    localStorage.setItem(
+      "daze_notification_prefs",
+      JSON.stringify(notifications),
+    );
   }, [notifications]);
 
   const [isAddBankDialogOpen, setIsAddBankDialogOpen] = useState(false);
   const [currentPlan, setCurrentPlan] = useState("free");
 
   // Password change state
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
 
   const initialProfileDataRef = useRef<ProfileData | null>(null);
@@ -187,20 +192,29 @@ export const Settings = () => {
       return;
     }
     if (newPassword.length < 8) {
-      toast({ title: "Password must be at least 8 characters", variant: "destructive" });
+      toast({
+        title: "Password must be at least 8 characters",
+        variant: "destructive",
+      });
       return;
     }
     setPasswordLoading(true);
     try {
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
       if (error) throw error;
       toast({ title: "Password updated successfully" });
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
-      toast({ title: "Failed to update password", description: message, variant: "destructive" });
+      toast({
+        title: "Failed to update password",
+        description: message,
+        variant: "destructive",
+      });
     } finally {
       setPasswordLoading(false);
     }
@@ -428,7 +442,9 @@ export const Settings = () => {
           <TabsContent value="destinations" className="space-y-6">
             <DestinationManagement />
             <div>
-              <h3 className="text-sm font-semibold mb-3">Venue Availability by Resort</h3>
+              <h3 className="text-sm font-semibold mb-3">
+                Venue Availability by Resort
+              </h3>
               <ResortVenueMapping />
             </div>
           </TabsContent>
@@ -550,19 +566,39 @@ export const Settings = () => {
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="current-password">Current Password</Label>
-                      <Input id="current-password" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+                      <Input
+                        id="current-password"
+                        type="password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="new-password">New Password</Label>
-                      <Input id="new-password" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                      <Input
+                        id="new-password"
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="confirm-password">
                         Confirm New Password
                       </Label>
-                      <Input id="confirm-password" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                      <Input
+                        id="confirm-password"
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
                     </div>
-                    <Button onClick={handlePasswordChange} disabled={passwordLoading}>{passwordLoading ? "Updating..." : "Update Password"}</Button>
+                    <Button
+                      onClick={handlePasswordChange}
+                      disabled={passwordLoading}
+                    >
+                      {passwordLoading ? "Updating..." : "Update Password"}
+                    </Button>
                   </div>
                 </div>
 
@@ -575,7 +611,18 @@ export const Settings = () => {
                   <p className="text-sm text-gray-500 mb-4">
                     Add an extra layer of security to your account
                   </p>
-                  <Button variant="outline" onClick={() => toast({ title: "Two-factor authentication", description: "2FA setup coming soon. Contact support at support@dazeapp.com to enable it early." })}>Enable 2FA</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      toast({
+                        title: "Two-factor authentication",
+                        description:
+                          "2FA setup coming soon. Contact support at support@dazeapp.com to enable it early.",
+                      })
+                    }
+                  >
+                    Enable 2FA
+                  </Button>
                 </div>
               </CardContent>
             </Card>

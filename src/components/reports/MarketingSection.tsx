@@ -47,13 +47,16 @@ export const MarketingSection = () => {
 
         if (ordersError) throw ordersError;
 
-        const orders: { id: string; guest_email: string | null; created_at: string }[] =
-          ordersRaw ?? [];
+        const orders: {
+          id: string;
+          guest_email: string | null;
+          created_at: string;
+        }[] = ordersRaw ?? [];
 
         const distinctEmails = new Set(
           orders
             .map((o) => o.guest_email)
-            .filter((e): e is string => !!e && e.trim() !== "")
+            .filter((e): e is string => !!e && e.trim() !== ""),
         );
         const newCustomers = distinctEmails.size;
         const activeUsers = orders.length;
@@ -71,7 +74,8 @@ export const MarketingSection = () => {
         for (const row of itemsRaw ?? []) {
           const id = row.item_id as string;
           const name =
-            (row.pos_menu_items as { name?: string } | null)?.name ?? "Unknown Item";
+            (row.pos_menu_items as { name?: string } | null)?.name ??
+            "Unknown Item";
           const qty = typeof row.quantity === "number" ? row.quantity : 1;
           if (!countMap[id]) countMap[id] = { name, count: 0 };
           countMap[id].count += qty;
@@ -86,7 +90,12 @@ export const MarketingSection = () => {
       } catch (err) {
         console.error("MarketingSection fetch error:", err);
         // Fall back to zeroed state so UI doesn't stay blank
-        setData({ newCustomers: 0, activeUsers: 0, menuViews: 0, topItems: [] });
+        setData({
+          newCustomers: 0,
+          activeUsers: 0,
+          menuViews: 0,
+          topItems: [],
+        });
       } finally {
         setLoading(false);
       }
@@ -256,8 +265,8 @@ export const MarketingSection = () => {
               Data source
             </div>
             <div className="text-xs text-green-700">
-              Metrics pulled live from order data. Menu Views estimated at 8x order
-              volume — no view-tracking in DB yet.
+              Metrics pulled live from order data. Menu Views estimated at 8x
+              order volume — no view-tracking in DB yet.
             </div>
           </motion.div>
         </CardContent>

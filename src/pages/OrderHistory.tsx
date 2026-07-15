@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { OrderFilters, StatusBadge, PaginationControls } from "./OrderHistorySubcomponents";
+import {
+  OrderFilters,
+  StatusBadge,
+  PaginationControls,
+} from "./OrderHistorySubcomponents";
 import {
   Table,
   TableBody,
@@ -23,7 +27,13 @@ import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { useToast } from "@/hooks/use-toast";
 import { useStores } from "@/contexts/StoresContext";
-import { format, startOfDay, startOfWeek, startOfMonth, subDays } from "date-fns";
+import {
+  format,
+  startOfDay,
+  startOfWeek,
+  startOfMonth,
+  subDays,
+} from "date-fns";
 import { useResort } from "@/contexts/DestinationContext";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useAuth } from "@/contexts/AuthContext";
@@ -74,7 +84,10 @@ interface Order {
 
 const ITEMS_PER_PAGE_OPTIONS = ["5", "10", "25", "50"];
 
-const STORE_DISPLAY: Record<string, { logo: string; bgColor: string; customLogo?: string }> = {
+const STORE_DISPLAY: Record<
+  string,
+  { logo: string; bgColor: string; customLogo?: string }
+> = {
   "salty-rose": {
     logo: "🌹",
     bgColor: "bg-gradient-to-br from-emerald-700 to-emerald-800",
@@ -91,9 +104,18 @@ const STORE_DISPLAY: Record<string, { logo: string; bgColor: string; customLogo?
 };
 
 function getStoreDisplay(storeName: string | null | undefined) {
-  if (!storeName) return { logo: "🏪", bgColor: "bg-gradient-to-br from-gray-600 to-gray-700" };
+  if (!storeName)
+    return {
+      logo: "🏪",
+      bgColor: "bg-gradient-to-br from-gray-600 to-gray-700",
+    };
   const slug = storeName.toLowerCase().replace(/\s+/g, "-");
-  return STORE_DISPLAY[slug] ?? { logo: "🏪", bgColor: "bg-gradient-to-br from-gray-600 to-gray-700" };
+  return (
+    STORE_DISPLAY[slug] ?? {
+      logo: "🏪",
+      bgColor: "bg-gradient-to-br from-gray-600 to-gray-700",
+    }
+  );
 }
 
 function getDateStart(range: string): Date | null {
@@ -127,7 +149,8 @@ export const OrderHistory = () => {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [selectedStore, setSelectedStore] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedDateRange, setSelectedDateRange] = useState<string>("last7days");
+  const [selectedDateRange, setSelectedDateRange] =
+    useState<string>("last7days");
   const [itemsPerPage, setItemsPerPage] = useState<string>("10");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -153,7 +176,9 @@ export const OrderHistory = () => {
       try {
         let query = supabase
           .from("orders")
-          .select("*, order_items(name, quantity, unit_price), guests(name, email)")
+          .select(
+            "*, order_items(name, quantity, unit_price), guests(name, email)",
+          )
           .eq("tenant_id", tenantId)
           .in("status", ["delivered", "completed", "fulfilled"]);
 
@@ -202,18 +227,24 @@ export const OrderHistory = () => {
   const mappedOrders: Order[] = useMemo(() => {
     return rawOrders.map((row) => {
       const storeDisplay = getStoreDisplay(row.store_name ?? row.store_id);
-      const items: OrderItem[] = (row.order_items ?? []).map((oi: any, idx: number) => ({
-        id: oi.id ?? String(idx),
-        name: oi.name ?? "Item",
-        price: typeof oi.unit_price === "number" ? oi.unit_price : parseFloat(oi.unit_price ?? "0"),
-        quantity: oi.quantity ?? 1,
-      }));
+      const items: OrderItem[] = (row.order_items ?? []).map(
+        (oi: any, idx: number) => ({
+          id: oi.id ?? String(idx),
+          name: oi.name ?? "Item",
+          price:
+            typeof oi.unit_price === "number"
+              ? oi.unit_price
+              : parseFloat(oi.unit_price ?? "0"),
+          quantity: oi.quantity ?? 1,
+        }),
+      );
 
-      const total = typeof row.total_amount === "number"
-        ? `$${row.total_amount.toFixed(2)}`
-        : row.total_amount
-          ? `$${parseFloat(row.total_amount).toFixed(2)}`
-          : "$0.00";
+      const total =
+        typeof row.total_amount === "number"
+          ? `$${row.total_amount.toFixed(2)}`
+          : row.total_amount
+            ? `$${parseFloat(row.total_amount).toFixed(2)}`
+            : "$0.00";
 
       const guestName = row.guests?.name ?? row.customer_name ?? "Guest";
       const statusRaw: string = row.status ?? "completed";
@@ -240,7 +271,9 @@ export const OrderHistory = () => {
         status: statusDisplay,
         items,
         refundStatus: row.refund_status ?? "none",
-        refundAmount: row.refund_amount ? `$${parseFloat(row.refund_amount).toFixed(2)}` : undefined,
+        refundAmount: row.refund_amount
+          ? `$${parseFloat(row.refund_amount).toFixed(2)}`
+          : undefined,
       };
     });
   }, [rawOrders]);
@@ -306,7 +339,9 @@ export const OrderHistory = () => {
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleOrderClick = (order: Order) => {
-    setExpandedOrder(expandedOrder === order.supabase_id ? null : order.supabase_id);
+    setExpandedOrder(
+      expandedOrder === order.supabase_id ? null : order.supabase_id,
+    );
   };
 
   const handleRefundClick = (order: Order, e: React.MouseEvent) => {
@@ -325,7 +360,8 @@ export const OrderHistory = () => {
     } catch (error) {
       toast({
         title: "Refund Failed",
-        description: "There was an error processing the refund. Please try again.",
+        description:
+          "There was an error processing the refund. Please try again.",
         variant: "destructive",
       });
     }
@@ -370,7 +406,11 @@ export const OrderHistory = () => {
         {hasRefund && (
           <span
             className="inline-flex items-center gap-1 rounded-full bg-accent/10 border border-accent/30 px-2.5 py-0.5 text-[11px] font-semibold text-accent tracking-wide"
-            title={isPartialRefund ? `Partial refund ${order.refundAmount}` : `Full refund ${order.refundAmount}`}
+            title={
+              isPartialRefund
+                ? `Partial refund ${order.refundAmount}`
+                : `Full refund ${order.refundAmount}`
+            }
           >
             <DollarSign className="w-3 h-3" />
             {isPartialRefund ? "Partial Refund" : "Refunded"}
@@ -417,7 +457,11 @@ export const OrderHistory = () => {
               <button
                 className="w-8 h-8 flex-shrink-0 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
                 onClick={() => handleOrderClick(order)}
-                aria-label={expandedOrder === order.supabase_id ? "Collapse order details" : "Expand order details"}
+                aria-label={
+                  expandedOrder === order.supabase_id
+                    ? "Collapse order details"
+                    : "Expand order details"
+                }
               >
                 {expandedOrder === order.supabase_id ? (
                   <ChevronDown className="w-4 h-4 text-primary" />
@@ -451,9 +495,7 @@ export const OrderHistory = () => {
               </div>
             </div>
           </div>
-          <div className="pl-[4.25rem]">
-            {getOrderMetaBadges(order)}
-          </div>
+          <div className="pl-[4.25rem]">{getOrderMetaBadges(order)}</div>
         </div>
 
         <div className="p-3 space-y-2">
@@ -538,7 +580,10 @@ export const OrderHistory = () => {
   const LoadingSkeleton = () => (
     <div className="space-y-3 p-4">
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="bg-white rounded-xl p-4 animate-pulse border border-gray-100">
+        <div
+          key={i}
+          className="bg-white rounded-xl p-4 animate-pulse border border-gray-100"
+        >
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-gray-200" />
             <div className="flex-1 space-y-2">
@@ -553,7 +598,8 @@ export const OrderHistory = () => {
   );
 
   // ── Pagination info ────────────────────────────────────────────────────────
-  const startItem = filteredOrders.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
+  const startItem =
+    filteredOrders.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
   const endItem = Math.min(safePage * pageSize, filteredOrders.length);
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -599,7 +645,13 @@ export const OrderHistory = () => {
                 className={`flex ${scrollDirection === "down" && !isAtTop ? "flex-row space-x-2" : "flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3"}`}
               >
                 {/* Date quick-pick */}
-                <Select value={selectedDateRange} onValueChange={(v) => { setSelectedDateRange(v); setDateRange(undefined); }}>
+                <Select
+                  value={selectedDateRange}
+                  onValueChange={(v) => {
+                    setSelectedDateRange(v);
+                    setDateRange(undefined);
+                  }}
+                >
                   <SelectTrigger
                     className={`border-gray-200 bg-white ${scrollDirection === "down" && !isAtTop ? "w-32 h-8 text-xs" : "w-full sm:w-40"}`}
                   >
@@ -644,7 +696,9 @@ export const OrderHistory = () => {
                 </div>
 
                 {/* Search */}
-                <div className={`relative ${scrollDirection === "down" && !isAtTop ? "w-44" : "w-full sm:w-56"}`}>
+                <div
+                  className={`relative ${scrollDirection === "down" && !isAtTop ? "w-44" : "w-full sm:w-56"}`}
+                >
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   <Input
                     value={searchQuery}
@@ -665,7 +719,9 @@ export const OrderHistory = () => {
               <LoadingSkeleton />
             ) : fetchError ? (
               <div className="p-8 text-center">
-                <p className="text-red-600 font-medium mb-1">Failed to load orders</p>
+                <p className="text-red-600 font-medium mb-1">
+                  Failed to load orders
+                </p>
                 <p className="text-sm text-gray-500">{fetchError}</p>
               </div>
             ) : filteredOrders.length === 0 ? (
@@ -673,7 +729,9 @@ export const OrderHistory = () => {
                 <Receipt className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500 font-medium">No orders found</p>
                 <p className="text-sm text-gray-400 mt-1">
-                  {searchQuery ? "Try adjusting your search or filters." : "Completed orders will appear here."}
+                  {searchQuery
+                    ? "Try adjusting your search or filters."
+                    : "Completed orders will appear here."}
                 </p>
               </div>
             ) : (
@@ -687,13 +745,17 @@ export const OrderHistory = () => {
                           <TableHead className="w-8"></TableHead>
                           <TableHead className="font-semibold">Order</TableHead>
                           <TableHead className="font-semibold">Store</TableHead>
-                          <TableHead className="font-semibold">Customer</TableHead>
+                          <TableHead className="font-semibold">
+                            Customer
+                          </TableHead>
                           <TableHead className="font-semibold">Type</TableHead>
                           <TableHead className="font-semibold text-right">
                             Total
                           </TableHead>
                           <TableHead className="font-semibold">Date</TableHead>
-                          <TableHead className="font-semibold">Actions</TableHead>
+                          <TableHead className="font-semibold">
+                            Actions
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -706,7 +768,11 @@ export const OrderHistory = () => {
                               <TableCell>
                                 <button
                                   className="w-8 h-8 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
-                                  aria-label={expandedOrder === order.supabase_id ? "Collapse order details" : "Expand order details"}
+                                  aria-label={
+                                    expandedOrder === order.supabase_id
+                                      ? "Collapse order details"
+                                      : "Expand order details"
+                                  }
                                 >
                                   {expandedOrder === order.supabase_id ? (
                                     <ChevronDown className="w-4 h-4 text-primary" />
@@ -771,12 +837,17 @@ export const OrderHistory = () => {
                                         <span>Order Details</span>
                                       </h4>
                                       <div className="flex items-center space-x-3">
-                                        <Badge variant="outline" className="bg-white">
+                                        <Badge
+                                          variant="outline"
+                                          className="bg-white"
+                                        >
                                           {order.items.length} items
                                         </Badge>
                                         <Button
                                           size="sm"
-                                          onClick={(e) => handleRefundClick(order, e)}
+                                          onClick={(e) =>
+                                            handleRefundClick(order, e)
+                                          }
                                           className="bg-red-600 hover:bg-red-700 text-white flex items-center space-x-2 shadow-sm"
                                         >
                                           <DollarSign className="w-4 h-4" />
@@ -803,7 +874,9 @@ export const OrderHistory = () => {
                                                 </p>
                                                 <p className="font-bold text-gray-900">
                                                   $
-                                                  {(item.price * item.quantity).toFixed(2)}
+                                                  {(
+                                                    item.price * item.quantity
+                                                  ).toFixed(2)}
                                                 </p>
                                               </div>
                                             </div>
@@ -815,7 +888,8 @@ export const OrderHistory = () => {
                                     <div className="bg-white rounded-xl p-3 border border-gray-200">
                                       <div className="flex justify-between items-center">
                                         <span className="font-semibold text-gray-900 text-lg">
-                                          Order Total ({order.items.length} items)
+                                          Order Total ({order.items.length}{" "}
+                                          items)
                                         </span>
                                         <span className="text-xl font-bold text-gray-900">
                                           {order.total}
@@ -837,13 +911,18 @@ export const OrderHistory = () => {
                         <span className="text-sm text-gray-600 font-medium">
                           Show:
                         </span>
-                        <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                        <Select
+                          value={itemsPerPage}
+                          onValueChange={setItemsPerPage}
+                        >
                           <SelectTrigger className="w-20 h-8 border-gray-200 bg-white">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
                             {ITEMS_PER_PAGE_OPTIONS.map((v) => (
-                              <SelectItem key={v} value={v}>{v}</SelectItem>
+                              <SelectItem key={v} value={v}>
+                                {v}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -851,7 +930,8 @@ export const OrderHistory = () => {
                       </div>
                       <div className="flex items-center space-x-4">
                         <span className="text-sm text-gray-600 font-medium">
-                          {startItem}-{endItem} of {filteredOrders.length} orders
+                          {startItem}-{endItem} of {filteredOrders.length}{" "}
+                          orders
                         </span>
                         <div className="flex items-center space-x-1">
                           <Button
@@ -859,7 +939,9 @@ export const OrderHistory = () => {
                             size="sm"
                             className="h-8 w-8 p-0 border-gray-200"
                             disabled={safePage <= 1}
-                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                            onClick={() =>
+                              setCurrentPage((p) => Math.max(1, p - 1))
+                            }
                             aria-label="Previous page"
                           >
                             <ChevronLeft className="w-4 h-4" />
@@ -869,7 +951,9 @@ export const OrderHistory = () => {
                             size="sm"
                             className="h-8 w-8 p-0 border-gray-200"
                             disabled={safePage >= totalPages}
-                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                            onClick={() =>
+                              setCurrentPage((p) => Math.min(totalPages, p + 1))
+                            }
                             aria-label="Next page"
                           >
                             <ChevronRightIcon className="w-4 h-4" />
@@ -884,7 +968,11 @@ export const OrderHistory = () => {
                 <div className="lg:hidden">
                   <div className="p-4 space-y-3">
                     {pagedOrders.map((order, index) => (
-                      <MobileOrderCard key={order.supabase_id} order={order} index={index} />
+                      <MobileOrderCard
+                        key={order.supabase_id}
+                        order={order}
+                        index={index}
+                      />
                     ))}
 
                     {/* Mobile Pagination */}
@@ -892,13 +980,18 @@ export const OrderHistory = () => {
                       <CardContent className="p-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
-                            <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
+                            <Select
+                              value={itemsPerPage}
+                              onValueChange={setItemsPerPage}
+                            >
                               <SelectTrigger className="w-28 h-9 border-gray-200 bg-white">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
                                 {ITEMS_PER_PAGE_OPTIONS.map((v) => (
-                                  <SelectItem key={v} value={v}>{v} per page</SelectItem>
+                                  <SelectItem key={v} value={v}>
+                                    {v} per page
+                                  </SelectItem>
                                 ))}
                               </SelectContent>
                             </Select>
@@ -913,7 +1006,9 @@ export const OrderHistory = () => {
                                 size="sm"
                                 className="h-8 w-8 p-0 border-gray-200"
                                 disabled={safePage <= 1}
-                                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                onClick={() =>
+                                  setCurrentPage((p) => Math.max(1, p - 1))
+                                }
                                 aria-label="Previous page"
                               >
                                 <ChevronLeft className="w-4 h-4" />
@@ -923,7 +1018,11 @@ export const OrderHistory = () => {
                                 size="sm"
                                 className="h-8 w-8 p-0 border-gray-200"
                                 disabled={safePage >= totalPages}
-                                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                onClick={() =>
+                                  setCurrentPage((p) =>
+                                    Math.min(totalPages, p + 1),
+                                  )
+                                }
                                 aria-label="Next page"
                               >
                                 <ChevronRightIcon className="w-4 h-4" />

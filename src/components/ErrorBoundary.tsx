@@ -49,7 +49,11 @@ export class ErrorBoundary extends React.Component<
             keeps happening, let the team know.
           </p>
           <div className="flex gap-3">
-            <Button variant="outline" className="flex-1" onClick={this.handleHome}>
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={this.handleHome}
+            >
               Go to dashboard
             </Button>
             <Button className="flex-1" onClick={this.handleReload}>

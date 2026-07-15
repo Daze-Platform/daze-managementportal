@@ -7,7 +7,13 @@ import { RecentReviews } from "@/components/ratings/RecentReviews";
 import { motion } from "framer-motion";
 import { Star, Calendar } from "lucide-react";
 
-import { format, parse, isWithinInterval, startOfDay, endOfDay } from "date-fns";
+import {
+  format,
+  parse,
+  isWithinInterval,
+  startOfDay,
+  endOfDay,
+} from "date-fns";
 
 const ratingsData = {
   overall: 4.7,
@@ -124,10 +130,14 @@ export const Ratings = () => {
     ? ratingsData.recentReviews.filter((review) => {
         try {
           // Parse dates like "Dec 15, 2024 7:30PM" or "Dec 14, 2024 9:45AM"
-          const reviewDate = new Date(review.date.replace(/(\d{1,2}:\d{2})(AM|PM)/i, '$1 $2'));
+          const reviewDate = new Date(
+            review.date.replace(/(\d{1,2}:\d{2})(AM|PM)/i, "$1 $2"),
+          );
           if (isNaN(reviewDate.getTime())) return true; // keep if unparseable
           const from = startOfDay(dateRange.from!);
-          const to = dateRange.to ? endOfDay(dateRange.to) : endOfDay(dateRange.from!);
+          const to = dateRange.to
+            ? endOfDay(dateRange.to)
+            : endOfDay(dateRange.from!);
           return isWithinInterval(reviewDate, { start: from, end: to });
         } catch {
           return true;

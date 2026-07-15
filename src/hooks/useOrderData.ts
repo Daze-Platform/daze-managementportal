@@ -143,8 +143,7 @@ function transformDbOrder(dbOrder: DbOrder): Order {
       ? `${itemCount} item${itemCount > 1 ? "s" : ""}, ${formatCents(dbOrder.total_cents)}`
       : `Order #${dbOrder.order_number}, ${formatCents(dbOrder.total_cents)}`;
 
-  const customer =
-    dbOrder.guests?.name || `Guest #${dbOrder.order_number}`;
+  const customer = dbOrder.guests?.name || `Guest #${dbOrder.order_number}`;
 
   // Estimated time
   let estimatedTime = "15 min";
@@ -304,8 +303,7 @@ export const useOrderData = () => {
 
         const order = { ...updated[fromTab][idx] };
         if (toTab === "fulfilled" || toTab === "fulfillment") {
-          order.status =
-            order.type === "Delivery" ? "Delivered" : "Picked Up";
+          order.status = order.type === "Delivery" ? "Delivered" : "Picked Up";
           order.icon = "\u2705";
           order.iconBg =
             order.type === "Delivery" ? "bg-green-500" : "bg-primary";
@@ -369,11 +367,7 @@ export const useOrderData = () => {
   );
 
   const scheduleOrder = useCallback(
-    (
-      orderId: string,
-      fromTab: keyof OrderData,
-      scheduledTime: string,
-    ) => {
+    (orderId: string, fromTab: keyof OrderData, scheduledTime: string) => {
       // Schedule is local-only (no DB column yet)
       setOrderData((prev) => {
         const updated = { ...prev };

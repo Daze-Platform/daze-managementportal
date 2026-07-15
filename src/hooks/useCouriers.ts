@@ -31,7 +31,10 @@ const fromRow = async (rows: RawRow[]): Promise<CourierRosterRow[]> => {
   const { data: counts } = await supabase
     .from("orders")
     .select("courier_user_id")
-    .in("courier_user_id", rows.map((r) => r.courier_id))
+    .in(
+      "courier_user_id",
+      rows.map((r) => r.courier_id),
+    )
     .in("status", ["pending", "confirmed", "preparing", "ready", "delivering"]);
 
   const countMap = new Map<string, number>();
@@ -41,7 +44,9 @@ const fromRow = async (rows: RawRow[]): Promise<CourierRosterRow[]> => {
   });
 
   return rows.map((r) => {
-    const lastMs = r.last_location_update ? new Date(r.last_location_update).getTime() : 0;
+    const lastMs = r.last_location_update
+      ? new Date(r.last_location_update).getTime()
+      : 0;
     return {
       courierId: r.courier_id,
       tenantId: r.tenant_id,
@@ -70,7 +75,9 @@ export const useCouriers = (tenantId: string | null) => {
     setLoading(true);
     const { data, error: err } = await supabase
       .from("courier_status")
-      .select("courier_id, tenant_id, is_available, latitude, longitude, last_location_update, current_delivery_id")
+      .select(
+        "courier_id, tenant_id, is_available, latitude, longitude, last_location_update, current_delivery_id",
+      )
       .eq("tenant_id", tenantId)
       .order("last_location_update", { ascending: false, nullsFirst: false });
     if (err) {
@@ -90,13 +97,23 @@ export const useCouriers = (tenantId: string | null) => {
       .channel(`mgmt-couriers-${tenantId}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "courier_status", filter: `tenant_id=eq.${tenantId}` },
-        () => refetch()
+        {
+          event: "*",
+          schema: "public",
+          table: "courier_status",
+          filter: `tenant_id=eq.${tenantId}`,
+        },
+        () => refetch(),
       )
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "orders", filter: `tenant_id=eq.${tenantId}` },
-        () => refetch()
+        {
+          event: "*",
+          schema: "public",
+          table: "orders",
+          filter: `tenant_id=eq.${tenantId}`,
+        },
+        () => refetch(),
       )
       .subscribe();
     return () => {
@@ -109,16 +126,23 @@ export const useCouriers = (tenantId: string | null) => {
 
 export const useReassignOrder = () => {
   const { user } = useAuth();
-  return useCallback(async (orderId: string, courierId: string | null): Promise<{ ok: boolean; reason?: string }> => {
-    if (!user) return { ok: false, reason: "Not signed in" };
-    const { data, error } = await supabase
-      .from("orders")
-      .update({ courier_user_id: courierId })
-      .eq("id", orderId)
-      .select("id")
-      .maybeSingle();
-    if (error) return { ok: false, reason: error.message };
-    if (!data) return { ok: false, reason: "Order not found or RLS blocked update" };
-    return { ok: true };
-  }, [user]);
+  return useCallback(
+    async (
+      orderId: string,
+      courierId: string | null,
+    ): Promise<{ ok: boolean; reason?: string }> => {
+      if (!user) return { ok: false, reason: "Not signed in" };
+      const { data, error } = await supabase
+        .from("orders")
+        .update({ courier_user_id: courierId })
+        .eq("id", orderId)
+        .select("id")
+        .maybeSingle();
+      if (error) return { ok: false, reason: error.message };
+      if (!data)
+        return { ok: false, reason: "Order not found or RLS blocked update" };
+      return { ok: true };
+    },
+    [user],
+  );
 };

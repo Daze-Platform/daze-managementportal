@@ -465,7 +465,9 @@ export const OptionSetEditorDialog: React.FC<OptionSetEditorDialogProps> = ({
                         className="h-8 w-8 shrink-0"
                         onClick={() => handleToggleDefault(option.id)}
                         aria-label={
-                          option.isDefault ? "Remove as default option" : "Set as default"
+                          option.isDefault
+                            ? "Remove as default option"
+                            : "Set as default"
                         }
                       >
                         <Star

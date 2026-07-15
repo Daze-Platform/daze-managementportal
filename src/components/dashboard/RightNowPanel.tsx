@@ -63,7 +63,9 @@ async function fetchMetrics(tenantId?: string): Promise<RightNowMetrics> {
     const { data: queueData, error: queueError } = await queueQuery;
 
     const inQueue =
-      !queueError && queueData ? (queueData.length ?? 0) : generateFallback("inQueue");
+      !queueError && queueData
+        ? (queueData.length ?? 0)
+        : generateFallback("inQueue");
 
     // 2. Completed today
     let completedQuery = sb
@@ -76,12 +78,13 @@ async function fetchMetrics(tenantId?: string): Promise<RightNowMetrics> {
     const { data: completedData, error: completedError } = await completedQuery;
 
     const completedToday =
-      !completedError && completedData ? completedData.length : generateFallback("completedToday");
+      !completedError && completedData
+        ? completedData.length
+        : generateFallback("completedToday");
 
     // 3. Avg ticket time
     let avgTicketMinutes: number | null = null;
     if (!completedError && completedData && completedData.length > 0) {
-       
       const times = completedData
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((row: any) => {
@@ -99,7 +102,8 @@ async function fetchMetrics(tenantId?: string): Promise<RightNowMetrics> {
         );
       }
     }
-    if (avgTicketMinutes === null) avgTicketMinutes = generateFallback("avgTicket") as number;
+    if (avgTicketMinutes === null)
+      avgTicketMinutes = generateFallback("avgTicket") as number;
 
     // 4. Pacing — completed yesterday up to same time of day
     let yestQuery = sb
@@ -275,14 +279,11 @@ export const RightNowPanel = ({ tenantId }: RightNowPanelProps) => {
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {metricCards.map((card, index) => {
           const Icon = card.icon;
-          const rawValue =
-            metrics[card.key as keyof RightNowMetrics];
+          const rawValue = metrics[card.key as keyof RightNowMetrics];
 
           // Special rendering for pacing card
           const isPacing = card.key === "pacing";
-          const pacingStyle = isPacing
-            ? getPacingStyle(metrics.pacing)
-            : null;
+          const pacingStyle = isPacing ? getPacingStyle(metrics.pacing) : null;
 
           return (
             <motion.div

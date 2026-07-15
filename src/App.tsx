@@ -17,18 +17,42 @@ import { LoadingScreen } from "./components/LoadingScreen";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
 // Lazy load all page components for code-splitting
-const Dashboard = lazy(() => import("./pages/Dashboard").then(m => ({ default: m.Dashboard })));
-const Stores = lazy(() => import("./pages/Stores").then(m => ({ default: m.Stores })));
-const ActiveOrders = lazy(() => import("./pages/ActiveOrders").then(m => ({ default: m.ActiveOrders })));
-const OrderHistory = lazy(() => import("./pages/OrderHistory").then(m => ({ default: m.OrderHistory })));
-const MenuManagement = lazy(() => import("./pages/MenuManagement").then(m => ({ default: m.MenuManagement })));
-const Reports = lazy(() => import("./pages/Reports").then(m => ({ default: m.Reports })));
-const Payouts = lazy(() => import("./pages/Payouts").then(m => ({ default: m.Payouts })));
-const Employees = lazy(() => import("./pages/Employees").then(m => ({ default: m.Employees })));
-const Ratings = lazy(() => import("./pages/Ratings").then(m => ({ default: m.Ratings })));
-const Promotions = lazy(() => import("./pages/Promotions").then(m => ({ default: m.Promotions })));
-const Settings = lazy(() => import("./pages/Settings").then(m => ({ default: m.Settings })));
-const Notifications = lazy(() => import("./pages/Notifications").then(m => ({ default: m.Notifications })));
+const Dashboard = lazy(() =>
+  import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })),
+);
+const Stores = lazy(() =>
+  import("./pages/Stores").then((m) => ({ default: m.Stores })),
+);
+const ActiveOrders = lazy(() =>
+  import("./pages/ActiveOrders").then((m) => ({ default: m.ActiveOrders })),
+);
+const OrderHistory = lazy(() =>
+  import("./pages/OrderHistory").then((m) => ({ default: m.OrderHistory })),
+);
+const MenuManagement = lazy(() =>
+  import("./pages/MenuManagement").then((m) => ({ default: m.MenuManagement })),
+);
+const Reports = lazy(() =>
+  import("./pages/Reports").then((m) => ({ default: m.Reports })),
+);
+const Payouts = lazy(() =>
+  import("./pages/Payouts").then((m) => ({ default: m.Payouts })),
+);
+const Employees = lazy(() =>
+  import("./pages/Employees").then((m) => ({ default: m.Employees })),
+);
+const Ratings = lazy(() =>
+  import("./pages/Ratings").then((m) => ({ default: m.Ratings })),
+);
+const Promotions = lazy(() =>
+  import("./pages/Promotions").then((m) => ({ default: m.Promotions })),
+);
+const Settings = lazy(() =>
+  import("./pages/Settings").then((m) => ({ default: m.Settings })),
+);
+const Notifications = lazy(() =>
+  import("./pages/Notifications").then((m) => ({ default: m.Notifications })),
+);
 const Couriers = lazy(() => import("./pages/Couriers"));
 const DispatchLog = lazy(() => import("./pages/DispatchLog"));
 const Login = lazy(() => import("./pages/Login"));

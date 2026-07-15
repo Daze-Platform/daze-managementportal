@@ -124,41 +124,41 @@ export const OrdersListLayout = ({
             <EightySixBoard />
           </div>
         ) : (
-        <div className="h-full flex bg-black">
-          {/* Orders List */}
-          <div
-            className={`${showOrderDetails ? "w-1/2" : "w-full"} h-full bg-black`}
-          >
-            <ModernOrdersList
-              orders={filteredOrders}
-              selectedOrder={selectedOrder}
-              onOrderSelect={onOrderSelect}
-              activeTab={activeTab}
-              isWaitingForOrders={isWaitingForOrders}
-              onOrderUpdate={onOrderUpdate}
-              onViewDetails={onViewDetails}
-              selectedStore={selectedStore}
-              orderStatus={orderStatus}
-              onResumeOrders={onResumeOrders}
-            />
-          </div>
+          <div className="h-full flex bg-black">
+            {/* Orders List */}
+            <div
+              className={`${showOrderDetails ? "w-1/2" : "w-full"} h-full bg-black`}
+            >
+              <ModernOrdersList
+                orders={filteredOrders}
+                selectedOrder={selectedOrder}
+                onOrderSelect={onOrderSelect}
+                activeTab={activeTab}
+                isWaitingForOrders={isWaitingForOrders}
+                onOrderUpdate={onOrderUpdate}
+                onViewDetails={onViewDetails}
+                selectedStore={selectedStore}
+                orderStatus={orderStatus}
+                onResumeOrders={onResumeOrders}
+              />
+            </div>
 
-          {/* Desktop Order Details Panel */}
-          {showOrderDetails && orderDetailsId && (
-            <DesktopOrderDetailsPanel
-              selectedOrder={orderDetailsId}
-              activeTab={activeTab}
-              onOrderUpdate={onOrderUpdate}
-              onClose={() => {
-                // Clear both selected order and viewing details
-                onOrderSelect("");
-                if (onViewDetails) {
-                  onViewDetails("");
-                }
-              }}
-            />
-          )}
-        </div>
+            {/* Desktop Order Details Panel */}
+            {showOrderDetails && orderDetailsId && (
+              <DesktopOrderDetailsPanel
+                selectedOrder={orderDetailsId}
+                activeTab={activeTab}
+                onOrderUpdate={onOrderUpdate}
+                onClose={() => {
+                  // Clear both selected order and viewing details
+                  onOrderSelect("");
+                  if (onViewDetails) {
+                    onViewDetails("");
+                  }
+                }}
+              />
+            )}
+          </div>
         )}
       </div>
     </div>

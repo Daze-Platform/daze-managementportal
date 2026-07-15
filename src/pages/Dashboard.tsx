@@ -8,10 +8,7 @@ import { EmployeeDeliveries } from "@/components/dashboard/EmployeeDeliveries";
 import { PerformanceAlerts } from "@/components/dashboard/PerformanceAlerts";
 import { CustomerSatisfaction } from "@/components/dashboard/CustomerSatisfaction";
 import { OperationalMetrics } from "@/components/dashboard/OperationalMetrics";
-import {
-  resortDashboardData,
-  employeeDeliveries,
-} from "@/data/dashboardData";
+import { resortDashboardData, employeeDeliveries } from "@/data/dashboardData";
 import { useDashboardLiveData } from "@/hooks/useDashboardLiveData";
 import { useFilters } from "@/contexts/FilterContext";
 import { useResort } from "@/contexts/DestinationContext";
@@ -52,8 +49,7 @@ export const Dashboard = () => {
   }
 
   // Log filter changes for debugging
-  useEffect(() => {
-  }, [selectedStore, selectedDateRange]);
+  useEffect(() => {}, [selectedStore, selectedDateRange]);
 
   return (
     <div className="min-h-full bg-gray-50 page-fade-in">
@@ -82,7 +78,11 @@ export const Dashboard = () => {
             storeName={liveData.storeName}
             revenueData={liveData.revenueData}
             orderData={liveData.orderData}
-            topItems={liveData.topItems.length > 0 ? liveData.topItems : currentStoreData.topItems}
+            topItems={
+              liveData.topItems.length > 0
+                ? liveData.topItems
+                : currentStoreData.topItems
+            }
           />
         </div>
 

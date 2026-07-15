@@ -12,7 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { RefreshCw, Save, Plug, CheckCircle, AlertTriangle } from "lucide-react";
+import {
+  RefreshCw,
+  Save,
+  Plug,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -103,7 +109,11 @@ export const POSIntegration = () => {
       .upsert(payload, { onConflict: "tenant_id,store_slug" });
 
     if (error) {
-      toast({ title: "Save failed", description: error.message, variant: "destructive" });
+      toast({
+        title: "Save failed",
+        description: error.message,
+        variant: "destructive",
+      });
     } else {
       toast({
         title: "POS configuration saved",
@@ -125,16 +135,19 @@ export const POSIntegration = () => {
             POS Integration
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Configure Omnivore API credentials for each outlet. When Olo activates your
-            production account, update the Location ID, API Key, and switch to{" "}
-            <strong>Live</strong> mode.
+            Configure Omnivore API credentials for each outlet. When Olo
+            activates your production account, update the Location ID, API Key,
+            and switch to <strong>Live</strong> mode.
           </p>
         </CardHeader>
         <CardContent className="space-y-5">
           {/* Store selector */}
           <div>
             <Label htmlFor="store-select">Outlet</Label>
-            <Select value={selectedStoreSlug} onValueChange={setSelectedStoreSlug}>
+            <Select
+              value={selectedStoreSlug}
+              onValueChange={setSelectedStoreSlug}
+            >
               <SelectTrigger id="store-select" className="mt-1">
                 <SelectValue placeholder="Select outlet..." />
               </SelectTrigger>
@@ -171,10 +184,16 @@ export const POSIntegration = () => {
                     Sandbox
                   </Button>
                   <Button
-                    variant={config.env === "production" ? "default" : "outline"}
+                    variant={
+                      config.env === "production" ? "default" : "outline"
+                    }
                     size="sm"
                     onClick={() => setConfig({ ...config, env: "production" })}
-                    className={config.env === "production" ? "bg-green-600 hover:bg-green-700" : ""}
+                    className={
+                      config.env === "production"
+                        ? "bg-green-600 hover:bg-green-700"
+                        : ""
+                    }
                   >
                     Live
                   </Button>
@@ -203,7 +222,9 @@ export const POSIntegration = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="omnivore">Omnivore (Micros)</SelectItem>
+                      <SelectItem value="omnivore">
+                        Omnivore (Micros)
+                      </SelectItem>
                       <SelectItem value="toast">Toast</SelectItem>
                     </SelectContent>
                   </Select>
@@ -215,7 +236,9 @@ export const POSIntegration = () => {
                     id="account-id"
                     className="mt-1 font-mono text-sm"
                     value={config.account_id}
-                    onChange={(e) => setConfig({ ...config, account_id: e.target.value })}
+                    onChange={(e) =>
+                      setConfig({ ...config, account_id: e.target.value })
+                    }
                     placeholder="e.g. AixdjR9i"
                   />
                 </div>
@@ -226,7 +249,9 @@ export const POSIntegration = () => {
                     id="location-id"
                     className="mt-1 font-mono text-sm"
                     value={config.location_id}
-                    onChange={(e) => setConfig({ ...config, location_id: e.target.value })}
+                    onChange={(e) =>
+                      setConfig({ ...config, location_id: e.target.value })
+                    }
                     placeholder="e.g. cgX7Lndi"
                   />
                 </div>
@@ -238,7 +263,9 @@ export const POSIntegration = () => {
                     className="mt-1 font-mono text-sm"
                     type="password"
                     value={config.api_key}
-                    onChange={(e) => setConfig({ ...config, api_key: e.target.value })}
+                    onChange={(e) =>
+                      setConfig({ ...config, api_key: e.target.value })
+                    }
                     placeholder="Omnivore API key"
                   />
                 </div>
@@ -249,17 +276,27 @@ export const POSIntegration = () => {
                     id="ordering-base"
                     className="mt-1 font-mono text-sm"
                     value={config.ordering_api_base}
-                    onChange={(e) => setConfig({ ...config, ordering_api_base: e.target.value })}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        ordering_api_base: e.target.value,
+                      })
+                    }
                     placeholder="https://daze-piazza-pizza.vercel.app"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
-                    The Vercel URL for this outlet's ordering app (without trailing slash).
+                    The Vercel URL for this outlet's ordering app (without
+                    trailing slash).
                   </p>
                 </div>
               </div>
 
               <div className="pt-2">
-                <Button onClick={handleSave} disabled={saving} className="gap-2">
+                <Button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="gap-2"
+                >
                   {saving ? (
                     <RefreshCw className="w-4 h-4 animate-spin" />
                   ) : (
@@ -271,9 +308,10 @@ export const POSIntegration = () => {
 
               {config.env === "sandbox" && (
                 <div className="text-xs text-muted-foreground bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
-                  <strong>Sandbox mode:</strong> Syncs against Omnivore's virtual POS — no real
-                  orders fire. When Olo activates your Micros account, paste the real Location ID
-                  and API Key here and switch to <strong>Live</strong>.
+                  <strong>Sandbox mode:</strong> Syncs against Omnivore's
+                  virtual POS — no real orders fire. When Olo activates your
+                  Micros account, paste the real Location ID and API Key here
+                  and switch to <strong>Live</strong>.
                 </div>
               )}
             </>

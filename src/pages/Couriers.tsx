@@ -25,7 +25,10 @@ const loadColor = (n: number) => {
 const StatusPill = ({ row }: { row: CourierRosterRow }) => {
   if (row.isStale) {
     return (
-      <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-300">
+      <Badge
+        variant="outline"
+        className="bg-gray-100 text-gray-600 border-gray-300"
+      >
         <WifiOff className="w-3 h-3 mr-1" />
         Offline (stale)
       </Badge>
@@ -33,14 +36,20 @@ const StatusPill = ({ row }: { row: CourierRosterRow }) => {
   }
   if (!row.isAvailable) {
     return (
-      <Badge variant="outline" className="bg-slate-100 text-slate-600 border-slate-300">
+      <Badge
+        variant="outline"
+        className="bg-slate-100 text-slate-600 border-slate-300"
+      >
         <WifiOff className="w-3 h-3 mr-1" />
         Off duty
       </Badge>
     );
   }
   return (
-    <Badge variant="outline" className="bg-emerald-100 text-emerald-700 border-emerald-300">
+    <Badge
+      variant="outline"
+      className="bg-emerald-100 text-emerald-700 border-emerald-300"
+    >
       <Wifi className="w-3 h-3 mr-1" />
       Online
     </Badge>
@@ -55,7 +64,9 @@ const Couriers = () => {
   const summary = useMemo(() => {
     const online = rows.filter((r) => r.isAvailable && !r.isStale).length;
     const stale = rows.filter((r) => r.isStale).length;
-    const idle = rows.filter((r) => r.isAvailable && !r.isStale && r.activeOrders === 0).length;
+    const idle = rows.filter(
+      (r) => r.isAvailable && !r.isStale && r.activeOrders === 0,
+    ).length;
     const totalActiveOrders = rows.reduce((sum, r) => sum + r.activeOrders, 0);
     return { online, stale, idle, totalActiveOrders };
   }, [rows]);
@@ -80,7 +91,10 @@ const Couriers = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Couriers</h1>
-        <p className="text-sm text-muted-foreground">Live roster of food runners on shift, their load, and last known location.</p>
+        <p className="text-sm text-muted-foreground">
+          Live roster of food runners on shift, their load, and last known
+          location.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -90,15 +104,23 @@ const Couriers = () => {
         </Card>
         <Card className="p-4">
           <div className="text-xs text-muted-foreground">Idle (0 orders)</div>
-          <div className="text-2xl font-bold text-emerald-600">{summary.idle}</div>
+          <div className="text-2xl font-bold text-emerald-600">
+            {summary.idle}
+          </div>
         </Card>
         <Card className="p-4">
-          <div className="text-xs text-muted-foreground">Active orders carried</div>
+          <div className="text-xs text-muted-foreground">
+            Active orders carried
+          </div>
           <div className="text-2xl font-bold">{summary.totalActiveOrders}</div>
         </Card>
         <Card className="p-4">
-          <div className="text-xs text-muted-foreground">Stale (no heartbeat)</div>
-          <div className="text-2xl font-bold text-gray-500">{summary.stale}</div>
+          <div className="text-xs text-muted-foreground">
+            Stale (no heartbeat)
+          </div>
+          <div className="text-2xl font-bold text-gray-500">
+            {summary.stale}
+          </div>
         </Card>
       </div>
 
@@ -116,21 +138,35 @@ const Couriers = () => {
           <tbody className="divide-y divide-border">
             {rows.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">
-                  No couriers on shift yet. They'll appear here as they sign up and toggle online.
+                <td
+                  colSpan={5}
+                  className="px-4 py-12 text-center text-muted-foreground"
+                >
+                  No couriers on shift yet. They'll appear here as they sign up
+                  and toggle online.
                 </td>
               </tr>
             )}
             {rows.map((row) => (
               <tr key={row.courierId} className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-mono text-xs">{fmtCourier(row.courierId)}…</td>
-                <td className="px-4 py-3"><StatusPill row={row} /></td>
+                <td className="px-4 py-3 font-mono text-xs">
+                  {fmtCourier(row.courierId)}…
+                </td>
                 <td className="px-4 py-3">
-                  <Badge variant="outline" className={loadColor(row.activeOrders)}>
-                    {row.activeOrders} {row.activeOrders === 1 ? "order" : "orders"}
+                  <StatusPill row={row} />
+                </td>
+                <td className="px-4 py-3">
+                  <Badge
+                    variant="outline"
+                    className={loadColor(row.activeOrders)}
+                  >
+                    {row.activeOrders}{" "}
+                    {row.activeOrders === 1 ? "order" : "orders"}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">{fmtTime(row.lastLocationUpdate)}</td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  {fmtTime(row.lastLocationUpdate)}
+                </td>
                 <td className="px-4 py-3 text-muted-foreground">
                   {row.latitude != null && row.longitude != null ? (
                     <span className="inline-flex items-center gap-1">
@@ -148,7 +184,9 @@ const Couriers = () => {
       </Card>
 
       <p className="text-xs text-muted-foreground">
-        Tip: a roster MAP (live courier pins on a Mapbox 3D resort map) is a follow-up — Mapbox isn't installed in this project yet. The data here is the same source the courier portal uses.
+        Tip: a roster MAP (live courier pins on a Mapbox 3D resort map) is a
+        follow-up — Mapbox isn't installed in this project yet. The data here is
+        the same source the courier portal uses.
       </p>
     </div>
   );

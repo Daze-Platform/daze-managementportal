@@ -204,7 +204,11 @@ export const ModernOrderCard = ({
                     e.stopPropagation();
                     setIsExpanded(!isExpanded);
                   }}
-                  aria-label={isExpanded ? "Collapse order details" : "Expand order details"}
+                  aria-label={
+                    isExpanded
+                      ? "Collapse order details"
+                      : "Expand order details"
+                  }
                 >
                   {isExpanded ? (
                     <ChevronUp className="w-5 h-5 text-muted-foreground" />
@@ -312,7 +316,11 @@ export const ModernOrderCard = ({
                   {order.customer || "Guest Order"}
                 </p>
 
-                <OrderCardStatusInfo activeTab={activeTab} time={order.time} createdAt={order.createdAt} />
+                <OrderCardStatusInfo
+                  activeTab={activeTab}
+                  time={order.time}
+                  createdAt={order.createdAt}
+                />
               </div>
             </div>
 
