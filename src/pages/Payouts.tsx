@@ -88,6 +88,11 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
     let cancelled = false;
     setLoading(true);
 
+    // Safety net: never leave the UI in a permanent loading state.
+    const safetyTimeout = setTimeout(() => {
+      if (!cancelled) setLoading(false);
+    }, 8000);
+
     (async () => {
       try {
         let query = supabase
@@ -109,7 +114,7 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
         if (cancelled) return;
         if (qErr) throw qErr;
 
-        const mapped: PayoutRow[] = (rows ?? []).map((row: any) => {
+        const mapped: PayoutRow[] = (rows ?? []).map((row: Record<string, unknown>) => {
           const subtotalCents: number = row.subtotal_cents ?? 0;
           const totalCents: number = row.total_cents ?? subtotalCents;
           const serviceFeeCents = Math.round(subtotalCents * 0.1);
@@ -139,7 +144,10 @@ function usePayoutsData(): { data: PayoutRow[]; loading: boolean; error: Error |
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      clearTimeout(safetyTimeout);
+    };
   }, [userProfile?.tenantId, selectedDateRange]);
 
   return { data, loading, error };

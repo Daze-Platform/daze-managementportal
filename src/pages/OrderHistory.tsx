@@ -47,7 +47,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────────────────
 
 interface OrderItem {
   id: string;
@@ -70,7 +70,7 @@ interface Order {
   refundAmount?: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers ───────────────────────────────────────────────────────────────────────────────
 
 const ITEMS_PER_PAGE_OPTIONS = ["5", "10", "25", "50"];
 
@@ -112,7 +112,7 @@ function getDateStart(range: string): Date | null {
   }
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Component ──────────────────────────────────────────────────────────────────────────────
 
 export const OrderHistory = () => {
   const { stores: allStores } = useStores();
@@ -135,11 +135,11 @@ export const OrderHistory = () => {
   const { toast } = useToast();
 
   // Data state
-  const [rawOrders, setRawOrders] = useState<any[]>([]);
+  const [rawOrders, setRawOrders] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  // ── Fetch from Supabase ────────────────────────────────────────────────────
+  // ── Fetch from Supabase ────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!tenantId) {
       setLoading(false);
@@ -186,9 +186,9 @@ export const OrderHistory = () => {
         } else {
           setRawOrders(data ?? []);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("OrderHistory unexpected error:", err);
-        setFetchError(err?.message ?? "Unknown error");
+        setFetchError(err instanceof Error ? err.message : "Unknown error");
         setRawOrders([]);
       } finally {
         setLoading(false);
@@ -198,11 +198,11 @@ export const OrderHistory = () => {
     fetchOrders();
   }, [tenantId, selectedDateRange, dateRange]);
 
-  // ── Map raw Supabase rows → Order shape ───────────────────────────────────
+  // ── Map raw Supabase rows → Order shape ──────────────────────────────────────────────────
   const mappedOrders: Order[] = useMemo(() => {
     return rawOrders.map((row) => {
       const storeDisplay = getStoreDisplay(row.store_name ?? row.store_id);
-      const items: OrderItem[] = (row.order_items ?? []).map((oi: any, idx: number) => ({
+      const items: OrderItem[] = (row.order_items ?? []).map((oi: Record<string, unknown>, idx: number) => ({
         id: oi.id ?? String(idx),
         name: oi.name ?? "Item",
         price: typeof oi.unit_price === "number" ? oi.unit_price : parseFloat(oi.unit_price ?? "0"),
@@ -245,7 +245,7 @@ export const OrderHistory = () => {
     });
   }, [rawOrders]);
 
-  // ── Client-side filters (store, status, search) ───────────────────────────
+  // ── Client-side filters (store, status, search) ───────────────────────────────────────────
   const availableStores = allStores.filter(
     (store, index, self) => index === self.findIndex((s) => s.id === store.id),
   );
@@ -290,7 +290,7 @@ export const OrderHistory = () => {
     return result;
   }, [mappedOrders, selectedStatus, searchQuery]);
 
-  // ── Pagination ─────────────────────────────────────────────────────────────
+  // ── Pagination ─────────────────────────────────────────────────────────────────────────────
   const pageSize = parseInt(itemsPerPage, 10) || 10;
   const totalPages = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
@@ -304,7 +304,7 @@ export const OrderHistory = () => {
     setCurrentPage(1);
   }, [selectedStatus, searchQuery, selectedDateRange, dateRange, itemsPerPage]);
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
+  // ── Handlers ──────────────────────────────────────────────────────────────────────────────
   const handleOrderClick = (order: Order) => {
     setExpandedOrder(expandedOrder === order.supabase_id ? null : order.supabase_id);
   };
@@ -315,7 +315,7 @@ export const OrderHistory = () => {
     setIsRefundDialogOpen(true);
   };
 
-  const handleRefund = async (refundData: any) => {
+  const handleRefund = async (refundData: { amount: number; orderId: string }) => {
     try {
       toast({
         variant: "default",
@@ -331,7 +331,7 @@ export const OrderHistory = () => {
     }
   };
 
-  // ── Sub-components ─────────────────────────────────────────────────────────
+  // ── Sub-components ────────────────────────────────────────────────────────────────────────────
   const getOrderMetaBadges = (order: Order) => {
     const isPartialRefund = order.refundStatus === "partial";
     const isFullRefund = order.refundStatus === "full";
@@ -534,7 +534,7 @@ export const OrderHistory = () => {
     </Card>
   );
 
-  // ── Loading skeleton ───────────────────────────────────────────────────────
+  // ── Loading skeleton ────────────────────────────────────────────────────────────────────────
   const LoadingSkeleton = () => (
     <div className="space-y-3 p-4">
       {[...Array(5)].map((_, i) => (
@@ -552,11 +552,11 @@ export const OrderHistory = () => {
     </div>
   );
 
-  // ── Pagination info ────────────────────────────────────────────────────────
+  // ── Pagination info ──────────────────────────────────────────────────────────────────────────
   const startItem = filteredOrders.length === 0 ? 0 : (safePage - 1) * pageSize + 1;
   const endItem = Math.min(safePage * pageSize, filteredOrders.length);
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 page-fade-in">
       <div className="min-h-screen flex flex-col">
