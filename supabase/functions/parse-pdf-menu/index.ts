@@ -206,7 +206,7 @@ async function extractTextFromPDF(pdfBuffer: ArrayBuffer): Promise<string> {
   const pdfString = decoder.decode(uint8Array);
   
   // Extract text between parentheses and brackets (common PDF text markers)
-  const textMatches = pdfString.match(/\((.*?)\)/g);
+  const textMatches = pdfString.match(/(\(.*?\))/g);
   if (textMatches) {
     text = textMatches
       .map(match => match.slice(1, -1)) // Remove parentheses
@@ -312,7 +312,7 @@ ${menuText}
     }
     
     // Ensure all items have required fields
-    parsed.items = parsed.items.map((item: any) => ({
+    parsed.items = parsed.items.map((item: Record<string, unknown>) => ({
       name: item.name || 'Unknown Item',
       description: item.description || '',
       price: typeof item.price === 'number' ? item.price : 0,

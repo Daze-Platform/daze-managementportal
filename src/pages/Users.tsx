@@ -87,7 +87,7 @@ export const Users = () => {
       }
 
       if (data) {
-        const mapped: TeamUser[] = data.map((m: any) => ({
+        const mapped: TeamUser[] = data.map((m: Record<string, unknown>) => ({
           id: m.id,
           name: m.profiles?.full_name || 'User',
           email: m.profiles?.email || '',

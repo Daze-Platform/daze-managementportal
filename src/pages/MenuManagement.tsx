@@ -19,7 +19,7 @@ export interface Menu {
   is_active: boolean;
   store_id?: number;
   resort_id?: string;
-  items: any[];
+  items: unknown[];
   created_at?: string;
   updated_at?: string;
 }
@@ -140,7 +140,7 @@ export const MenuManagement = () => {
     }
   };
 
-  const handleMenuBuilderSave = async (menuData: any) => {
+  const handleMenuBuilderSave = async (menuData: { name: string; description?: string; category: string; isActive: boolean; items: unknown[] }) => {
     if (editingMenu) {
       await updateMenu({
         ...editingMenu,
