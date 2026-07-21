@@ -45,7 +45,6 @@ export const OrderCardActions = ({
     e.stopPropagation();
     if (onOrderUpdate) {
       onOrderUpdate(order.id, action);
-    } else {
     }
   };
 

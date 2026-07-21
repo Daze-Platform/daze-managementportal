@@ -50,8 +50,12 @@ import {
   Calendar as CalendarIcon,
   Filter,
   Download,
+  Loader2,
+  AlertCircle,
+  FileBarChart,
 } from "lucide-react";
 import { exportReportsToPdf } from "@/utils/reportsPdfExport";
+import { EmptyState } from "@/components/EmptyState";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -120,6 +124,18 @@ export const Reports = () => {
   );
 
   const { data: reportsData, loading, error } = useReportsData();
+
+  // A reports payload is "empty" when every section returned no rows.
+  // The downstream section components were built against a richer object
+  // shape than the RPC actually returns, so empty arrays would crash them.
+  const hasReportsData =
+    !!reportsData &&
+    (
+      (Array.isArray(reportsData.revenue) && reportsData.revenue.length > 0) ||
+      (Array.isArray(reportsData.productMix) && reportsData.productMix.length > 0) ||
+      (Array.isArray(reportsData.customerAnalytics) && reportsData.customerAnalytics.length > 0) ||
+      (Array.isArray(reportsData.paymentTypes) && reportsData.paymentTypes.length > 0)
+    );
 
   // Get all stores regardless of resort assignment and remove duplicates
   const availableStores = allStores.filter(
@@ -436,13 +452,22 @@ export const Reports = () => {
       {/* Content */}
       {loading ? (
         <div className='flex items-center justify-center h-64'>
-            <p>Loading reports...</p>
+          <Loader2 className='w-6 h-6 animate-spin text-muted-foreground' />
+          <span className='ml-3 text-muted-foreground'>Loading reports…</span>
         </div>
       ) : error ? (
-        <div className='flex items-center justify-center h-64'>
-            <p>Error loading reports.</p>
-        </div>
-      ) : reportsData ? (
+        <EmptyState
+          icon={AlertCircle}
+          title="We couldn't load your reports"
+          description="There was a problem fetching report data. Refresh the page to try again."
+        />
+      ) : !hasReportsData ? (
+        <EmptyState
+          icon={FileBarChart}
+          title="No data for this range"
+          description="Try a wider date range or a different venue to see reporting data."
+        />
+      ) : (
       <div>
         <motion.div
           variants={containerVariants}
@@ -652,7 +677,7 @@ export const Reports = () => {
           )}
         </motion.div>
       </div>
-      ) : null}
+      )}
     </div>
   );
 };

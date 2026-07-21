@@ -64,12 +64,10 @@ export const useFullScreenScroll = () => {
         );
         scrollContainers.forEach((container) => {
           if (container instanceof HTMLElement) {
-            const containerStyle = container.style as any;
-            containerStyle.height = "100%";
-            containerStyle.overflowY = "auto";
-            // Use bracket notation for vendor-prefixed properties
-            containerStyle["-webkit-overflow-scrolling"] = "touch";
-            containerStyle.paddingBottom = `calc(env(safe-area-inset-bottom) + 20px)`;
+            container.style.height = "100%";
+            container.style.overflowY = "auto";
+            container.style.setProperty("-webkit-overflow-scrolling", "touch");
+            container.style.paddingBottom = `calc(env(safe-area-inset-bottom) + 20px)`;
           }
         });
 
@@ -83,21 +81,13 @@ export const useFullScreenScroll = () => {
     handleViewportChange();
 
     // Add event listeners with enhanced options for better mobile performance
+    const handleOrientationChange = () => {
+      setTimeout(handleViewportChange, 200);
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleViewportChange, { passive: true });
-    window.addEventListener(
-      "orientationchange",
-      () => {
-        setTimeout(handleViewportChange, 200);
-      },
-      { passive: true },
-    );
-
-    // iOS specific event listeners
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      window.addEventListener("touchstart", () => {}, { passive: true });
-      window.addEventListener("touchmove", () => {}, { passive: true });
-    }
+    window.addEventListener("orientationchange", handleOrientationChange, { passive: true });
 
     // Initialize after a brief delay to ensure proper setup
     setTimeout(() => {
@@ -108,7 +98,7 @@ export const useFullScreenScroll = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleViewportChange);
-      window.removeEventListener("orientationchange", handleViewportChange);
+      window.removeEventListener("orientationchange", handleOrientationChange);
     };
   }, [updateScrollDirection]);
 

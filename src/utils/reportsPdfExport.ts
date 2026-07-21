@@ -134,7 +134,7 @@ export const exportReportsToPdf = async ({
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    yPosition = doc.lastAutoTable.finalY + 15;
   }
 
   // Revenue Section
@@ -161,7 +161,7 @@ export const exportReportsToPdf = async ({
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    yPosition = doc.lastAutoTable.finalY + 15;
   }
 
   // Payment Types Section
@@ -177,7 +177,7 @@ export const exportReportsToPdf = async ({
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 15;
+    yPosition = doc.lastAutoTable.finalY + 15;
   }
 
   // Cancellations Section
@@ -196,7 +196,7 @@ export const exportReportsToPdf = async ({
       margin: { left: 14, right: 14 },
     });
 
-    yPosition = (doc as any).lastAutoTable.finalY + 10;
+    yPosition = doc.lastAutoTable.finalY + 10;
 
     if (data.cancellations.reasons && data.cancellations.reasons.length > 0) {
       autoTable(doc, {
@@ -212,12 +212,12 @@ export const exportReportsToPdf = async ({
         margin: { left: 14, right: 14 },
       });
 
-      yPosition = (doc as any).lastAutoTable.finalY + 15;
+      yPosition = doc.lastAutoTable.finalY + 15;
     }
   }
 
   // Add footer on each page
-  const pageCount = (doc as any).internal.getNumberOfPages();
+  const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(10);

@@ -11,6 +11,7 @@ import {
   Users,
   Star,
   Gift,
+  Truck,
 } from "lucide-react";
 import { useOrderManagement } from "@/hooks/useOrderManagement";
 import { SidebarMenuItem } from "./SidebarMenuItem";
@@ -37,7 +38,14 @@ const menuItems = [
     submenu: [
       { name: "Active orders", path: "/orders/active" },
       { name: "Order history", path: "/orders/history" },
+      { name: "Dispatch log", path: "/dispatch-log" },
     ],
+  },
+  {
+    name: "Couriers",
+    path: "/couriers",
+    icon: Truck,
+    iconClass: "w-4 h-4 sm:w-5 sm:h-5",
   },
   {
     name: "Menus",

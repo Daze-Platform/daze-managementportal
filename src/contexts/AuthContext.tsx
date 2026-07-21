@@ -55,47 +55,59 @@ const getDefaultProfile = (email: string): UserProfile => ({
   avatar: ''
 });
 
-const fetchProfile = async (userId: string, email: string): Promise<UserProfile> => {
-  let profile: UserProfile = getDefaultProfile(email);
-
+// Use raw fetch instead of the supabase-js query builder. The query builder
+// shares an internal auth lock with auth.* calls, and the very-first navigation
+// after a token refresh can deadlock — the .from().select() promise just never
+// resolves. Raw fetch bypasses the lock entirely.
+const restFetch = async (path: string, accessToken: string): Promise<unknown[] | null> => {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const apikey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !apikey) return null;
   try {
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 4000);
+    const res = await fetch(`${url}/rest/v1/${path}`, {
+      headers: { Authorization: `Bearer ${accessToken}`, apikey, Accept: 'application/json' },
+      signal: ctrl.signal,
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+};
 
-    if (profileData) {
-      const names = (profileData.full_name || '').split(' ');
-      profile = {
-        firstName: names[0] || email.split('@')[0],
-        lastName: names.slice(1).join(' ') || '',
-        email: profileData.email || email,
-        phone: (profileData as any).phone || '',
-        timezone: (profileData as any).timezone || 'America/Chicago',
-        language: (profileData as any).language || 'English',
-        avatar: '',
-      };
-    }
-  } catch (err) {
-    console.warn('Could not fetch profile, using defaults:', err);
+const fetchProfile = async (userId: string, email: string, accessToken: string | null): Promise<UserProfile> => {
+  let profile: UserProfile = getDefaultProfile(email);
+  if (!accessToken) return profile;
+
+  const profileRows = await restFetch(
+    `profiles?select=*&id=eq.${userId}&limit=1`,
+    accessToken,
+  );
+  const profileData = profileRows && profileRows[0];
+  if (profileData) {
+    const names = ((profileData as any).full_name || '').split(' ');
+    profile = {
+      firstName: names[0] || email.split('@')[0],
+      lastName: names.slice(1).join(' ') || '',
+      email: (profileData as any).email || email,
+      phone: (profileData as any).phone || '',
+      timezone: (profileData as any).timezone || 'America/Chicago',
+      language: (profileData as any).language || 'English',
+      avatar: '',
+    };
   }
 
-  // Resolve tenant membership
-  try {
-    const { data: memberships } = await supabase
-      .from('user_tenants')
-      .select('tenant_id, role')
-      .eq('user_id', userId)
-      .limit(1);
-    const membership = memberships?.[0] ?? null;
-
-    if (membership) {
-      profile.tenantId = membership.tenant_id;
-      profile.role = membership.role;
-    }
-  } catch (err) {
-    console.warn('Could not fetch tenant membership:', err);
+  const memberships = await restFetch(
+    `user_tenants?select=tenant_id,role&user_id=eq.${userId}&limit=1`,
+    accessToken,
+  );
+  const membership = memberships && memberships[0];
+  if (membership) {
+    profile.tenantId = (membership as any).tenant_id;
+    profile.role = (membership as any).role;
   }
 
   return profile;
@@ -138,8 +150,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserEmail(session.user.email ?? null);
         setUserId(session.user.id);
         try {
-          const profile = await fetchProfile(session.user.id, session.user.email ?? '');
+          const profile = await fetchProfile(session.user.id, session.user.email ?? '', session.access_token ?? null);
           if (mounted) setUserProfile(profile);
+          // Cache the profile so ProtectedRoute can decide synchronously
+          // on subsequent navigations even if fetchProfile is slow.
+          try { localStorage.setItem("userProfile", JSON.stringify(profile)); } catch { /* quota */ }
         } catch {
           if (mounted) setUserProfile(getDefaultProfile(session.user.email ?? ''));
         }
@@ -232,8 +247,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUserEmail(session.user.email ?? null);
         setUserId(session.user.id);
         try {
-          const profile = await fetchProfile(session.user.id, session.user.email ?? '');
+          const profile = await fetchProfile(session.user.id, session.user.email ?? '', session.access_token ?? null);
           if (mounted) setUserProfile(profile);
+          try { localStorage.setItem("userProfile", JSON.stringify(profile)); } catch { /* quota */ }
         } catch {
           if (mounted) setUserProfile(getDefaultProfile(session.user.email ?? ''));
         }

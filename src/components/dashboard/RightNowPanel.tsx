@@ -81,7 +81,7 @@ async function fetchMetrics(tenantId?: string): Promise<RightNowMetrics> {
     // 3. Avg ticket time
     let avgTicketMinutes: number | null = null;
     if (!completedError && completedData && completedData.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       const times = completedData
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((row: any) => {

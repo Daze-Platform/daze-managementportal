@@ -311,7 +311,7 @@ export const useEightySixCount = () => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let available = 0;
+    const available = 0;
 
     const compute = async () => {
       try {

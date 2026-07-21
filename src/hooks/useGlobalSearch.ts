@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { useLocation } from "react-router-dom";
 
 interface SearchResult {
   type:
@@ -209,7 +208,6 @@ export const globalSearchData = {
 
 export const useGlobalSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const location = useLocation();
 
   // Create search results from global data
   const searchResults = useMemo(() => {
@@ -369,7 +367,7 @@ export const useGlobalSearch = () => {
         });
       });
     return results.slice(0, 8); // Limit to 8 results
-  }, [searchQuery, location.pathname]);
+  }, [searchQuery]);
 
   const hasResults = searchResults.length > 0;
   return {

@@ -45,15 +45,15 @@ export const Layout = ({ children }: LayoutProps) => {
       setTimeout(updateViewportHeight, 100);
     };
 
+    const onOrientationChange = () => { setTimeout(checkScreenSize, 100); };
+
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
-    window.addEventListener("orientationchange", () => {
-      setTimeout(checkScreenSize, 100);
-    });
+    window.addEventListener("orientationchange", onOrientationChange);
 
     return () => {
       window.removeEventListener("resize", checkScreenSize);
-      window.removeEventListener("orientationchange", checkScreenSize);
+      window.removeEventListener("orientationchange", onOrientationChange);
     };
   }, []);
 

@@ -1,4 +1,4 @@
-import { Order } from "@/hooks/useOrderData";
+import { Order, OrderData } from "@/hooks/useOrderData";
 import { FilterState } from "@/components/orders/AdvancedFilters";
 
 export const useOrderFilters = () => {
@@ -63,7 +63,7 @@ export const useOrderFilters = () => {
   };
 
   const getFilteredOrders = (
-    orderData: any,
+    orderData: OrderData,
     activeTab: string,
     selectedStore: string,
     orderType: "all" | "pickup" | "delivery",
@@ -83,7 +83,6 @@ export const useOrderFilters = () => {
         const matches = matchesById || matchesByName;
         return matches;
       });
-    } else {
     }
 
     // Filter by order type
@@ -103,7 +102,7 @@ export const useOrderFilters = () => {
   };
 
   const getOrderTypeCount = (
-    orderData: any,
+    orderData: OrderData,
     activeTab: string,
     selectedStore: string,
     type:

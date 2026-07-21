@@ -46,7 +46,7 @@ export const POSIntegration = () => {
       const firstWithSlug = stores.find((s) => s.slug);
       if (firstWithSlug?.slug) setSelectedStoreSlug(firstWithSlug.slug);
     }
-  }, [stores]);
+  }, [stores, selectedStoreSlug]);
 
   // Load config when store or tenant changes
   useEffect(() => {
