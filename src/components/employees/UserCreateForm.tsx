@@ -53,7 +53,7 @@ export const UserCreateForm = ({
     if (stores.length > 0 && !formData.store) {
       setFormData((prev) => ({ ...prev, store: stores[0].name }));
     }
-  }, [stores]);
+  }, [stores, formData.store]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
