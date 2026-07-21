@@ -49,12 +49,8 @@ const orderHistoryData = [
   },
 ];
 
-export const useDashboardSearch = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const location = useLocation();
-
-  // Sample data for dashboard search - Pensacola Beach Resort venues
-  const sampleData = {
+// Sample data for dashboard search - Pensacola Beach Resort venues
+const sampleData = {
     stores: [
       { id: "windrose-restaurant", name: "Windrose Restaurant", orders: 45 },
       { id: "tiki-bar", name: "Tiki Bar", orders: 32 },
@@ -74,8 +70,12 @@ export const useDashboardSearch = () => {
       { id: "oysters-stock", name: "Fresh Oysters", urgency: "high" },
       { id: "bourbon", name: "Bourbon Selection", urgency: "medium" },
       { id: "eggs", name: "Farm Fresh Eggs", urgency: "low" },
-    ],
-  };
+  ],
+};
+
+export const useDashboardSearch = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
 
   // Create search results based on current page
   const searchResults = useMemo(() => {
