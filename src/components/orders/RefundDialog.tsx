@@ -115,6 +115,7 @@ export const RefundDialog = ({
       await onRefund(refundData);
 
       // 2. Void the Omnivore ticket if one exists (Piazza/Micros orders)
+      let localVoidError: string | null = null;
       if (order.omnivore_ticket_id) {
         try {
           const voidRes = await fetch(`${ORDERING_API_BASE}/omnivore-void`, {
@@ -134,13 +135,14 @@ export const RefundDialog = ({
         } catch (voidErr: any) {
           // Omnivore void failed — log but don't block the refund flow
           console.error("[RefundDialog] Omnivore void error:", voidErr);
-          setVoidError(voidErr?.message || "Omnivore ticket void failed");
+          localVoidError = voidErr?.message || "Omnivore ticket void failed";
+          setVoidError(localVoidError);
           setVoidResult("error");
         }
       }
 
-      // Only close if there's no void error to display
-      if (!voidError) onClose();
+      // Use local variable — React state update from setVoidError is not yet flushed here
+      if (!localVoidError) onClose();
     } catch (error) {
       console.error("Refund failed:", error);
     } finally {

@@ -138,9 +138,10 @@ export const ModernOrdersList = ({
       container.style.height = "100%";
 
       // Check scroll after a brief delay to ensure DOM is updated
-      setTimeout(() => {
+      const scrollTimer = setTimeout(() => {
         checkScrollIndicator();
       }, 100);
+      return () => clearTimeout(scrollTimer);
     }
   }, [visibleOrders.length]);
 
